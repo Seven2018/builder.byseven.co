@@ -71,6 +71,7 @@
     line-height: 1.6;
     list-style: none;
     padding: 0;
+    margin: 0;
   }
 
   li {
@@ -120,9 +121,9 @@
 }
 
 .fa-user-plus, .fa-user-minus, .fa-search-plus, .fa-search-minus {
-font-size: 32px;
-color: black;
-background-color: rgba(0,0,0,0);
+  font-size: 32px;
+  color: black;
+  background-color: rgba(0,0,0,0);
 }
 
 .comment-box {
