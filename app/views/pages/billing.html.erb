@@ -17,11 +17,13 @@
       <%# intervention = OverviewNumbersSevener.all.select{|x| x['Training_id'] == training.id && x['User_id'] == current_user.id}.first %>
       <%# intervention = OverviewNumbersSevener.all(filter: "Training_id = '#{training.id}'" && "User_id = '#{current_user.id}'").first %>
       <% intervention = OverviewNumbersSevener.all(filter: "Training_id = '#{training.id}'") %>
-      <% intervention = intervention.select{|x| x['User_id'] == current_user.id}.first %>
-      <% if intervention['Total Due (excl. VAT)'].to_f - intervention['Total Paid'].to_f <= 0 %>
-        <% paid << {training: training, intervention: intervention} %>
-      <% else %>
-        <% to_pay << {training: training, intervention: intervention} %>
+      <% if intervention.present? %>
+        <% intervention = intervention.select{|x| x['User_id'] == current_user.id}.first %>
+        <% if intervention['Total Due (excl. VAT)'].to_f - intervention['Total Paid'].to_f <= 0 %>
+          <% paid << {training: training, intervention: intervention} %>
+        <% else %>
+          <% to_pay << {training: training, intervention: intervention} %>
+        <% end %>
       <% end %>
     <% end %>
     <div class='billing-index-category'>
