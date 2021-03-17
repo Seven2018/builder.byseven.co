@@ -174,7 +174,7 @@ class Training < ApplicationRecord
             new_activity = OverviewNumbersActivity.create('Training' => [card.id], 'Date' => session.date.strftime('%Y-%m-%d'), 'Trainer' => [OverviewUser.all(filter: "Builder_id = '#{trainer.user_id}'")&.first&.id], 'Hours' => session.duration)
             if card['Unit Type'] == 'Hour'
               new_activity['Revenue'] = new_activity['Hours'] * card['Unit Price']
-            elsif ['Participant', 'Half day', 'Day'].include?(card['Unit Type'])
+            elsif ['Participant', 'Half day', 'Day', 'Flat rate'].include?(card['Unit Type'])
               new_activity['Revenue'] = card['Unit Number'] * card['Unit Price'] / (self.sessions.map{|x| x.duration}.sum * session.users.count) * session.duration
             end
             new_activity.save
