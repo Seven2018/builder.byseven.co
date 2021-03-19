@@ -100,6 +100,11 @@ class PagesController < ApplicationController
 
   def intel_thank_you
   end
+
+  def export_numbers_activity_cumulation
+    UpdateCumulationChartJob.perform_async(Date.today)
+    redirect_to trainings_path(page: 1)
+  end
 end
 
 

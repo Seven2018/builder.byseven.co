@@ -171,12 +171,13 @@ class Training < ApplicationRecord
         if session.date.present?
           session.session_trainers.each do |trainer|
             # new_activity = OverviewNumbersActivity.create('Training' => [card.id], 'Date' => session.date.strftime('%Y-%m-%d'), 'Trainer' => [OverviewUser.all.select{|x| x['Builder_id'] == trainer.user_id}&.first&.id], 'Hours' => session.duration)
-            new_activity = OverviewNumbersActivity.create('Training' => [card.id], 'Date' => session.date.strftime('%Y-%m-%d'), 'Trainer' => [OverviewUser.all(filter: "Builder_id = '#{trainer.user_id}'")&.first&.id], 'Hours' => session.duration)
+            new_activity = OverviewNumbersActivity.create('Training' => [card.id], 'Date' => session.date.strftime('%Y-%m-%d'), 'Trainer' => [OverviewUser.all(filter: "{Builder_id} = '#{trainer.user_id}'")&.first&.id], 'Hours' => session.duration)
             if card['Unit Type'] == 'Hour'
               new_activity['Revenue'] = new_activity['Hours'] * card['Unit Price']
             elsif ['Participant', 'Half day', 'Day', 'Flat rate'].include?(card['Unit Type'])
               new_activity['Revenue'] = card['Unit Number'] * card['Unit Price'] / (self.sessions.map{|x| x.duration}.sum * session.users.count) * session.duration
             end
+            new_activity['Revenue'] = 0 unless new_activity['Revenue'].present?
             new_activity.save
           end
         end
@@ -219,5 +220,20 @@ class Training < ApplicationRecord
       end
     # rescue
     # end
+  end
+
+  def self.export_numbers_activity_cumulation
+    date_array = []
+    i = 0
+    sales = 0
+    date_array = OverviewNumbersActivity.all(filter: "{Date} >= '#{Date.today.beginning_of_year}'").map{|x| x['Date']}.sort.uniq
+    date_array.each do |date|
+      date_records = OverviewNumbersActivity.all.select{|x| x['Date'] == date}
+      sales = sales + date_records.map{|x|x['Revenue']}.sum
+        date_records.first['Revenue (Accumulation by Date)'] = sales
+        date_records.first['Revenue (Expected Accumulation by Date)'] = ((3000000.0 / 365) * (Date::strptime(date,'%Y-%m-%d') - Date.today.beginning_of_year)).round(2)
+        date_records.first.save
+      i += 1
+    end
   end
 end

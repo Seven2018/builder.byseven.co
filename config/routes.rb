@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get 'intel_thank_you', to: 'pages#intel_thank_you', as: 'intel_thank_you'
   get 'intel_new_attendee', to: 'pages#intel_new_attendee', as: 'intel_new_attendee'
   post 'intel_create_attendee', to: 'pages#intel_create_attendee', as: 'intel_create_attendee'
+  get 'cumulation', to: 'pages#export_numbers_activity_cumulation', as: 'export_numbers_activity_cumulation'
 
   # AIRTABLE
   get 'airtable_import_users', to: 'pages#airtable_import_users', as: 'airtable_import_users'
