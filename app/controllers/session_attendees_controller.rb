@@ -43,5 +43,13 @@ class SessionAttendeesController < ApplicationController
     flash[:notice] = "Vous êtes désinscrit de la session #{@session_attendee.session.title}."
     redirect_back(fallback_location: root_path)
   end
+
+  def import_for_training
+    attendees = Attendee.import(params[:file])
+    raise
+    skip_authorization
+    flash[:notice] = 'Import terminé'
+    redirect_back(fallback_location: root_path)
+  end
 end
 

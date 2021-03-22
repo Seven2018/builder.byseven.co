@@ -7,3 +7,7 @@ end
 task :update_bizdev_data => :environment do
   User.report
 end
+
+task :update_cumulative_sales => :environment do
+  Training.export_numbers_activity_cumulation
+end
