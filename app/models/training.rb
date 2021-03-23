@@ -162,16 +162,15 @@ class Training < ApplicationRecord
 
   def export_numbers_activity
     # begin
-      # to_delete = OverviewNumbersActivity.all.select{|x| x['Builder_id'] == [self.id]}
-      to_delete = OverviewNumbersActivity.all(filter: "{Builder_id} = #{self.id}")
-      to_delete.each{|x| x.destroy}
-      # card = OverviewTraining.all.select{|x| x['Builder_id'] == self.id}&.first
+      activities = OverviewNumbersActivity.all(filter: "{Builder_id} = #{self.id}")
+      updated = []
       card = OverviewTraining.all(filter: "{Builder_id} = '#{self.id}'")&.first
       self.sessions.each do |session|
         if session.date.present?
           session.session_trainers.each do |trainer|
-            # new_activity = OverviewNumbersActivity.create('Training' => [card.id], 'Date' => session.date.strftime('%Y-%m-%d'), 'Trainer' => [OverviewUser.all.select{|x| x['Builder_id'] == trainer.user_id}&.first&.id], 'Hours' => session.duration)
-            new_activity = OverviewNumbersActivity.create('Training' => [card.id], 'Date' => session.date.strftime('%Y-%m-%d'), 'Trainer' => [OverviewUser.all(filter: "{Builder_id} = '#{trainer.user_id}'")&.first&.id], 'Hours' => session.duration)
+            new_activity = activities.select{|x| x['Training'] == [card.id] && x['Date'] == session.date.strftime('%Y-%m-%d') && x['Trainer'] == [OverviewUser.all(filter: "{Builder_id} = '#{trainer.user_id}'")&.first&.id]}.first
+            new_activity = OverviewNumbersActivity.create('Training' => [card.id], 'Date' => session.date.strftime('%Y-%m-%d'), 'Trainer' => [OverviewUser.all(filter: "{Builder_id} = '#{trainer.user_id}'")&.first&.id]) unless new_activity.present?
+            new_activity['Hours'] = session.duration
             if card['Unit Type'] == 'Hour'
               new_activity['Revenue'] = new_activity['Hours'] * card['Unit Price']
             elsif ['Participant', 'Half day', 'Day', 'Flat rate'].include?(card['Unit Type'])
@@ -179,16 +178,17 @@ class Training < ApplicationRecord
             end
             new_activity['Revenue'] = 0 unless new_activity['Revenue'].present?
             new_activity.save
+            updated << new_activity
           end
         end
       end
+      (activities - updated).each{|x| x.destroy}
     # rescue
     # end
   end
 
   def export_numbers_sevener(user)
     # begin
-      # cards = OverviewNumbersSevener.all.select{|x| x['Reference SEVEN'] == [self.refid]}
       cards = OverviewNumbersSevener.all(filter: "{Reference SEVEN} = '#{self.refid}'")
       cards.each do |trainer|
         unless self.trainers.map{|x| x.id}.include?(OverviewUser.find(trainer['Sevener'].join)['Builder_id'])
@@ -196,7 +196,6 @@ class Training < ApplicationRecord
         end
       end
       if ['sevener', 'sevener+'].include?(user.access_level)
-        # sevener = OverviewUser.all.select{|x| x['Builder_id'] == user.id}&.first
         sevener = OverviewUser.all(filter: "{Builder_id} = '#{user.id}'")&.first
         card = OverviewNumbersSevener.all.select{|x| x['Reference SEVEN'] == [self.refid] && x['Sevener'] == [sevener.id]}&.first
         invoices = OverviewInvoiceSevener.all.select{|x| x['Training Reference'] == [self.refid] && x['Sevener'] == [sevener.id]}
