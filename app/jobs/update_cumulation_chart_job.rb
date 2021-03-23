@@ -1,11 +1,17 @@
 class UpdateCumulationChartJob < ApplicationJob
   include SuckerPunch::Job
 
-  def perform(date)
+  def perform
     date_array = []
     i = 0
     sales = 0
-    date_array = OverviewNumbersActivity.all(filter: "{Date} >= '#{Date.today.beginning_of_year}'").map{|x| x['Date']}.sort.uniq
+    activities = OverviewNumbersActivity.all(filter: "{Date} >= '#{Date.today.beginning_of_year}'")
+    activities.each do |activity|
+      activity['Revenue (Accumulation by Date)'] = nil
+      activity['Revenue (Expected Accumulation by Date)'] = nil
+      activity.save
+    end
+    date_array = activities.map{|x| x['Date']}.sort.uniq
     date_array.each do |date|
       date_records = OverviewNumbersActivity.all.select{|x| x['Date'] == date}
       sales = sales + date_records.map{|x|x['Revenue']}.sum

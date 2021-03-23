@@ -222,6 +222,6 @@ class Training < ApplicationRecord
   end
 
   def self.export_numbers_activity_cumulation
-    UpdateCumulationChartJob.perform_now(Date.today)
+    UpdateCumulationChartJob.perform_now
   end
 end
