@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   get 'import_airtable', to: 'pages#import_airtable', as: 'import_airtable'
   get 'trainings/:id/export_airtable', to: 'pages#export_airtable', as: 'export_airtable'
   get 'airtable_partners_form', to:'pages#airtable_partners_form', as: 'airtable_partners_form'
+  get 'airtable/account_invoice', to: 'pages#account_invoice', as: 'account_invoice'
 
   # USERS
   resources :users
