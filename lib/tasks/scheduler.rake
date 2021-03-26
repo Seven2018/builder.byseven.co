@@ -11,3 +11,7 @@ end
 task :update_cumulative_sales => :environment do
   Training.export_numbers_activity_cumulation
 end
+
+task :oblivion => :environment do
+  OblivionJob.perform_async
+end

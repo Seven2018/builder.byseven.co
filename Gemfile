@@ -17,6 +17,7 @@ gem 'devise', :git => "https://github.com/heartcombo/devise.git", ref: '8bb358cf
 gem 'autoprefixer-rails'
 gem 'font-awesome-sass', '~> 5.5.0'
 gem 'simple_form'
+gem "nested_form"
 gem 'pg_search'
 gem 'pundit'
 gem 'wicked_pdf', '~> 1.1'

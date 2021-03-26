@@ -5,21 +5,6 @@
     </div>
     <button type="button" class="btn btn-icon-close" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
   </div>
-  <!-- <div class="modal-body" id="modalNewBookinBody" style='display:flex;flex-direction:column;align-items:center;'>
-    <% simple_form_for :link, url: link_attendees_to_training_path(training) do |f| %>
-      <div style="display:flex;justify-content:space-between;flex-direction:column;">
-        <p><%= training.client_company.name %></p>
-        <% checked = [] %>
-        <% training.attendees.each {|x| checked << x.id } %>
-        <%= f.input_field :attendee_ids, as: :check_boxes, collection: Attendee.where(client_company_id: training.client_contact.client_company.id).order('lastname ASC').map{|x|["#{x.firstname} #{x.lastname}", x.id]}, checked: checked %>
-      </div>
-      <div class='modal-control'>
-        <%= button_tag :submit, class: 'btn btn-edit-green btn-icon', data: { toggle: 'tooltip' }, title: 'Save' do %>
-          <i class="fas fa-save"></i>
-        <% end %>
-      </div>
-    <% end %>
-  </div> -->
   <div class='centered-item'>
     <ul class="nav nav-tabs">
       <li role="presentation"><a href="#import" data-toggle="tab" class="active">Import CSV</a></li>
@@ -36,9 +21,12 @@
       </div>
     </div>
     <div role="tabpanel" class="tab-pane" id="form">
-      <div class='centered-item'>
-        <p>Add</p>
-      </div>
+      <%= simple_form_for :attendees, url: attendee_create_all_path do |f| %>
+        <div class="flex-column-between-centered">
+          <%= f.text_area :list, placeholder: 'Entrer un nom de participant par ligne, sous la forme suivante : prénom,nom,email' %>
+          <%= f.submit 'Submit' %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

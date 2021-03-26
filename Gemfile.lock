@@ -218,6 +218,7 @@ GEM
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
+    nested_form (0.3.2)
     net-http-persistent (4.0.1)
       connection_pool (~> 2.2)
     netrc (0.11.0)
@@ -444,6 +445,7 @@ DEPENDENCIES
   linkedin-v2
   listen (~> 3.0.5)
   material-sass!
+  nested_form
   oauth2
   omniauth-google-oauth2
   omniauth-linkedin-oauth2

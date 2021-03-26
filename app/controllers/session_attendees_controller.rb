@@ -36,6 +36,28 @@ class SessionAttendeesController < ApplicationController
     end
   end
 
+  def create_all
+    skip_authorization
+    attendees = []
+    training = Training.find(params[:id])
+    params[:attendees][:list].split("\r\n").each do |attendee|
+      attendee = attendee.split(',')
+      new_attendee = Attendee.new(firstname: attendee[0], lastname: attendee[1], email: attendee[2])
+      new_attendee.client_company_id = training.client_contact.client_company_id
+      if new_attendee.save
+        attendees << new_attendee
+      else
+        attendees << Attendee.find_by(email: attendee[2])
+      end
+    end
+    attendees.each do |attendee|
+      training.sessions.each do |session|
+        SessionAttendee.create(session_id: session.id, attendee_id: attendee.id)
+      end
+    end
+    redirect_to training_path(training, page: 1)
+  end
+
   def destroy
     @session_attendee = SessionAttendee.find_by(session_id: params[:session_id], attendee_id: params[:attendee_id])
     authorize @session_attendee
@@ -45,8 +67,13 @@ class SessionAttendeesController < ApplicationController
   end
 
   def import_for_training
-    attendees = Attendee.import(params[:file])
-    raise
+    attendees = Attendee.import(params[:file], Training.find(params[:id]).client_contact.client_company_id)
+    training = Training.find(params[:id])
+    attendees.each do |attendee|
+      training.sessions.each do |session|
+        SessionAttendee.create(session_id: session.id, attendee_id: attendee.id)
+      end
+    end
     skip_authorization
     flash[:notice] = 'Import terminé'
     redirect_back(fallback_location: root_path)

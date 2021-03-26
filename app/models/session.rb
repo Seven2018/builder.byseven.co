@@ -24,4 +24,10 @@ class Session < ApplicationRecord
       end
     end
   end
+
+  def final_session_attendee_list
+    self.attendees.each do |attendee|
+      # Training.joins(sessions: :session_attendees).where()
+    end
+  end
 end

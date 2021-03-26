@@ -140,6 +140,7 @@ Rails.application.routes.draw do
   post 'session/:id/session_attendees/link_attendees', to: 'session_attendees#link_attendees', as: 'link_attendees'
   post 'training/:id/session_attendees/link_attendees', to: 'session_attendees#link_attendees_to_training', as: 'link_attendees_to_training'
   post 'training/:id/import_for_training', to: 'session_attendees#import_for_training', as: 'import_for_training'
+  post 'training/:id/attendee_create_all', to: 'session_attendees#create_all', as: 'attendee_create_all'
 
 
   # ATTENDEES INTERESTS

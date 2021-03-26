@@ -1,5 +1,5 @@
 class Attendee < ApplicationRecord
-  belongs_to :client_company
+  belongs_to :client_company, optional: true
   has_many :session_attendees, dependent: :destroy
   has_many :sessions, through: :session_attendees
   has_many :attendee_interests, dependent: :destroy
@@ -8,11 +8,18 @@ class Attendee < ApplicationRecord
   before_save :make_capitalize
   require 'csv'
 
-  def self.import(file)
+  def self.import(file, client_company_id = nil)
+    attendees = []
     CSV.foreach(file.path, headers: true) do |row|
       attendee = Attendee.new(row.to_hash)
-      attendee.save
+      attendee.client_company_id = client_company_id
+      if attendee.save
+        attendees << attendee
+      else
+        attendees << Attendee.find_by(email: attendee.email)
+      end
     end
+    return attendees
   end
 
   def self.to_csv
@@ -46,5 +53,9 @@ class Attendee < ApplicationRecord
 
   def trainings
     Training.joins(sessions: :session_attendees).where(sessions: {session_attendees: {attendee_id: self.id}})
+  end
+
+  def last_session(training)
+    session = Session.joins(:session_attendees).where(session_attendees: {session_id: training.sessions.ids, attendee_id: self.id}).sort{|a,b|  a.date <=> b.date}.last
   end
 end
