@@ -2,29 +2,91 @@
   <div id="page-controls">
     <%= link_to users_path, class: 'btn return-arrow' do %><i class="fas fa-arrow-left"></i><% end %>
   </div>
-  <div class='centered-card-show'>
+  <div class='user-card'>
     <div class="index-card-small-show">
-      <div style='display:flex;flex-direction:row;'>
-        <div class='user-picture-show'>
-          <img src='<%= @user.picture %>' alt="" class='client-company-logo-show' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+        <div class='user-picture-logo-show'>
+          <img src='<%= @user.picture %>' alt="" class='user-logo-show' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
         </div>
-        <div class="show-control-links" style='display:flex;flex-direction:row;'>
-          <% if current_user.access_level == 'super admin' || @user == current_user || (current_user.access_level == 'admin' && (@user.access_level == 'sevener' || @user.access_level == 'sevener+')) %>
-            <a class="button edit-fafa" data-toggle='modal' data-target='#editUser'><button class='btn btn-edit-yellow'>Edit Profile</button></a>
-            <a class="button edit-fafa" data-toggle='modal' data-target='#editPassword'><button class='btn btn-edit-yellow'>Change Password</button></a>
-          <% end %>
+        <div class="user-info">
+          <h4><strong><%=  @user.firstname %> <%=  @user.lastname %></strong></h4>
+          <p><%= @user.email %></p>
+          <div class="user-show-control-links">
+            <% if current_user.access_level == 'super admin' || @user == current_user || (current_user.access_level == 'admin' && (@user.access_level == 'sevener' || @user.access_level == 'sevener+')) %>
+              <a class="button edit-fafa" data-toggle='modal' data-target='#editUser'><button class='btn btn-edit-yellow'>Edit Profile</button></a>
+              <a class="button edit-fafa" data-toggle='modal' data-target='#editPassword'><button class='btn btn-edit-yellow'>Change Password</button></a>
+            <% end %>
         </div>
-      </div>
-      <div class="user-info">
-        <p>Lastname: <strong><%=  @user.lastname %></strong></p>
-        <p>Firstname: <strong><%=  @user.firstname %></strong></p>
-        <p>Email: <%= @user.email %></p>
-        <p>Access Level: <%= @user.access_level.capitalize %></p>
-        <p>Description: <%= @user.description %></p>
-        <p>Rating: <%= @user.rating %></p>
-        <p>LinkedIn: <%= link_to @user.linkedin do %><i class="fab fa-linkedin-in"></i><% end %></p>
         </div>
     </div>
+  </div>
+  <% trainings = Training.joins(sessions: :session_trainers).where(session_trainers: {user_id: @user.id}).uniq %>
+  <h3 class="training-update-text">Upcoming</h3>
+  <div class="trainings-row">
+    <% trainings.each do |training| %>
+      <% if training.end_time.present? && training.end_time >= Date.today %>
+        <div class="training-card" id="card-index">
+          <div class="training-card-main">
+            <%= link_to training_path(training), class: 'stretched-link' do %>
+              <h4 style='max-width: 18rem;'><%= training.title %></h4>
+              <div class='client-logo' style="background-image: url(<%= training.client_contact.client_company.logo %>); background-size: 5rem 5rem; background-repeat: no-repeat;"></div>
+              <div class="training-card-infos">
+                <% sessions = training.sessions %>
+                <div class='training-card-infos-elements'>
+                  <% if sessions.count == 1 %>
+                    <i class="far fa-calendar-alt"></i><%= "  On #{sessions.first.date.strftime('%d/%m/%y')}" %>
+                  <% else %>
+                    <i class="far fa-calendar-alt"></i><%= "  From #{sessions.order(date: :asc).first.date&.strftime('%d/%m/%y')} to #{sessions.order(date: :asc).last.date&.strftime('%d/%m/%y')}" %>
+                  <% end %>
+                  <br>
+                  <i class="far fa-calendar-check"></i>
+                  <%= training.sessions.count.to_s + " " + "Sessions" %>
+                </div>
+              </div>
+              <% users_list = [training.owners + training.writers + training.trainers].flatten.uniq.first(3) %>
+              <% u = 1 %>
+              <% users_list.each do |user| %>
+              <img class="avatar-sm training-card-user training-card-user-<%= u %>" src="<%= user.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+              <% u += 1 %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  <h3 class="training-update-text">Completed</h3>
+  <div class="trainings-row">
+    <% trainings.uniq.each do |training| %>
+      <% if training.end_time.present? && training.end_time < Date.today %>
+        <div class="training-card" id="card-index">
+          <div class="training-card-main">
+            <%= link_to training_path(training), class: 'stretched-link' do %>
+              <h4 style='max-width: 18rem;'><%= training.title %></h4>
+              <div class='client-logo' style="background-image: url(<%= training.client_contact.client_company.logo %>); background-size: 5rem 5rem; background-repeat: no-repeat;"></div>
+              <div class="completed-training-card-infos">
+                <% sessions = training.sessions %>
+                <div class='training-card-infos-elements'>
+                  <% if sessions.count == 1 %>
+                    <i class="far fa-calendar-alt"></i><%= "  On #{sessions.first.date.strftime('%d/%m/%y')}" %>
+                  <% else %>
+                    <i class="far fa-calendar-alt"></i><%= "  From #{sessions.order(date: :asc).first.date&.strftime('%d/%m/%y')} to #{sessions.order(date: :asc).last.date&.strftime('%d/%m/%y')}" %>
+                  <% end %>
+                  <br>
+                  <i class="far fa-calendar-check"></i>
+                  <%= training.sessions.count.to_s + " " + "Sessions" %>
+                </div>
+              </div>
+              <% users_list = [training.owners + training.writers + training.trainers].flatten.uniq.first(3) %>
+              <% u = 1 %>
+              <% users_list.each do |user| %>
+              <img class="avatar-sm training-card-user training-card-user-<%= u %>" src="<%= user.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+              <% u += 1 %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
   </div>
 </div>
 

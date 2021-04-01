@@ -101,7 +101,7 @@ class UsersController < ApplicationController
 
   def index_function(parameter)
     if params[:search]
-      @users = (parameter.where('lower(firstname) LIKE ?', "%#{params[:search].downcase}%") + parameter.where('lower(lastname) LIKE ?', "%#{params[:search].downcase}%"))
+      @users = (parameter.where('lower(firstname) LIKE ?', "%#{params[:search][:name].downcase}%") + parameter.where('lower(lastname) LIKE ?', "%#{params[:search][:name].downcase}%"))
       @users = @users.sort_by{ |user| user.lastname } if @users.present?
     else
       @users = parameter.order(lastname: :asc)

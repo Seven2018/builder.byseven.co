@@ -84,11 +84,6 @@
   }
 }
 
-.client-company-search-close {
-  position: absolute;
-  right: 170.5rem;
-  top: 0.5rem;
-}
 
 //-------------------------------------------------------------------
 
@@ -122,10 +117,12 @@
     }
   }
 
-  .show-control-links {
-
-  }
 }
+  .show-control-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
 
  .user-picture-show {
   overflow: hidden;
@@ -147,17 +144,3 @@
     margin-left: 12rem;
   }
 }
-
-//FORM
-
-// .client_company_address, .client_contact_billing_address {
-//   width: 30%;
-// }
-
-// .client_company_zipcode, .client_contact_billing_zipcode {
-//   width: 10%;
-// }
-
-// .client_company_city, .client_contact_billing_city {
-//   width: 30%;
-// }

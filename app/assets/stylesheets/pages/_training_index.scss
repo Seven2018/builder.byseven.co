@@ -6,33 +6,26 @@
   }
 }
 
+
 .training-cat {
   margin: 3rem 0 3rem 0;
   font-size: 2rem;
   margin-left: 83px;
   font-size: 28px;
-
 }
 
 .row {
   background-color: white;
-  background-color: white;
-  padding-top: 2.5rem;
-  padding-left: 2.5rem;
-  padding-right: 0px;
-  margin-left: 80.5rem;
-  margin-right: 60.5rem;
-  margin-top: 2.5rem;
+}
+
+
+.training-update-text {
+  text-decoration: underline;
+  text-decoration-color: #F9C553;
 }
 
 
 .trainings-title {
-  margin-top: 37px;
-  height: 5.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
   h3 {
     margin: 0;
   }
@@ -40,6 +33,18 @@
   @include from-large {
     flex-direction: row;
   }
+}
+
+.trainings-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+    padding-left: 0px;
+    a {
+    font-family: 'Montserrat';
+    font-size: 15px;
+    }
 }
 
 #training-buttons {
@@ -55,13 +60,14 @@
   }
 }
 
-.training-search-close {
+.search-close {
   position: absolute;
-  right: 37rem;
-  top: 0.8rem;
+  right: 1rem;
+  top: 0.9rem;
 }
 
 #trainings_user_filter {
+  margin-bottom: 2rem;
 
   .avatar-sm {
 
@@ -94,4 +100,32 @@
   i {
     margin-left: 5px;
   }
+}
+
+.trainings-row {
+  min-height: 25rem;
+  width: auto;
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  background-color: white;
+  margin-right: 0;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}
+
+.trainings-row::-webkit-scrollbar {
+  display: none;
+}
+
+.trainings-row.active {
+  background: rgba(255,255,255,0.3);
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+  transform: scale(1);
 }

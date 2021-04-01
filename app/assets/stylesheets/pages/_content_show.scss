@@ -1,16 +1,25 @@
+.workshop-title-details {
+  margin-left: 20px;
+}
+
+
 #content-mods {
   margin: 3rem 0;
+
+  h4 {
+    font-size: 2rem;
+  }
 }
 
 .module-card {
-  box-shadow: 1px 0px 7rem -1.1rem rgba(0, 0, 0, 0.15);
-  margin: 3rem 5rem;
+  box-shadow: 1px 1px 1.5rem rgba(0, 0, 0, 0.3);
+  margin: 5rem 5rem;
   padding: 2rem;
   position: relative;
   overflow: visible;
 
   &:hover {
-    box-shadow: 1px 1px 1.5rem rgba(0, 0, 0, 0.3);
+    box-shadow: 1px 0px 2rem 1rem rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -23,7 +32,7 @@
 }
 
 .module-card-footer {
-  background-color: rgba(0,0,0,0.1);
+  background-color: #F1F3F4;
   padding: 2rem;
 }
 
@@ -272,10 +281,6 @@
   background-color: blue;
 }
 
-.content-actions {
-  color: $orange;
-  margin: 0;
-}
 
 .content-logistics {
   height: auto;
@@ -287,18 +292,54 @@
     margin: 0 !important;
   }
 
-  @include from-large {
-    justify-content: left;
-    display: flex;
-  }
 }
 
 .content-logistics, .content-logistics > div > div {
-  color: $green;
+  p {
+  color: #D69D29;
+  font-weight: 700;
+  font-size: 17px;
+  }
+  ul {
+    list-style-type: disc;
+    font-size: 15px;
+    color: black;
+    font-weight: 300;
+  }
+}
+
+#content_module_logistics {
+  margin-bottom: 25px;
+}
+
+.content-actions, .content-actions > div > div {
+  p {
+  color: $orange;
+  font-weight: 700;
+  font-size: 17px;
+  }
+  ul {
+    list-style-type: decimal;
+    font-size: 15px;
+    color: black;
+    font-weight: 300;
+  }
 }
 
 .workshop-middle-info-main {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  margin-top: 20px;
+  h4 {
+    font-weight: 800;
+  }
+}
+
+.theory-buttons {
+  margin-top: 2rem;
+
+  p {
+    margin: 0 0 0 1rem;
+  }
 }

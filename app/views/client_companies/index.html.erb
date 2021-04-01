@@ -4,11 +4,13 @@
       <h1>Clients List</h1>
       <div id="page-buttons">
         <%= simple_form_for :search, url: client_companies_path, method: 'GET' do |f| %>
-          <%= f.input :name, placeholder: 'Search', label: false %>
           <% if params[:search] %>
-            <%= link_to client_companies_path, class: 'client-company-search-close' do %>
+            <%= f.input :name, placeholder: params[:search][:name], label: false %>
+            <%= link_to client_companies_path, class: 'search-close' do %>
               <i class="far fa-times-circle"></i>
             <% end %>
+          <% else %>
+            <%= f.input :name, placeholder: 'Search', label: false %>
           <% end %>
         <% end %>
         <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>

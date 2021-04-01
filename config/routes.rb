@@ -157,6 +157,12 @@ Rails.application.routes.draw do
   get '/remove_session_trainers', to: 'session_trainers#remove_session_trainers', as: 'remove_session_trainers'
   get '/remove_training_trainers', to: 'session_trainers#remove_training_trainers', as: 'remove_training_trainers'
 
+  # OBLIVIONS
+  resources :oblivions
+
+  # OBLIVION_CONTENTS
+  resources :oblivion_contents
+
   # LINKEDIN
   get '/linkedin_scrape', to: 'users#linkedin_scrape', as: 'linkedin_scrape'
   get '/linkedin_scrape_callback', to: 'users#linkedin_scrape_callback', as: 'linkedin_scrape_callback'

@@ -92,46 +92,18 @@
     opacity: 0;
     position: absolute;
   }
-}
 
-.text {
-  font-size: 17px;
-  color: white;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  transition: all 0.5s ease-in-out;
+  .text {
+    font-size: 17px;
+    color: white;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.5s ease-in-out;
+  }
 }
 
 .toggle {
   display: none;
-}
-
-.button {
-  position: absolute;
-  z-index: 999;
-  width: 31px;
-  height: 31px;
-  transition: all 0.5s ease-in-out;
-  cursor: pointer;
-  &:before {
-    position: absolute;
-    top: 13px;
-    left: 6px;
-    content: '';
-    width: 16px;
-    height: 2px;
-    background: white;
-    transform: rotate(90deg);
-  }
-  &:after {
-    position: absolute;
-    top: 13px;
-    left: 6px;
-    content: '';
-    width: 16px;
-    height: 2px;
-    background: white;
-  }
 }
 
 .toggle:checked ~ .nav {

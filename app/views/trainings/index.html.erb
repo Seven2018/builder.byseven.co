@@ -6,16 +6,14 @@
         <%= simple_form_for :search, url: trainings_path, method: 'GET' do |f| %>
           <% if params[:search].present? %>
             <%= f.input :title, placeholder: 'Search', label: false, input_html: {value: params[:search][:title]} %>
+            <%= link_to trainings_path(page: 1), class: 'search-close' do %>
+              <i class="far fa-times-circle"></i>
+            <% end %>
           <% else %>
             <%= f.input :title, placeholder: 'Search', label: false %>
           <% end %>
           <%= f.input :user, as: :hidden, input_html: { value: params[:user] } %>
           <%= hidden_field_tag :page, 1 %>
-          <% if params[:search] %>
-            <%= link_to trainings_path(page: 1), class: 'training-search-close' do %>
-              <i class="far fa-times-circle"></i>
-            <% end %>
-          <% end %>
         <% end %>
       <% else %>
         <%= simple_form_for :search, url: trainings_path, method: 'GET' do |f| %>
@@ -26,7 +24,7 @@
           <% end %>
           <%= hidden_field_tag :page, 1 %>
           <% if params[:search] %>
-            <%= link_to trainings_path(page: 1), class: 'training-search-close' do %>
+            <%= link_to trainings_path(page: 1), class: 'search-close' do %>
               <i class="far fa-times-circle"></i>
             <% end %>
           <% end %>
@@ -69,65 +67,59 @@
   <% end %>
   <div class="trainings-title">
     <% if params[:search] %>
-      <ul class="nav nav-tabs">
-        <li><p class="active">Search</p></li>
-      </ul>
+      <h3 class="training-update-text">Search</h3>
+      <%= render 'search', trainings: @trainings %>
     <% else %>
-      <ul class="nav nav-tabs">
-        <% if params[:tab].nil? || params[:tab] == 'upcoming' %>
-          <!-- <li role="presentation"><a href="#upcoming" data-toggle="tab" class="active">Upcoming</a></li> -->
-          <li role="presentation"><a href="#upcoming" data-toggle="tab" class="active">Upcoming</a></li>
-          <li role="presentation"><a href="#completed" data-toggle="tab" id='completed_tab'>Completed</a></li>
-          <% if (['super admin', 'admin', 'training manager'].include? current_user.access_level) %>
-            <li role="presentation"><a href="#to_date" data-toggle="tab">To Schedule</a></li>
-            <li role="presentation"><a href="#to_staff" data-toggle="tab">To Staff</a></li>
-          <% end %>
-          <% if ['sevener+', 'sevener'].include?(current_user.access_level) %>
-            <!-- <li role="presentation"><a href="#invoices" data-toggle="tab" id='invoices_tab'>Invoices</a></li> -->
-          <% end %>
-        <% elsif params[:tab] == 'completed' %>
-          <li role="presentation"><a href="#upcoming" data-toggle="tab">Upcoming</a></li>
-          <li role="presentation"><a href="#completed" data-toggle="tab" class="active">Completed</a></li>
-          <% if (['super admin', 'admin', 'training manager'].include? current_user.access_level) %>
-            <li role="presentation"><a href="#to_date" data-toggle="tab">To Schedule</a></li>
-            <li role="presentation"><a href="#to_staff" data-toggle="tab">To Staff</a></li>
-          <% end %>
-        <% elsif params[:tab] == 'to_date' %>
-          <li role="presentation"><a href="#upcoming" data-toggle="tab">Upcoming</a></li>
-          <li role="presentation"><a href="#completed" data-toggle="tab">Completed</a></li>
-          <li role="presentation"><a href="#to_date" data-toggle="tab" class="active">To Schedule</a></li>
-          <li role="presentation"><a href="#to_staff" data-toggle="tab">To Staff</a></li>
-        <% elsif params[:tab] == 'to_staff' %>
-          <li role="presentation"><a href="#upcoming" data-toggle="tab">Upcoming</a></li>
-          <li role="presentation"><a href="#completed" data-toggle="tab">Completed</a></li>
-          <li role="presentation"><a href="#to_date" data-toggle="tab">To Schedule</a></li>
-          <li role="presentation"><a href="#to_staff" data-toggle="tab" class="active">To Staff</a></li>
-        <% end %>
-        <li><%# link_to "Calendar", index_week_path %></li>
-      </ul>
-    <% end %>
-  </div>
-  <div class="tab-content">
-    <% if params[:search] %>
-      <div class="tab-pane active">
-        <%= render 'search', trainings: @trainings %>
+      <div class="trainings-list">
+        <h3 class="training-update-text">Upcoming</h3>
+        <div class="trainings-row">
+          <%= render_async index_upcoming_path(user: params[:user]) %>
+        </div>
+        <h3 class="training-update-text">Completed</h3>
+        <div class="trainings-row">
+          <%= render_async index_completed_path(user: params[:user])%>
+        </div>
+        <h3 class="training-update-text">To Schedule</h3>
+        <div class="trainings-row">
+          <%= render 'to_date', trainings: @trainings %>
+        </div>
+        <h3 class="training-update-text">To Staff</h3>
+        <div class="trainings-row">
+          <%= render 'to_staff', trainings: @trainings %>
+        </div>
       </div>
-    <% else params[:tab].nil? || params[:tab] == 'all' %>
-      <div role="tabpanel" class="tab-pane active" id="upcoming">
-        <%= render_async index_upcoming_path(page: params[:page]) %>
-      </div>
-      <div role="tabpanel" class="tab-pane" id="completed">
-        <%= render_async index_completed_path(page: 1), toggle: { selector: '#completed_tab', event: :click } %>
-      </div>
-      <div role="tabpanel" class="tab-pane" id="to_date">
-        <%= render 'to_date', trainings: @trainings %>
-      </div>
-      <div role="tabpanel" class="tab-pane" id="to_staff">
-        <%= render 'to_staff', trainings: @trainings %>
-      </div>
-      <!-- <div role="tabpanel" class="tab-pane" id="invoices">
-        <h1>test</h1>
-      </div> -->
     <% end %>
   </div>
 </div>
+
+<script>
+  sliders = document.querySelectorAll('.trainings-row');
+  sliders.forEach((slider) => {
+    isDown = false;
+    let startX;
+    let scrollLeft;
+
+    slider.addEventListener('mousedown', (e) => {
+      isDown = true;
+      slider.classList.add('active');
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+    });
+    slider.addEventListener('mouseleave', () => {
+      isDown = false;
+      slider.classList.remove('active');
+    });
+    slider.addEventListener('mouseup', () => {
+      isDown = false;
+      slider.classList.remove('active');
+    });
+    slider.addEventListener('mousemove', (e) => {
+      if(!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 3; //scroll-fast
+      slider.scrollLeft = scrollLeft - walk;
+      console.log(walk);
+    });
+  })
+</script>

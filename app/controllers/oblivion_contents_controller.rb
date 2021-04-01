@@ -1,0 +1,2 @@
+class OblivionContentsController < ApplicationController
+end

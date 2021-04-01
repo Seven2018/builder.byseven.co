@@ -1,0 +1,2 @@
+class OblivionContent < ApplicationRecord
+end

@@ -1,0 +1,21 @@
+<div class="container-seven-large">
+  <div id='page-controls'>
+    <%= link_to training_path(@training), class: 'btn return-arrow' do %>
+      <i class="fas fa-arrow-left"></i>
+    <% end %>
+  </div>
+  <h3>Create an Oblivion</h3>
+
+  <%= simple_form_for @oblivion do |f| %>
+    <div class='mod-date'>
+      <%= f.input :title %>
+    </div>
+    <div class="mod-date">
+    <%= f.association :session, collection: @training.sessions, selected: @training.sessions.last.id %></div>
+    <div class="center-button">
+      <%= button_tag type: 'submit', class: 'btn btn-edit-green btn-icon' do %>
+        <i class="fas fa-save"></i>
+      <% end %>
+    </div>
+  <% end %>
+</div>
