@@ -14,7 +14,7 @@
         <div class="module-card-infos">
           <h4><%= link_to mod.title, training_session_workshop_workshop_module_path(@workshop.session.training, @workshop.session, @workshop, mod) %></h4>
           <% if mod.instructions != ''  %>
-            <div class='module-card-instructions'><%= mod.instructions %></div>
+            <div class='module-card-instructions'><%= mod.instructions.html_safe %></div>
           <% end %>
         </div>
           <div class='module-card-controls'>
@@ -52,7 +52,7 @@
         <% if mod.logistics.present? %>
           <div class='content-logistics'>
             <p class='logistics-label'>Logistics:</p><br>
-            <ul><li><%= mod.logistics %></li></ul>
+            <ul><li><%= mod.logistics.html_safe %></li></ul>
           </div>
         <% end %>
         <% if !mod.action1.nil? && !mod.action2.nil? %>
