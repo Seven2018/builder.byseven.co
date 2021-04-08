@@ -52,6 +52,7 @@ gem 'sucker_punch', '~> 2.0'
 gem 'sendgrid-ruby'
 gem 'whenever', require: false
 gem 'ransack'
+gem 'declarative-option'
 gem 'trix-rails', require: 'trix'
 gem 'where_exists'
 
