@@ -33,11 +33,10 @@
                 <% sessions = training.sessions %>
                 <div class='training-card-infos-elements'>
                   <% if sessions.count == 1 %>
-                    <i class="far fa-calendar-alt"></i><%= "  On #{sessions.first&.date&.strftime('%d/%m/%y')}" %>
+                    <p><i class="far fa-calendar-alt"></i><%= "  On #{sessions.first&.date&.strftime('%d/%m/%y')}" %></p>
                   <% else %>
-                    <i class="far fa-calendar-alt"></i><%= "  From #{sessions.order(date: :asc).first&.date&.strftime('%d/%m/%y')} to #{sessions.order(date: :asc).last&.date&.strftime('%d/%m/%y')}" %>
+                    <p><i class="far fa-calendar-alt"></i><%= "  From #{sessions.order(date: :asc).first&.date&.strftime('%d/%m/%y')} to #{sessions.order(date: :asc).last&.date&.strftime('%d/%m/%y')}" %></p>
                   <% end %>
-                  <br>
                   <i class="far fa-calendar-check"></i>
                   <%= training.sessions.count.to_s + " " + "Sessions" %>
                 </div>
@@ -67,11 +66,10 @@
                 <% sessions = training.sessions %>
                 <div class='training-card-infos-elements'>
                   <% if sessions.count == 1 %>
-                    <i class="far fa-calendar-alt"></i><%= "  On #{sessions.first&.date&.strftime('%d/%m/%y')}" %>
+                    <p><i class="far fa-calendar-alt"></i><%= "  On #{sessions.first&.date&.strftime('%d/%m/%y')}" %></p>
                   <% else %>
-                    <i class="far fa-calendar-alt"></i><%= "  From #{sessions.order(date: :asc).first&.date&.strftime('%d/%m/%y')} to #{sessions.order(date: :asc).last&.date&.strftime('%d/%m/%y')}" %>
+                    <p><i class="far fa-calendar-alt"></i><%= "  From #{sessions.order(date: :asc).first&.date&.strftime('%d/%m/%y')} to #{sessions.order(date: :asc).last&.date&.strftime('%d/%m/%y')}" %></p>
                   <% end %>
-                  <br>
                   <i class="far fa-calendar-check"></i>
                   <%= training.sessions.count.to_s + " " + "Sessions" %>
                 </div>
