@@ -34,7 +34,8 @@ class AttendeesController < ApplicationController
 
   # Creates new Attendees from an imported list
   def import
-    @attendees = Attendee.import(params[:file])
+    raise
+    @attendees = Attendee.import(params[:file], Training.find(params[:id]).client_contact.client_company_id)
     skip_authorization
     flash[:notice] = 'Import terminé'
     redirect_back(fallback_location: root_path)

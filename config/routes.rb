@@ -16,12 +16,14 @@ Rails.application.routes.draw do
   get 'intel_thank_you', to: 'pages#intel_thank_you', as: 'intel_thank_you'
   get 'intel_new_attendee', to: 'pages#intel_new_attendee', as: 'intel_new_attendee'
   post 'intel_create_attendee', to: 'pages#intel_create_attendee', as: 'intel_create_attendee'
+  get 'cumulation', to: 'pages#export_numbers_activity_cumulation', as: 'export_numbers_activity_cumulation'
 
   # AIRTABLE
   get 'airtable_import_users', to: 'pages#airtable_import_users', as: 'airtable_import_users'
   get 'import_airtable', to: 'pages#import_airtable', as: 'import_airtable'
   get 'trainings/:id/export_airtable', to: 'pages#export_airtable', as: 'export_airtable'
   get 'airtable_partners_form', to:'pages#airtable_partners_form', as: 'airtable_partners_form'
+  get 'airtable/account_invoice', to: 'pages#account_invoice', as: 'account_invoice'
 
   # USERS
   resources :users
@@ -137,6 +139,9 @@ Rails.application.routes.draw do
   # SESSION ATTENDEES
   post 'session/:id/session_attendees/link_attendees', to: 'session_attendees#link_attendees', as: 'link_attendees'
   post 'training/:id/session_attendees/link_attendees', to: 'session_attendees#link_attendees_to_training', as: 'link_attendees_to_training'
+  post 'training/:id/import_for_training', to: 'session_attendees#import_for_training', as: 'import_for_training'
+  post 'training/:id/attendee_create_all', to: 'session_attendees#create_all', as: 'attendee_create_all'
+
 
   # ATTENDEES INTERESTS
   post 'new_attendee_interest', to: 'attendee_interests#create', as: 'new_attendee_interest'
@@ -151,6 +156,12 @@ Rails.application.routes.draw do
   get '/calendars', to: 'session_trainers#calendars', as: 'calendars'
   get '/remove_session_trainers', to: 'session_trainers#remove_session_trainers', as: 'remove_session_trainers'
   get '/remove_training_trainers', to: 'session_trainers#remove_training_trainers', as: 'remove_training_trainers'
+
+  # OBLIVIONS
+  resources :oblivions
+
+  # OBLIVION_CONTENTS
+  resources :oblivion_contents
 
   # LINKEDIN
   get '/linkedin_scrape', to: 'users#linkedin_scrape', as: 'linkedin_scrape'

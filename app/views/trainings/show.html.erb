@@ -22,7 +22,7 @@
         </div>
         <% end %>
         <%= link_to update_calendar_path(training_id: @training.id), class: "btn btn-edit-red btn-icon", data: { toggle: 'tooltip'}, title: 'Update Calendar' do %>
-          <span class="iconify" data-icon="dashicons:update" data-inline="false"></span>
+          <i class="fas fa-calendar-check"></i>
         <% end %>
         <%# airtable_training = OverviewTraining.all.select{|x| if x['Builder_id'].present?; x['Builder_id'] == @training.id; end}&.first %>
         <% airtable_training = OverviewTraining.all(filter: "{Builder_id} = '#{@training.id}'")&.first %>
@@ -43,19 +43,20 @@
           <button class='btn btn-edit-grey btn-icon dropdown-toggle' id="dropdownMenuButton" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></button>
           <ul class="dropdown-menu dropdown-menu-right navbar-wagon-dropdown-menu" aria-labelledby="dropdownMenuButton">
             <li><a data-toggle='modal' data-target='#addAttendees' data-toggle="tooltip" title="Add Participants">Add participants</a></li>
-            <li><%= link_to 'New estimate',new_invoiceitem_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Estimate'), method: :post %></li>
-            <li><%= link_to 'Estimates List', invoice_items_path(training_id: @training.id, type: 'Estimate') %></li>
+            <!-- <li><%# link_to 'New estimate',new_invoiceitem_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Estimate'), method: :post %></li> -->
+            <!-- <li><%# link_to 'Estimates List', invoice_items_path(training_id: @training.id, type: 'Estimate') %></li> -->
             <li><%= link_to 'New invoice', new_invoiceitem_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
             <li><%= link_to 'New invoice Airtable', new_airtable_invoiceitem_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
             <li><%= link_to 'New invoice Airtable by Trainer', new_airtable_invoiceitem_by_trainer_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id), method: :post %></li>
-            <li><%= link_to 'New invoice Airtable by Participant', new_airtable_invoiceitem_by_attendee_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id), method: :post %></li>
+            <!-- <li><%# link_to 'New invoice Airtable by Participant', new_airtable_invoiceitem_by_attendee_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id), method: :post %></li> -->
             <li><%= link_to 'Invoices List', invoice_items_path(training_id: @training.id, type: 'Invoice', page: 1) %></li>
-            <% if @training.forms.empty? %>
-              <li><a data-toggle='modal' type='button' data-target='#newForm' style='cursor:pointer;'>New form</a></li>
-            <% else %>
-              <li><%= link_to 'Forms list', training_forms_path(@training) %></li>
-            <% end %>
-            <li><a data-toggle='modal' data-target='#createCertificate' data-toggle="tooltip" title="Create certificate">Create certificate</a></li>
+            <%# if @training.forms.empty? %>
+              <!-- <li><a data-toggle='modal' type='button' data-target='#newForm' style='cursor:pointer;'>New form</a></li> -->
+            <%# else %>
+              <!-- <li><%# link_to 'Forms list', training_forms_path(@training) %></li> -->
+            <%# end %>
+            <!-- <li><a data-toggle='modal' data-target='#createCertificate' data-toggle="tooltip" title="Create certificate">Create certificate</a></li> -->
+            <li><%= link_to 'New Oblivion', new_oblivion_path(training_id: params[:id]) %></li>
           </ul>
         </div>
       </div>
@@ -121,26 +122,8 @@
           <% end %>
         </ul>
       </div>
-    </div>
-  </div>
-  <div class="middle-info2">
-    <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-      <p id='survey-link' class='btn-add-user'>Link to survey : <%= @training.satisfaction_survey %></p>
-      <%= simple_form_for @training, html: { class: "hidden", id: 'survey-form' } do |f| %>
-        <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
-          <%= f.input :satisfaction_survey, placeholder: 'Add a link to the survey', value: @training.satisfaction_survey, label: false, input_html: { style: 'width: 200px;'} %>
-          <%= button_tag type: 'submit', class: 'btn btn-add-user', input_html: { style: 'height: 3.5rem' } do %>
-            Update
-          <% end %>
-        </div>
-      <% end %>
-    <% else %>
-      <p id='survey-link' class='btn-add-user'>Link to survey : <%= @training.satisfaction_survey %></p>
-    <% end %>
-    <div>
-      <div class='trainer-div'>
-        <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-          <ul id="trainer">
+      <div>
+        <ul id="trainer">
             <% trainer_array = [] %>
             <% @training.sessions.each do |session| %>
               <% session.users.each do |trainer| %>
@@ -164,9 +147,23 @@
               <% end %>
             <% end %>
           </ul>
-        <% end %>
       </div>
     </div>
+  </div>
+  <div class="middle-info2">
+    <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+      <p id='survey-link'>Link to survey : <%= @training.satisfaction_survey %></p>
+      <%= simple_form_for @training, html: { class: "hidden", id: 'survey-form' } do |f| %>
+        <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+          <%= f.input :satisfaction_survey, placeholder: 'Add a link to the survey', value: @training.satisfaction_survey, label: false, input_html: { style: 'width: 200px;'} %>
+          <%= button_tag type: 'submit', class: 'btn btn-add-user', input_html: { style: 'height: 3.5rem' } do %>
+            Update
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <p id='survey-link'>Link to survey : <%= @training.satisfaction_survey %></p>
+    <% end %>
   </div>
   <div class="training_index_controls">
     <% if @training.sessions.count.to_f / 10 > 2 %>
@@ -382,7 +379,7 @@
 </div>
 
 <div class="modal fade" id="addAttendees" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog" role="document" style="border-radius: 20px">
+  <div class="modal-dialog modal-lg" role="document" style="border-radius: 20px">
     <%= render 'session_attendees/new_all', training: @training %>
   </div>
 </div>

@@ -9,6 +9,7 @@ class Session < ApplicationRecord
   has_many :session_forms, dependent: :destroy
   has_many :forms, through: :session_forms
   has_many :attendee_interests, dependent: :destroy
+  has_one :oblivion
   validates :title, :duration, presence: true
   accepts_nested_attributes_for :session_trainers
   default_scope { order(:date, :start_time) }
@@ -22,6 +23,12 @@ class Session < ApplicationRecord
       session.users.each do |user|
         TrainerNotificationMailer.with(user: user).trainer_session_reminder(session, user).deliver_now
       end
+    end
+  end
+
+  def final_session_attendee_list
+    self.attendees.each do |attendee|
+      # Training.joins(sessions: :session_attendees).where()
     end
   end
 end

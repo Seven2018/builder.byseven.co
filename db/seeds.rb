@@ -91,6 +91,7 @@ User.create(firstname: "Thomas", lastname: "Fraudet", email: "thomas.fraudet@bys
 User.create(firstname: "Jorick", lastname: "Roustan", email: "jorick.roustan@byseven.co", password: "tititoto", access_level: 'training manager', linkedin: "https://www.linkedin.com/in/jorickroustan/", picture: "https://media.licdn.com/dms/image/C5603AQEAGvSdhQwuCQ/profile-displayphoto-shrink_800_800/0?e=1567036800&v=beta&t=AKTcGW7VjOOFm39TsLbMF0K-5a8BSXu_GO-VEmpmw0w", description: "Business Developer")
 User.create(firstname: "Mathilde", lastname: "Meurer", email: "mathilde.meurer@byseven.co", password: "tititoto", access_level: 'training manager', linkedin: "https://www.linkedin.com/in/mathilde-meurer-80668961/", picture: "https://media.licdn.com/dms/image/C5603AQFqVl0zBCRjSw/profile-displayphoto-shrink_800_800/0?e=1567036800&v=beta&t=l5MDjEaxp2vjRA55N7W7D22lGxfFn1mDAmB58SFQuqg", description: "Business Developer")
 User.create(firstname: "Sevener", lastname: "Lambda", email: "sevener@byseven.co", password: "tititoto", access_level: "sevener", linkedin: "", picture: "https://bloody-disgusting.com/wp-content/uploads/2017/05/Screen-Shot-2017-05-01-at-11.17.09-AM.jpg", description: "Sevener Lambda")
+User.create(firstname: "Marie", lastname: "Leleu", email: "marie.leleu@byseven.co", password: "Seven2021", access_level: "super admin")
 
 puts "Generating Client Companies..."
 ClientCompany.create(

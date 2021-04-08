@@ -25,6 +25,6 @@ set :chronic_options, hours24: true
 #   runner 'SessionReminderJob.perform_async'
 # end
 
-every 5.minutes do
-  runner 'SessionReminderJob.perform_async'
-end
+# every 5.minutes do
+#   runner 'SessionReminderJob.perform_async'
+# end

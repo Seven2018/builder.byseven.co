@@ -3,20 +3,38 @@
     <%= link_to content_path(@content_module.content), class: 'return-arrow' do %>
       <i class="fas fa-arrow-left"></i>
     <% end %>
+    <div class="page-controls-buttons flex-row-between-centered">
+      <%= link_to edit_training_session_workshop_workshop_module_path(@workshop_module.workshop.session.training, @workshop_module.workshop.session, @workshop_module.workshop, @workshop_module), data: { toggle: 'tooltip' }, title: 'Edit', class: 'btn btn-edit-yellow btn-icon' do %>
+        <i class="fas fa-pen"></i>
+      <% end %>
+      <%= link_to content_content_path(@content_module.content, @content_module), method: :delete, data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete', class: 'btn btn-edit-red btn-icon' do %>
+        <i class="fas fa-trash-alt"></i>
+      <% end %>
+    </div>
   </div>
   <div class="middle-info-workshop">
-    <h3><%= @content_module.title %> - <%= @content_module.duration %> minutes</h3>
+    <h4><%= @content_module.title %> - <i class="fas fa-stopwatch fa-1x"></i> <%= @content_module.duration %> min</h4>
     <br>
-    <p><%= @content_module.instructions.html_safe %></p>
+    <p><%= @content_module.instructions %></p>
     <% if @content_module.comments && @content_module.comments != "" %>
       <p>Comments : <%= @content_module.comments %></p>
     <% end %>
-    <div class='content-logistics'><p class='logistics-label'>Logistics : </p><div><%= @content_module.logistics.html_safe %></div></div>
-    <% if @content_module.action1 %>
-      <p class='content-actions'>Action 1 (participant): <%= @content_module.action1.name %></p>
-    <% end %>
-    <% if @content_module.action2 %>
-      <p class='content-actions'>Action 2 (participant) : <%= @content_module.action2.name %></p>
-    <% end %>
+    <div class='content-logistics'>
+      <% if @content_module.logistics.present? %>
+        <p class='logistics-label'>Logistics: </p>
+        <ul><li><%= @content_module.logistics.html_safe %></li></ul>
+      <% end %>
+    </div>
+    <div class="content-actions">
+      <% actions = [@content_module.action1, @content_module.action2].compact %>
+      <% if actions.present? %>
+        <p class='logistics-label'>Actions:</p>
+        <ul>
+          <% actions.each do |action| %>
+            <li><%= action.name %></li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
   </div>
 </div>

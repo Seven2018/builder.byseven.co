@@ -1,16 +1,25 @@
 source 'https://rubygems.org'
 ruby '2.7.2'
 
-gem 'bootsnap', require: false
-gem 'cloudinary', '~> 1.9.1'
-gem 'devise', :git => "https://github.com/heartcombo/devise.git", ref: '8bb358cf80a632d3232c3f548ce7b95fd94b6eb2'
-gem 'jbuilder'
-gem 'pg', '~> 0.21'
-gem 'pg_search'
-gem 'puma'
-gem 'pundit'
 gem 'rails', '6.0.0'
+gem 'pg', '~> 0.21'
+gem 'puma'
+gem 'sassc-rails'
+gem 'webpacker'
+# new
+gem 'turbolinks', '~> 5'
+#
+gem 'jbuilder'
 gem 'redis'
+gem 'bootsnap', require: false
+# gem 'cloudinary', '~> 1.9.1'
+gem 'devise', :git => "https://github.com/heartcombo/devise.git", ref: '8bb358cf80a632d3232c3f548ce7b95fd94b6eb2'
+gem 'autoprefixer-rails'
+gem 'font-awesome-sass', '~> 5.5.0'
+gem 'simple_form'
+gem "nested_form"
+gem 'pg_search'
+gem 'pundit'
 gem 'wicked_pdf', '~> 1.1'
 gem 'wkhtmltopdf-binary'
 gem 'wkhtmltopdf-heroku', '2.12.5.0'
@@ -24,12 +33,7 @@ gem 'omniauth-google-oauth2'
 gem 'omniauth-linkedin-oauth2'
 gem "linkedin-v2"
 gem 'rest-client', '~> 2.1'
-gem 'autoprefixer-rails'
-gem 'font-awesome-sass', '~> 5.5.0'
-gem 'sassc-rails'
-gem 'simple_form'
 gem 'uglifier'
-gem 'webpacker'
 gem 'jquery-rails'
 gem 'acts_as_list'
 gem "acts_as_tree"
@@ -48,6 +52,8 @@ gem 'sucker_punch', '~> 2.0'
 gem 'sendgrid-ruby'
 gem 'whenever', require: false
 gem 'ransack'
+gem 'trix-rails', require: 'trix'
+gem 'where_exists'
 
 gem 'dotenv-rails', groups: [:development, :test]
 

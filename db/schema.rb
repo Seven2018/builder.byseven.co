@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_18_135403) do
+ActiveRecord::Schema.define(version: 2021_03_26_104307) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -193,6 +193,29 @@ ActiveRecord::Schema.define(version: 2020_06_18_135403) do
     t.integer "position"
     t.index ["invoice_item_id"], name: "index_invoice_lines_on_invoice_item_id"
     t.index ["product_id"], name: "index_invoice_lines_on_product_id"
+  end
+
+  create_table "oblivion_contents", force: :cascade do |t|
+    t.string "title"
+    t.string "content"
+    t.string "image"
+    t.bigint "theory_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["theory_id"], name: "index_oblivion_contents_on_theory_id"
+  end
+
+  create_table "oblivions", force: :cascade do |t|
+    t.string "title"
+    t.date "date"
+    t.bigint "session_id"
+    t.integer "content1"
+    t.integer "content2"
+    t.integer "content3"
+    t.integer "content4"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["session_id"], name: "index_oblivions_on_session_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -387,6 +410,8 @@ ActiveRecord::Schema.define(version: 2020_06_18_135403) do
   add_foreign_key "invoice_items", "users"
   add_foreign_key "invoice_lines", "invoice_items"
   add_foreign_key "invoice_lines", "products"
+  add_foreign_key "oblivion_contents", "theories"
+  add_foreign_key "oblivions", "sessions"
   add_foreign_key "session_attendees", "attendees"
   add_foreign_key "session_attendees", "sessions"
   add_foreign_key "session_forms", "forms"
