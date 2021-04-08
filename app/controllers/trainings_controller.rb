@@ -117,7 +117,6 @@ class TrainingsController < ApplicationController
     end
     @training.satisfaction_survey = 'https://learn.byseven.co/survey'
     if @training.save
-      Session.create(title: 'Session 1', date: @training.created_at, duration: 0, training_id: @training.id)
       redirect_to training_path(@training)
     else
       render :new
