@@ -14,7 +14,7 @@
       <div class="module-card-main">
         <div class="module-card-infos">
           <h4><%= link_to mod.title, content_content_module_path(@content, mod) %></h4>
-          <div class='module-card-instructions'><%= mod.instructions %></div>
+          <div class='module-card-instructions'><%= mod.instructions.html_safe %></div>
         </div>
         <div class='module-card-controls'>
           <p><%= mod.duration %> min</p>
