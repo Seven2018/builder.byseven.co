@@ -43,7 +43,7 @@ a {
     padding-top: 3rem;
     margin-left: 6rem;
     min-height: calc(100vh - 13rem);
-    max-width: 122rem;
+    max-width: 138rem;
     width: calc(100vw - 6rem);
   }
 }
@@ -114,7 +114,8 @@ a {
   height: 15rem;
   padding: 3rem;
   background-color: white;
-  z-index: 20;
+  z-index: 100;
+  transition: all 0.25s ease-in-out;
 
   h4 {
     font-weight: 700;
@@ -124,8 +125,8 @@ a {
   @include from-large {
     padding: 0;
     height: 9rem;
-    max-width: 116rem;
-    width: calc(100vw - 28rem);
+    max-width: 132rem;
+    width: calc(100vw - 12rem);
     left: auto;
   }
 
