@@ -24,7 +24,7 @@
   <div class="trainings-row">
     <% trainings.each do |training| %>
       <% if training.end_time.present? && training.end_time >= Date.today %>
-        <div class="training-card" id="card-index">
+        <div class="training-card" id="card-index" data-toggle='tooltip' title='<%= training.title %>'>
           <%= link_to training_path(training), class: 'stretched-link' do %>
             <div class="training-card-main">
               <div class="block-with-text">
@@ -58,7 +58,7 @@
   <div class="trainings-row">
     <% trainings.uniq.each do |training| %>
       <% if training.end_time.present? && training.end_time < Date.today %>
-        <div class="training-card" id="card-index">
+        <div class="training-card" id="card-index" data-toggle='tooltip' title='<%= training.title %>'>
           <%= link_to training_path(training), class: 'stretched-link' do %>
             <div class="training-card-main">
               <div class="block-with-text">
@@ -102,3 +102,35 @@
     <%= render 'changepassword', user: @user %>
   </div>
 </div>
+
+<script>
+  sliders = document.querySelectorAll('.trainings-row');
+  sliders.forEach((slider) => {
+    isDown = false;
+    let startX;
+    let scrollLeft;
+
+    slider.addEventListener('mousedown', (e) => {
+      isDown = true;
+      slider.classList.add('active');
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+    });
+    slider.addEventListener('mouseleave', () => {
+      isDown = false;
+      slider.classList.remove('active');
+    });
+    slider.addEventListener('mouseup', () => {
+      isDown = false;
+      slider.classList.remove('active');
+    });
+    slider.addEventListener('mousemove', (e) => {
+      if(!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 3; //scroll-fast
+      slider.scrollLeft = scrollLeft - walk;
+      console.log(walk);
+    });
+  })
+</script>

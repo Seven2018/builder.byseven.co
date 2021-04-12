@@ -36,14 +36,15 @@ a {
   min-height: calc(100vh-5rem);
   padding: 0 3rem;
   position: relative;
+  transition: all .25s ease-in-out;
 
   @include from-large {
     margin-top: 8rem;
     padding-top: 3rem;
-    margin-left: 22rem;
+    margin-left: 6rem;
     min-height: calc(100vh - 13rem);
     max-width: 122rem;
-    width: calc(100vw - 22rem);
+    width: calc(100vw - 6rem);
   }
 }
 

@@ -103,12 +103,10 @@
 }
 
 .trainings-row {
-  min-height: 22rem;
-  margin: 2rem;
+  min-height: 25rem;
   width: auto;
   display: flex;
   flex-direction: row;
-  align-items: center;
   overflow-x: auto;
   background-color: white;
   margin-right: 0;
@@ -119,10 +117,6 @@
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+/Edge */
   user-select: none; /* Standard */
-
-  a:first-of-type {
-    height: 200px;
-  }
 }
 
 .trainings-row::-webkit-scrollbar {
