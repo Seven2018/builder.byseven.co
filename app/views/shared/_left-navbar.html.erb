@@ -5,6 +5,12 @@
     <% elsif params[:controller] == 'workshops' && params[:action] == 'viewer' %>
       <%= link_to 'Exit View Mode', training_session_path(@workshop.session.training, @workshop.session), class: 'btn btn-edit-red' %>
     <% end %>
+    <div class="btn-icon left-navbar-control-open">
+      <i class="fas fa-arrow-right"></i>
+    </div>
+    <div class="btn-icon hidden left-navbar-control-close">
+      <i class="fas fa-times"></i>
+    </div>
   </div>
   <% if params[:controller] == 'sessions' && params[:action] == 'viewer' %>
     <div class="left-navbar-middle">
@@ -129,8 +135,33 @@
     </div>
   <% end %>
   <div class="left-navbar-bottom">
-    <%= link_to root_path, class: "left-navbar-logo" do %>
+    <%= link_to root_path, class: "left-navbar-logo hidden" do %>
       <%= image_tag "SEVENLOGO_SQUARE2.png" %>
+    <% end %>
+    <%= link_to root_path, class: "left-navbar-logo-small" do %>
+      <%= image_tag "SEVENLOGO_SQUARE4.png" %>
     <% end %>
   </div>
 </div>
+
+<script>
+  open = document.querySelector('.left-navbar-control-open');
+  close = document.querySelector('.left-navbar-control-close');
+  left_navbar = document.querySelector('.left-navbar');
+  logo = document.querySelector('.left-navbar-logo');
+  logo_small = document.querySelector('.left-navbar-logo-small');
+  open.addEventListener('click', (event) => {
+    left_navbar.style.width = '220px';
+    setTimeout(function(){logo.classList.toggle('hidden');}, 250);
+    setTimeout(function(){logo_small.classList.toggle('hidden');}, 250);
+    open.classList.toggle('hidden');
+    close.classList.toggle('hidden');
+  })
+  close.addEventListener('click', (event) => {
+    left_navbar.style.width = '60px';
+    logo.classList.toggle('hidden');
+    logo_small.classList.toggle('hidden');
+    open.classList.toggle('hidden');
+    close.classList.toggle('hidden');
+  })
+</script>

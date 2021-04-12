@@ -2,21 +2,49 @@
 $timeline: #115173;
 
 .training-card {
-  margin: 20px;
   width: 260px;
   height: 200px;
-  box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.2);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  overflow: hidden;
+  position: relative;
 }
 
 .training-card-main {
-  height: 100%;
-  position: relative;
+  height: 55%;
   width: 260px;
+  padding: 10px;
+  position: relative;
+  overflow: hidden;
   h4 {
-    margin-left: 10px;
-    margin-top: 10px;
+    margin: 0;
     font-size: 1.6rem !important;
+    // height: calc(100% - 20px);
+    // overflow: hidden;
+    // white-space: nowrap;
+    // text-overflow: ellipsis;
   }
+}
+
+.training-card-infos {
+  height: 45%;
+  width: 260px;
+  background-color: #FFF1D5;
+  padding: 6px 12px;
+}
+
+.completed-training-card-infos {
+  height: 45%;
+  width: 260px;
+  background-color: #C4C4C4;
+  padding: 6px 12px;
+}
+
+.training-card-infos-elements {
+  line-height: 28px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   .training-card-user {
     border: 3px white solid;
@@ -24,49 +52,22 @@ $timeline: #115173;
 
   .training-card-user-1 {
     position: absolute;
-    bottom: 1.5rem;
-    right: 2rem;
+    bottom: 0.5rem;
+    right: 1rem;
     z-index: 30;
   }
   .training-card-user-2 {
     position: absolute;
-    bottom: 1.5rem;
-    right: 4rem;
+    bottom: 0.5rem;
+    right: 3rem;
     z-index: 20;
   }
   .training-card-user-3 {
     position: absolute;
-    bottom: 1.5rem;
-    right: 6rem;
+    bottom: 0.5rem;
+    right: 5rem;
     z-index: 10;
   }
-}
-
-.training-card-infos {
-  width: 260px;
-  position: absolute;
-  background-color: #FFF1D5;
-  display: flex;
-  justify-items: flex-end;
-  margin-top: 35px;
-  padding: 12px 12px;
-  bottom: 10px;
-}
-
-.completed-training-card-infos {
-  width: 260px;
-  position: absolute;
-  background-color: #C4C4C4;
-  display: flex;
-  justify-items: flex-end;
-  margin-top: 35px;
-  padding: 12px 12px;
-  bottom: 10px;
-}
-
-.training-card-infos-elements {
-  line-height: 28px;
-  position: relative;
 }
 
 .empty-card-info {
@@ -700,7 +701,7 @@ $timeline: #115173;
   }
 }
 
-.stretched-link::after {
+.stretched-link {
     position: absolute;
     top: 0;
     right: 0;

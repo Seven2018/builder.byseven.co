@@ -61,7 +61,7 @@
               <p>Total paid : <%= intervention['Total Paid'].to_f %>€</p>
               <!-- <p>Total due : <%= total_due %>€</p> -->
               <% unless total_due == 0 %>
-                <% if training.end_time < Date.today %>
+                <% if training.end_time <= Date.today %>
                   <%= link_to invoice_form_path(training), class: 'btn btn-edit-green btn-icon', data: {toggle:'tooltip'}, title: 'Submit an invoice' do %>
                     <i class="fas fa-file-invoice-dollar"></i>
                   <% end %>

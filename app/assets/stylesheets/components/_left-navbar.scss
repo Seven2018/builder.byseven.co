@@ -5,9 +5,11 @@
   background-color: #F1F3F4;
   position: fixed;
   top: 0px;
-  width: 22rem;
+  width: 6rem;
+  transition: width 0.25s ease-in-out;
+  // width: 22rem;
   height: 100vh;
-  z-index: 1;
+  z-index: 20;
 
   text-align: left;
   padding-top: 5rem;
@@ -26,7 +28,7 @@
   top: 0px;
   width: 100vw;
   height: 5rem;
-  z-index: 2;
+  z-index: 100;
 
   text-align: left;
 
@@ -40,6 +42,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-left: .5rem;
+
+  i {
+    color: #FFC552;
+    cursor: pointer;
+  }
 }
 
 .left-navbar-middle {
@@ -110,11 +118,19 @@
   width: 10rem;
 }
 
+.left-navbar-logo-small img {
+  width: 4rem;
+  margin-bottom: 5rem;
+}
+
+
+
 .left-menu-list {
   display: flex;
   align-items: center;
   padding: 2.4rem;
   width: 22rem;
+  height: 73.2px;
 
   &:hover {
     background-color: #FDC553;
@@ -144,7 +160,7 @@
   padding: 0 !important;
 
   li {
-    padding: 0.5rem 1rem;
+    padding: 20px;
   }
 
   li:hover {
@@ -178,7 +194,7 @@
   h4 {
     font-size: 1.8rem;
     font-weight: 400;
-    margin: 0;
+    margin: 0 0 0 5px;
   }
 }
 
