@@ -9,7 +9,7 @@
           <% sessions = training.sessions %>
           <div class='training-card-infos-elements'>
             <% if sessions.count == 1 %>
-              <i class="far fa-calendar-alt"></i><%= "  On #{sessions.first.date.strftime('%d/%m/%y')}" %>
+              <i class="far fa-calendar-alt"></i><%= "  On #{sessions.first&.date&.strftime('%d/%m/%y')}" %>
             <% else %>
               <i class="far fa-calendar-alt"></i><%= "  From #{sessions.order(date: :asc).first&.date&.strftime('%d/%m/%y')} to #{sessions.order(date: :asc).last&.date&.strftime('%d/%m/%y')}" %>
             <% end %>
