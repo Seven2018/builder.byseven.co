@@ -16,6 +16,7 @@ class ContentModulesController < ApplicationController
     authorize @content_module
     @content_module.content = @content
     @content_module.position = @content.content_modules.count + 1
+    params[:content_module][:duration] = ["", "0 Mins"] if params[:content_module][:duration] == [""]
     @content_module.duration = params[:content_module][:duration][1].split(' ')[0].to_i
     @content_module.action1_id = params[:content_module][:action1_id][0].to_i
     @content_module.action2_id = params[:content_module][:action1_id][1].to_i
@@ -36,6 +37,7 @@ class ContentModulesController < ApplicationController
     authorize @content_module
     @content = @content_module.content
     @content_module.update(content_module_params)
+    params[:content_module][:duration] = ["", "0 Mins"] if params[:content_module][:duration] == [""]
     @content_module.update(duration: params[:content_module][:duration][1].split(' ')[0].to_i, action1_id: params[:content_module][:action1_id][0].to_i, action2_id: params[:content_module][:action1_id][1].to_i)
     if @content_module.save
       update_duration
