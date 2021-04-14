@@ -24,32 +24,32 @@
   <div class="trainings-row">
     <% trainings.each do |training| %>
       <% if training.end_time.present? && training.end_time >= Date.today %>
-        <div class="training-card" id="card-index">
-          <div class="training-card-main">
-            <%= link_to training_path(training), class: 'stretched-link' do %>
-              <h4 style='max-width: 18rem;'><%= training.title %></h4>
-              <div class='client-logo' style="background-image: url(<%= training.client_contact.client_company.logo %>); background-size: 5rem 5rem; background-repeat: no-repeat;"></div>
-              <div class="training-card-infos">
-                <% sessions = training.sessions %>
-                <div class='training-card-infos-elements'>
-                  <% if sessions.count == 1 %>
-                    <i class="far fa-calendar-alt"></i><%= "  On #{sessions.first.date.strftime('%d/%m/%y')}" %>
-                  <% else %>
-                    <i class="far fa-calendar-alt"></i><%= "  From #{sessions.order(date: :asc).first.date&.strftime('%d/%m/%y')} to #{sessions.order(date: :asc).last.date&.strftime('%d/%m/%y')}" %>
-                  <% end %>
-                  <br>
-                  <i class="far fa-calendar-check"></i>
-                  <%= training.sessions.count.to_s + " " + "Sessions" %>
-                </div>
+        <div class="training-card" id="card-index" data-toggle='tooltip' title='<%= training.title %>'>
+          <%= link_to training_path(training), class: 'stretched-link' do %>
+            <div class="training-card-main">
+              <div class="block-with-text">
+                <h4 toggle='tooltip' title='<%= training.title %>'><%= training.title %></h4>
               </div>
-              <% users_list = [training.owners + training.writers + training.trainers].flatten.uniq.first(3) %>
-              <% u = 1 %>
-              <% users_list.each do |user| %>
-              <img class="avatar-sm training-card-user training-card-user-<%= u %>" src="<%= user.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
-              <% u += 1 %>
-              <% end %>
-            <% end %>
-          </div>
+              <div class='client-logo' style="background-image: url(<%= training.client_contact.client_company.logo %>); background-size: 5rem 5rem; background-repeat: no-repeat;"></div>
+            </div>
+            <div class="training-card-infos">
+              <% sessions = training.sessions %>
+              <div class='training-card-infos-elements'>
+                <% if sessions.count == 1 %>
+                  <p><i class="far fa-calendar-alt"></i><%= "  On #{sessions.first&.date&.strftime('%d/%m/%y')}" %></p>
+                <% else %>
+                  <p><i class="far fa-calendar-alt"></i><%= "  From #{sessions.order(date: :asc).first&.date&.strftime('%d/%m/%y')} to #{sessions.order(date: :asc).last&.date&.strftime('%d/%m/%y')}" %></p>
+                <% end %>
+                <p><i class="far fa-calendar-check"></i><%= " " + training.sessions.count.to_s + " " + "Sessions" %></p>
+                <% users_list = [training.owners + training.writers + training.trainers].flatten.uniq.first(3) %>
+                <% u = 1 %>
+                <% users_list.each do |user| %>
+                <img class="avatar-sm training-card-user training-card-user-<%= u %>" src="<%= user.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+                <% u += 1 %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
         </div>
       <% end %>
     <% end %>
@@ -58,32 +58,32 @@
   <div class="trainings-row">
     <% trainings.uniq.each do |training| %>
       <% if training.end_time.present? && training.end_time < Date.today %>
-        <div class="training-card" id="card-index">
-          <div class="training-card-main">
-            <%= link_to training_path(training), class: 'stretched-link' do %>
-              <h4 style='max-width: 18rem;'><%= training.title %></h4>
-              <div class='client-logo' style="background-image: url(<%= training.client_contact.client_company.logo %>); background-size: 5rem 5rem; background-repeat: no-repeat;"></div>
-              <div class="completed-training-card-infos">
-                <% sessions = training.sessions %>
-                <div class='training-card-infos-elements'>
-                  <% if sessions.count == 1 %>
-                    <i class="far fa-calendar-alt"></i><%= "  On #{sessions.first.date.strftime('%d/%m/%y')}" %>
-                  <% else %>
-                    <i class="far fa-calendar-alt"></i><%= "  From #{sessions.order(date: :asc).first.date&.strftime('%d/%m/%y')} to #{sessions.order(date: :asc).last.date&.strftime('%d/%m/%y')}" %>
-                  <% end %>
-                  <br>
-                  <i class="far fa-calendar-check"></i>
-                  <%= training.sessions.count.to_s + " " + "Sessions" %>
-                </div>
+        <div class="training-card" id="card-index" data-toggle='tooltip' title='<%= training.title %>'>
+          <%= link_to training_path(training), class: 'stretched-link' do %>
+            <div class="training-card-main">
+              <div class="block-with-text">
+                <h4 toggle='tooltip' title='<%= training.title %>'><%= training.title %></h4>
               </div>
-              <% users_list = [training.owners + training.writers + training.trainers].flatten.uniq.first(3) %>
-              <% u = 1 %>
-              <% users_list.each do |user| %>
-              <img class="avatar-sm training-card-user training-card-user-<%= u %>" src="<%= user.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
-              <% u += 1 %>
-              <% end %>
-            <% end %>
-          </div>
+              <div class='client-logo' style="background-image: url(<%= training.client_contact.client_company.logo %>); background-size: 5rem 5rem; background-repeat: no-repeat;"></div>
+            </div>
+            <div class="completed-training-card-infos">
+              <% sessions = training.sessions %>
+              <div class='training-card-infos-elements'>
+                <% if sessions.count == 1 %>
+                  <p><i class="far fa-calendar-alt"></i><%= "  On #{sessions.first&.date&.strftime('%d/%m/%y')}" %></p>
+                <% else %>
+                  <p><i class="far fa-calendar-alt"></i><%= "  From #{sessions.order(date: :asc).first&.date&.strftime('%d/%m/%y')} to #{sessions.order(date: :asc).last&.date&.strftime('%d/%m/%y')}" %></p>
+                <% end %>
+                <p><i class="far fa-calendar-check"></i><%= " " + training.sessions.count.to_s + " " + "Sessions" %></p>
+                <% users_list = [training.owners + training.writers + training.trainers].flatten.uniq.first(3) %>
+                <% u = 1 %>
+                <% users_list.each do |user| %>
+                <img class="avatar-sm training-card-user training-card-user-<%= u %>" src="<%= user.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+                <% u += 1 %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
         </div>
       <% end %>
     <% end %>
@@ -102,3 +102,35 @@
     <%= render 'changepassword', user: @user %>
   </div>
 </div>
+
+<script>
+  sliders = document.querySelectorAll('.trainings-row');
+  sliders.forEach((slider) => {
+    isDown = false;
+    let startX;
+    let scrollLeft;
+
+    slider.addEventListener('mousedown', (e) => {
+      isDown = true;
+      slider.classList.add('active');
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+    });
+    slider.addEventListener('mouseleave', () => {
+      isDown = false;
+      slider.classList.remove('active');
+    });
+    slider.addEventListener('mouseup', () => {
+      isDown = false;
+      slider.classList.remove('active');
+    });
+    slider.addEventListener('mousemove', (e) => {
+      if(!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 3; //scroll-fast
+      slider.scrollLeft = scrollLeft - walk;
+      console.log(walk);
+    });
+  })
+</script>

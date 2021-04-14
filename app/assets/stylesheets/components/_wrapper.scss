@@ -36,14 +36,15 @@ a {
   min-height: calc(100vh-5rem);
   padding: 0 3rem;
   position: relative;
+  transition: all .25s ease-in-out;
 
   @include from-large {
     margin-top: 8rem;
     padding-top: 3rem;
-    margin-left: 22rem;
+    margin-left: 6rem;
     min-height: calc(100vh - 13rem);
-    max-width: 122rem;
-    width: calc(100vw - 22rem);
+    max-width: 138rem;
+    width: calc(100vw - 6rem);
   }
 }
 
@@ -103,7 +104,7 @@ a {
 #page-controls {
   position: fixed;
   top: 5rem;
-  left: 0;
+  right: 0;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -114,9 +115,9 @@ a {
   padding: 3rem;
   background-color: white;
   z-index: 100;
+  transition: all 0.25s ease-in-out;
 
   h4 {
-    font-size: 2rem;
     font-weight: 700;
   }
 
@@ -124,9 +125,10 @@ a {
   @include from-large {
     padding: 0;
     height: 9rem;
-    max-width: 116rem;
-    width: calc(100vw - 28rem);
-    left: auto;
+    margin: 0 auto 0 auto;
+    max-width: 132rem;
+    width: calc(100vw - 12rem);
+    right: auto;
   }
 
   form, input, button {

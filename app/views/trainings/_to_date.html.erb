@@ -1,17 +1,17 @@
 <% trainings_to_date = Training.joins(:sessions).where(sessions: {date: nil}).uniq + Training.where_not_exists(:sessions) %>
 <% trainings_to_date.each do |training| %>
-  <div class="training-card" id="card-index">
+  <div class="training-card" id="card-index" data-toggle='tooltip' title='<%= training.title %>'>
     <div class="training-card-main">
       <%= link_to training_path(training), class: 'stretched-link' do %>
-        <h4 style='max-width: 18rem;'><%= training.title %></h4>
+        <h4><%= training.title %></h4>
         <div class='client-logo' style="background-image: url(<%= training.client_contact.client_company.logo %>); background-size: 5rem 5rem; background-repeat: no-repeat;"></div>
         <div class="training-card-infos">
           <% sessions = training.sessions %>
           <div class='training-card-infos-elements'>
             <% if sessions.count == 1 %>
-              <i class="far fa-calendar-alt"></i><%= "  On #{sessions.first.date.strftime('%d/%m/%y')}" %>
+              <i class="far fa-calendar-alt"></i><%= "  On #{sessions.first&.date&.strftime('%d/%m/%y')}" %>
             <% else %>
-              <i class="far fa-calendar-alt"></i><%= "  From #{sessions.order(date: :asc).first.date&.strftime('%d/%m/%y')} to #{sessions.order(date: :asc).last.date&.strftime('%d/%m/%y')}" %>
+              <i class="far fa-calendar-alt"></i><%= "  From #{sessions.order(date: :asc).first&.date&.strftime('%d/%m/%y')} to #{sessions.order(date: :asc).last&.date&.strftime('%d/%m/%y')}" %>
             <% end %>
             <br>
             <i class="far fa-calendar-check"></i>

@@ -46,6 +46,10 @@
     margin: 0;
   }
 
+  h4 > a {
+    font-size: 2rem;
+  }
+
   .module-card-instructions {
     // color: gray;
     // margin: 1rem 0;
@@ -319,7 +323,7 @@
   font-size: 17px;
   }
   ul {
-    list-style-type: decimal;
+    list-style-type: disc;
     font-size: 15px;
     color: black;
     font-weight: 300;

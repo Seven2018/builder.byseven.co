@@ -8,13 +8,19 @@
   </h5>
   </div>
 <% else %>
+  <% i = 1 %>
   <% @workshop.workshop_modules.order('position ASC').each do |mod| %>
     <div class='module-card'>
       <div class="module-card-main">
         <div class="module-card-infos">
-          <h4><%= link_to mod.title, training_session_workshop_workshop_module_path(@workshop.session.training, @workshop.session, @workshop, mod) %></h4>
+          <% if i % 2 == 1 %>
+            <h4><%= link_to mod.title, training_session_workshop_workshop_module_path(@workshop.session.training, @workshop.session, @workshop, mod), style: "color:#4AC2C7;" %></h4>
+          <% else %>
+            <h4><%= link_to mod.title, training_session_workshop_workshop_module_path(@workshop.session.training, @workshop.session, @workshop, mod), style: "color:#E64259;" %></h4>
+          <% end %>
+          <% i += 1 %>
           <% if mod.instructions != ''  %>
-            <div class='module-card-instructions'><%= mod.instructions %></div>
+            <div class='module-card-instructions'><%= mod.instructions.html_safe %></div>
           <% end %>
         </div>
           <div class='module-card-controls'>
@@ -52,7 +58,7 @@
         <% if mod.logistics.present? %>
           <div class='content-logistics'>
             <p class='logistics-label'>Logistics:</p><br>
-            <ul><li><%= mod.logistics %></li></ul>
+            <ul><li><%= mod.logistics.html_safe %></li></ul>
           </div>
         <% end %>
         <% if !mod.action1.nil? && !mod.action2.nil? %>
