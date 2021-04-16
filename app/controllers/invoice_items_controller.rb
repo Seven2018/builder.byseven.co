@@ -10,7 +10,7 @@ class AccessToken
 end
 
 class InvoiceItemsController < ApplicationController
-  before_action :set_invoice_item, only: [:show, :edit, :copy, :copy_here, :transform_to_invoice, :edit_client, :credit, :marked_as_send, :marked_as_paid, :marked_as_reminded, :destroy, :upload_sevener_invoice_to_drive]
+  before_action :set_invoice_item, only: [:show, :edit, :update, :copy, :copy_here, :transform_to_invoice, :edit_client, :credit, :marked_as_send, :marked_as_paid, :marked_as_reminded, :destroy, :upload_sevener_invoice_to_drive]
 
   # Indexes with a filter option (see below)
   def index
@@ -65,7 +65,9 @@ class InvoiceItemsController < ApplicationController
     authorize @invoice_item
     @invoice_item.update(invoiceitem_params)
     if @invoice_item.save
-      @invoice_item.export_numbers_revenue
+      unless params[:invoice_item][:skip_update].present?
+        @invoice_item.export_numbers_revenue
+      end
       redirect_to invoice_item_path(@invoice_item)
     end
   end
@@ -368,39 +370,6 @@ class InvoiceItemsController < ApplicationController
     redirect_to client_company_path(@invoice_item.client_company)
   end
 
-  # Upload to GDrive
-  # def redirect_upload_to_drive
-  #   skip_authorization
-  #   client = Signet::OAuth2::Client.new(client_options)
-  #   # Allows to pass informations through the Google Auth as a complex string
-  #   client.update!(state: Base64.encode64(params[:invoice_item_id] + '|' + params[:file].tempfile))
-  #   redirect_to client.authorization_uri.to_s
-  # end
-
-  # def upload_to_drive
-  #   # @invoice_item = InvoiceItem.find(Base64.decode64(params[:state]).split('|').first)
-  #   @invoice_item = InvoiceItem.find(params[:invoice_item_id])
-  #   # file_path = Base64.decode64(params[:state]).split('|').last
-  #   file_path = params[:file].tempfile
-  #   authorize @invoice_item
-  #   require 'google/apis/drive_v3'
-
-  #   access_token = AccessToken.new 'SECRET_TOKEN'
-  #   drive_service = Google::Apis::DriveV3::DriveService.newc
-  #   # client = Signet::OAuth2::Client.new(client_options)
-  #   client = Signet::OAuth2::Client.new(client_options)
-  #   drive_service.authorization = access_token
-
-  #   # metadata = Drive::File.new(title: 'My document')
-  #   # metadata = drive.insert_file(metadata, upload_source: 'test.txt', content_type: 'text/plain')
-  #   file_metadata = {
-  #     name: 'my_file_name.pdf',
-  #     # parents: [folder_id],
-  #     description: 'This is my file'
-  #   }
-  #   file = drive_service.create_file(file_metadata, upload_source: file_path, fields: 'id')
-  # end
-
   private
 
   # Filter for index method
@@ -433,7 +402,7 @@ class InvoiceItemsController < ApplicationController
   end
 
   def invoiceitem_params
-    params.require(:invoice_item).permit(:status, :uuid)
+    params.require(:invoice_item).permit(:status, :uuid, :object)
   end
 
   def self.to_csv

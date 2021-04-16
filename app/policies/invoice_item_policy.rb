@@ -17,6 +17,10 @@ class InvoiceItemPolicy < ApplicationPolicy
     check_access_seven
   end
 
+  def update?
+    check_access_seven
+  end
+
   def copy?
     check_access_seven
   end

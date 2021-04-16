@@ -19,6 +19,7 @@
       </div>
       <%= f.input :description, :input_html => {:rows => 5, style: 'width:100%;'} %>
       <%= f.input :logo, label: 'Logo URL' %>
+      <%= f.input :siret, input_html: { style: 'width: 20rem;'} %>
       <p class="center-button"> <%= f.button :submit, 'Save', class: 'btn btn-edit-yellow' %> </p>
     <% end %>
   </div>

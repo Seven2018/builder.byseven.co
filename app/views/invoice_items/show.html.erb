@@ -109,6 +109,20 @@
           </div>
         <% end %>
       </div>
+      <div class="invoice-object">
+        <% if @invoice_item.object.present? %>
+          <p id='object-link'>Objet: <%= @invoice_item.object %></p>
+        <% end %>
+        <%= simple_form_for @invoice_item, html: { class: "hidden", id: 'object-form' } do |f| %>
+          <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+            <%= f.input :object, placeholder: 'Objet', value: @invoice_item.object, label: false, input_html: { style: 'width: 200px;'} %>
+            <%= f.hidden_field :skip_update, value: true %>
+            <%= button_tag type: 'submit', class: 'btn btn-add-user', input_html: { style: 'height: 3.5rem' } do %>
+              Update
+            <% end %>
+          </div>
+        <% end %>
+      </div>
       <div class="invoice-desc-line" id='invoice-desc-header'>
         <p>Désignation</p>
         <div>
@@ -217,6 +231,16 @@
     button_close.addEventListener('click', (event) => {
       library.style.height = '0px';
     })
+  </script>
+  <script>
+    window.onload = function() {
+      object = document.getElementById('object-link');
+      form = document.getElementById('object-form');
+      object.addEventListener('click', (event) => {
+        object.classList.toggle('hidden');
+        form.classList.toggle('hidden');
+      })
+    }
   </script>
 
   <!-- MODALS -->
