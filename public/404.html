@@ -4,64 +4,148 @@
   <title>The page you were looking for doesn't exist (404)</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
-  .rails-default-error-page {
-    background-color: #EFEFEF;
-    color: #2E2F30;
-    text-align: center;
-    font-family: arial, sans-serif;
-    margin: 0;
+    @import url(https://fonts.googleapis.com/css?family=Montserrat);
+@import url(https://fonts.googleapis.com/css?family=Lato:300);
+* {
+  font-family: "Lato";
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+body, html {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #F5F5F5;
+  overflow: hidden;
+}
+.inline-block {
+  display: inline-block;
+}
+.relative {
+  position: relative;
+}
+p {
+  position: relative;
+  font-size: 24px;
+  margin-top: -40px;
+  z-index: 1000;
+}
+.error {
+  width: 500px;
+  text-align: center;
+  display: inline-block;
+  transform: scale(0.8);
+}
+#grey, #yellow {
+  font-family: "Montserrat";
+  font-size: 260px;
+  display: inline-block;
+  margin: 0;
+  vertical-align: top;
+  margin-top: -40px;
+}
+#grey {
+  color: #CCC;
+}
+#yellow {
+  color: #FFCC00;
+}
+#pfantome {
+  width: 190px;
+  height: 230px;
+}
+.fantome {
+  height: 230px;
+  width: 190px;
+  background-color: #CC3300;
+  margin: auto;
+  border-radius: 95px 95px 0px 0px;
+-moz-border-radius: 95px 95px 0px 0px;
+-webkit-border-radius: 95px 95px 0px 0px;
+  padding-top: 80px;
+  text-align: center;
+  font-size: 0;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.eye {
+  height: 30px;
+  width: 30px;
+  border-radius: 15px;
+  background-color: white;
+  display: inline-block;
+  margin: 0 5px;
+}
+#eyes {
+  margin-bottom: 109px;
+}
+.pico {
+  height: 38px;
+  width: 38px;
+  background-color: #F5F5F5;
+  display: inline-block;
+  transform-origin: center;
+  transform: rotate(45deg);
+}
+#directional {
+  display: inline-block;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+#directional .touche {
+  border-radius: 4px;
+  background-color: #eee;
+  padding: 4px;
+  margin: 2px;
+  color: #bdbdbd;
+  cursor: pointer;
+  transition: all ease 0.2s;
+}
+@media screen and (max-width: 975px) {
+  #directional {
+    transform: scale(1.4) translateY(-15px) translateX(15px);
   }
-
-  .rails-default-error-page div.dialog {
-    width: 95%;
-    max-width: 33em;
-    margin: 4em auto 0;
-  }
-
-  .rails-default-error-page div.dialog > div {
-    border: 1px solid #CCC;
-    border-right-color: #999;
-    border-left-color: #999;
-    border-bottom-color: #BBB;
-    border-top: #B00100 solid 4px;
-    border-top-left-radius: 9px;
-    border-top-right-radius: 9px;
-    background-color: white;
-    padding: 7px 12% 0;
-    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
-  }
-
-  .rails-default-error-page h1 {
-    font-size: 100%;
-    color: #730E15;
-    line-height: 1.5em;
-  }
-
-  .rails-default-error-page div.dialog > p {
-    margin: 0 0 1em;
-    padding: 1em;
-    background-color: #F7F7F7;
-    border: 1px solid #CCC;
-    border-right-color: #999;
-    border-left-color: #999;
-    border-bottom-color: #999;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    border-top-color: #DADADA;
-    color: #666;
-    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
-  }
-  </style>
+}
+</style>
 </head>
 
 <body class="rails-default-error-page">
   <!-- This file lives in public/404.html -->
-  <div class="dialog">
-    <div>
-      <h1>The page you were looking for doesn't exist.</h1>
-      <p>You may have mistyped the address or the page may have moved.</p>
+  <div class="error">
+  <p id="grey">4</p>
+  <div id="pfantome" class="inline-block relative">
+    <div class="fantome">
+      <div id="eyes">
+        <div class="eye">
+        </div>
+        <div class="eye">
+        </div>
+      </div>
+      <div id="picos">
+        <div class="pico">
+        </div>
+        <div class="pico">
+        </div>
+        <div class="pico">
+        </div>
+        <div class="pico">
+        </div>
+        <div class="pico">
+        </div>
+      </div>
     </div>
-    <p>If you are the application owner check the logs for more information.</p>
   </div>
+  <p id="yellow">4</p>
+</div>
+<p id="click">Ooops, Erreur 404 !</p>
 </body>
 </html>

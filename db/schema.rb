@@ -219,12 +219,7 @@ ActiveRecord::Schema.define(version: 2021_04_08_090516) do
 
   create_table "oblivions", force: :cascade do |t|
     t.string "title"
-    t.date "date"
     t.bigint "session_id"
-    t.integer "content1"
-    t.integer "content2"
-    t.integer "content3"
-    t.integer "content4"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["session_id"], name: "index_oblivions_on_session_id"
