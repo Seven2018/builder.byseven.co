@@ -65,7 +65,7 @@ class Training < ApplicationRecord
   end
 
   def trainers
-    SessionTrainer.where(session_id: [self.sessions.ids]).map{|x| x.user}.uniq
+    SessionTrainer.where(session_id: [self.sessions.ids]).includes([:user]).map{|x| x.user}.uniq
   end
 
   def attendees
