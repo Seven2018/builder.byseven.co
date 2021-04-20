@@ -54,6 +54,7 @@ gem 'whenever', require: false
 gem 'ransack'
 gem 'trix-rails', require: 'trix'
 gem 'where_exists'
+gem 'bullet', group: 'development'
 
 gem 'dotenv-rails', groups: [:development, :test]
 

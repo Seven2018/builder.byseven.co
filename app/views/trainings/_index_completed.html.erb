@@ -10,7 +10,12 @@
             <% if sessions.count == 1 %>
               <i class="far fa-calendar-alt"></i><%= "  On #{sessions.first&.date&.strftime('%d/%m/%y')}" %>
             <% else %>
-              <i class="far fa-calendar-alt"></i><%= "  From #{sessions.order(date: :asc).first&.date&.strftime('%d/%m/%y')} to #{sessions.order(date: :asc).last&.date&.strftime('%d/%m/%y')}" %>
+              <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+                <i class="far fa-calendar-alt"></i><%= "  From #{sessions.order(date: :asc).first&.date&.strftime('%d/%m/%y')} to #{sessions.order(date: :asc).last&.date&.strftime('%d/%m/%y')}" %>
+              <% else %>
+                <% trainer_sessions = Session.joins(:session_trainers).where(training_id: training.id, session_trainers: {user_id: current_user.id}).order(date: :asc) %>
+                <i class="far fa-calendar-alt"></i><%= "  From #{trainer_sessions.first&.date&.strftime('%d/%m/%y')} to #{trainer_sessions.last&.date&.strftime('%d/%m/%y')}" %>
+              <% end %>
             <% end %>
             <br>
             <i class="far fa-calendar-check"></i>

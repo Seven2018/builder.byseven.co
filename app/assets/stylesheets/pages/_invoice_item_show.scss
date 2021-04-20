@@ -50,6 +50,14 @@
     border-bottom: 2px solid black;
 }
 
+.invoice-object {
+  margin: 0 0 3rem 3rem;
+}
+
+#invoice_item_object {
+  padding: 0 !important;
+}
+
 .invoice-desc-line, .invoice-desc-line-chapter, .invoice-desc-line > div {
   display: flex;
   justify-content: space-between;

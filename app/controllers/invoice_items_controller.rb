@@ -10,7 +10,7 @@ class AccessToken
 end
 
 class InvoiceItemsController < ApplicationController
-  before_action :set_invoice_item, only: [:show, :edit, :copy, :copy_here, :transform_to_invoice, :edit_client, :credit, :marked_as_send, :marked_as_paid, :marked_as_reminded, :destroy, :upload_sevener_invoice_to_drive]
+  before_action :set_invoice_item, only: [:show, :edit, :update, :copy, :copy_here, :transform_to_invoice, :edit_client, :credit, :marked_as_send, :marked_as_paid, :marked_as_cancelled, :destroy, :upload_sevener_invoice_to_drive]
 
   # Indexes with a filter option (see below)
   def index
@@ -65,7 +65,9 @@ class InvoiceItemsController < ApplicationController
     authorize @invoice_item
     @invoice_item.update(invoiceitem_params)
     if @invoice_item.save
-      @invoice_item.export_numbers_revenue
+      unless params[:invoice_item][:skip_update].present?
+        @invoice_item.export_numbers_revenue
+      end
       redirect_to invoice_item_path(@invoice_item)
     end
   end
@@ -82,15 +84,22 @@ class InvoiceItemsController < ApplicationController
     @client_company = ClientCompany.find(params[:client_company_id])
     @invoice = InvoiceItem.new(training_id: params[:training_id].to_i, client_company_id: params[:client_company_id].to_i, type: params[:type])
     authorize @invoice
-    invoices = InvoiceItem.where(type: 'Invoice')
-    estimates = InvoiceItem.where(type: 'Estimate')
     # attributes a invoice number to the InvoiceItem
     if params[:type] == 'Invoice'
-      invoices.count != 0 ? (@invoice.uuid = "FA#{Date.today.strftime('%Y')}" + (invoices.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')) : (@invoice.uuid = "FA#{Date.today.strftime('%Y')}00001")
+      begin
+        @invoice.uuid = "FA#{Date.today.strftime('%Y')}" + (invoices.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')
+      rescue
+        @invoice.uuid = "FA#{Date.today.strftime('%Y')}00001"
+      end
     elsif params[:type] == 'Estimate'
-      estimates.count != 0 ? (@invoice.uuid = "DE#{Date.today.strftime('%Y')}" + (estimates.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')) : (@invoice.uuid = "DE#{Date.today.strftime('%Y')}00001")
+      begin
+        @invoice.uuid = "DE#{Date.today.strftime('%Y')}" + (estimates.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')
+      rescue
+        @invoice.uuid = "DE#{Date.today.strftime('%Y')}00001"
+      end
     end
     @invoice.status = 'Pending'
+    @invoice.object = @training.client_company.name + ' - ' + @training.title
     # Fills the created InvoiceItem with InvoiceLines, according Training data
     if @training.client_contact.client_company.client_company_type == 'Company'
       product = Product.find(2)
@@ -98,15 +107,15 @@ class InvoiceItemsController < ApplicationController
       @training.sessions.each do |session|
         session.duration < 4 ? quantity += 0.5 * session.session_trainers.count : quantity += 1 * session.session_trainers.count
       end
-      InvoiceLine.create(invoice_item: @invoice, description: @training.title, quantity: quantity, net_amount: product.price, tax_amount: product.tax, product_id: product.id, position: 1)
+      # InvoiceLine.create(invoice_item: @invoice, description: @training.title, quantity: quantity, net_amount: product.price, tax_amount: product.tax, product_id: product.id, position: 1)
     else
       product = Product.find(1)
       quantity = 0
       @training.sessions.each do |session|
       quantity += session.duration
       end
-      InvoiceLine.create(invoice_item: @invoice, description: @training.title, quantity: quantity, net_amount: product.price, tax_amount: product.tax, product_id: product.id, position: 1)
     end
+    InvoiceLine.create(invoice_item: @invoice, description: "Animation", quantity: quantity, net_amount: product.price, tax_amount: product.tax, product_id: product.id, position: 1)
     @invoice.update_price
     if @invoice.save
       @invoice.export_numbers_revenue if @invoice.type == 'Invoice'
@@ -122,18 +131,25 @@ class InvoiceItemsController < ApplicationController
     @client_company = ClientCompany.find(params[:client_company_id])
     @invoice = InvoiceItem.new(training_id: @training.id, client_company_id: @client_company.id, type: params[:type])
     skip_authorization
-    invoices = InvoiceItem.where(type: 'Invoice')
-    estimates = InvoiceItem.where(type: 'Estimate')
+    @invoice.object = @training.client_company.name + ' - ' + @training.title
     # attributes a invoice number to the InvoiceItem
     if params[:type] == 'Invoice'
-      invoices.count != 0 ? (@invoice.uuid = "FA#{Date.today.strftime('%Y')}" + (invoices.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')) : (@invoice.uuid = "FA#{Date.today.strftime('%Y')}00001")
+      begin
+        @invoice.uuid = "FA#{Date.today.strftime('%Y')}" + (invoices.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')
+      rescue
+        @invoice.uuid = "FA#{Date.today.strftime('%Y')}00001"
+      end
     elsif params[:type] == 'Estimate'
-      estimates.count != 0 ? (@invoice.uuid = "DE#{Date.today.strftime('%Y')}" + (estimates.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')) : (@invoice.uuid = "DE#{Date.today.strftime('%Y')}00001")
+      begin
+        @invoice.uuid = "DE#{Date.today.strftime('%Y')}" + (estimates.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')
+      rescue
+        @invoice.uuid = "DE#{Date.today.strftime('%Y')}00001"
+      end
     end
     @invoice.status = 'Pending'
     # Fills the created InvoiceItem with InvoiceLines, according Training data
     @training.client_contact.client_company.client_company_type == 'Company' ? product = Product.find(2) : product = Product.find(1)
-    line = InvoiceLine.new(invoice_item: @invoice, description: @training.client_company.name + ' - ' + @training.title, quantity: airtable_training['Unit Number'], net_amount: airtable_training['Unit Price'], tax_amount: product.tax, product_id: product.id, position: 1)
+    line = InvoiceLine.new(invoice_item: @invoice, description: "Animation", quantity: airtable_training['Unit Number'], net_amount: airtable_training['Unit Price'], tax_amount: product.tax, product_id: product.id, position: 1)
     comments = "<br>Détail des séances (date, horaires, intervenant(s)) :<br><br>"
     @training.sessions.each do |session|
       lunch = session.workshops.find_by(title: 'Pause Déjeuner')
@@ -147,7 +163,7 @@ class InvoiceItemsController < ApplicationController
     end
     line.comments = comments
     line.save
-    if airtable_training['Preparation'].present?
+    if airtable_training['Preparation'].present? && airtable_training['Preparation'] != 0
       preparation = Product.find(3)
       InvoiceLine.create(invoice_item: @invoice, description: 'Préparation formation', quantity: 1, net_amount: airtable_training['Preparation'], tax_amount: preparation.tax, product_id: preparation.id, position: 2)
     end
@@ -326,6 +342,7 @@ class InvoiceItemsController < ApplicationController
         new_invoice_line.update(invoice_item_id: credit.id)
         new_invoice_line.update(net_amount: -(line.net_amount)) if line.net_amount.present?
       end
+      credit.update(status = "Credit") if credit.total_amount < 0
       redirect_to invoice_item_path(credit)
     else
       raise
@@ -339,26 +356,31 @@ class InvoiceItemsController < ApplicationController
   # Marks an InvoiceItem as send
   def marked_as_send
     authorize @invoice_item
-    index_filtered
-    @invoice_item.update(sending_date: params[:edit_sending][:sending_date])
+    @invoice_item.update(sending_date: params[:edit_sending][:sending_date], status: 'Send')
     redirect_back(fallback_location: invoice_item_path(@invoice_item))
   end
 
   # Marks an InvoiceItem as paid
   def marked_as_paid
     authorize @invoice_item
-    index_filtered
-    @invoice_item.update(payment_date: params[:edit_payment][:payment_date])
+    @invoice_item.update(payment_date: params[:edit_payment][:payment_date], status: 'Paid')
     @invoice_item.export_numbers_revenue if @invoice_item.type = 'Invoice'
-    redirect_back(fallback_location: invoice_item_path(@invoice_item, page: 1))
+    UpdateAirtableJob.perform_async(@invoice_item.training)
+    redirect_back(fallback_location: invoice_item_path(@invoice_item))
   end
 
   # Marks an InvoiceItem as reminded
   def marked_as_reminded
     authorize @invoice_item
-    index_filtered
     @invoice_item.update(dunning_date: params[:edit_payment][:dunning_date])
-    redirect_back(fallback_location: invoice_item_path(@invoice_item, page: 1))
+    redirect_back(fallback_location: invoice_item_path(@invoice_item))
+  end
+
+  #Marks an InvoiceItem as cancelled
+  def marked_as_cancelled
+    authorize @invoice_item
+    @invoice_item.update(status: "Cancelled")
+    redirect_back(fallback_location: invoice_item_path(@invoice_item))
   end
 
   # Destroys an InvoiceItem
@@ -367,39 +389,6 @@ class InvoiceItemsController < ApplicationController
     @invoice_item.destroy
     redirect_to client_company_path(@invoice_item.client_company)
   end
-
-  # Upload to GDrive
-  # def redirect_upload_to_drive
-  #   skip_authorization
-  #   client = Signet::OAuth2::Client.new(client_options)
-  #   # Allows to pass informations through the Google Auth as a complex string
-  #   client.update!(state: Base64.encode64(params[:invoice_item_id] + '|' + params[:file].tempfile))
-  #   redirect_to client.authorization_uri.to_s
-  # end
-
-  # def upload_to_drive
-  #   # @invoice_item = InvoiceItem.find(Base64.decode64(params[:state]).split('|').first)
-  #   @invoice_item = InvoiceItem.find(params[:invoice_item_id])
-  #   # file_path = Base64.decode64(params[:state]).split('|').last
-  #   file_path = params[:file].tempfile
-  #   authorize @invoice_item
-  #   require 'google/apis/drive_v3'
-
-  #   access_token = AccessToken.new 'SECRET_TOKEN'
-  #   drive_service = Google::Apis::DriveV3::DriveService.newc
-  #   # client = Signet::OAuth2::Client.new(client_options)
-  #   client = Signet::OAuth2::Client.new(client_options)
-  #   drive_service.authorization = access_token
-
-  #   # metadata = Drive::File.new(title: 'My document')
-  #   # metadata = drive.insert_file(metadata, upload_source: 'test.txt', content_type: 'text/plain')
-  #   file_metadata = {
-  #     name: 'my_file_name.pdf',
-  #     # parents: [folder_id],
-  #     description: 'This is my file'
-  #   }
-  #   file = drive_service.create_file(file_metadata, upload_source: file_path, fields: 'id')
-  # end
 
   private
 
@@ -433,7 +422,7 @@ class InvoiceItemsController < ApplicationController
   end
 
   def invoiceitem_params
-    params.require(:invoice_item).permit(:status, :uuid)
+    params.require(:invoice_item).permit(:status, :uuid, :object)
   end
 
   def self.to_csv
