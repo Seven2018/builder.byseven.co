@@ -61,7 +61,7 @@ class InvoiceItemPolicy < ApplicationPolicy
     check_access_seven
   end
 
-  def marked_as_reminded?
+  def marked_as_cancelled?
     check_access_seven
   end
 

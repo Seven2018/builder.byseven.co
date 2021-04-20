@@ -10,7 +10,7 @@ class AccessToken
 end
 
 class InvoiceItemsController < ApplicationController
-  before_action :set_invoice_item, only: [:show, :edit, :update, :copy, :copy_here, :transform_to_invoice, :edit_client, :credit, :marked_as_send, :marked_as_paid, :marked_as_reminded, :destroy, :upload_sevener_invoice_to_drive]
+  before_action :set_invoice_item, only: [:show, :edit, :update, :copy, :copy_here, :transform_to_invoice, :edit_client, :credit, :marked_as_send, :marked_as_paid, :marked_as_cancelled, :destroy, :upload_sevener_invoice_to_drive]
 
   # Indexes with a filter option (see below)
   def index
@@ -163,7 +163,7 @@ class InvoiceItemsController < ApplicationController
     end
     line.comments = comments
     line.save
-    if airtable_training['Preparation'].present?
+    if airtable_training['Preparation'].present? && airtable_training['Preparation'] != 0
       preparation = Product.find(3)
       InvoiceLine.create(invoice_item: @invoice, description: 'Préparation formation', quantity: 1, net_amount: airtable_training['Preparation'], tax_amount: preparation.tax, product_id: preparation.id, position: 2)
     end
@@ -342,6 +342,7 @@ class InvoiceItemsController < ApplicationController
         new_invoice_line.update(invoice_item_id: credit.id)
         new_invoice_line.update(net_amount: -(line.net_amount)) if line.net_amount.present?
       end
+      credit.update(status = "Credit") if credit.total_amount < 0
       redirect_to invoice_item_path(credit)
     else
       raise
@@ -355,26 +356,31 @@ class InvoiceItemsController < ApplicationController
   # Marks an InvoiceItem as send
   def marked_as_send
     authorize @invoice_item
-    index_filtered
-    @invoice_item.update(sending_date: params[:edit_sending][:sending_date])
+    @invoice_item.update(sending_date: params[:edit_sending][:sending_date], status: 'Send')
     redirect_back(fallback_location: invoice_item_path(@invoice_item))
   end
 
   # Marks an InvoiceItem as paid
   def marked_as_paid
     authorize @invoice_item
-    index_filtered
-    @invoice_item.update(payment_date: params[:edit_payment][:payment_date])
+    @invoice_item.update(payment_date: params[:edit_payment][:payment_date], status: 'Paid')
     @invoice_item.export_numbers_revenue if @invoice_item.type = 'Invoice'
-    redirect_back(fallback_location: invoice_item_path(@invoice_item, page: 1))
+    UpdateAirtableJob.perform_async(@invoice_item.training)
+    redirect_back(fallback_location: invoice_item_path(@invoice_item))
   end
 
   # Marks an InvoiceItem as reminded
   def marked_as_reminded
     authorize @invoice_item
-    index_filtered
     @invoice_item.update(dunning_date: params[:edit_payment][:dunning_date])
-    redirect_back(fallback_location: invoice_item_path(@invoice_item, page: 1))
+    redirect_back(fallback_location: invoice_item_path(@invoice_item))
+  end
+
+  #Marks an InvoiceItem as cancelled
+  def marked_as_cancelled
+    authorize @invoice_item
+    @invoice_item.update(status: "Cancelled")
+    redirect_back(fallback_location: invoice_item_path(@invoice_item))
   end
 
   # Destroys an InvoiceItem

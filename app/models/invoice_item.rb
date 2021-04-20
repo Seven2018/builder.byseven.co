@@ -103,6 +103,17 @@ class InvoiceItem < ApplicationRecord
       else
         invoice['Paid'] = false
       end
+      if self.status == "Cancelled"
+        invoice['Type'] = 'Cancelled'
+      elsif self.status == "Credit"
+        invoice['Type'] = 'Credit'
+      elsif self.products.include?(Product.find(7))
+        invoice['Type'] = 'Home'
+      elsif self.products.include?(Product.find(8))
+        invoice['Type'] = 'Deposit (Home)'
+      else
+        invoice['Type'] = 'Training'
+      end
       self.training.export_airtable if training.present?
       invoice.save
     rescue
