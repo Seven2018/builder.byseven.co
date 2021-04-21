@@ -86,17 +86,9 @@ class InvoiceItemsController < ApplicationController
     authorize @invoice
     # attributes a invoice number to the InvoiceItem
     if params[:type] == 'Invoice'
-      begin
-        @invoice.uuid = "FA#{Date.today.strftime('%Y')}" + (invoices.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')
-      rescue
-        @invoice.uuid = "FA#{Date.today.strftime('%Y')}00001"
-      end
+      invoices.count != 0 ? (@invoice.uuid = "FA#{Date.today.strftime('%Y')}" + (invoices.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')) : (@invoice.uuid = "FA#{Date.today.strftime('%Y')}00001")
     elsif params[:type] == 'Estimate'
-      begin
-        @invoice.uuid = "DE#{Date.today.strftime('%Y')}" + (estimates.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')
-      rescue
-        @invoice.uuid = "DE#{Date.today.strftime('%Y')}00001"
-      end
+      estimates.count != 0 ? (@invoice.uuid = "DE#{Date.today.strftime('%Y')}" + (estimates.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')) : (@invoice.uuid = "DE#{Date.today.strftime('%Y')}00001")
     end
     @invoice.status = 'Pending'
     @invoice.object = @training.client_company.name + ' - ' + @training.title
@@ -134,17 +126,9 @@ class InvoiceItemsController < ApplicationController
     @invoice.object = @training.client_company.name + ' - ' + @training.title
     # attributes a invoice number to the InvoiceItem
     if params[:type] == 'Invoice'
-      begin
-        @invoice.uuid = "FA#{Date.today.strftime('%Y')}" + (invoices.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')
-      rescue
-        @invoice.uuid = "FA#{Date.today.strftime('%Y')}00001"
-      end
+      invoices.count != 0 ? (@invoice.uuid = "FA#{Date.today.strftime('%Y')}" + (invoices.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')) : (@invoice.uuid = "FA#{Date.today.strftime('%Y')}00001")
     elsif params[:type] == 'Estimate'
-      begin
-        @invoice.uuid = "DE#{Date.today.strftime('%Y')}" + (estimates.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')
-      rescue
-        @invoice.uuid = "DE#{Date.today.strftime('%Y')}00001"
-      end
+      estimates.count != 0 ? (@invoice.uuid = "DE#{Date.today.strftime('%Y')}" + (estimates.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')) : (@invoice.uuid = "DE#{Date.today.strftime('%Y')}00001")
     end
     @invoice.status = 'Pending'
     # Fills the created InvoiceItem with InvoiceLines, according Training data
