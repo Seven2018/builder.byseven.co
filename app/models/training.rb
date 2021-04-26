@@ -65,7 +65,7 @@ class Training < ApplicationRecord
   end
 
   def trainers
-    SessionTrainer.where(session_id: [self.sessions.ids]).map{|x| x.user}.uniq
+    SessionTrainer.where(session_id: [self.sessions.ids]).includes([:user]).map{|x| x.user}.uniq
   end
 
   def attendees
@@ -81,10 +81,19 @@ class Training < ApplicationRecord
       existing_card = OverviewTraining.all.select{|x| x['Reference SEVEN'] == self.refid}&.first
       details = "Détail des sessions (date, horaires, intervenants):\n\n"
       seven_invoices = "Factures SEVEN :\n"
+      n = 0
       OverviewNumbersRevenue.all.select{|x| x['Training_id'] == self.id}.sort_by{|x| x['Invoice_id']}.each do |invoice|
         builder_invoice = InvoiceItem.find(invoice['Invoice_id'])
-        invoice['Paid'] == true ? seven_invoices += "[x] #{builder_invoice.uuid} \n" : seven_invoices += "[ ] #{builder_invoice.uuid} \n"
+        if invoice['Type'] == "Training"
+          if invoice['Paid'] == true
+            seven_invoices += "[x] #{builder_invoice.uuid} \n"
+            n += 1
+          else
+            seven_invoices += "[ ] #{builder_invoice.uuid} \n"
+          end
+        end
       end
+      existing_card['Status'] = "11. Terminée" if n >= self.invoice_items.where.not(payment_date: nil).count
       self.sessions.each do |session|
         if session.date.present?
           details += "- #{session.date.strftime('%d/%m/%Y')} de #{session.start_time.strftime('%Hh%M')} à #{session.end_time.strftime('%Hh%M')}"

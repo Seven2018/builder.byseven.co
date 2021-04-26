@@ -31,7 +31,7 @@
       <% unless mod.action2.nil? %>
         <p id='action-pdf'>Action: <%= mod.action2.name %></p>
       <% end %>
-      <% unless mod.comments.empty? %>
+      <% if mod.comments.present? %>
         <p id='comments-pdf'>Commentaires: <%= mod.comments %></p>
       <% end %>
     </div>

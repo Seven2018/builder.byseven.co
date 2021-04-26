@@ -41,7 +41,8 @@ class TrainingsController < ApplicationController
       end
     # Index for Sevener Users, with limited visibility
     else
-      @trainings = Training.joins(sessions: :users).where("users.email LIKE ?", "#{current_user.email}").uniq.select{|x| x.end_time.present? && x.end_time >= Date.today}.sort_by{|y| y.next_session}
+      # @trainings = Training.joins(sessions: :users).where("users.email LIKE ?", "#{current_user.email}").uniq.select{|x| x.end_time.present? && x.end_time >= Date.today}.sort_by{|y| y.next_session}
+      @trainings = Training.joins(sessions: :users).where(users: {id: current_user.id}).uniq.select{|x| Session.joins(:session_trainers).where(training_id: x.id, session_trainers: {user_id: current_user.id}).order(date: :asc).last.date >= Date.today}.sort_by{|y| y.next_session}
       @trainings_count = @trainings.count
     end
     skip_authorization
@@ -60,7 +61,7 @@ class TrainingsController < ApplicationController
       end
     # Index for Sevener Users, with limited visibility
     else
-      @trainings = Training.joins(sessions: :users).where("users.email LIKE ?", "#{current_user.email}").uniq.select{|x| x.next_session.present?}.sort_by{|y| y.next_session}
+      @trainings = Training.joins(sessions: :users).where(users: {id: current_user.id}).uniq.select{|x| Session.joins(:session_trainers).where(training_id: x.id, session_trainers: {user_id: current_user.id}).order(date: :asc).last.date < Date.today}.sort_by{|y| y.end_time}.reverse
     end
     skip_authorization
     render partial: "index_completed"

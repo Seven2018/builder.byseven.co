@@ -70,15 +70,15 @@
       <h3 class="training-update-text">Search</h3>
       <%= render 'search', trainings: @trainings %>
     <% else %>
-      <div class="trainings-list">
-        <h3 class="training-update-text">Upcoming</h3>
-        <div class="trainings-row">
-          <%= render_async index_upcoming_path(user: params[:user]) %>
-        </div>
-        <h3 class="training-update-text">Completed</h3>
-        <div class="trainings-row">
-          <%= render_async index_completed_path(user: params[:user])%>
-        </div>
+      <h3 class="training-update-text">Upcoming</h3>
+      <div class="trainings-row">
+        <%= render_async index_upcoming_path(user: params[:user]) %>
+      </div>
+      <h3 class="training-update-text">Completed</h3>
+      <div class="trainings-row">
+        <%= render_async index_completed_path(user: params[:user])%>
+      </div>
+      <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
         <h3 class="training-update-text">To Schedule</h3>
         <div class="trainings-row">
           <%= render 'to_date', trainings: @trainings %>
@@ -87,7 +87,7 @@
         <div class="trainings-row">
           <%= render 'to_staff', trainings: @trainings %>
         </div>
-      </div>
+      <% end %>
     <% end %>
   </div>
 </div>

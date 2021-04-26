@@ -39,7 +39,7 @@
   }
 
   .invoice-card-link {
-    width: 20%;
+    width: 15%;
   }
 }
 
@@ -54,6 +54,43 @@
     width: 15rem;
     white-space: nowrap;
     text-overflow: ellipsis;
+  }
+}
+
+.invoice-list-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .btn {
+    margin-left: 5px;
+  }
+}
+
+.item-status {
+  height: 45.7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  i {
+    font-size: 2rem;
+  }
+
+  .fa-check-circle {
+    color: #00FF00;
+  }
+
+  .fa-ellipsis-h {
+    color: #FFA500;
+  }
+
+  .fa-times-circle {
+    color: #FF0000;
+  }
+
+  .fa-exclamation-triangle {
+    color: #FA8072;
   }
 }
 

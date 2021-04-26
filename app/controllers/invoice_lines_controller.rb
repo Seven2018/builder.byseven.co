@@ -14,7 +14,7 @@ class InvoiceLinesController < ApplicationController
       @invoiceline = InvoiceLine.new(invoice_item_id: @invoice_item.id, description: 'Commentaires', position: @invoice_item.invoice_lines.count + 1)
     end
     authorize @invoiceline
-    @invoice_line.net_amount = 0 unless @invoice_line.net_amount.present?
+    @invoiceline.net_amount = 0 unless @invoiceline.net_amount.present?
     if @invoiceline.save
       @invoice_item.export_numbers_revenue
       redirect_to invoice_item_path(@invoice_item)
