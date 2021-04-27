@@ -69,7 +69,7 @@ Rails.application.routes.draw do
   get 'invoice_items/:id/export', to: 'invoice_items#export', as: 'invoice_item_export'
   get 'invoice_items/:id/marked_as_send', to: 'invoice_items#marked_as_send', as: 'marked_as_send_invoice_item'
   get 'invoice_items/:id/marked_as_paid', to: 'invoice_items#marked_as_paid', as: 'marked_as_paid_invoice_item'
-  get 'invoice_items/:id/marked_as_reminded', to: 'invoice_items#marked_as_reminded', as: 'marked_as_reminded_invoice_item'
+  get 'invoice_items/:id/marked_as_cancelled', to: 'invoice_items#marked_as_cancelled', as: 'marked_as_cancelled_invoice_item'
   get 'invoice_items/export_to_csv', to: 'invoice_items#export_to_csv', as: 'export_to_csv_invoice_items'
   post 'redirect_upload_to_drive', to: 'invoice_items#redirect_upload_to_drive', as: 'redirect_upload_to_drive'
   post 'upload_to_drive', to: 'invoice_items#upload_to_drive', as: 'upload_to_drive'

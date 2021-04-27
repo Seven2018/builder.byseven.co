@@ -11,10 +11,6 @@
     <% end %>
     <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>
       <div class="page-controls-buttons flex-row-between-centered">
-        <!-- <a class="btn btn-edit-yellow btn-icon" data-toggle='modal' type='button' data-target='#editTraining' data-toggle="tooltip" title="Edit"><i class="fas fa-pen"></i></a>
-        <%# link_to remove_training_trainers_path(training_id: @training.id), class: "btn btn-edit-red btn-icon", data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
-          <i class="fas fa-trash-alt"></i>
-        <%# end %> -->
         <% if params[:change].present? %>
         <div class="flex-column-between-centered">
           <p class='calendar_message'>Calendar update required</p>
@@ -50,6 +46,7 @@
             <li><%= link_to 'New invoice Airtable by Trainer', new_airtable_invoiceitem_by_trainer_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id), method: :post %></li>
             <!-- <li><%# link_to 'New invoice Airtable by Participant', new_airtable_invoiceitem_by_attendee_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id), method: :post %></li> -->
             <li><%= link_to 'Invoices List', invoice_items_path(training_id: @training.id, type: 'Invoice', page: 1) %></li>
+<<<<<<< HEAD
             <%# if @training.forms.empty? %>
               <!-- <li><a data-toggle='modal' type='button' data-target='#newForm' style='cursor:pointer;'>New form</a></li> -->
             <%# else %>
@@ -57,12 +54,14 @@
             <%# end %>
             <!-- <li><a data-toggle='modal' data-target='#createCertificate' data-toggle="tooltip" title="Create certificate">Create certificate</a></li> -->
             <li><%= link_to 'New Oblivion', new_training_oblivion_path(@training) %></li>
+=======
+            <li><%= link_to 'New Oblivion', new_oblivion_path(training_id: params[:id]) %></li>
+>>>>>>> b9633086f607d9deab74eba2fc9bfd002530cadb
           </ul>
         </div>
       </div>
     <% else %>
       <div class="page-controls-buttons flex-row-between-centered">
-        <!-- <a class='btn btn-edit-green btn-icon' data-toggle='modal' data-target='#reviewSevener' data-toggle="tooltip" title="Invoice Review"><i class="fas fa-copy"></i></a> -->
         <%= link_to invoice_form_path(@training), class: 'btn btn-edit-green btn-icon', data: {toggle:'tooltip'}, title: 'Submit an invoice' do %>
           <i class="fas fa-file-invoice-dollar"></i>
         <% end %>
