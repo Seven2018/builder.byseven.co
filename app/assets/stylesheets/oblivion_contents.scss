@@ -1,3 +1,270 @@
 // Place all the styles related to the oblivion_contents controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+.interactive-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  .roadmap, .controls {
+    position: absolute;
+    z-index: 5;
+    bottom: 1%;
+  }
+
+  .roadmap {
+    right: 10%;
+    display: inline-block;
+  }
+
+  .milestone {
+    overflow: hidden;
+    float: left;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    margin: 0 .5vw;
+    border: 3px solid #FFAF01;
+    opacity: .6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform .2s linear, filter .15s ease-in-out;
+    will-change: transform, filter;
+    cursor: pointer;
+
+    &.active {
+      opacity: 1;
+      transform: translateY(-10px) scale(1.2);
+    }
+
+    &:hover {
+      filter: drop-shadow(0 12px 10px rgba(0,0,0,.9));
+    }
+
+    span {
+      font-weight: bold;
+      color: #FFAF01;
+    }
+  }
+
+  .controls {
+    right: 10%;
+    display: flex;
+    flex-direction: row;
+
+    .prev, .next {
+      height: 40px;
+      padding: 0 10px;
+      margin: .5vw;
+      background: #FFAF01;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      border-radius: 7.5px;
+      color: #fff;
+      transition: background .2s ease-in-out, color .2s ease-in-out, opacity .1s linear;
+      will-change: background, color, opacity;
+      cursor: pointer;
+      font-weight: bold;
+      text-transform: uppercase;
+      position: relative;
+
+      &.disabled {
+        background: darken(#ccc, 30%);
+        cursor: default;
+        opacity: .7;
+        color: #000;
+      }
+
+      &.submission {
+        background: green;
+      }
+
+      &:after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #FFAF01;
+        font-size: 30px;
+        transition: transform .15s linear, opacity .15s linear;
+        will-change: transform, opacity;
+        z-index: -1;
+        opacity: 0;
+      }
+    }
+  }
+
+  .form-wrapper {
+    display: block;
+    height: 100%;
+    position: relative;
+    width: 80%;
+    max-height: 80%;
+
+    form {
+      display: block;
+      height: 100%;
+    }
+
+    .modules {
+
+      max-height: 100%;
+      overflow-y: scroll;
+      margin-bottom: 100px;
+    }
+
+    [class^="module_"] {
+      opacity: 0;
+      display: none;
+      justify-content: center;
+      flex-direction: column;
+      overflow: auto;
+
+      &.active {
+        opacity: 1;
+        display: flex;
+      }
+    }
+
+    [class$="_greet"] {
+
+    }
+
+    [class$="_submit"] {
+
+    }
+  }
+}
+
+@media (max-width: 800px) {
+  .interactive-form {
+    .form-wrapper {
+      width: 97.5%;
+    }
+
+    .roadmap {
+      left: 2.5%;
+    }
+
+    .controls {
+      right: 2.5%;
+
+      .prev:after, .next:after {
+        content: '';
+      }
+    }
+  }
+}
+
+.tag-item {
+  display: inline-block;
+}
+
+.tag-selector {
+  position: absolute;
+  transform: scale(0);
+}
+
+.tag-selector + label {
+  text-align:left;
+  width:700px;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1.6rem !important;
+  font-weight:700;
+  border-radius: 50rem;
+  padding: .5rem 5rem;
+  background-color: #fcde9e;
+  color: #D28F00;
+  border: 3px solid #D28F00;
+  margin-right: 0.6rem;
+  margin-bottom: 0.4rem;
+}
+
+
+.tag-selector:hover + label {
+  background-color: #D28F00;
+  color: white !important;
+}
+
+.tag-selector:checked + label  {
+  background-color: #D28F00;
+  color: white !important;
+}
+
+
+.dropdown-pills {
+  legend {
+    display: none;
+  }
+}
+
+.fake-dropdown-template {
+  h4 {
+    font-size: 1.6rem;
+  }
+  i {
+    color: #D28F00;
+  }
+  width:750px;
+  border-bottom: 3px solid #D28F00;
+  margin: 30px 0px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+}
+
+.pills-hidden {
+  display:none;
+}
+
+.choice-hidden {
+  display:none;
+}
+
+.create-your-own {
+  margin-top: 100px;
+}
+
+.validate-btn {
+  height: 40px;
+  padding: 0 10px;
+  margin: .5vw;
+  background: #FFAF01;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 7.5px;
+  color: #fff;
+  background-color: #FFAF01;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #FFAF01;
+  p {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 0px;
+  }
+}
+
+.oblivion-recap {
+  background-color: #fcde9e;
+  color: #D28F00;
+  border: 3px solid #D28F00;
+  border-radius: 20px;
+  padding: 20px;
+  margin: 20px 0px;
+  p {
+    color: black;
+  }
+}
+
+.roadmapbtns {
+  margin-bottom: 80px;
+}

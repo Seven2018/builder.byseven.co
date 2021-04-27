@@ -81,6 +81,9 @@ Rails.application.routes.draw do
 
   # TRAININGS
   resources :trainings do
+    resources :oblivions do
+      resources :oblivion_messages
+    end
     get 'session_viewer/:id', to: 'sessions#viewer', as: 'session_viewer'
     get 'session/:id/copy', to: 'sessions#copy', as: 'copy_session'
     get 'session/:id/copy_form', to: 'sessions#copy_form', as: 'copy_form_session'
@@ -157,8 +160,6 @@ Rails.application.routes.draw do
   get '/remove_session_trainers', to: 'session_trainers#remove_session_trainers', as: 'remove_session_trainers'
   get '/remove_training_trainers', to: 'session_trainers#remove_training_trainers', as: 'remove_training_trainers'
 
-  # OBLIVIONS
-  resources :oblivions
 
   # OBLIVION_CONTENTS
   resources :oblivion_contents
