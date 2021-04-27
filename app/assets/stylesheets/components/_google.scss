@@ -1,17 +1,14 @@
 $white: #fff;
 $google-blue: #4285f4;
 $button-active-blue: #1669F2;
-
 .google-btn {
   width: 184px;
   height: 42px;
-  background-color: $google-blue;
+  background-color: white;
   border-radius: 2px;
   box-shadow: 0 3px 4px 0 rgba(0,0,0,.25);
   .google-icon-wrapper {
     position: absolute;
-    margin-top: 1px;
-    margin-left: 1px;
     width: 40px;
     height: 40px;
     border-radius: 2px;
@@ -26,17 +23,14 @@ $button-active-blue: #1669F2;
   }
   .btn-text {
     float: right;
-    margin: 11px 5.5px 0 0;
-    color: $white;
-    font-size: 14px;
+    margin: 12px 7px 0 0;
+    color: grey;
+    font-size: 13px;
     letter-spacing: 0.2px;
-    font-family: "Roboto";
+    font-family: "Montserrat";
   }
   &:hover {
-    box-shadow: 0 0 6px $google-blue;
-  }
-  &:active {
-    background: $button-active-blue;
+    box-shadow: 0 0 6px grey;
   }
 }
 

@@ -109,7 +109,6 @@ a {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #DADCE0;
   width: 100vw;
   height: 15rem;
   padding: 3rem;
@@ -268,4 +267,11 @@ ul {
   .form-check {
     margin: 0;
   }
+}
+
+.login {
+  padding: 50px;
+  border-radius: 20px;
+  background-color: #F7F7F7;
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.25);
 }
