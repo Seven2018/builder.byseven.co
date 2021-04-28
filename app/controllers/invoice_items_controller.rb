@@ -330,7 +330,7 @@ class InvoiceItemsController < ApplicationController
         new_invoice_line.update(invoice_item_id: credit.id)
         new_invoice_line.update(net_amount: -(line.net_amount)) if line.net_amount.present?
       end
-      credit.update(status = "Credit") if credit.total_amount < 0
+      credit.update(status: "Credit") if credit.total_amount < 0
       redirect_to invoice_item_path(credit)
     else
       raise

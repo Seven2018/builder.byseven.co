@@ -11,6 +11,7 @@
       <div class="copy-form-element">
         <%= f.input :training_id, label: 'Please enter the target Training id :', input_html: {class: 'copy-input'} %>
         <%= f.input :amount, label: 'Number of copies', input_html: { value: 1 } %>
+        <%= f.hidden_field :session_page, value: params[:page] %>
         <%# f.label :client_company_id, 'Client' %>
         <%# f.collection_select :client_company_id, ClientCompany.all.order(:name), :id, :name, options = { include_blank: true }, html_options = { class: "copy_client_company_id" } %>
       </div>

@@ -24,7 +24,8 @@ class Training < ApplicationRecord
 
   def next_session
     if self.end_time.present? && self.end_time >= Date.today
-      return self.sessions&.where('date >= ?', Date.today)&.order(date: :asc).first&.date
+      # return self.sessions&.where('date >= ?', Date.today)&.order(date: :asc).first&.date
+      return Session.where(training_id: self.id).where('date >= ?', Date.today)&.order(date: :asc).first&.date
     elsif self.end_time.present?
       return self.end_time
     else

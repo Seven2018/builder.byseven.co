@@ -17,6 +17,10 @@ class SessionPolicy < ApplicationPolicy
     check_access_seven
   end
 
+  def update_ajax?
+    check_access_seven
+  end
+
   def destroy?
     check_access_seven
   end

@@ -20,7 +20,6 @@
         <%= link_to update_calendar_path(training_id: @training.id), class: "btn btn-edit-red btn-icon", data: { toggle: 'tooltip'}, title: 'Update Calendar' do %>
           <i class="fas fa-calendar-check"></i>
         <% end %>
-        <%# airtable_training = OverviewTraining.all.select{|x| if x['Builder_id'].present?; x['Builder_id'] == @training.id; end}&.first %>
         <% airtable_training = OverviewTraining.all(filter: "{Builder_id} = '#{@training.id}'")&.first %>
         <% if airtable_training.present? %>
           <%= link_to training_path(@training, task: 'update_airtable'), class: "btn btn-edit-yellow btn-icon", data: { toggle: 'tooltip'}, title: "Sync with Airtable - Last sync : #{airtable_training['Builder Update'].to_time.strftime('%d/%m/%Y at %H:%M')}" do %>
@@ -39,12 +38,9 @@
           <button class='btn btn-edit-grey btn-icon dropdown-toggle' id="dropdownMenuButton" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></button>
           <ul class="dropdown-menu dropdown-menu-right navbar-wagon-dropdown-menu" aria-labelledby="dropdownMenuButton">
             <li><a data-toggle='modal' data-target='#addAttendees' data-toggle="tooltip" title="Add Participants">Add participants</a></li>
-            <!-- <li><%# link_to 'New estimate',new_invoiceitem_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Estimate'), method: :post %></li> -->
-            <!-- <li><%# link_to 'Estimates List', invoice_items_path(training_id: @training.id, type: 'Estimate') %></li> -->
             <li><%= link_to 'New invoice', new_invoiceitem_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
             <li><%= link_to 'New invoice Airtable', new_airtable_invoiceitem_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
             <li><%= link_to 'New invoice Airtable by Trainer', new_airtable_invoiceitem_by_trainer_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id), method: :post %></li>
-            <!-- <li><%# link_to 'New invoice Airtable by Participant', new_airtable_invoiceitem_by_attendee_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id), method: :post %></li> -->
             <li><%= link_to 'Invoices List', invoice_items_path(training_id: @training.id, type: 'Invoice', page: 1) %></li>
             <li><%= link_to 'New Oblivion', new_oblivion_path(training_id: params[:id]) %></li>
           </ul>
@@ -198,36 +194,65 @@
           <div class="card-lg">
             <div class="card-footer-lg">
               <% if session.start_time && session.end_time %>
-                <div><p> <%="#{session&.date&.strftime('%d/%m/%y')}"%> </p></div>
-                <div><p><%= " #{session.start_time.strftime("%k:%M")} to #{session.end_time.strftime("%k:%M")}" %></p></div>
-                <div><i class="fas fa-users"></i><p style='margin-left: 0.5rem;'><%= session.attendees.count %>/<%= session.attendee_number %></p></div>
+                <div class="card-footer-lg-infos">
+                  <div>
+                    <p id='<%= "date-form-" + "#{session.id.to_s}" %>' onclick='openSessionForm(this)'> <%="#{session&.date&.strftime('%d/%m/%y')}"%> </p>
+                    <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: @training.id, id: session.id, page: params[:page], type: 'date'), html: { class: "hidden hidden-form" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
+                      <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+                        <%= f.input :date, as: :string, input_html: { class: 'datepicker', value: session.date, style: 'width: 12rem' }, label: false %>
+                      </div>
+                    <% end %>
+                  </div>
+                  <div>
+                    <p id='<%= "time-form-" + "#{session.id.to_s}" %>' onclick='openSessionForm(this)'><%= " #{session.start_time.strftime("%k:%M")} to #{session.end_time.strftime("%k:%M")}" %></p>
+                    <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: @training.id, id: session.id, page: params[:page], type: 'time'), html: { class: "hidden hidden-form" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
+                      <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+                        <%= f.input :start_time, label: 'Start time:', as: :time, minute_step: 15, input_html: { class: 'timepicker'}, default: session.start_time, label: false %>
+                        <%= f.input :end_time, label: 'End time:', as: :time, minute_step: 15, input_html: { class: 'timepicker'}, default: session.end_time, label: false %>
+                      </div>
+                    <% end %>
+                  </div>
+                  <div>
+                    <i class="fas fa-users"></i>
+                    <p id='<%= "attendee-form-" + "#{session.id.to_s}" %>' style='margin-left: 0.5rem;' onclick='openSessionForm(this)'><%= session.attendees.count %>/<%= session.attendee_number %></p>
+                    <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: @training.id, id: session.id, page: params[:page], type: 'attendee'), html: { class: "hidden hidden-form" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
+                      <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+                        <%= f.input :attendee_number, input_html: { min: 0, value: session.attendee_number, style: 'width: 5rem' }, label: false %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
               <% end %>
-              <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
-                <button class="edit-fafa" data-toggle='modal' data-target='#addTrainer<%= session.id %>' data-toggle="tooltip" title="Add Trainer"><i class="fas fa-user-astronaut"></i></button>
-                <button class="edit-fafa edit_button" data-toggle='modal' data-target='#editSession<%= session.id %>' data-toggle="tooltip" title="Edit"><i class="fas fa-pen"></i></button>
-                <%= link_to training_copy_form_session_path(session.training, session), data: { toggle: 'tooltip'}, title: 'Copy Session' do %>
-                  <button class='edit-fafa session_copy'><i class="fas fa-copy"></i></button>
+              <div class="flex-row-between-centered">
+                <button class='edit-fafa' data-toggle="tooltip" title="View Session">
+                  <%= link_to training_session_path(@training, session) do %>
+                    <i class="fas fa-eye"></i>
+                  <% end %>
+                </button>
+                <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
+                  <button class="edit-fafa" data-toggle='modal' data-target='#addTrainer<%= session.id %>' data-toggle="tooltip" title="Add Trainer"><i class="fas fa-user-astronaut"></i></button>
+                  <button class="edit-fafa" data-toggle='modal' data-target='#editSession<%= session.id %>' data-toggle="tooltip" title="Edit"><i class="fas fa-pen"></i></button>
+                  <%= link_to training_copy_form_session_path(session.training, session, page: params[:page]), data: { toggle: 'tooltip'}, title: 'Copy Session' do %>
+                    <button class='edit-fafa'><i class="fas fa-copy"></i></button>
+                  <% end %>
+                <% else %>
+                  <button class="edit-fafa disabled" data-toggle="tooltip" title="Disabled"><i class="fas fa-user-astronaut"></i></button>
+                  <button class="edit-fafa disabled" data-toggle="tooltip" title="Disabled"><i class="fas fa-pen"></i></button>
+                  <a class='disabled' data-toggle="tooltip" title="Disabled">
+                    <button class='edit-fafa session_copy disabled'><i class="fas fa-copy"></i></button>
+                  </a>
                 <% end %>
-              <% else %>
-                <button class="edit-fafa disabled" data-toggle="tooltip" title="Disabled"><i class="fas fa-user-astronaut"></i></button>
-                <button class="edit-fafa disabled" data-toggle="tooltip" title="Disabled"><i class="fas fa-pen"></i></button>
-                <a class='disabled' data-toggle="tooltip" title="Disabled">
-                  <button class='edit-fafa session_copy disabled'><i class="fas fa-copy"></i></button>
-                </a>
-              <% end %>
+              </div>
             </div>
             <div class="card-main-lg">
               <div class="card-session-header">
-                <%= link_to training_session_path(@training, session) do %><h3 class='title-link'><%= session.title %></h3><% end %>
-                <%= simple_form_for @training, html: { class: "hidden", id: 'title-form' } do |f| %>
+                <h3 id='<%= "title-form-" + "#{session.id.to_s}" %>' onclick='openSessionForm(this)'><%= session.title %></h3>
+                <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: @training.id, id: session.id, page: params[:page], type: 'title'), html: { class: "hidden hidden-form" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
                   <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
-                    <%= f.input :title, label: false %>
-                    <%= button_tag type: 'submit', class: 'btn btn-add-user', input_html: { style: 'height: 3.5rem' } do %>
-                      Update
-                    <% end %>
+                    <%= f.input :title, label: false, input_html: {value: session.title} %>
                   </div>
                 <% end %>
-                <div style='display:flex;align-items:center;position: absolute;right: 160px;top: -48px;'>
+                <div style='display:flex;align-items:center;position: absolute;right: 210px;top: -60px;'>
                   <ul id="owner-session-index">
                     <% session.users.each do |user| %>
                       <li>
@@ -312,54 +337,12 @@
   </div>
 </div>
 
-<div class="modal fade" id="newSevenerInvoice" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-sm" role="document" style="border-radius: 2rem">
-    <%# render 'invoice_items/new_sevener_invoice', form: @form %>
-  </div>
-</div>
-
 <div class="modal fade" id="updateNotificationSelect" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-sm" role="document" style="border-radius: 2rem">
     <%= render 'session_trainers/notification_select', training: @training %>
   </div>
 </div>
 
-<script>
-  function extractValue(element1) {
-    return parseInt(element1.options[element1.selectedIndex].value, 10);
-  }
-
-  buttons = document.querySelectorAll('.edit_button');
-  buttons.forEach(function(button) {
-    button.addEventListener('click', (click) => {
-      card = button.parentElement.parentElement.querySelector('.editSession');
-
-      edit_duration = card.querySelector('#edit_duration');
-      // lunch_edit_duration = card.querySelector('#edit_lunch_duration');
-      edit_start_time_hour = card.querySelectorAll('.edit_start_time').item(0);
-      edit_start_time_min = card.querySelectorAll('.edit_start_time').item(1);
-      edit_end_time_hour = card.querySelectorAll('.edit_end_time').item(0);
-      edit_end_time_min = card.querySelectorAll('.edit_end_time').item(1);
-      edit_start_time_hour_value = extractValue(edit_start_time_hour);
-      edit_start_time_min_value = extractValue(edit_start_time_min);
-      edit_end_time_hour_value = extractValue(edit_end_time_hour);
-      edit_end_time_min_value = extractValue(edit_end_time_min);
-      [edit_start_time_hour, edit_start_time_min, edit_end_time_hour, edit_end_time_min].forEach(function(element2) {
-        element2.addEventListener('change', (event) => {
-          edit_start_time_hour = card.querySelectorAll('.edit_start_time').item(0);
-          edit_start_time_min = card.querySelectorAll('.edit_start_time').item(1);
-          edit_end_time_hour = card.querySelectorAll('.edit_end_time').item(0);
-          edit_end_time_min = card.querySelectorAll('.edit_end_time').item(1);
-          edit_start_time_hour_value = extractValue(edit_start_time_hour);
-          edit_start_time_min_value = extractValue(edit_start_time_min);
-          edit_end_time_hour_value = extractValue(edit_end_time_hour);
-          edit_end_time_min_value = extractValue(edit_end_time_min);
-          edit_duration.value = edit_end_time_hour_value - edit_start_time_hour_value + (edit_end_time_min_value / 60) - (edit_start_time_min_value / 60);
-        });
-      });
-    });
-  });
-</script>
 
 <div class="modal fade" id="newSession" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-lg" role="document" style="border-radius: 2rem">
@@ -399,35 +382,86 @@
 
 <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
   <script>
-    window.onload = function() {
-      survey = document.getElementById('survey-link');
-      form = document.getElementById('survey-form');
-      survey.addEventListener('click', (event) => {
-        survey.classList.toggle('hidden');
+    // survey = document.getElementById('survey-link');
+    // form = document.getElementById('survey-form');
+    // survey.addEventListener('click', (event) => {
+    //   console.log('mescouilles');
+    //   survey.classList.toggle('hidden');
+    //   form.classList.toggle('hidden');
+    // })
+    function outsideClick(event, notelem) {
+      notelem = $(notelem); // jquerize (optional)
+      // check outside click for multiple elements
+      var clickedOut = true, i, len = notelem.length;
+      for (i = 0;i < len;i++)  {
+          if (event.target == notelem[i] || notelem[i].contains(event.target)) {
+              clickedOut = false;
+          }
+      }
+      if (clickedOut) return true;
+      else return false;
+    }
+
+    function openSessionForm(element) {
+      if (document.querySelectorAll('.hidden-form.active').length == 0) {
+        form = element.parentNode.querySelector('.hidden-form');
+        element.classList.toggle('hidden');
         form.classList.toggle('hidden');
-      })
-    }
-  </script>
-  <script>
-    window.onload = function() {
-      titles = document.querySelectorAll('title-link');
-      title_form = document.getElementById('survey-form');
-      titles.forEach(title => {
-        title.addEventListener('click', (event) => {
-          title.classList.toggle('hidden');
-          form.classList.toggle('hidden');
-        })
-      })
-    }
+        form.classList.toggle('active');
+        if (form.querySelector('.datepicker') != null) {
+          flatpickr(".datepicker", {
+            disableMobile: true,
+            dateFormat: "d/m/Y",});
+        }
+        window.addEventListener('click', function(e) {
+           if (outsideClick(e, form) && outsideClick(e, element)) {
+              form.submit();
+           }
+        });
+      }
+    };
   </script>
 <% end %>
 
 <script>
+  function extractValue(element1) {
+    return parseInt(element1.options[element1.selectedIndex].value, 10);
+  }
+
+  buttons = document.querySelectorAll('.edit_button');
+  buttons.forEach(function(button) {
+    button.addEventListener('click', (click) => {
+      card = button.parentElement.parentElement.querySelector('.editSession');
+
+      edit_duration = card.querySelector('#edit_duration');
+      edit_start_time_hour = card.querySelectorAll('.edit_start_time').item(0);
+      edit_start_time_min = card.querySelectorAll('.edit_start_time').item(1);
+      edit_end_time_hour = card.querySelectorAll('.edit_end_time').item(0);
+      edit_end_time_min = card.querySelectorAll('.edit_end_time').item(1);
+      edit_start_time_hour_value = extractValue(edit_start_time_hour);
+      edit_start_time_min_value = extractValue(edit_start_time_min);
+      edit_end_time_hour_value = extractValue(edit_end_time_hour);
+      edit_end_time_min_value = extractValue(edit_end_time_min);
+      [edit_start_time_hour, edit_start_time_min, edit_end_time_hour, edit_end_time_min].forEach(function(element2) {
+        element2.addEventListener('change', (event) => {
+          edit_start_time_hour = card.querySelectorAll('.edit_start_time').item(0);
+          edit_start_time_min = card.querySelectorAll('.edit_start_time').item(1);
+          edit_end_time_hour = card.querySelectorAll('.edit_end_time').item(0);
+          edit_end_time_min = card.querySelectorAll('.edit_end_time').item(1);
+          edit_start_time_hour_value = extractValue(edit_start_time_hour);
+          edit_start_time_min_value = extractValue(edit_start_time_min);
+          edit_end_time_hour_value = extractValue(edit_end_time_hour);
+          edit_end_time_min_value = extractValue(edit_end_time_min);
+          edit_duration.value = edit_end_time_hour_value - edit_start_time_hour_value + (edit_end_time_min_value / 60) - (edit_start_time_min_value / 60);
+        });
+      });
+    });
+  });
+
   window.onload = function() {
     cards = document.querySelectorAll('.card-lg');
     cards.forEach(element => {
       element.addEventListener('mouseover', (event) => {
-        // element.querySelector('.mods-list').classList.remove('hidden');
         element.querySelector('.mods-list').style.maxHeight = '1000px';
       })
     })
@@ -438,34 +472,3 @@
     })
   }
 </script>
-
-<!-- <script>
-  $input = $("[data-behavior='autocomplete']");
-
-  $input.each(function(index) {
-    console.log(this);
-    var that = this;
-    var options = {
-      listLocation: "users",
-      getValue: 'name',
-      url: function(phrase) {
-        return "/users_search.json?search=" + phrase
-      },
-      list: {
-        onChooseEvent: function() {
-          // test = document.getElementById('users-list');
-          console.log(that);
-          test = $(that).parent().parent().parent().find('.users-list');
-          console.log(test);
-          new_el = document.createElement('p');
-          content = document.createTextNode($(that).value);
-          new_el.appendChild(content);
-          $(test).appendChild(new_el);
-
-        }
-      }
-    }
-
-    $(this).easyAutocomplete(options);
-  })
-</script> -->

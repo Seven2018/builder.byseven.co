@@ -4,7 +4,7 @@
       <div class="invoice-card">
         <div class='item-id invoice-card-link'>
           <p><%= item.uuid %></p>
-          <p><%= item.client_company.name %></p>
+          <p><%= InvoiceItem.includes(:client_company).find(item.id).client_company.name %></p>
         </div>
 
         <div class="item-id invoice-card-link">
@@ -26,29 +26,38 @@
         <!--  -->
         <div class="invoice-list-controls">
           <%= link_to invoice_item_path(item), class: 'btn btn-icon' do %>
-            <i class="far fa-eye"></i>
+            <i class="fas fa-pencil-alt"></i>
           <% end %>
-          <a class='btn btn-icon' data-toggle='modal' type='button' data-target='#editSending<%= item.id %>' style='cursor:pointer;'>
-            <i class="fas fa-paper-plane"></i>
-          </a>
-          <!-- MODAL -->
-          <div class="modal fade" id="editSending<%= item.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog" role="document" style="border-radius: 2rem">
-              <%= render 'edit_sending', item: item %>
+          <%= link_to invoice_item_path(item, format: :pdf), target: :_blank, class: 'btn btn-icon' do %>
+            <i class="fas fa-eye"></i>
+          <% end %>
+          <% if params[:type] == 'Invoice' %>
+            <a class='btn btn-icon' data-toggle='modal' type='button' data-target='#editSending<%= item.id %>' style='cursor:pointer;'>
+              <i class="fas fa-paper-plane"></i>
+            </a>
+            <!-- MODAL -->
+            <div class="modal fade" id="editSending<%= item.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+              <div class="modal-dialog" role="document" style="border-radius: 2rem">
+                <%= render 'edit_sending', item: item %>
+              </div>
             </div>
-          </div>
-          <a class='btn btn-icon' data-toggle='modal' type='button' data-target='#editPayment<%= item.id %>' style='cursor:pointer;'>
-            <i class="fas fa-euro-sign"></i>
-          </a>
-          <!-- MODAL -->
-          <div class="modal fade" id="editPayment<%= item.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog" role="document" style="border-radius: 2rem">
-              <%= render 'edit_payment', item: item %>
+            <a class='btn btn-icon' data-toggle='modal' type='button' data-target='#editPayment<%= item.id %>' style='cursor:pointer;'>
+              <i class="fas fa-euro-sign"></i>
+            </a>
+            <!-- MODAL -->
+            <div class="modal fade" id="editPayment<%= item.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+              <div class="modal-dialog" role="document" style="border-radius: 2rem">
+                <%= render 'edit_payment', item: item %>
+              </div>
             </div>
-          </div>
-          <!--  -->
-          <%= link_to marked_as_cancelled_invoice_item_path(item), class: 'btn btn-icon' do %>
-            <i class="fas fa-skull-crossbones"></i>
+            <!--  -->
+            <%= link_to marked_as_cancelled_invoice_item_path(item), class: 'btn btn-icon' do %>
+              <i class="fas fa-skull-crossbones"></i>
+            <% end %>
+          <% else %>
+            <%= link_to transform_to_invoice_path(item), class: 'btn btn-icon' do %>
+                <i class="fas fa-file-invoice-dollar"></i>
+            <% end %>
           <% end %>
         </div>
         <!--  -->

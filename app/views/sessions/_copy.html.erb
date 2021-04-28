@@ -9,6 +9,7 @@
     <%= simple_form_for :copy, url: training_copy_session_path(session.training, session), html: {target: '_blank'}, method: 'GET' do |f| %>
       <div class="copy-form-element">
         <%= f.input :training_id, label: 'Please enter the target Training id :', class: 'copy-input' %>
+        <%= f.hidden_field :session_page, value: params[:page] %>
         <%# f.label :client_company_id, 'Client' %>
         <%# f.collection_select :client_company_id, ClientCompany.all.order(:name), :id, :name, options = { include_blank: true }, html_options = { class: "copy_client_company_id" } %>
       </div>

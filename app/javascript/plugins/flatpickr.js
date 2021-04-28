@@ -5,6 +5,7 @@ require("flatpickr/dist/flatpickr.css")
 
 flatpickr(".datepicker", {
   disableMobile: true,
+  dateFormat: "d/m/Y",
 })
 
 // flatpickr(".timepicker", {

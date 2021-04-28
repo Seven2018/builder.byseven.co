@@ -8,7 +8,7 @@
     <% end %>
     <div id='attendee-form-logo'>
       <%= image_tag "SEVENLOGO_SQUARE2.png" %>
-      <img src="<%= @training.client_contact.client_company.logo %>" alt="" >
+      <img src="<%= @Training.includes(:client_contact).find(training.id).client_contact.client_company.logo %>" alt="" >
     </div>
     <div id='attendee-form'>
       <% status = !params[:search].nil? %>

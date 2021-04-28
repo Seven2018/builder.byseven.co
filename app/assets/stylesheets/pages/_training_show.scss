@@ -38,6 +38,10 @@
     vertical-align: middle;
   }
 
+  .btn {
+    margin-left: .5rem;
+  }
+
   .dropdown-menu {
     width: 17rem;
     position: absolute;
@@ -47,12 +51,10 @@
 
   .calendar_message {
     color: #E64259;
-    margin: 0 10px 0 0;
   }
 
   .airtable_message {
     color: #FDC553;
-    margin: 0 10px 0 0;
   }
 }
 
@@ -219,10 +221,6 @@
     display: inline-block;
     margin: 0 0.5rem;
   }
-}
-
-.fa-arrow-left {
-  font-size: 3rem;
 }
 
 #dropdownMenuButton::after, #dropdownNotificationButton::after {

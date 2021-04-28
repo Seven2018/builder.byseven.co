@@ -29,7 +29,7 @@
           <div class="training-card-main">
             <%= link_to training_path(training), class: 'stretched-link' do %>
               <h4><%= training.title %></h4>
-              <div class='client-logo' style="background-image: url(<%= training.client_contact.client_company.logo %>); background-size: 5rem 5rem; background-repeat: no-repeat;"></div>
+              <img src="<%= Training.includes(:client_contact).find(training.id).client_contact.client_company.logo %>" class='lazyload client-logo'>
               <div class="training-card-infos">
                 <% sessions = training.sessions %>
                 <div class='training-card-infos-elements'>
@@ -68,7 +68,7 @@
           <div class="training-card-main">
             <%= link_to training_path(training), class: 'stretched-link' do %>
               <h4><%= training.title %></h4>
-              <div class='client-logo' style="background-image: url(<%= training.client_contact.client_company.logo %>); background-size: 5rem 5rem; background-repeat: no-repeat;"></div>
+              <img src="<%= Training.includes(:client_contact).find(training.id).client_contact.client_company.logo %>" class='lazyload client-logo'>
               <div class="completed-training-card-infos">
                 <% sessions = training.sessions %>
                 <div class='training-card-infos-elements'>
