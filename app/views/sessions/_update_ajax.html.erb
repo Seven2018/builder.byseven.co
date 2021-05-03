@@ -1,0 +1,100 @@
+<% @sessions.each do |session| %>
+  <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) || session.users.include?(current_user) %>
+    <div class="card-lg">
+      <div class="card-footer-lg">
+        <% if session.start_time && session.end_time %>
+          <div class="card-footer-lg-infos">
+            <div>
+              <p onclick='openSessionForm(this)'> <%="#{session&.date&.strftime('%d/%m/%y')}"%> </p>
+              <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id, page: params[:page]), html: { class: "hidden hidden-form" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
+                <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+                  <%= f.input :date, as: :string, input_html: { class: 'datepicker', value: session.date, style: 'width: 12rem' }, label: false %>
+                </div>
+              <% end %>
+            </div>
+            <div>
+              <p onclick='openSessionForm(this)'><%= " #{session.start_time.strftime("%k:%M")} to #{session.end_time.strftime("%k:%M")}" %></p>
+              <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id, page: params[:page]), html: { class: "hidden hidden-form" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
+                <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+                  <%= f.input :start_time, label: 'Start time:', as: :time, minute_step: 15, input_html: { class: 'timepicker'}, default: session.start_time, label: false %>
+                  <%= f.input :end_time, label: 'End time:', as: :time, minute_step: 15, input_html: { class: 'timepicker'}, default: session.end_time, label: false %>
+                </div>
+              <% end %>
+            </div>
+            <div>
+              <i class="fas fa-users"></i>
+              <p style='margin-left: 0.5rem;' onclick='openSessionForm(this)'><%= session.attendees.count %>/<%= session.attendee_number %></p>
+              <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id, page: params[:page]), html: { class: "hidden hidden-form" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
+                <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+                  <%= f.input :attendee_number, input_html: { min: 0, value: session.attendee_number, style: 'width: 5rem' }, label: false %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+        <div class="flex-row-between-centered">
+          <button class='edit-fafa' data-toggle="tooltip" title="View Session">
+            <%= link_to training_session_path(session.training, session) do %>
+              <i class="fas fa-eye"></i>
+            <% end %>
+          </button>
+          <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
+            <button class="edit-fafa" data-toggle='modal' data-target='#addTrainer<%= session.id %>' data-toggle="tooltip" title="Add Trainer"><i class="fas fa-user-astronaut"></i></button>
+            <button class="edit-fafa" data-toggle='modal' data-target='#editSession<%= session.id %>' data-toggle="tooltip" title="Edit"><i class="fas fa-pen"></i></button>
+            <%= link_to training_copy_form_session_path(session.training, session, page: params[:page]), data: { toggle: 'tooltip'}, title: 'Copy Session' do %>
+              <button class='edit-fafa'><i class="fas fa-copy"></i></button>
+            <% end %>
+          <% else %>
+            <button class="edit-fafa disabled" data-toggle="tooltip" title="Disabled"><i class="fas fa-user-astronaut"></i></button>
+            <button class="edit-fafa disabled" data-toggle="tooltip" title="Disabled"><i class="fas fa-pen"></i></button>
+            <a class='disabled' data-toggle="tooltip" title="Disabled">
+              <button class='edit-fafa session_copy disabled'><i class="fas fa-copy"></i></button>
+            </a>
+          <% end %>
+        </div>
+      </div>
+      <div class="card-main-lg">
+        <div class="card-session-header">
+          <h3 class='title-link' onclick='openSessionForm(this)'><%= session.title %></h3>
+          <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id, page: params[:page]), html: { class: "hidden hidden-form" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
+            <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+              <%= f.input :title, label: false, input_html: {value: session.title} %>
+            </div>
+          <% end %>
+          <div style='display:flex;align-items:center;position: absolute;right: 210px;top: -60px;'>
+            <ul id="owner-session-index">
+              <% Session.includes(:session_trainers).find(session.id).users.each do |user| %>
+                <li>
+                  <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'></a>
+                </li>
+                <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                  <div class="modal-dialog" role="document" style="border-radius: 2rem">
+                    <%= render 'users/consult', user: user %>
+                  </div>
+                </div>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+        <div class="mods-list">
+          <%= render_async show_session_content_path(session_id: session.id) %>
+          <% session_number = session.training.sessions.order(date: :asc).find_index(session) + 1 %>
+        </div>
+        <div class='flex-row-end-centered'>
+          <h4 class='card-session-number'><%= session_number %>/<%= session.training.sessions.count %> </h4>
+        </div>
+    </div>
+      <div class="modal fade editSession" id="editSession<%= session.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg" role="document" style="border-radius: 2rem">
+          <%= render '/sessions/edit', session: session %>
+        </div>
+      </div>
+      <div class="modal fade" id="addTrainer<%= session.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog %>" role="document" style="border-radius: 2rem">
+          <% @session = session %>
+          <%= render '/session_trainers/new', session: @session, session_trainer: SessionTrainer.new, session_number: session_number %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>

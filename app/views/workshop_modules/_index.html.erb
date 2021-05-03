@@ -24,7 +24,7 @@
           <% end %>
         </div>
           <div class='module-card-controls'>
-            <% if mod.user %>
+            <% if WorkshopModule.includes(:user).find(mod.id).user %>
               <a data-toggle='modal' data-target='#consultUser<%= mod.user.id %>'><img src='<%= "#{mod.user.picture}" %>' alt="" class='avatar-sm avatar-workshop-module-card'></a>
             <% end %>
             <p><%= mod.duration %> min</p>

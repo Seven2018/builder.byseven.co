@@ -5,7 +5,7 @@
         <div class="training-card-main">
           <%= link_to training_path(training), class: 'stretched-link' do %>
             <h4><%= training.title %></h4>
-            <div class='client-logo' style="background-image: url(<%= training.client_contact.client_company.logo %>); background-size: 5rem 5rem; background-repeat: no-repeat;"></div>
+            <img src="<%= Training.includes(:client_contact).find(training.id).client_contact.client_company.logo %>" class='lazyload client-logo'>
             <% if training.end_time.present? && training.end_time < Date.today %>
             <div class="completed-training-card-infos">
             <% else %>

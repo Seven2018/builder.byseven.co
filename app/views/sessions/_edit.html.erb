@@ -29,6 +29,7 @@
         <%= f.label :teaser %>
         <%= f.cktext_area :teaser %>
       <% end %>
+      <%= f.hidden_field :session_page, value: params[:page] %>
       <div class='modal-control'>
         <%= button_tag type: 'submit', class: 'btn btn-edit-green btn-icon', data: { toggle: 'tooltip' }, title: 'Save' do %>
           <i class="fas fa-save"></i>

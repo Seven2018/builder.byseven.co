@@ -24,7 +24,8 @@ class Training < ApplicationRecord
 
   def next_session
     if self.end_time.present? && self.end_time >= Date.today
-      return self.sessions&.where('date >= ?', Date.today)&.order(date: :asc).first&.date
+      # return self.sessions&.where('date >= ?', Date.today)&.order(date: :asc).first&.date
+      return Session.where(training_id: self.id).where('date >= ?', Date.today)&.order(date: :asc).first&.date
     elsif self.end_time.present?
       return self.end_time
     else
@@ -81,19 +82,17 @@ class Training < ApplicationRecord
       existing_card = OverviewTraining.all.select{|x| x['Reference SEVEN'] == self.refid}&.first
       details = "Détail des sessions (date, horaires, intervenants):\n\n"
       seven_invoices = "Factures SEVEN :\n"
-      n = 0
       OverviewNumbersRevenue.all.select{|x| x['Training_id'] == self.id}.sort_by{|x| x['Invoice_id']}.each do |invoice|
         builder_invoice = InvoiceItem.find(invoice['Invoice_id'])
         if invoice['Type'] == "Training"
           if invoice['Paid'] == true
             seven_invoices += "[x] #{builder_invoice.uuid} \n"
-            n += 1
           else
             seven_invoices += "[ ] #{builder_invoice.uuid} \n"
           end
         end
       end
-      existing_card['Status'] = "11. Terminée" if n >= self.invoice_items.where.not(payment_date: nil).count
+      existing_card['Status'] = "11. Terminée" if (self.invoice_items.present? && self.invoice_items.where(payment_date: nil).count == 0)
       self.sessions.each do |session|
         if session.date.present?
           details += "- #{session.date.strftime('%d/%m/%Y')} de #{session.start_time.strftime('%Hh%M')} à #{session.end_time.strftime('%Hh%M')}"

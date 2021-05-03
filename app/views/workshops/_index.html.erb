@@ -1,6 +1,6 @@
 <div id="items">
   <% array = [] %>
-  <% @session.workshops.order('position ASC').each do |mod| %>
+  <% Workshop.includes(:session).where(session_id: @session.id).order('position ASC').each do |mod| %>
     <% array << mod %>
     <% mod.update(position: (array.index(mod) + 1)) %>
   <% end %>

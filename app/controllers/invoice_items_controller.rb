@@ -84,19 +84,13 @@ class InvoiceItemsController < ApplicationController
     @client_company = ClientCompany.find(params[:client_company_id])
     @invoice = InvoiceItem.new(training_id: params[:training_id].to_i, client_company_id: params[:client_company_id].to_i, type: params[:type])
     authorize @invoice
+    invoices = InvoiceItem.where(type: 'Invoice')
+    estimates = InvoiceItem.where(type: 'Estimate')
     # attributes a invoice number to the InvoiceItem
     if params[:type] == 'Invoice'
-      begin
-        @invoice.uuid = "FA#{Date.today.strftime('%Y')}" + (invoices.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')
-      rescue
-        @invoice.uuid = "FA#{Date.today.strftime('%Y')}00001"
-      end
+      invoices.count != 0 ? (@invoice.uuid = "FA#{Date.today.strftime('%Y')}" + (invoices.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')) : (@invoice.uuid = "FA#{Date.today.strftime('%Y')}00001")
     elsif params[:type] == 'Estimate'
-      begin
-        @invoice.uuid = "DE#{Date.today.strftime('%Y')}" + (estimates.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')
-      rescue
-        @invoice.uuid = "DE#{Date.today.strftime('%Y')}00001"
-      end
+      estimates.count != 0 ? (@invoice.uuid = "DE#{Date.today.strftime('%Y')}" + (estimates.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')) : (@invoice.uuid = "DE#{Date.today.strftime('%Y')}00001")
     end
     @invoice.status = 'Pending'
     @invoice.object = @training.client_company.name + ' - ' + @training.title
@@ -131,20 +125,14 @@ class InvoiceItemsController < ApplicationController
     @client_company = ClientCompany.find(params[:client_company_id])
     @invoice = InvoiceItem.new(training_id: @training.id, client_company_id: @client_company.id, type: params[:type])
     skip_authorization
+    invoices = InvoiceItem.where(type: 'Invoice')
+    estimates = InvoiceItem.where(type: 'Estimate')
     @invoice.object = @training.client_company.name + ' - ' + @training.title
     # attributes a invoice number to the InvoiceItem
     if params[:type] == 'Invoice'
-      begin
-        @invoice.uuid = "FA#{Date.today.strftime('%Y')}" + (invoices.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')
-      rescue
-        @invoice.uuid = "FA#{Date.today.strftime('%Y')}00001"
-      end
+      invoices.count != 0 ? (@invoice.uuid = "FA#{Date.today.strftime('%Y')}" + (invoices.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')) : (@invoice.uuid = "FA#{Date.today.strftime('%Y')}00001")
     elsif params[:type] == 'Estimate'
-      begin
-        @invoice.uuid = "DE#{Date.today.strftime('%Y')}" + (estimates.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')
-      rescue
-        @invoice.uuid = "DE#{Date.today.strftime('%Y')}00001"
-      end
+      estimates.count != 0 ? (@invoice.uuid = "DE#{Date.today.strftime('%Y')}" + (estimates.last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')) : (@invoice.uuid = "DE#{Date.today.strftime('%Y')}00001")
     end
     @invoice.status = 'Pending'
     # Fills the created InvoiceItem with InvoiceLines, according Training data
@@ -342,7 +330,7 @@ class InvoiceItemsController < ApplicationController
         new_invoice_line.update(invoice_item_id: credit.id)
         new_invoice_line.update(net_amount: -(line.net_amount)) if line.net_amount.present?
       end
-      credit.update(status = "Credit") if credit.total_amount < 0
+      credit.update(status: "Credit") if credit.total_amount < 0
       redirect_to invoice_item_path(credit)
     else
       raise

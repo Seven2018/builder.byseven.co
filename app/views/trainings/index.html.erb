@@ -55,11 +55,11 @@
       <% User.where.not(access_level: %w[sevener+ sevener]).each do |user| %>
         <% if (params[:user] == user.id&.to_s) || (params[:search] && params[:search][:user] == user.id&.to_s) %>
           <%= link_to trainings_path(page: 1, user: user.id) do %>
-            <img src="<%= user.picture %>" class='avatar-sm' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+            <img src="<%= user.picture %>" class='lazyload avatar-sm' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
           <% end %>
         <% else %>
            <%= link_to trainings_path(page: 1, user: user.id) do %>
-            <img src="<%= user.picture %>" class='avatar-sm' style='opacity: 0.6;' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+            <img src="<%= user.picture %>" class='lazyload avatar-sm' style='opacity: 0.6;' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
           <% end %>
         <% end %>
       <% end %>

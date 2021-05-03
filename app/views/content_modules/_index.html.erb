@@ -20,7 +20,7 @@
             <h4><%= link_to mod.title, content_content_module_path(@content, mod), style: "color:#E64259;" %></h4>
           <% end %>
           <% i += 1 %>
-          <div class='module-card-instructions'><%= mod.instructions.html_safe %></div>
+          <div class='module-card-instructions'><%= mod.instructions.html_safe if mod.instructions.present? %></div>
         </div>
         <div class='module-card-controls'>
           <p><%= mod.duration %> min</p>
@@ -53,7 +53,7 @@
             <ul><li><%= mod.logistics %></li></ul>
           </div>
         <% end %>
-        <% if !mod.action1.nil? && !mod.action2.nil? %>
+        <% if !ContentModule.includes(:action1).find(mod.id).action1.nil? && !ContentModule.includes(:action1).find(mod.id).action2.nil? %>
           <div class='content-actions'>
           <p class='logistics-label'>Actions:</p>
            <ul><li><%= mod.action1.name %></li></ul>
