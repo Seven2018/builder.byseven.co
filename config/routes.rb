@@ -111,6 +111,11 @@ Rails.application.routes.draw do
     resources :training_ownerships, only: [:create, :destroy]
     post 'new_writer', to: 'training_ownerships#new_writer', as: 'new_writer'
     resources :forms, only: [:index, :show, :create, :update, :destroy]
+
+    # OBLIVIONS
+    resources :oblivions do
+      resources :oblivion_messages
+    end
   end
   get 'trainings_completed', to: 'trainings#index_completed', as: 'index_completed'
   get 'trainings_upcoming', to: 'trainings#index_upcoming', as: 'index_upcoming'
@@ -157,11 +162,6 @@ Rails.application.routes.draw do
   get '/calendars', to: 'session_trainers#calendars', as: 'calendars'
   get '/remove_session_trainers', to: 'session_trainers#remove_session_trainers', as: 'remove_session_trainers'
   get '/remove_training_trainers', to: 'session_trainers#remove_training_trainers', as: 'remove_training_trainers'
-
-  # OBLIVIONS
-  resources :oblivions do
-    resources :oblivion_messages
-  end
 
   # OBLIVION_CONTENTS
   resources :oblivion_contents
