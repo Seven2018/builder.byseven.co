@@ -1,13 +1,1 @@
-// document.querySelector('.sessions-cards').innerHTML = '<%= j (render("update_ajax", sessions: @sessions)) %>';
-element = document.querySelector('#<%= @id %>');
-if ('<%= @id.split("-").first %>' == 'title') {
-  element.innerHTML = '<%= Session.find(@id.split("-").last.to_i).title %>';
-} else if ('<%= @id.split("-").first %>' == 'date') {
-  element.innerHTML = '<%= Session.find(@id.split("-").last.to_i).date %>';
-} else if ('<%= @id.split("-").first %>' == 'time') {
-  element.innerHTML = '<%= Session.find(@id.split("-").last.to_i).start_time.strftime("%k:%M") %> to <%= Session.find(@id.split("-").last.to_i).end_time.strftime("%k:%M") %>';
-} else if ('<%= @id.split("-").first %>' == 'attendee') {
-  element.innerHTML = '<%= Session.find(@id.split("-").last.to_i).attendees.count %>/<%= Session.find(@id.split("-").last.to_i).attendee_number %>';
-}
-element.classList.toggle('hidden');
-element.parentNode.querySelector('form').classList.toggle('hidden');
+document.querySelector('.sessions-cards').innerHTML = '<%= j (render("update_ajax", sessions: @sessions)) %>';
