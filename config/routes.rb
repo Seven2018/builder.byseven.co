@@ -88,7 +88,7 @@ Rails.application.routes.draw do
     patch 'sessions/:id/update_ajax', to: 'sessions#update_ajax', as: 'update_ajax_session'
     resources :sessions, only: [:new, :show, :create, :update, :destroy] do
       post 'workshops/:id', to: 'workshops#move', as: 'move_workshop'
-      get 'workshops/:id', to: 'workshops#save', as: 'save_workshop'
+      get 'workshops/:id/save', to: 'workshops#save', as: 'save_workshop'
       get 'workshops_viewer/:id', to: 'workshops#viewer', as: 'workshop_viewer'
       get 'workshops/:id/move_up', to: 'workshops#move_up', as: 'move_up_workshop'
       get 'workshops/:id/move_down', to: 'workshops#move_down', as: 'move_down_workshop'
