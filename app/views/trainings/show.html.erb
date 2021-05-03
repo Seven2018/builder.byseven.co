@@ -202,7 +202,11 @@
               <% if session.start_time && session.end_time %>
                 <div class="card-footer-lg-infos">
                   <div>
-                    <p id='<%= "date-form-" + "#{session.id.to_s}" %>' onclick='openSessionForm(this)'> <%="#{session&.date&.to_s}"%> </p>
+                    <% if session.date.present? %>
+                      <p id='<%= "date-form-" + "#{session.id.to_s}" %>' onclick='openSessionForm(this)'> <%="#{session&.date&.to_s}"%> </p>
+                    <% else %>
+                      <p id='<%= "date-form-" + "#{session.id.to_s}" %>' onclick='openSessionForm(this)'> A dater </p>
+                    <% end %>
                     <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: @training.id, id: session.id, page: params[:page], type: 'date'), html: { class: "hidden hidden-form" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
                       <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
                         <%= f.input :date, as: :string, input_html: { class: 'datepicker', value: session.date, style: 'width: 12rem' }, label: false %>
@@ -233,11 +237,11 @@
                 </div>
               <% end %>
               <div class="flex-row-between-centered">
-                <button class='edit-fafa' data-toggle="tooltip" title="View Session">
-                  <%= link_to training_session_path(@training, session) do %>
+                <%= link_to training_session_path(@training, session), class: 'edit-fafa', data: {toggle: 'tooltip'}, title: 'View Session' do %>
+                  <button class='edit-fafa' data-toggle="tooltip" title="View Session">
                     <i class="fas fa-eye"></i>
-                  <% end %>
-                </button>
+                  </button>
+                <% end %>
                 <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
                   <button class="edit-fafa" data-toggle='modal' data-target='#addTrainer<%= session.id %>' data-toggle="tooltip" title="Add Trainer"><i class="fas fa-user-astronaut"></i></button>
                   <button class="edit-fafa" data-toggle='modal' data-target='#editSession<%= session.id %>' data-toggle="tooltip" title="Edit"><i class="fas fa-pen"></i></button>
@@ -424,7 +428,7 @@
             dateFormat: "d/m/Y",});
         }
         window.addEventListener('click', function(e) {
-           if (outsideClick(e, form.parentNode)) {
+           if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
               form.querySelector('.hidden-submit').click();
            }
         });
