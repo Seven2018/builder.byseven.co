@@ -1,15 +1,33 @@
 <div class="left-navbar left-navbar-builder">
   <div class="left-navbar-top">
-    <% if params[:controller] == 'sessions' && params[:action] == 'viewer' %>
-      <%= link_to 'Exit View Mode', training_session_path(@session.training, @session), class: 'btn btn-edit-red' %>
-    <% elsif params[:controller] == 'workshops' && params[:action] == 'viewer' %>
-      <%= link_to 'Exit View Mode', training_session_path(@workshop.session.training, @workshop.session), class: 'btn btn-edit-red' %>
-    <% end %>
-    <div class="btn-icon left-navbar-control-open">
-      <i class="fas fa-arrow-right"></i>
-    </div>
-    <div class="btn-icon hidden left-navbar-control-close">
-      <i class="fas fa-times"></i>
+    <div class="dropdown show left-menu-list-user">
+      <a class="navbar-user-card userhidden flex-row-between-centered" href="#" role="button" id="dropdownMenuLogout" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <img src="<%= current_user.picture %>" alt="<%= current_user.fullname %>" class='avatar-xs' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+        <div class='left-menu-title-user'>
+          <h4><%= current_user.fullname %></h4>
+        </div>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" id='dropdown-user-menu' aria-labelledby="dropdownMenuLogout">
+        <div class="dropdown-card dropdown-item flex-row-between-centered">
+          <p>Account</p>
+        </div>
+        <%= link_to user_path(current_user) do %>
+          <div class="dropdown-card dropdown-item flex-row-between-centered">
+            <i class="fas fa-user"></i>
+            <div class='dropdown-card-text'>
+              <h6>Profile</h6>
+            </div>
+          </div>
+        <% end %>
+        <%= link_to destroy_user_session_path, method: :delete do %>
+          <div class="dropdown-card dropdown-item flex-row-between-centered">
+            <i class="fas fa-sign-out-alt"></i>
+            <div class='dropdown-card-text'>
+              <h6>Log out</h6>
+            </div>
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
   <% if params[:controller] == 'sessions' && params[:action] == 'viewer' %>
@@ -131,6 +149,19 @@
             <% end %>
           <% end %>
         <% end %>
+        <div class="left-navbar-bottom">
+          <% if params[:controller] == 'sessions' && params[:action] == 'viewer' %>
+            <%= link_to 'Exit View Mode', training_session_path(@session.training, @session), class: 'btn btn-edit-red' %>
+          <% elsif params[:controller] == 'workshops' && params[:action] == 'viewer' %>
+            <%= link_to 'Exit View Mode', training_session_path(@workshop.session.training, @workshop.session), class: 'btn btn-edit-red' %>
+          <% end %>
+          <div class="btn-icon left-navbar-control-open">
+            <i class="fas fa-arrow-right"></i>
+          </div>
+          <div class="btn-icon hidden left-navbar-control-close">
+            <i class="fas fa-times"></i>
+          </div>
+        </div>
       <% end %>
     </div>
   <% end %>
@@ -144,4 +175,50 @@
   </div>
 </div>
 
+<script>
+  open = document.querySelector('.left-navbar-control-open');
+  close = document.querySelector('.left-navbar-control-close');
+  left_navbar = document.querySelector('.left-navbar');
+  logo = document.querySelector('.left-navbar-logo');
+  user = document.querySelector('.navbar-user-card');
+  logo_small = document.querySelector('.left-navbar-logo-small');
+  open.addEventListener('click', (event) => {
+    user.classList.remove('userhidden');
+    container = document.querySelector('.container-seven-large');
+    page_controls = document.getElementById('page-controls');
+    left_navbar.style.width = '220px';
+    setTimeout(function(){logo.classList.toggle('hidden');}, 250);
+    setTimeout(function(){logo_small.classList.toggle('hidden');}, 250);
+    open.classList.toggle('hidden');
+    close.classList.toggle('hidden');
+    if (window.innerWidth > 1440) {
+      container.style.width = (1440 - 220).toString() + 'px';
+      container.style.marginLeft = '220px';
+      page_controls.style.width = (1440 - 280).toString() + 'px';
+    } else {
+      container.style.width = (window.innerWidth - 220).toString() + 'px';
+      container.style.marginLeft = '220px';
+      page_controls.style.width = (window.innerWidth - 280).toString() + 'px';
+    }
+  })
+  close.addEventListener('click', (event) => {
+    user.classList.add('userhidden');
+    container = document.querySelector('.container-seven-large');
+    page_controls = document.getElementById('page-controls');
+    left_navbar.style.width = '60px';
+    logo.classList.toggle('hidden');
+    logo_small.classList.toggle('hidden');
+    open.classList.toggle('hidden');
+    close.classList.toggle('hidden');
+    if (window.innerWidth >= 1440) {
+      container.style.width = (1440 - 60).toString() + 'px';
+      container.style.marginLeft = '60px';
+      page_controls.style.width = (1440 - 120).toString() + 'px';
+    } else {
+      container.style.width = (window.innerWidth - 60).toString() + 'px';
+      container.style.marginLeft = '60px';
+      page_controls.style.width = (window.innerWidth - 120).toString() + 'px';
+    }
+  })
+</script>
 

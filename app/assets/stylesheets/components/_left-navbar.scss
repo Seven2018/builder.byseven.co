@@ -12,7 +12,7 @@
   z-index: 20;
 
   text-align: left;
-  padding-top: 5rem;
+  padding-top: 4rem;
 
   @include from-large {
     display: flex;
@@ -39,10 +39,7 @@
 
 .left-navbar-top {
   min-height: 8rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-left: .5rem;
+  margin-bottom: 60px;
 
   i {
     color: #FFC552;
@@ -79,6 +76,10 @@
   justify-content: center;
   margin-bottom: 3rem;
   margin-top: 3.8rem;
+  i {
+    color: #FFC552;
+    cursor: pointer;
+  }
 }
 
 .left-buttons {
@@ -164,6 +165,7 @@
 }
 
 .dropdown-menu {
+  z-index: 1000;
   min-width: unset;
   padding: 0 !important;
 
@@ -212,4 +214,57 @@
 
 .left-navbar-active {
   display: flex;
+}
+
+
+.userhidden {
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+  border-radius: 0.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+    h4 {
+    font-size: 1.8rem;
+    font-weight: 400;
+    margin: 0 0 0 5px;
+  }
+  div {
+    margin:0;
+  }
+
+  h4 {
+    display: none;
+  }
+
+  &:hover {
+    width:60px;
+  }
+}
+
+.left-menu-title-user {
+  text-align: left;
+  margin-left: 1.5rem;
+
+  h4 {
+    font-size: 1.6rem;
+    font-weight: 400;
+    margin: 0 0 0 5px;
+  }
+}
+
+.left-menu-list-user {
+  display: flex;
+  align-items: center;
+  padding: 1.8rem;
+  width: 22rem;
+  height: 73.2px;
+
+  &:hover {
+    color: white;
+  }
+
+  p {
+    margin: 0;
+  }
 }

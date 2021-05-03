@@ -22,6 +22,6 @@ class OblivionsController < ApplicationController
   end
 
   def workshop_params
-    params.require(:oblivion).permit(:session_id, :title, :content1, :content2, :content3, :content4)
+    params.require(:oblivion).permit(:session_id, :title)
   end
 end

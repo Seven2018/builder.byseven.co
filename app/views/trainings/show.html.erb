@@ -42,7 +42,13 @@
             <li><%= link_to 'New invoice Airtable', new_airtable_invoiceitem_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
             <li><%= link_to 'New invoice Airtable by Trainer', new_airtable_invoiceitem_by_trainer_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id), method: :post %></li>
             <li><%= link_to 'Invoices List', invoice_items_path(training_id: @training.id, type: 'Invoice', page: 1) %></li>
-            <li><%= link_to 'New Oblivion', new_oblivion_path(training_id: params[:id]) %></li>
+            <%# if @training.forms.empty? %>
+              <!-- <li><a data-toggle='modal' type='button' data-target='#newForm' style='cursor:pointer;'>New form</a></li> -->
+            <%# else %>
+              <!-- <li><%# link_to 'Forms list', training_forms_path(@training) %></li> -->
+            <%# end %>
+            <!-- <li><a data-toggle='modal' data-target='#createCertificate' data-toggle="tooltip" title="Create certificate">Create certificate</a></li> -->
+            <li><%= link_to 'New Oblivion', new_training_oblivion_path(@training) %></li>
           </ul>
         </div>
       </div>

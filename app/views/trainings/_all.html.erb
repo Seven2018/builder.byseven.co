@@ -120,7 +120,9 @@
           <% end %>
             <div>
               <% training.users.each do |owner| %>
-                <img class='avatar-xs' src="<%= owner.picture %>"  onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+                <div data-toggle='tooltip' title='<%= owner.name %>'>
+                  <img class='avatar-xs' src="<%= owner.picture %>"  onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+                </div>
               <% end %>
             </div>
           </div>
