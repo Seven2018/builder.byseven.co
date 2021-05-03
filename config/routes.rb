@@ -159,7 +159,9 @@ Rails.application.routes.draw do
   get '/remove_training_trainers', to: 'session_trainers#remove_training_trainers', as: 'remove_training_trainers'
 
   # OBLIVIONS
-  resources :oblivions
+  resources :oblivions do
+    resources :oblivion_messages
+  end
 
   # OBLIVION_CONTENTS
   resources :oblivion_contents
