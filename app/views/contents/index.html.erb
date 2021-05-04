@@ -79,7 +79,7 @@
                 <% theme.contents.order(title: :asc).each do |content| %>
                   <div class="content-index-card">
                     <%= link_to content_path(content) do %>
-                      <span class="content-index-card-title"><strong><%= content.title %></strong></span>
+                      <span class="content-index-card-title"><%= content.title %></span>
                       <% if !content.theories.nil? %>
                         <div class="content-index-card-theories">
                           <% if content.theories.count <= 1 %>
