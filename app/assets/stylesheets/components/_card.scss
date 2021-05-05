@@ -236,14 +236,20 @@ $timeline: #115173;
   margin: 0 auto 5rem auto;
   text-decoration: none;
   color: black;
+
   &:hover {
     background-color: rgba(0,0,0,0.05);
+  }
+
+  p {
+    cursor: zoom-in;
   }
 
   .card-main-lg {
     height: auto;
     position: relative;
     margin-top: 2rem;
+
     h3 {
       font-family: "Roboto";
       font-weight: 500;
@@ -251,6 +257,7 @@ $timeline: #115173;
       color: inherit;
       text-align: left;
       margin: 0;
+      cursor: zoom-in;
     }
   }
 

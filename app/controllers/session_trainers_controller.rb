@@ -63,19 +63,21 @@ class SessionTrainersController < ApplicationController
       list.each do |ind|
         Session.where(id: session_ids).each do |session|
           unless SessionTrainer.where(session_id: session.id, user_id: ind.to_i).first&.calendar_uuid&.present?
-            day = session&.date
+            date = session&.date
+            day, month, year = date.day, date.month, date.year
+            start_time = session.start_time.change(day: day, month: month, year: year)
+            end_time = session.end_time.change(day: day, month: month, year: year)
             events = []
             begin
               break_position = session.workshops.find_by(title: 'Pause Déjeuner')&.position
               if break_position.nil?
-                # Creates the event to be added to one or several calendars
                 events << Google::Apis::CalendarV3::Event.new({
                   start: {
-                    date_time: day.to_s+'T'+session.start_time.strftime('%H:%M:%S'),
+                    date_time: start_time.rfc3339,
                     time_zone: 'Europe/Paris',
                   },
                   end: {
-                    date_time: day.to_s+'T'+session.end_time.strftime('%H:%M:%S'),
+                    date_time: end_time.rfc3339,
                     time_zone: 'Europe/Paris',
                   },
                   summary: session.training.client_company.name + " - " + session.training.title
@@ -85,18 +87,18 @@ class SessionTrainersController < ApplicationController
                 morning_duration = session.workshops.where('position < ?', break_position).map(&:duration).sum
                 morning << session.start_time + morning_duration.minutes
                 afternoon = [session.end_time - session.workshops.where('position > ?', break_position).map(&:duration).sum.minutes, session.end_time]
-                [morning, afternoon].each do |event|
+                [morning.change(day: day, month: month, year: year), afternoon.change(day: day, month: month, year: year)].each do |event|
                   events << Google::Apis::CalendarV3::Event.new({
-                  start: {
-                    date_time: day.to_s+'T'+event.first.strftime('%H:%M:%S'),
-                    time_zone: 'Europe/Paris',
-                  },
-                  end: {
-                    date_time: day.to_s+'T'+event.last.strftime('%H:%M:%S'),
-                    time_zone: 'Europe/Paris',
-                  },
-                  summary: session.training.client_company.name + " - " + session.training.title
-                })
+                    start: {
+                      date_time: start_time.rfc3339,
+                      time_zone: 'Europe/Paris',
+                    },
+                    end: {
+                      date_time: end_time.rfc3339,
+                      time_zone: 'Europe/Paris',
+                    },
+                    summary: session.training.client_company.name + " - " + session.training.title
+                  })
                 end
               end
               events.each do |event|

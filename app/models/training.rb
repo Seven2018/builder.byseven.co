@@ -84,7 +84,7 @@ class Training < ApplicationRecord
       seven_invoices = "Factures SEVEN :\n"
       OverviewNumbersRevenue.all.select{|x| x['Training_id'] == self.id}.sort_by{|x| x['Invoice_id']}.each do |invoice|
         builder_invoice = InvoiceItem.find(invoice['Invoice_id'])
-        if invoice['Type'] == "Training"
+        if ['Training', 'Home', 'Deposit (Home)'].include?(invoice['Type'])
           if invoice['Paid'] == true
             seven_invoices += "[x] #{builder_invoice.uuid} \n"
           else
@@ -92,7 +92,7 @@ class Training < ApplicationRecord
           end
         end
       end
-      existing_card['Status'] = "11. Terminée" if (self.invoice_items.present? && self.invoice_items.where(payment_date: nil).count == 0)
+      existing_card['Status'] = "11. Terminée" if (self.invoice_items.present? && self.invoice_items.where(status: 'Pending').count == 0 && self.invoice_items.where(status: 'Paid').count > 0)
       self.sessions.each do |session|
         if session.date.present?
           details += "- #{session.date.strftime('%d/%m/%Y')} de #{session.start_time.strftime('%Hh%M')} à #{session.end_time.strftime('%Hh%M')}"
