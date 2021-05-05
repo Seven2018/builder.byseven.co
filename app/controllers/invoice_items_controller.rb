@@ -368,6 +368,7 @@ class InvoiceItemsController < ApplicationController
   def marked_as_cancelled
     authorize @invoice_item
     @invoice_item.update(status: "Cancelled")
+    UpdateAirtableJob.perform_async(@invoice_item.training)
     redirect_back(fallback_location: invoice_item_path(@invoice_item))
   end
 

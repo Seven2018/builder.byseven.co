@@ -109,7 +109,6 @@ class SessionsController < ApplicationController
   end
 
   def copy
-    raise
     authorize @session
     new_sessions = []
     if params[:button] == 'copy'
