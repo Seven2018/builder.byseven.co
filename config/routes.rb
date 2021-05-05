@@ -116,6 +116,7 @@ Rails.application.routes.draw do
     resources :oblivions do
       resources :oblivion_messages
     end
+    get :create_oblivion, controller: :oblivions
   end
   get 'trainings_completed', to: 'trainings#index_completed', as: 'index_completed'
   get 'trainings_upcoming', to: 'trainings#index_upcoming', as: 'index_upcoming'

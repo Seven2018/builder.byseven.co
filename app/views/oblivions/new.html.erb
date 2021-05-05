@@ -27,12 +27,9 @@
         <div class="modules">
           <div class="module_greet active" data-map="greet">
             <h3>For which session would you like to create an Oblivion?</h3>
-            <%= simple_form_for [@training, @oblivion] do |f| %>
-             <!--  <div class='mod-date'>
-                <%= f.input :title %>
-              </div> -->
+            <%= simple_form_for :create_oblivion, url: training_create_oblivion_path(@training) do |f| %>
               <div class="mod-date">
-              <%= f.association :session, collection: @training.sessions, selected: @training.sessions.last.id %></div>
+              <%= f.input :session_id, collection: @training.sessions, selected: @training.sessions.last.id, label_method: lambda { |session| "#{session.title} - #{session.date}" } %></div>
           </div>
           <div class="module_first" data-map="who are you?">
             <h3>What message would you like to send as your first reminder?</h3>
@@ -42,14 +39,24 @@
                <i class="fas fa-chevron-down fa-2x"></i></i>
               </div>
               <div class='dropdown-pills pills-hidden' id='pills'>
-                  <input type="checkbox" id='1' class="tag-selector" onclick="selectOnlyThis(this.id)">
-                  <label for="1">Create your own</label>
-                  <input type="checkbox" id='2' class="tag-selector" onclick="selectOnlyThis(this.id)">
-                  <label for="2">Python 101</label>
-                  <input type="checkbox" id='3' class="tag-selector" onclick="selectOnlyThis(this.id)">
-                  <label for="3">Example 101</label>
-                  <input type="checkbox" id='4' class="tag-selector" onclick="selectOnlyThis(this.id)">
-                  <label for="4">Example 102</label>
+                <span>
+                  <div>
+                    <input type="checkbox" id='1' class="tag-selector" onclick="selectOnlyThis(this)">
+                    <label for="1">Create your own</label>
+                  </div>
+                </span>
+                <%= f.collection_check_boxes :oblivion_contents, OblivionContent.all.order(title: :asc), :id, :title do |b| %>
+                  <div>
+                    <%= b.check_box(class: 'tag-selector', onclick: "selectOnlyThis(this)") %>
+                    <%= b.label %>
+                  </div>
+                <% end %>
+                <!-- <input type="checkbox" id='2' class="tag-selector" onclick="selectOnlyThis(this.id)">
+                <label for="2">Python 101</label>
+                <input type="checkbox" id='3' class="tag-selector" onclick="selectOnlyThis(this.id)">
+                <label for="3">Example 101</label>
+                <input type="checkbox" id='4' class="tag-selector" onclick="selectOnlyThis(this.id)">
+                <label for="4">Example 102</label> -->
               </div>
             </div>
             <div class="create-your-own choice-hidden" id='create-oblivion'>
@@ -288,11 +295,16 @@ createoblivion.classList.remove('choice-hidden');
  }
 })
 
-function selectOnlyThis(id) {
-    for (var i = 1;i <= 4; i++)
-    {
-    document.getElementById(i).checked = false;
-    }
-    document.getElementById(id).checked = true;
+function selectOnlyThis(element) {
+  element.parentNode.querySelectorAll('input').forEach((el) => {
+    el.checked = false;
+  })
+  element.checked = true;
+  // for (var i = 1;i <= 4; i++) {
+  //   document.getElementById(i).checked = false;
+  // }
+  // document.getElementById(id).checked = true;
+  console.log(element.parentNode.parentNode.parentNode.querySelector('h4'));
+  element.parentNode.parentNode.parentNode.querySelector('h4').innerHTML = element.parentNode.querySelector('label').innerHTML;
 }
 </script>
