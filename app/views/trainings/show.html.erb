@@ -320,7 +320,9 @@
         form = element.parentNode.querySelector('.hidden-form');
         element.classList.toggle('hidden');
         form.classList.toggle('hidden');
-        form.classList.toggle('active');
+        if (form.querySelector('.form-control') != null){
+          initial_value = form.querySelector('.form-control').value;
+        }
         if (form.querySelector('.datepicker') != null) {
           flatpickr(".datepicker", {
             disableMobile: true,
@@ -328,7 +330,13 @@
         }
         window.addEventListener('click', function(e) {
            if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
-              form.querySelector('.hidden-submit').click();
+              if (form.querySelector('.form-control').value != initial_value) {
+                form.querySelector('.hidden-submit').click();
+              } else {
+                form.classList.toggle('hidden');
+                element.classList.toggle('hidden');
+              }
+              this.removeEventListener('click', arguments.callee, false);
            }
         });
       }
@@ -371,17 +379,17 @@
     });
   });
 
-  window.onload = function() {
-    cards = document.querySelectorAll('.card-lg');
-    cards.forEach(element => {
-      element.addEventListener('mouseover', (event) => {
-        element.querySelector('.mods-list').style.maxHeight = '1000px';
-      })
-    })
-    cards.forEach(element => {
-      element.addEventListener('mouseout', (event) => {
-        element.querySelector('.mods-list').style.maxHeight = '0px';
-      })
-    })
-  }
+  // window.onload = function() {
+  //   cards = document.querySelectorAll('.card-lg');
+  //   cards.forEach(element => {
+  //     element.addEventListener('mouseover', (event) => {
+  //       element.querySelector('.mods-list').style.maxHeight = '1000px';
+  //     })
+  //   })
+  //   cards.forEach(element => {
+  //     element.addEventListener('mouseout', (event) => {
+  //       element.querySelector('.mods-list').style.maxHeight = '0px';
+  //     })
+  //   })
+  // }
 </script>

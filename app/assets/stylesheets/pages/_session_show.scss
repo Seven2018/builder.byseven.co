@@ -92,7 +92,7 @@
 
   @include from-large {
     display: block;
-    max-height: 0;
+    // max-height: 0;
     overflow: hidden;
     padding: 0;
     transition: max-height 2s linear;

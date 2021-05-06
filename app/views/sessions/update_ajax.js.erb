@@ -1,1 +1,2 @@
 document.querySelector('#card-block-<%= @session.id %>').innerHTML = '<%= j (render("trainings/show_session_card", session: @session)) %>';
+document.querySelector('#card-block-<%= @session.id %>').querySelector('.mods-list').innerHTML = '<%= j (render("trainings/show_session_content", session: @session)) %>';
