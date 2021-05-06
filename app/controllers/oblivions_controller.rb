@@ -15,6 +15,10 @@ class OblivionsController < ApplicationController
     authorize @oblivion
   end
 
+  def create_oblivion
+    raise
+  end
+
   private
 
   def set_oblivion

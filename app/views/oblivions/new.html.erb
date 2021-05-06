@@ -33,7 +33,7 @@
           </div>
           <div class="module_first" data-map="who are you?">
             <h3>What message would you like to send as your first reminder?</h3>
-            <div class="fake-dropdown" id='fake-drop' onclick="myFunction()">
+            <div class="fake-dropdown" id='fake-drop' onclick="myFunction(this);">
               <div class="fake-dropdown-template">
                 <h4>Choose Reminder</h4>
                <i class="fas fa-chevron-down fa-2x"></i></i>
@@ -41,11 +41,11 @@
               <div class='dropdown-pills pills-hidden' id='pills'>
                 <span>
                   <div>
-                    <input type="checkbox" id='1' class="tag-selector" onclick="selectOnlyThis(this)">
+                    <input type="checkbox" id='1' class="tag-selector" onclick="selectOnlyThis(this);">
                     <label for="1">Create your own</label>
                   </div>
                 </span>
-                <%= f.collection_check_boxes :oblivion_contents, OblivionContent.all.order(title: :asc), :id, :title do |b| %>
+                <%= f.collection_check_boxes :oblivion_contents1, OblivionContent.all.order(title: :asc), :id, :title do |b| %>
                   <div>
                     <%= b.check_box(class: 'tag-selector', onclick: "selectOnlyThis(this)") %>
                     <%= b.label %>
@@ -61,26 +61,31 @@
             </div>
             <div class="create-your-own choice-hidden" id='create-oblivion'>
               <h3>Create your own Reminder</h3>
-              <%= f.rich_text_area :title %>
-              <button class='validate-btn'><p>OK<i class="fas fa-check"></i></p></button>
+              <%= f.text_field :title1, placeholder: 'Title' %>
+              <%= f.rich_text_area :content1, placeholder: 'Content' %>
+              <!-- <button class='validate-btn'><p>OK<i class="fas fa-check"></i></p></button> -->
             </div>
           </div>
           <div class="module_second" data-map="your business">
             <h3>What message would you like to send as your second reminder?</h3>
-            <div class="fake-dropdown" id='fake-drop' onclick="myFunction1()">
+            <div class="fake-dropdown" id='fake-drop' onclick="myFunction(this);">
               <div class="fake-dropdown-template">
                 <h4>Choose Reminder</h4>
                <i class="fas fa-chevron-down fa-2x"></i></i>
               </div>
-              <div class='dropdown-pills pills-hidden' id='pills-1'>
-                  <input type="checkbox" id='1' class="tag-selector" onclick="selectOnlyThis(this.id)">
-                  <label for="1">Create your own</label>
-                  <input type="checkbox" id='2' class="tag-selector" onclick="selectOnlyThis(this.id)">
-                  <label for="2">Python 101</label>
-                  <input type="checkbox" id='3' class="tag-selector" onclick="selectOnlyThis(this.id)">
-                  <label for="3">Example 101</label>
-                  <input type="checkbox" id='4' class="tag-selector" onclick="selectOnlyThis(this.id)">
-                  <label for="4">Example 102</label>
+              <div class='dropdown-pills pills-hidden' id='pills'>
+                <span>
+                  <div>
+                    <input type="checkbox" id='1' class="tag-selector" onclick="selectOnlyThis(this);">
+                    <label for="1">Create your own</label>
+                  </div>
+                </span>
+                <%= f.collection_check_boxes :oblivion_contents2, OblivionContent.all.order(title: :asc), :id, :title do |b| %>
+                  <div>
+                    <%= b.check_box(class: 'tag-selector', onclick: "selectOnlyThis(this)") %>
+                    <%= b.label %>
+                  </div>
+                <% end %>
               </div>
             </div>
             <div class="create-your-own choice-hidden" id='create-oblivion'>
@@ -91,20 +96,24 @@
           </div>
           <div class="module_third" data-map="your target">
             <h3>What message would you like to send as your third reminder?</h3>
-            <div class="fake-dropdown" id='fake-drop' onclick="myFunction2()">
+            <div class="fake-dropdown" id='fake-drop' onclick="myFunction(this);">
               <div class="fake-dropdown-template">
                 <h4>Choose Reminder</h4>
                <i class="fas fa-chevron-down fa-2x"></i></i>
               </div>
-              <div class='dropdown-pills pills-hidden' id='pills-2'>
-                  <input type="checkbox" id='1' class="tag-selector" onclick="selectOnlyThis(this.id)">
-                  <label for="1">Create your own</label>
-                  <input type="checkbox" id='2' class="tag-selector" onclick="selectOnlyThis(this.id)">
-                  <label for="2">Python 101</label>
-                  <input type="checkbox" id='3' class="tag-selector" onclick="selectOnlyThis(this.id)">
-                  <label for="3">Example 101</label>
-                  <input type="checkbox" id='4' class="tag-selector" onclick="selectOnlyThis(this.id)">
-                  <label for="4">Example 102</label>
+              <div class='dropdown-pills pills-hidden' id='pills'>
+                <span>
+                  <div>
+                    <input type="checkbox" id='1' class="tag-selector" onclick="selectOnlyThis(this);">
+                    <label for="1">Create your own</label>
+                  </div>
+                </span>
+                <%= f.collection_check_boxes :oblivion_contents3, OblivionContent.all.order(title: :asc), :id, :title do |b| %>
+                  <div>
+                    <%= b.check_box(class: 'tag-selector', onclick: "selectOnlyThis(this)") %>
+                    <%= b.label %>
+                  </div>
+                <% end %>
               </div>
             </div>
             <div class="create-your-own choice-hidden" id='create-oblivion'>
@@ -115,20 +124,24 @@
           </div>
           <div class="module_fourth" data-map="your service/product">
             <h3>What message would you like to send as your last reminder?</h3>
-            <div class="fake-dropdown" id='fake-drop' onclick="myFunction3()">
+            <div class="fake-dropdown" id='fake-drop' onclick="myFunction(this);">
               <div class="fake-dropdown-template">
                 <h4>Choose Reminder</h4>
                <i class="fas fa-chevron-down fa-2x"></i></i>
               </div>
-              <div class='dropdown-pills pills-hidden' id='pills-3'>
-                  <input type="checkbox" id='1' class="tag-selector" onclick="selectOnlyThis(this.id)">
-                  <label for="1">Create your own</label>
-                  <input type="checkbox" id='2' class="tag-selector" onclick="selectOnlyThis(this.id)">
-                  <label for="2">Python 101</label>
-                  <input type="checkbox" id='3' class="tag-selector" onclick="selectOnlyThis(this.id)">
-                  <label for="3">Example 101</label>
-                  <input type="checkbox" id='4' class="tag-selector" onclick="selectOnlyThis(this.id)">
-                  <label for="4">Example 102</label>
+              <div class='dropdown-pills pills-hidden' id='pills'>
+                <span>
+                  <div>
+                    <input type="checkbox" id='1' class="tag-selector" onclick="selectOnlyThis(this);">
+                    <label for="1">Create your own</label>
+                  </div>
+                </span>
+                <%= f.collection_check_boxes :oblivion_contents4, OblivionContent.all.order(title: :asc), :id, :title do |b| %>
+                  <div>
+                    <%= b.check_box(class: 'tag-selector', onclick: "selectOnlyThis(this)") %>
+                    <%= b.label %>
+                  </div>
+                <% end %>
               </div>
             </div>
             <div class="create-your-own choice-hidden" id='create-oblivion'>
@@ -273,38 +286,25 @@ pills1 = document.getElementById('pills-1')
 pills2 = document.getElementById('pills-2')
 pills3 = document.getElementById('pills-3')
 checkbox = document.getElementById('1')
-function myFunction() {
-  document.getElementById("pills").classList.toggle("pills-hidden");
-}
-function myFunction1() {
-  document.getElementById("pills-1").classList.toggle("pills-hidden");
-}
-function myFunction2() {
-  document.getElementById("pills-2").classList.toggle("pills-hidden");
-}
-function myFunction3() {
-  document.getElementById("pills-3").classList.toggle("pills-hidden");
+
+function myFunction(element) {
+  element.querySelector("#pills").classList.toggle("pills-hidden");
+  createoblivion = element.querySelector('#create-oblivion')
+  choose = element.querySelector('#1')
+  choose.addEventListener('click', event => {
+  createoblivion.classList.remove('choice-hidden');
+   if (checkbox.checked == false){
+    createoblivion.classList.add('choice-hidden');
+   }
+  })
 }
 
-createoblivion = document.getElementById('create-oblivion')
-choose = document.getElementById('1')
-choose.addEventListener('click', event => {
-createoblivion.classList.remove('choice-hidden');
- if (checkbox.checked == false){
- createoblivion.classList.add('choice-hidden');
- }
-})
 
 function selectOnlyThis(element) {
-  element.parentNode.querySelectorAll('input').forEach((el) => {
+  element.parentNode.parentNode.parentNode.querySelectorAll('.tag-selector').forEach((el) => {
     el.checked = false;
   })
   element.checked = true;
-  // for (var i = 1;i <= 4; i++) {
-  //   document.getElementById(i).checked = false;
-  // }
-  // document.getElementById(id).checked = true;
-  console.log(element.parentNode.parentNode.parentNode.querySelector('h4'));
-  element.parentNode.parentNode.parentNode.querySelector('h4').innerHTML = element.parentNode.querySelector('label').innerHTML;
+  element.parentNode.parentNode.parentNode.parentNode.querySelector('h4').innerHTML = element.parentNode.querySelector('label').innerHTML;
 }
 </script>

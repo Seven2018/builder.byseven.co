@@ -1,1 +1,1 @@
-document.querySelector('.sessions-cards').innerHTML = '<%= j (render("update_ajax", sessions: @sessions)) %>';
+document.querySelector('#card-block-<%= @session.id %>').innerHTML = '<%= j (render("trainings/show_session_card", session: @session)) %>';
