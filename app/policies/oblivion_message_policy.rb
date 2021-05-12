@@ -1,4 +1,4 @@
-class OblivionPolicy < ApplicationPolicy
+class OblivionMessagePolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all
