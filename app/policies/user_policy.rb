@@ -29,6 +29,10 @@ class UserPolicy < ApplicationPolicy
     check_access_seven
   end
 
+  def airtable_create_user?
+    check_access_seven
+  end
+
   private
 
   def check_access_seven

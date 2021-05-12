@@ -73,11 +73,11 @@ class SessionTrainersController < ApplicationController
               if break_position.nil?
                 events << Google::Apis::CalendarV3::Event.new({
                   start: {
-                    date_time: start_time.rfc3339,
+                    date_time: start_time.rfc3339.slice(0...-1),
                     time_zone: 'Europe/Paris',
                   },
                   end: {
-                    date_time: end_time.rfc3339,
+                    date_time: end_time.rfc3339.slice(0...-1),
                     time_zone: 'Europe/Paris',
                   },
                   summary: session.training.client_company.name + " - " + session.training.title
@@ -90,11 +90,11 @@ class SessionTrainersController < ApplicationController
                 [morning.change(day: day, month: month, year: year), afternoon.change(day: day, month: month, year: year)].each do |event|
                   events << Google::Apis::CalendarV3::Event.new({
                     start: {
-                      date_time: start_time.rfc3339,
+                      date_time: start_time.rfc3339.slice(0...-1),
                       time_zone: 'Europe/Paris',
                     },
                     end: {
-                      date_time: end_time.rfc3339,
+                      date_time: end_time.rfc3339.slice(0...-1),
                       time_zone: 'Europe/Paris',
                     },
                     summary: session.training.client_company.name + " - " + session.training.title

@@ -87,7 +87,6 @@
           <% end %>
           <% if status %>
             <ul id='myUL'>
-              <% raise %>
               <% (Content.where("lower(title) LIKE :query", query:"%#{params[:search][:title].downcase}%") + Content.joins(:content_modules).where("lower(content_modules.title) LIKE :query", query:"%#{params[:search][:title].downcase}%") + Content.joins(:theories).where("lower(theories.description) LIKE :query", query:"%#{params[:search][:title].downcase}%") + Content.joins(:theories).where("lower(theories.name) LIKE :query", query:"%#{params[:search][:title].downcase}%")).uniq.each do |content| %>
                 <%= link_to training_session_workshops_path(@session.training, @session, content_id: content.id), method: :post, remote: true do %>
                   <li class='myUL-li-theme-sidebar'>+ <%= content.title %></li>
@@ -100,7 +99,7 @@
                 <% if theme.children.empty? && theme.level == 0 && !['Ice breaker', 'Présentation', 'Conclusion'].include?(theme.name) %>
                   <li><span class="caret sidebar-caret"><%= theme.name %></span>
                     <ul class="nested">
-                      <% Theme.includes(:contents).find(theme.id).contents.each do |content| %>
+                      <% Theme.includes(:contents).find(theme.id).contents.order(title: :asc).each do |content| %>
                         <%= link_to training_session_workshops_path(@session.training, @session, content_id: content.id), method: :post, remote: true do %>
                           <li>+ <%= content.title %></li>
                         <% end %>
@@ -143,7 +142,7 @@
                 <% if ['Ice breaker', 'Présentation', 'Conclusion'].include?(theme.name) %>
                   <li><span class="caret sidebar-caret"><%= theme.name %></span>
                     <ul class="nested">
-                      <% Theme.includes(:contents).find(theme.id).contents.each do |content| %>
+                      <% Theme.includes(:contents).find(theme.id).contents.order(title: :asc).each do |content| %>
                         <%= link_to training_session_workshops_path(@session.training, @session, content_id: content.id), method: :post, remote: true do %>
                           <li>+ <%= content.title %></li>
                         <% end %>

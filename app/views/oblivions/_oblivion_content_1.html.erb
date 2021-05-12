@@ -1,0 +1,64 @@
+<% if new_form %>
+  <%= simple_form_for :create_oblivion_message, url: training_oblivion_create_oblivion_message_path(@oblivion.session.training, Oblivion.find(@oblivion.id)), method: :get, remote: true, input_html: {multipart: true} do |f| %>
+    <h3>What message would you like to send as your first reminder?</h3>
+    <div class="fake-dropdown" id='fake-drop' onclick="myFunction(this);">
+      <div class="fake-dropdown-template">
+        <h4>Choose Reminder</h4>
+       <i class="fas fa-chevron-down fa-2x"></i></i>
+      </div>
+      <div class='dropdown-pills pills-hidden' id='pills'>
+        <span>
+          <div>
+            <input type="checkbox" id='1' class="tag-selector tag_create_my_own" onclick="selectOnlyThis(this);">
+            <label for="1">Create your own</label>
+          </div>
+        </span>
+        <%= f.collection_check_boxes :oblivion_contents1, OblivionContent.all.order(title: :asc), :id, :title do |b| %>
+          <div>
+            <%= b.check_box(class: 'tag-selector', onclick: "selectOnlyThis(this)") %>
+            <%= b.label %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="create-your-own choice-hidden" id='create-oblivion'>
+      <h3>Create your own Reminder</h3>
+      <%= f.text_field :title, placeholder: 'Title' %>
+      <%= f.rich_text_area :content, placeholder: 'Content' %>
+      <%= f.hidden_field :position %>
+    </div>
+    <%= f.submit 'Save' %>
+  <% end %>
+<% else %>
+  <%= simple_form_for :update_oblivion_message, url: training_oblivion_update_oblivion_message_path(@oblivion.session.training, Oblivion.find(@oblivion.id)), method: :get, remote: true, input_html: {multipart: true} do |f| %>
+    <h3>What message would you like to send as your first reminder?</h3>
+    <div class="fake-dropdown" id='fake-drop' onclick="myFunction(this);">
+      <div class="fake-dropdown-template">
+        <h4>Choose Reminder</h4>
+       <i class="fas fa-chevron-down fa-2x"></i></i>
+      </div>
+      <div class='dropdown-pills pills-hidden' id='pills'>
+        <span>
+          <div>
+            <input type="checkbox" id='1' class="tag-selector tag_create_my_own" onclick="selectOnlyThis(this);">
+            <label for="1">Create your own</label>
+          </div>
+        </span>
+        <% current_message = OblivionMessage.where(oblivion_id: Oblivion.find(@oblivion.id), position: position) %>
+        <%= f.collection_check_boxes :oblivion_contents1, OblivionContent.all.order(title: :asc), :id, :title, checked: current_message do |b| %>
+          <div>
+            <%= b.check_box(class: 'tag-selector', onclick: "selectOnlyThis(this)") %>
+            <%= b.label %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="create-your-own choice-hidden" id='create-oblivion'>
+      <h3>Create your own Reminder</h3>
+      <%= f.text_field :title, placeholder: 'Title', value: current_message.title %>
+      <%= f.rich_text_area :content, placeholder: 'Content', value: current_message.content %>
+      <%= f.hidden_field :position, value: position %>
+    </div>
+    <%= f.submit 'Save' %>
+  <% end %>
+<% end %>

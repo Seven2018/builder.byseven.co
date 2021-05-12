@@ -82,8 +82,6 @@ class SessionsController < ApplicationController
       end
     end
     if @session.save
-      # @id = params[:type] + '-form-' + params[:id]
-      @sessions = training.sessions.order(:date, :start_time).offset((params[:page].to_i-1)*10).first(10)
       respond_to do |format|
         format.html {redirect_to training_path(training)}
         format.js

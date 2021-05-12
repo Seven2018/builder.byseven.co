@@ -12,8 +12,8 @@ class ImportAirtableJob < ApplicationJob
         writers = OverviewUser.all.select{|x| if card['Writers'].present?; card['Writers'].include?(x.id); end}
         contact = OverviewContact.find(card['Partner Contact'].join)
         company = OverviewClient.find(contact['Company/School'].join)
-        if contact['Builder_id'].nil?
-          if company['Builder_id'].nil?
+        unless contact['Builder_id'].present?
+          unless company['Builder_id'].present?
             reference = (ClientCompany.where.not(reference: nil).order(id: :asc).last.reference[-8..-1].to_i + 1).to_s.rjust(8, '0') if ClientCompany.all.count != 0
             new_company = ClientCompany.create(name: company['Name'], address: company['Address'], zipcode: company['Zipcode'], city: company['City'], client_company_type: company['Type'], description: '', reference: reference)
             company['Builder_id'] = new_company.id

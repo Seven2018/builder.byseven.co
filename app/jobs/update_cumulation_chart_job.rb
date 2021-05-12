@@ -5,7 +5,8 @@ class UpdateCumulationChartJob < ApplicationJob
     date_array = []
     i = 0
     sales = 0
-    activities = OverviewNumbersActivity.all(filter: "{Date} >= '2021-01-01'")
+    # activities = OverviewNumbersActivity.all(filter: "{Date} >= '2021-01-01'")
+    activities = OverviewNumbersActivity.all.select{|x| x['Date'] >= '2021-01-01' && x['Status (from Training)'] != ['12. Fail']}
     activities.each do |activity|
       activity['Revenue (Accumulation by Date)'] = nil
       activity['Revenue (Expected Accumulation by Date)'] = nil
@@ -13,7 +14,7 @@ class UpdateCumulationChartJob < ApplicationJob
     end
     date_array = activities.map{|x| x['Date']}.sort.uniq
     date_array.each do |date|
-      date_records = OverviewNumbersActivity.all.select{|x| x['Date'] == date}
+      date_records = OverviewNumbersActivity.all.select{|x| x['Date'] == date && x['Status (from Training)'] != ['12. Fail']}
       # print(date)
       sales = sales + date_records.map{|x|x['Revenue']}.sum
         date_records.first['Revenue (Accumulation by Date)'] = sales

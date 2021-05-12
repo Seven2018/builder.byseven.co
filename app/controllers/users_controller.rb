@@ -89,6 +89,28 @@ class UsersController < ApplicationController
     redirect_to user_path(current_user)
   end
 
+  # AIRTABLE
+
+  def airtable_create_user
+    user = OverviewUser.find(params[:record_id])
+    new_user = User.new(firstname: user['Firstname'], lastname: user['Lastname'], email: user['Email'], password: 'Seven2021')
+    authorize new_user
+    if user['Status'] == 'Seven'
+      new_user.access_level = 'admin'
+    else
+      new_user.access_level = 'sevener'
+    end
+    if new_user.save
+      user['Builder_id'] = new_user.id
+      user['Builder Account'] = true
+      user.save
+      redirect_to user_path(new_user)
+    else
+      redirect_to users_path
+      flash[:alert] = 'An problem has occured. Please contact your administrator.'
+    end
+  end
+
   private
 
   def set_user

@@ -1,0 +1,16 @@
+document.querySelector('.form-wrapper').innerHTML = '<%= j (render("oblivion_content_1", oblivion: @oblivion, new_form: true)) %>';
+document.querySelectorAll('.milestone').forEach((element) => {
+  element.classList.remove('active');
+})
+document.querySelector('.milestone-2').classList.add('active');
+
+title_container = document.createElement('div');
+title_container.classList.add('hidden');
+html_title = '';
+html_content = '';
+<% OblivionContent.all.each do |content| %>
+  html_title = html_title + "<p id='title-<%= content.id %>'><%= content.title %></p>";
+  html_content = html_content + "<p id='content-<%= content.id %>'><%= content.content %></p>";
+<% end %>
+title_container.innerHTML = html_title + html_content;
+document.querySelector('.form-wrapper').appendChild(title_container);
