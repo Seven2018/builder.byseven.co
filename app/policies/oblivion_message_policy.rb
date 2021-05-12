@@ -21,7 +21,7 @@ class OblivionPolicy < ApplicationPolicy
     check_access_seven
   end
 
-  def create_oblivion?
+  def create_oblivion_message?
     check_access_seven
   end
 

@@ -4,307 +4,82 @@
       <i class="fas fa-arrow-left"></i>
     <% end %>
   </div>
-
-
-<section class="temp">
-  <div class="interactive-form">
-    <div class="roadmap">
-      <div class="roadmapbtns">
-        <div class="milestone start active" data-index="1">
-          <span>1</span>
+  <section class="temp">
+    <div class="interactive-form">
+      <div class="roadmap">
+        <div class="roadmapbtns">
+          <div class="milestone milestone-1 active">
+            <span>1</span>
+          </div>
+          <div class="milestone milestone-2">
+            <span>2</span>
+          </div>
+          <div class="milestone milestone-3">
+            <span>3</span>
+          </div>
+          <div class="milestone milestone-4">
+            <span>4</span>
+          </div>
+          <div class="milestone milestone-5">
+            <span>5</span>
+          </div>
+          <div class="milestone milestone-6">
+            <span>6</span>
+          </div>
+          <div class="milestone milestone-7">
+            <span>7</span>
+          </div>
         </div>
-        <div class="milestone end">
-          <span>7</span>
-        </div>
+      <div class="controls">
+        <a class="prev disabled">Back</a>
+        <a class="next" onclick='submitForm();'>Next</a>
       </div>
-    <div class="controls">
-      <a class="prev disabled">Back</a>
-      <a class="next">Next</a>
+      </div>
+      <div class="form-wrapper">
+        <h3>For which session would you like to create an Oblivion?</h3>
+        <%= simple_form_for :create_oblivion, url: training_create_oblivion_path(@training), method: :get, remote: true, input_html: {multipart: true} do |f| %>
+        <!-- , remote: true, input_html: {multipart: true} -->
+          <div class="mod-date">
+          <%= f.input :session_id, collection: @training.sessions.where.not(date: nil), selected: @training.sessions.last.id, label_method: lambda { |session| "#{session.title} - #{session.date}" } %></div>
+          <%= button_tag :submit, class: 'hidden', id: 'form_submit' do %>
+            <p><i class="fas fa-save"></i></p>
+          <% end %>
+        <% end %>
+      </div>
     </div>
-    </div>
-    <div class="form-wrapper">
-      <form class="submission-handler">
-        <div class="modules">
-          <div class="module_greet active" data-map="greet">
-            <h3>For which session would you like to create an Oblivion?</h3>
-            <%= simple_form_for :create_oblivion, url: training_create_oblivion_path(@training) do |f| %>
-              <div class="mod-date">
-              <%= f.input :session_id, collection: @training.sessions, selected: @training.sessions.last.id, label_method: lambda { |session| "#{session.title} - #{session.date}" } %></div>
-          </div>
-          <div class="module_first" data-map="who are you?">
-            <h3>What message would you like to send as your first reminder?</h3>
-            <div class="fake-dropdown" id='fake-drop' onclick="myFunction(this);">
-              <div class="fake-dropdown-template">
-                <h4>Choose Reminder</h4>
-               <i class="fas fa-chevron-down fa-2x"></i></i>
-              </div>
-              <div class='dropdown-pills pills-hidden' id='pills'>
-                <span>
-                  <div>
-                    <input type="checkbox" id='1' class="tag-selector" onclick="selectOnlyThis(this);">
-                    <label for="1">Create your own</label>
-                  </div>
-                </span>
-                <%= f.collection_check_boxes :oblivion_contents1, OblivionContent.all.order(title: :asc), :id, :title do |b| %>
-                  <div>
-                    <%= b.check_box(class: 'tag-selector', onclick: "selectOnlyThis(this)") %>
-                    <%= b.label %>
-                  </div>
-                <% end %>
-                <!-- <input type="checkbox" id='2' class="tag-selector" onclick="selectOnlyThis(this.id)">
-                <label for="2">Python 101</label>
-                <input type="checkbox" id='3' class="tag-selector" onclick="selectOnlyThis(this.id)">
-                <label for="3">Example 101</label>
-                <input type="checkbox" id='4' class="tag-selector" onclick="selectOnlyThis(this.id)">
-                <label for="4">Example 102</label> -->
-              </div>
-            </div>
-            <div class="create-your-own choice-hidden" id='create-oblivion'>
-              <h3>Create your own Reminder</h3>
-              <%= f.text_field :title1, placeholder: 'Title' %>
-              <%= f.rich_text_area :content1, placeholder: 'Content' %>
-              <!-- <button class='validate-btn'><p>OK<i class="fas fa-check"></i></p></button> -->
-            </div>
-          </div>
-          <div class="module_second" data-map="your business">
-            <h3>What message would you like to send as your second reminder?</h3>
-            <div class="fake-dropdown" id='fake-drop' onclick="myFunction(this);">
-              <div class="fake-dropdown-template">
-                <h4>Choose Reminder</h4>
-               <i class="fas fa-chevron-down fa-2x"></i></i>
-              </div>
-              <div class='dropdown-pills pills-hidden' id='pills'>
-                <span>
-                  <div>
-                    <input type="checkbox" id='1' class="tag-selector" onclick="selectOnlyThis(this);">
-                    <label for="1">Create your own</label>
-                  </div>
-                </span>
-                <%= f.collection_check_boxes :oblivion_contents2, OblivionContent.all.order(title: :asc), :id, :title do |b| %>
-                  <div>
-                    <%= b.check_box(class: 'tag-selector', onclick: "selectOnlyThis(this)") %>
-                    <%= b.label %>
-                  </div>
-                <% end %>
-              </div>
-            </div>
-            <div class="create-your-own choice-hidden" id='create-oblivion'>
-              <h3>Create your own Reminder</h3>
-              <%= f.rich_text_area :title %>
-              <button class='validate-btn'><p>OK<i class="fas fa-check"></i></p></button>
-            </div>
-          </div>
-          <div class="module_third" data-map="your target">
-            <h3>What message would you like to send as your third reminder?</h3>
-            <div class="fake-dropdown" id='fake-drop' onclick="myFunction(this);">
-              <div class="fake-dropdown-template">
-                <h4>Choose Reminder</h4>
-               <i class="fas fa-chevron-down fa-2x"></i></i>
-              </div>
-              <div class='dropdown-pills pills-hidden' id='pills'>
-                <span>
-                  <div>
-                    <input type="checkbox" id='1' class="tag-selector" onclick="selectOnlyThis(this);">
-                    <label for="1">Create your own</label>
-                  </div>
-                </span>
-                <%= f.collection_check_boxes :oblivion_contents3, OblivionContent.all.order(title: :asc), :id, :title do |b| %>
-                  <div>
-                    <%= b.check_box(class: 'tag-selector', onclick: "selectOnlyThis(this)") %>
-                    <%= b.label %>
-                  </div>
-                <% end %>
-              </div>
-            </div>
-            <div class="create-your-own choice-hidden" id='create-oblivion'>
-              <h3>Create your own Reminder</h3>
-              <%= f.rich_text_area :title %>
-              <button class='validate-btn'><p>OK<i class="fas fa-check"></i></p></button>
-            </div>
-          </div>
-          <div class="module_fourth" data-map="your service/product">
-            <h3>What message would you like to send as your last reminder?</h3>
-            <div class="fake-dropdown" id='fake-drop' onclick="myFunction(this);">
-              <div class="fake-dropdown-template">
-                <h4>Choose Reminder</h4>
-               <i class="fas fa-chevron-down fa-2x"></i></i>
-              </div>
-              <div class='dropdown-pills pills-hidden' id='pills'>
-                <span>
-                  <div>
-                    <input type="checkbox" id='1' class="tag-selector" onclick="selectOnlyThis(this);">
-                    <label for="1">Create your own</label>
-                  </div>
-                </span>
-                <%= f.collection_check_boxes :oblivion_contents4, OblivionContent.all.order(title: :asc), :id, :title do |b| %>
-                  <div>
-                    <%= b.check_box(class: 'tag-selector', onclick: "selectOnlyThis(this)") %>
-                    <%= b.label %>
-                  </div>
-                <% end %>
-              </div>
-            </div>
-            <div class="create-your-own choice-hidden" id='create-oblivion'>
-              <h3>Create your own Reminder</h3>
-              <%= f.rich_text_area :title %>
-              <button class='validate-btn'><p>OK<i class="fas fa-check"></i></p></button>
-            </div>
-          </div>
-          <div class="module_fifth" data-map="your added value">
-            <h3>Here’s an overview of the oblivions you created in order for Session <%= @training.sessions.ids %> of <%= @training.title %></h3>
-            <div class="oblivion-recap">
-              <h3>Oblivion Title</h3>
-              <p>Oblivion content</p>
-            </div>
-            <div class="oblivion-recap">
-              <h3>Oblivion Title</h3>
-              <p>Oblivion content</p>
-            </div>
-            <div class="oblivion-recap">
-              <h3>Oblivion Title</h3>
-              <p>Oblivion content</p>
-            </div>
-            <div class="oblivion-recap">
-              <h3>Oblivion Title</h3>
-              <p>Oblivion content</p>
-            </div>
-            <% end %>
-          </div>
-          <div class="module_submit" data-map="your something else">
-            <h3>Congrats you created an oblivion for Session <%= @training.sessions.ids %> of <%= @training.title %></h3>
-            <p>Your first oblivion will be sent <i>date.</i><br><br> Your second will be sent <i>date.</i><br><br> Your third will be sent <i>date.</i><br><br> Your last oblivion will be sent on this <i>date.</i></p>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-</section>
+  </section>
 </div>
 
 <script>
-  $(function() {
-  var prev = $('.prev'),
-      next = $('.next'),
-      nodeCount = $('.modules [class^="module_"]').length - 1;
-
-  // Map and populate roadmap
-  $('.modules').children('[class^=module_]').not(':first').not(':last').each(function() {
-    var dataMap = $(this).attr('data-map'),
-        nodeIndex = $('[class^="module_"]').index(this) + 1;
-    $('.roadmap .end').before(
-      '<div class="milestone" data-index="' + nodeIndex +'"><span>' + nodeIndex + '</span></div>'
-    );
-  });
-
-  $('.milestone.end').attr('data-index', nodeCount + 1);
-
-  function disableControls(type, i) {
-    switch(type) {
-      case 'prev':
-        if (i === 0) {
-          prev.addClass('disabled');
-        }
-        break;
-
-      case 'next':
-        if (i === nodeCount) {
-          next.addClass('submission').html('&#x2714; Send');
-        }
-        break;
-
-      case 'direct':
-        if (i === 0) {
-          prev.addClass('disabled');
-        } else if (i === nodeCount) {
-          next.addClass('submission').html('&#x2714; Send');
-        }
-    }
-
-    var x = $('.modules').find('[class^="module_"].active'),
-        y = $('[class^="module_"]').index(x);
-
-    if (y != 0) {
-      prev.removeClass('disabled');
-    }
-
-    if (y != nodeCount) {
-      next.removeClass('submission').html('Next');
-    }
+  function submitForm() {
+    button = document.getElementById('form_submit');
+    button.click();
   }
 
-  prev.on('click', function() {
-    var type = 'prev';
-    let a = $('.modules').find('[class^="module_"].active'),
-        b = $('[class^="module_"]').index(a);
+  function myFunction(element) {
+    element.querySelector("#pills").classList.toggle("pills-hidden");
+  }
 
-    if (b > 0) {
-      a.removeClass('active');
-      let c = $('.modules [class^="module_"]').eq(b - 1).addClass('active');
-      $('.roadmap .milestone.active').removeClass('active');
-      $('.roadmap').children().eq(b - 1).addClass('active');
-      b--;
+
+  function selectOnlyThis(element) {
+    element.parentNode.parentNode.parentNode.querySelectorAll('.tag-selector').forEach((el) => {
+      el.checked = false;
+    })
+    element.checked = true;
+    choice_title = element.parentNode.parentNode.parentNode.parentNode.querySelector('h4');
+    choice_title.innerHTML = element.parentNode.querySelector('label').innerHTML;
+    form_div = element.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('#create-oblivion');
+    position = parseInt(document.querySelector('.milestone.active').querySelector('span').innerHTML, 10) - 1;
+    form_div.querySelector('#create_oblivion_message_position').value = position;
+    if (element.classList.contains('tag_create_my_own')) {
+      form_div.classList.remove('choice-hidden');
+      form_div.querySelector('#create_oblivion_message_title').value = '';
+      form_div.querySelector('#create_oblivion_message_content').value = '';
+    } else {
+      form_div.classList.remove('choice-hidden');
+      form_div.querySelector('#create_oblivion_message_title').value = document.querySelector('#title-'+element.value.toString()).innerHTML;
+      form_div.querySelector('#create_oblivion_message_content').value = document.querySelector('#content-'+element.value.toString()).innerHTML;
+      console.log(element.value);
     }
-
-    disableControls(type, b);
-  });
-
-  next.on('click', function() {
-    var type = 'next';
-    let a = $('.modules').find('[class^="module_"].active'),
-        b = $('[class^="module_"]').index(a);
-
-    if (b < nodeCount) {
-      a.removeClass('active');
-      let c = $('.modules [class^="module_"]').eq(b + 1).addClass('active');
-      $('.roadmap .milestone.active').removeClass('active');
-      $('.roadmap').children().eq(b + 1).addClass('active');
-      b++;
-    }
-
-    disableControls(type, b);
-  });
-
-  $('.milestone').on('click', function() {
-    $('.roadmap').find('.milestone.active').removeClass('active');
-    $('.modules').find('[class^="module_"].active').removeClass('active');
-    $(this).addClass('active');
-    let a = $('.roadmap').find('.milestone.active'),
-        b = $('.milestone').index(a);
-
-    $('.modules').children().eq(b).addClass('active');
-
-    var type = 'direct',
-        i = 0;
-    disableControls(type, b);
-  });
-});
-
-// FAKE DROPDOWN //
-fakedrop = document.getElementById('fake-drop')
-pills = document.getElementById('pills')
-pills1 = document.getElementById('pills-1')
-pills2 = document.getElementById('pills-2')
-pills3 = document.getElementById('pills-3')
-checkbox = document.getElementById('1')
-
-function myFunction(element) {
-  element.querySelector("#pills").classList.toggle("pills-hidden");
-  createoblivion = element.querySelector('#create-oblivion')
-  choose = element.querySelector('#1')
-  choose.addEventListener('click', event => {
-  createoblivion.classList.remove('choice-hidden');
-   if (checkbox.checked == false){
-    createoblivion.classList.add('choice-hidden');
-   }
-  })
-}
-
-
-function selectOnlyThis(element) {
-  element.parentNode.parentNode.parentNode.querySelectorAll('.tag-selector').forEach((el) => {
-    el.checked = false;
-  })
-  element.checked = true;
-  element.parentNode.parentNode.parentNode.parentNode.querySelector('h4').innerHTML = element.parentNode.querySelector('label').innerHTML;
-}
+  }
 </script>

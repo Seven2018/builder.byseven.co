@@ -33,3 +33,27 @@
     </div>
   <% end %>
 </div>
+
+<script>
+  $('input[name="content_module[duration][]"]').on('change', function() {
+    $('input[name="content_module[duration][]"]').not(this).prop('checked', false);
+  });
+
+  var $cs=$('input[name="content_module[action1_id][]"]');
+    if ($cs.length > 1) {
+      $('input[name="content_module[action1_id][]"] input:checkbox:not(:checked)').attr("disabled", true);
+      $('input[name="content_module[action1_id][]"] input:checkbox:not(:checked)').parent().css("color", "gray");
+    }
+  $('input[name="content_module[action1_id][]"]').change(function () {
+    console.log('test2');
+    var $cs=$('input[name="content_module[action1_id][]"]:checked');
+    if ($cs.length > 1) {
+      $('input[name="content_module[action1_id][]"]:not(:checked)').attr("disabled", true);
+      $('input[name="content_module[action1_id][]"]:not(:checked)').parent().css("color", "gray");
+    }
+    else{
+      $('input[name="content_module[action1_id][]"]').attr("disabled", false);
+      $('input[name="content_module[action1_id][]"]').parent().css("color", "black");
+    }
+  });
+</script>

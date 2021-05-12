@@ -10,7 +10,9 @@
     <%= f.input :firstname %>
     <%= f.input :lastname %>
     <%= f.input :email %>
+    <%= f.input :email, input_html: { style: 'display:none;', name: 'false-email'}, label: false %>
     <%= f.input :access_level, collection: ['super admin', 'admin', 'training manager', 'sevener+', 'sevener'], include_blank: false %>
+    <%= f.input :password, input_html: { style: 'display:none;', name: 'false-password'}, label: false %>
     <%= f.input :password %>
     <%= f.input :linkedin %>
     <%= f.input :picture, label: 'Photo URL' %>

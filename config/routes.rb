@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   resources :users
   # get 'users_search', to: 'users#users_search', as: 'users_search'
   get :users_search, controller: :users
+  get :airtable_create_user, controller: :users
 
   # ACTIONS
   resources :actions
@@ -115,6 +116,8 @@ Rails.application.routes.draw do
     # OBLIVIONS
     resources :oblivions do
       resources :oblivion_messages
+      get :create_oblivion_message, controller: :oblivion_messages
+      get :update_oblivion_message, controller: :oblivion_messages
     end
     get :create_oblivion, controller: :oblivions
   end

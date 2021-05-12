@@ -16,7 +16,14 @@ class OblivionsController < ApplicationController
   end
 
   def create_oblivion
-    raise
+    session = Session.find(params[:create_oblivion][:session_id])
+    @oblivion = Oblivion.new(title: "Oblivion for #{session.training.client_contact.client_company.name} - #{session.training.title} - #{session.date.strftime('%d/%m/%Y')}", session_id: session.id)
+    authorize @oblivion
+    if @oblivion.save
+      respond_to do |format|
+        format.js
+      end
+    end
   end
 
   private
