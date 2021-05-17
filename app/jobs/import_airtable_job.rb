@@ -4,6 +4,7 @@ class ImportAirtableJob < ApplicationJob
   def perform
     OverviewTraining.all.each do |card|
       if card['Builder_id'].present?
+        next if card['Status'] == '12. Fail'
         training = Training.find(card['Builder_id'])
         training.update(title: card['Title']) if training.title != card['Title']
         training.update(unit_price: card['Unit Price']) if training.unit_price != card['Unit Price']
