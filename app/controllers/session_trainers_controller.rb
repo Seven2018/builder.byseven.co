@@ -95,7 +95,7 @@ class SessionTrainersController < ApplicationController
             morning_duration = session.workshops.where('position < ?', break_position).map(&:duration).sum
             morning << session.start_time + morning_duration.minutes
             afternoon = [session.end_time - session.workshops.where('position > ?', break_position).map(&:duration).sum.minutes, session.end_time]
-            [morning.change(day: day, month: month, year: year), afternoon.change(day: day, month: month, year: year)].each do |event|
+            [morning.each{|x| x.change(day: day, month: month, year: year)}, afternoon.each{|y| y.change(day: day, month: month, year: year)}].each do |event|
               events << Google::Apis::CalendarV3::Event.new({
                 start: {
                   date_time: start_time.rfc3339.slice(0...-1),
