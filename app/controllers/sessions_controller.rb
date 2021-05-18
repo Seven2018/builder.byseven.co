@@ -52,14 +52,6 @@ class SessionsController < ApplicationController
     prev_start = @session.start_time
     prev_end = @session.end_time
     @session.update(session_params)
-    if prev_date != @session.date || prev_start != @session.start_time || prev_end != @session.end_time
-      @session.session_trainers.each do |session_trainer|
-        if session_trainer.calendar_uuid.present?
-          @session.training.gdrive_link.nil? ? @session.training.update(gdrive_link: session_trainer.user_id.to_s + ':' + session_trainer.calendar_uuid + ',') : @session.training.update(gdrive_link: @session.training.gdrive_link + session_trainer.user_id.to_s + ':' + session_trainer.calendar_uuid + ',')
-          session_trainer.update(calendar_uuid: nil)
-        end
-      end
-    end
     if @session.save && (params[:session][:date].present?)
       # UpdateAirtableJob.perform_async(@session.training, true)
       params[:session][:session_page].present? ? (redirect_to training_path(@session.training, page: params[:session][:session_page], change: true)) : (redirect_to training_path(@session.training, page: 1, change: true))
@@ -73,14 +65,6 @@ class SessionsController < ApplicationController
     prev_start = @session.start_time
     prev_end = @session.end_time
     @session.update(session_params)
-    if prev_date != @session.date || prev_start != @session.start_time || prev_end != @session.end_time
-      @session.session_trainers.each do |session_trainer|
-        if session_trainer.calendar_uuid.present?
-          @session.training.gdrive_link.nil? ? @session.training.update(gdrive_link: session_trainer.user_id.to_s + ':' + session_trainer.calendar_uuid + ',') : @session.training.update(gdrive_link: @session.training.gdrive_link + session_trainer.user_id.to_s + ':' + session_trainer.calendar_uuid + ',')
-          session_trainer.update(calendar_uuid: nil)
-        end
-      end
-    end
     if @session.save
       respond_to do |format|
         format.html {redirect_to training_path(training)}
