@@ -38,7 +38,11 @@
         <ul id='owner'>
           <% @session.users.each do |user| %>
             <li>
-              <a data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'></a>
+              <% if user.picture.present? %>
+                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm'></a>
+              <% else %>
+                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm'></a>
+              <% end %>
             </li>
           <% end %>
           <% if ['super admin', 'admin', 'project manager', 'HR'].include?(current_user.access_level) %>

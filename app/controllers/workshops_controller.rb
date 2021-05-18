@@ -16,17 +16,14 @@ class WorkshopsController < ApplicationController
     end
     authorize @workshop
     @workshop.session = @session
-    i = 1
     if @workshop.save
       if params[:content_id].present?
         @content.theories.each do |theory|
           TheoryWorkshop.create(theory_id: theory.id, workshop_id: @workshop.id)
         end
-        @content.content_modules.order('position ASC').each do |mod|
-          wmod = WorkshopModule.new(mod.attributes.except("id", "position", "created_at", "updated_at", "content_id"))
+        @content.content_modules.order(position: :asc).each do |mod|
+          wmod = WorkshopModule.new(mod.attributes.except("id", "created_at", "updated_at", "content_id"))
           wmod.workshop = @workshop
-          wmod.position = i
-          i +=1
           wmod.save
         end
       end

@@ -55,7 +55,7 @@ class SessionAttendeesController < ApplicationController
         SessionAttendee.create(session_id: session.id, attendee_id: attendee.id)
       end
     end
-    redirect_to training_path(training, page: 1)
+    redirect_to training_path(training)
   end
 
   def destroy

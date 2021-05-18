@@ -18,10 +18,7 @@ class UpdateCalendarJob < ApplicationJob
     # Lists the users and the ids of the events to be deleted
     if command[0...-1] == 'purge_session'
       SessionTrainer.where(session_id: session_ids).each do |session_trainer|
-        # begin
-          delete_calendar_id(session_trainer, service)
-        # rescue
-        # end
+        delete_calendar_id(session_trainer, service)
       end
       Session.find(session_ids.join).destroy
       redirect_to training_path(training)
@@ -29,21 +26,15 @@ class UpdateCalendarJob < ApplicationJob
     elsif command[0...-1] == 'remove_trainers' || command[0...-1] == 'remove_trainers_global'
       trainers_to_delete = Base64.decode64(state).split('#')[1].split(',')
       SessionTrainer.where(id: trainers_to_delete).each do |session_trainer|
-        # begin
-          delete_calendar_id(session_trainer, service)
-        # rescue
-        # end
+        delete_calendar_id(session_trainer, service)
         session_trainer.destroy
       end
       redirect_to training_path(training)
       return
     else
       SessionTrainer.where(session_id: session_ids).each do |session_trainer|
-        # begin
-          delete_calendar_id(session_trainer, service)
-          session_trainer.update(calendar_uuid: nil)
-        # rescue
-        # end
+        delete_calendar_id(session_trainer, service)
+        session_trainer.update(calendar_uuid: nil)
       end
       # Lists the users for whom an event will be created
       list = command.split(',')
@@ -120,10 +111,13 @@ class UpdateCalendarJob < ApplicationJob
   end
 
   def delete_calendar_id(session_trainer, service)
-    if ['super admin', 'admin'].include?(session_trainer.user.access_level)
-      service.delete_event(session_trainer.user.email, session_trainer.calendar_uuid)
-    else
-      service.delete_event(calendars_ids['other'], session_trainer.calendar_uuid)
+    begin
+      if ['super admin', 'admin'].include?(session_trainer.user.access_level)
+        service.delete_event(session_trainer.user.email, session_trainer.calendar_uuid)
+      else
+        service.delete_event(calendars_ids['other'], session_trainer.calendar_uuid)
+      end
+    rescue
     end
   end
 end

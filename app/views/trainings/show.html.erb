@@ -5,7 +5,7 @@
         <i class="fas fa-arrow-left"></i>
       <% end %>
     <% else %>
-      <%= link_to trainings_path(page: 1), class: 'btn return-arrow' do %>
+      <%= link_to trainings_path, class: 'btn return-arrow' do %>
         <i class="fas fa-arrow-left"></i>
       <% end %>
     <% end %>
@@ -71,7 +71,11 @@
         <ul id="owner">
           <% @training.owners.each do |user| %>
             <li>
-              <a data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'></a>
+              <% if user.picture.present? %>
+                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm'></a>
+              <% else %>
+                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm'></a>
+              <% end %>
             </li>
             <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
               <div class="modal-dialog" role="document" style="border-radius: 2rem">
@@ -90,7 +94,11 @@
         <ul id="writer">
           <% @training.writers.each do |user| %>
             <li>
-              <a data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'></a>
+              <% if user.picture.present? %>
+                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm'></a>
+              <% else %>
+                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm'></a>
+              <% end %>
             </li>
             <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
               <div class="modal-dialog" role="document" style="border-radius: 2rem">
@@ -120,7 +128,13 @@
               <% session.users.each do |trainer| %>
                 <% trainer_array << trainer %>
                 <% unless trainer_array.count(trainer) > 1 %>
-                  <li><a data-toggle='modal' data-target='#consultUser<%= trainer.id %>' data-toggle="tooltip" title="User Infos"><img src='<%= "#{trainer.picture}" %>' alt="" class='avatar-sm' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'></a></li>
+                  <li>
+                    <% if trainer.picture.present? %>
+                      <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= trainer.id %>'><img src='<%= "#{trainer.picture}" %>' alt="" class='avatar-sm'></a>
+                    <% else %>
+                      <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= trainer.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm'></a>
+                    <% end %>
+                  </li>
                 <% end %>
               <% end %>
             <% end %>
@@ -156,46 +170,9 @@
       <p id='survey-link'>Link to survey : <%= @training.satisfaction_survey %></p>
     <% end %>
   </div>
-  <div class="training_index_controls">
-    <% if @training.sessions.count.to_f / 10 > 2 %>
-      <% if params[:page].to_i > 1 %>
-        <%= link_to url_for(page: 1) do %>
-          <i class="fas fa-backward"></i>
-        <% end %>
-      <% else %>
-        <i class="fas fa-backward" style='color:rgba(0,0,0,0.3'></i>
-      <% end %>
-    <% end %>
-    <% if @training.sessions.count.to_f / 10 > 1 %>
-      <% if params[:page].to_i > 1 %>
-        <%= link_to url_for(page: params[:page].to_i - 1, type: params[:type]) do %>
-          <i class="fas fa-play fa-rotate-180"></i>
-        <% end %>
-      <% else %>
-        <i class="fas fa-play fa-rotate-180" style='color:rgba(0,0,0,0.3)'></i>
-      <% end %>
-      <p><%= "Page #{params[:page]} / #{(@training.sessions.count.to_f / 10).ceil}" %></p>
-      <% if params[:page].to_i < @training.sessions.count.to_f / 10 %>
-        <%= link_to url_for(page: params[:page].to_i + 1) do %>
-          <i class="fas fa-play"></i>
-        <% end %>
-      <% else %>
-        <i class="fas fa-play" style='color:rgba(0,0,0,0.3'></i>
-      <% end %>
-    <% end %>
-    <% if @training.sessions.count.to_f / 10 > 2 %>
-      <% if params[:page].to_i < @training.sessions.count.to_f / 10 %>
-        <%= link_to url_for(page: (@training.sessions.count.to_f / 10).ceil) do %>
-          <i class="fas fa-forward"></i>
-        <% end %>
-      <% else %>
-        <i class="fas fa-forward" style='color:rgba(0,0,0,0.3'></i>
-      <% end %>
-    <% end %>
-  </div>
   <div class="training-info">
     <div class="sessions-cards">
-      <% @training.sessions.order(:date, :start_time).offset((params[:page].to_i-1)*10).first(10).each do |session| %>
+      <% @training.sessions.order(:date, :start_time).each do |session| %>
         <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) || session.users.include?(current_user) %>
           <div id="card-block-<%= session.id %>">
             <%= render 'show_session_card', session: session %>

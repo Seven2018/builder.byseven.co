@@ -49,6 +49,9 @@
         <%= link_to training_copy_form_session_path(session.training, session, page: params[:page]), data: { toggle: 'tooltip'}, title: 'Copy Session' do %>
           <button class='edit-fafa'><i class="fas fa-copy"></i></button>
         <% end %>
+        <%= link_to remove_session_trainers_path(session_id: session.id, destroy: 'true'), data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
+          <button class='edit-fafa'><i class="fas fa-trash-alt"></i></button>
+        <% end %>
       <% else %>
         <button class="edit-fafa disabled" data-toggle="tooltip" title="Disabled"><i class="fas fa-user-astronaut"></i></button>
         <button class="edit-fafa disabled" data-toggle="tooltip" title="Disabled"><i class="fas fa-pen"></i></button>
@@ -65,11 +68,15 @@
         <%= f.input :title, label: false, input_html: {value: session.title, style: 'width:100%;'} %>
         <%= button_tag type: 'submit', class: 'hidden hidden-submit' %>
       <% end %>
-      <div style='display:flex;align-items:center;position: absolute;right: 210px;top: -60px;'>
+      <div style='display:flex;align-items:center;position: absolute;right: 260px;top: -60px;'>
         <ul id="owner-session-index">
           <% session.users.each do |user| %>
             <li>
-              <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'></a>
+              <% if user.picture.present? %>
+                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm'></a>
+              <% else %>
+                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm'></a>
+              <% end %>
             </li>
             <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
               <div class="modal-dialog" role="document" style="border-radius: 2rem">

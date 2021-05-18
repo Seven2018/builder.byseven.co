@@ -14,7 +14,7 @@ class TrainingsController < ApplicationController
           @trainings = trainings_empty + trainings_with_date
           @user = User.find(params[:search][:user])
         else
-          trainings = ((Training.where("lower(title) LIKE ?", "%#{params[:search][:title].downcase}%")) + (Training.joins(client_contact: :client_company).where("lower(client_companies.name) LIKE ?", "%#{params[:search][:title].downcase}%"))).flatten(1).uniq
+          trainings = ((Training.where("unaccent(lower(title)) LIKE ?", "%#{I18n.transliterate(params[:search][:title].downcase)}%")) + (Training.joins(client_contact: :client_company).where("lower(client_companies.name) LIKE ?", "%#{params[:search][:title].downcase}%"))).flatten(1).uniq
           trainings_empty = trainings.reject{|x| x.end_time.present?}
           trainings_with_date = trainings.reject{|y| !y.end_time.present?}.sort_by{|z| z.end_time}.reverse
           @trainings = trainings_empty + trainings_with_date
@@ -41,8 +41,6 @@ class TrainingsController < ApplicationController
       end
     # Index for Sevener Users, with limited visibility
     else
-      # @trainings = Training.joins(sessions: :users).where("users.email LIKE ?", "#{current_user.email}").uniq.select{|x| x.end_time.present? && x.end_time >= Date.today}.sort_by{|y| y.next_session}
-      # @trainings = (Training.joins(sessions: :users).where(users: {id: current_user.id}).uniq.select{|x| Session.joins(:session_trainers).where(training_id: x.id, session_trainers: {user_id: current_user.id}).order(date: :asc).reject{|c| !c.date.present?}.last.date >= Date.today}.sort_by{|y| y.next_session} + Training.joins(sessions: :users).where(sessions: {date: nil}, users: {id: current_user.id}).uniq).uniq
       @trainings = (Training.joins(sessions: :users).where(users: {id: current_user.id}).uniq.select{|x| if (sessions = Session.joins(:session_trainers).where(training_id: x.id, session_trainers: {user_id: current_user.id}).order(date: :asc).reject{|c| !c.date.present?}).present?; sessions.last.date >= Date.today; end;}.sort_by{|y| y.next_session} + Training.joins(sessions: :users).where(sessions: {date: nil}, users: {id: current_user.id}).uniq).uniq
       @trainings_count = @trainings.count
     end
@@ -57,12 +55,10 @@ class TrainingsController < ApplicationController
         @trainings = @trainings.select{|x| x.end_time.present? && x.end_time < Date.today}.sort_by{|y| y.end_time}.reverse
         @user = User.find(params[:user])
       else
-        # trainings = (Training.all.select{|x| x.next_session.present?}.sort_by{|y| y.next_session} + Training.all.select{|z| !z.next_session.present? && z.end_time.present?}.sort_by{|a| a.end_time}.reverse)
         @trainings = Training.all.select{|x| x.end_time.present? && x.end_time < Date.today}.sort_by{|y| y.end_time}.reverse
       end
     # Index for Sevener Users, with limited visibility
     else
-      # @trainings = Training.joins(sessions: :users).where(users: {id: current_user.id}).uniq.select{|x| Session.joins(:session_trainers).where(training_id: x.id, session_trainers: {user_id: current_user.id}).order(date: :asc).last.date < Date.today}.sort_by{|y| y.end_time}.reverse
       @trainings = (Training.joins(sessions: :users).where(users: {id: current_user.id}).uniq.select{|x| Session.joins(:session_trainers).where(training_id: x.id, session_trainers: {user_id: current_user.id}).order(date: :asc).reject{|c| !c.date.present?}.last.date < Date.today}.sort_by{|y| y.end_time}.reverse - Training.joins(sessions: :users).where(sessions: {date: nil}, users: {id: current_user.id}).uniq).uniq
 
     end
@@ -88,9 +84,6 @@ class TrainingsController < ApplicationController
     authorize @training
     @training_ownership = TrainingOwnership.new
     @session = Session.new
-    unless params[:page].present?
-      redirect_to training_path(@training, page: 1)
-    end
     if params[:task] == 'update_airtable'
       UpdateAirtableJob.perform_async(@training, true)
       #@training.trainers.each{|y| @training.export_numbers_sevener(y)}
@@ -144,7 +137,7 @@ class TrainingsController < ApplicationController
   def destroy
     authorize @training
     @training.destroy
-    redirect_to trainings_path(page: 1)
+    redirect_to trainings_path
   end
 
   def copy
@@ -232,16 +225,12 @@ class TrainingsController < ApplicationController
     authorize @training
     if params[:status] == 'new'
       @training.trainers.each do |user|
-      # if ['sevener+','sevener'].include?(user.access_level)
-          TrainerNotificationMailer.with(user: user).new_trainer_notification(@training, user).deliver
-      # end
+        TrainerNotificationMailer.with(user: user).new_trainer_notification(@training, user).deliver
       end
     elsif params[:trainers][:status] == 'edit'
       user_ids = params[:session][:user_ids][1..-1].map{|x| x.to_i}
       @training.trainers.select{|x| user_ids.include?(x.id)}.each do |user|
-        # if ['sevener+','sevener'].include?(user.access_level)
-            TrainerNotificationMailer.with(user: user).edit_trainer_notification(@training, user).deliver
-        # end
+        TrainerNotificationMailer.with(user: user).edit_trainer_notification(@training, user).deliver
       end
     end
     redirect_back(fallback_location: root_path)
@@ -249,9 +238,7 @@ class TrainingsController < ApplicationController
 
   def trainer_reminder_email(session, user)
     skip_authorization
-    # if ['sevener+','sevener'].include?(user.access_level)
-      TrainerNotificationMailer.with(user: user).trainer_session_reminder(session, user).deliver
-    # end
+    TrainerNotificationMailer.with(user: user).trainer_session_reminder(session, user).deliver
   end
 
   def redirect_docusign

@@ -4,7 +4,7 @@ class ImportAirtableJob < ApplicationJob
   def perform
     OverviewTraining.all.each do |card|
       if card['Builder_id'].present?
-        if card['Status'] == '12. Fail'
+        if card['Status'] != '12. Fail'
           to_delete = Training.find(card['Builder_id'])
           if to_delete.present?
 

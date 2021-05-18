@@ -54,7 +54,7 @@ class SessionsController < ApplicationController
     @session.update(session_params)
     if @session.save && (params[:session][:date].present?)
       # UpdateAirtableJob.perform_async(@session.training, true)
-      params[:session][:session_page].present? ? (redirect_to training_path(@session.training, page: params[:session][:session_page], change: true)) : (redirect_to training_path(@session.training, page: 1, change: true))
+      params[:session][:session_page].present? ? (redirect_to training_path(@session.training, page: params[:session][:session_page], change: true)) : (redirect_to training_path(@session.training, change: true))
     end
   end
 
