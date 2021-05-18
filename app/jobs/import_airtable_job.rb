@@ -7,7 +7,10 @@ class ImportAirtableJob < ApplicationJob
         if card['Status'] == '12. Fail'
           to_delete = Training.find_by(id: card['Builder_id'])
           if to_delete.present?
-            to_delete.destroy
+            begin
+              to_delete.destroy
+            rescue
+            end
           end
           next
         end
