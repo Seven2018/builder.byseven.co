@@ -27,7 +27,7 @@
         </div>
         <div>
           <i class="fas fa-users"></i>
-          <p id='<%= "attendee-form-" + "#{session.id.to_s}" %>' style='margin-left: 0.5rem;' onclick='openSessionForm(this)'><%= session.attendees.count %>/<%= session.attendee_number %></p>
+          <p id='<%= "attendee-form-" + "#{session.id.to_s}" %>' onclick='openSessionForm(this)'><%= session.attendees.count %>/<%= session.attendee_number %></p>
           <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id, page: params[:page], type: 'attendee'), html: { class: "hidden hidden-form" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
             <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
               <%= f.input :attendee_number, input_html: { min: 0, value: session.attendee_number, style: 'width: 5rem' }, label: false %>
@@ -61,11 +61,9 @@
   <div class="card-main-lg">
     <div class="card-session-header">
       <h3 id='<%= "title-form-" + "#{session.id.to_s}" %>' onclick='openSessionForm(this)'><%= session.title %></h3>
-      <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id, page: params[:page], type: 'title'), html: { class: "hidden hidden-form" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
-        <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
-          <%= f.input :title, label: false, input_html: {value: session.title} %>
-          <%= button_tag type: 'submit', class: 'hidden hidden-submit' %>
-        </div>
+      <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id, page: params[:page], type: 'title'), html: { class: "hidden hidden-form", style: 'width:100%;' }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
+        <%= f.input :title, label: false, input_html: {value: session.title, style: 'width:100%;'} %>
+        <%= button_tag type: 'submit', class: 'hidden hidden-submit' %>
       <% end %>
       <div style='display:flex;align-items:center;position: absolute;right: 210px;top: -60px;'>
         <ul id="owner-session-index">
@@ -91,7 +89,7 @@
     </div>
 </div>
   <div class="modal fade editSession" id="editSession<%= session.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg" role="document" style="border-radius: 2rem">
+    <div class="modal-dialog" role="document" style="border-radius: 2rem">
       <%= render '/sessions/edit', session: session %>
     </div>
   </div>

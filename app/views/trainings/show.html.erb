@@ -295,6 +295,7 @@
 
 <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
   <script>
+    formGuardian = false;
     // survey = document.getElementById('survey-link');
     // form = document.getElementById('survey-form');
     // survey.addEventListener('click', (event) => {
@@ -316,29 +317,33 @@
     }
 
     function openSessionForm(element) {
-      if (document.querySelectorAll('.hidden-form.active').length == 0) {
-        form = element.parentNode.querySelector('.hidden-form');
-        element.classList.toggle('hidden');
-        form.classList.toggle('hidden');
-        if (form.querySelector('.form-control') != null){
-          initial_value = form.querySelector('.form-control').value;
-        }
-        if (form.querySelector('.datepicker') != null) {
-          flatpickr(".datepicker", {
-            disableMobile: true,
-            dateFormat: "d/m/Y",});
-        }
-        window.addEventListener('click', function(e) {
-           if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
+      if (formGuardian == false) {
+        formGuardian = true;
+        if (document.querySelectorAll('.hidden-form.active').length == 0) {
+          form = element.parentNode.querySelector('.hidden-form');
+          element.classList.toggle('hidden');
+          form.classList.toggle('hidden');
+          if (form.querySelector('.form-control') != null){
+            initial_value = form.querySelector('.form-control').value;
+          }
+          if (form.querySelector('.datepicker') != null) {
+            flatpickr(".datepicker", {
+              disableMobile: true,
+              dateFormat: "d/m/Y",});
+          }
+          window.addEventListener('click', function(e) {
+            if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
               if (form.querySelector('.form-control').value != initial_value) {
                 form.querySelector('.hidden-submit').click();
               } else {
                 form.classList.toggle('hidden');
                 element.classList.toggle('hidden');
               }
+              formGuardian = false;
               this.removeEventListener('click', arguments.callee, false);
-           }
-        });
+            }
+          });
+        }
       }
     };
   </script>
