@@ -12,7 +12,8 @@ class UpdateCalendarJob < ApplicationJob
     # Get the targeted session
     session_ids = Base64.decode64(state).split('|')[1].split(',').map{|x| x.to_i}
     command = Base64.decode64(state).split('|').first.split(',').first
-    training = Base64.decode64(state).split('|').first&.split(',')&.last
+    training_id = Base64.decode64(params[:state]).split('|').first&.split(',')&.last
+    training = Training.find(training_id)
     training = Session.find(session_ids[0]).training unless training.present?
     # Calendars ids
     calendars_ids = {'other' => 'vum1670hi88jgei65u5uedb988@group.calendar.google.com'}

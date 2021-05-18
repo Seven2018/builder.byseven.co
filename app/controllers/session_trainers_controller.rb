@@ -20,7 +20,8 @@ class SessionTrainersController < ApplicationController
     UpdateCalendarJob.perform_async(params[:code], params[:state], params[:scope], client_options)
     session_ids = Base64.decode64(params[:state]).split('|')[1].split(',').map{|x| x.to_i}
     command = Base64.decode64(params[:state]).split('|').first.split(',').first
-    training = Base64.decode64(params[:state]).split('|').first&.split(',')&.last
+    training_id = Base64.decode64(params[:state]).split('|').first&.split(',')&.last
+    training = Training.find(training_id)
     training = Session.find(session_ids[0]).training unless training.present?
     redirect_to training_path(training)
   end
