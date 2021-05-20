@@ -64,9 +64,9 @@
       <h3><strong><%= @training.client_contact.client_company.name %></strong></h3>
       <div class="flex-row-between-centered">
         <h3 style='margin-bottom:1rem;'><%= @training.title %></h3>
-        <% if @airtable_training.present? %>
-          <a data-toggle='modal' data-target='#consultObjectives' data-toggle="tooltip" title="See Objectives"><i class="fas fa-info-circle"></i></a>
-        <% end %>
+        <%# if @airtable_training.present? %>
+          <!-- <a data-toggle='modal' data-target='#consultObjectives' data-toggle="tooltip" title="See Objectives"><i class="fas fa-info-circle"></i></a> -->
+        <%# end %>
       </div>
       <p><%="From #{@training.sessions.order(date: :asc).first&.date&.strftime('%d/%m/%y')} to #{@training.sessions.order(date: :asc).last&.date&.strftime('%d/%m/%y')}" %></p>
     </div>
