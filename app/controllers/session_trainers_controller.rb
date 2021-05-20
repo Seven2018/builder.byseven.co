@@ -180,10 +180,15 @@ class SessionTrainersController < ApplicationController
 
   def delete_calendar_id(session_trainer, service)
     begin
+      calendar_uuids = session_trainer.calendar_uuid.split(' - ')
       if ['super admin', 'admin'].include?(session_trainer.user.access_level)
-        service.delete_event(session_trainer.user.email, session_trainer.calendar_uuid)
+        calendar_uuids.each do |calendar_uuid|
+          service.delete_event(session_trainer.user.email, calendar_uuid)
+        end
       else
-        service.delete_event(calendars_ids['other'], session_trainer.calendar_uuid)
+        calendar_uuids.each do |calendar_uuid|
+          service.delete_event(calendars_ids['other'], calendar_uuid)
+        end
       end
     rescue
     end

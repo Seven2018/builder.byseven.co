@@ -7,7 +7,10 @@ class UpdateCalendarJob < ApplicationJob
     User.where(access_level: ['super admin','admin']).each{|x| calendars_ids[x.id] = x.email}
     # Lists the users and the ids of the events to be deleted
     SessionTrainer.where(session_id: session_ids).each do |session_trainer|
-      delete_calendar_id(session_trainer, service)
+      begin
+        delete_calendar_id(session_trainer, service)
+      rescue
+      end
       session_trainer.update(calendar_uuid: nil)
     end
     # Lists the users for whom an event will be created
@@ -34,18 +37,18 @@ class UpdateCalendarJob < ApplicationJob
             summary: session.training.client_company.name + " - " + session.training.title
           })
         else
-          morning = [session.start_time]
+          morning = [session.start_time.change(day: day, month: month, year: year)]
           morning_duration = session.workshops.where('position < ?', break_position).map(&:duration).sum
-          morning << session.start_time + morning_duration.minutes
-          afternoon = [session.end_time - session.workshops.where('position > ?', break_position).map(&:duration).sum.minutes, session.end_time]
-          [morning.change(day: day, month: month, year: year), afternoon.change(day: day, month: month, year: year)].each do |event|
+          morning << (session.start_time + morning_duration.minutes).change(day: day, month: month, year: year)
+          afternoon = [(session.end_time - session.workshops.where('position > ?', break_position).map(&:duration).sum.minutes).change(day: day, month: month, year: year), session.end_time.change(day: day, month: month, year: year)]
+          [morning, afternoon].each do |event|
             events << Google::Apis::CalendarV3::Event.new({
               start: {
-                date_time: start_time.rfc3339.slice(0...-1),
+                date_time: event[0].rfc3339.slice(0...-1),
                 time_zone: 'Europe/Paris',
               },
               end: {
-                date_time: end_time.rfc3339.slice(0...-1),
+                date_time: event[1].rfc3339.slice(0...-1),
                 time_zone: 'Europe/Paris',
               },
               summary: session.training.client_company.name + " - " + session.training.title
@@ -85,10 +88,15 @@ class UpdateCalendarJob < ApplicationJob
 
   def delete_calendar_id(session_trainer, service)
     begin
+      calendar_uuids = session_trainer.calendar_uuid.split(' - ')
       if ['super admin', 'admin'].include?(session_trainer.user.access_level)
-        service.delete_event(session_trainer.user.email, session_trainer.calendar_uuid)
+        calendar_uuids.each do |calendar_uuid|
+          service.delete_event(session_trainer.user.email, calendar_uuid)
+        end
       else
-        service.delete_event(calendars_ids['other'], session_trainer.calendar_uuid)
+        calendar_uuids.each do |calendar_uuid|
+          service.delete_event(calendars_ids['other'], calendar_uuid)
+        end
       end
     rescue
     end
