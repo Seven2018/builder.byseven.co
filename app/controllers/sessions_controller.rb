@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
   def show
     authorize @session
     @session_trainer = SessionTrainer.new
-    @comment = Comment.new
+    # @comment = Comment.new
     respond_to do |format|
       format.html
       format.pdf do
@@ -115,12 +115,12 @@ class SessionsController < ApplicationController
       end
     end
     new_sessions.each do |new_session|
-      @session.workshops.each do |workshop|
+      @session.workshops.order(position: :asc).each do |workshop|
         new_workshop = Workshop.create(workshop.attributes.except("id", "created_at", "updated_at", "session_id"))
-        new_workshop.update(session_id: new_session.id, position: workshop.position)
-        workshop.workshop_modules.each do |mod|
+        new_workshop.update(session_id: new_session.id)
+        workshop.workshop_modules.order(position: :asc).each do |mod|
           new_mod = WorkshopModule.create(mod.attributes.except("id", "created_at", "updated_at", "workshop_id", "user_id"))
-          new_mod.update(workshop_id: new_workshop.id, position: mod.position)
+          new_mod.update(workshop_id: new_workshop.id)
         end
       end
     end

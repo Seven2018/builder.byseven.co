@@ -82,7 +82,7 @@ class TrainingsController < ApplicationController
 
   def show
     authorize @training
-    @training_ownership = TrainingOwnership.new
+    @airtable_training = OverviewTraining.all(filter: "{Builder_id} = '#{@training.id}'").first
     @session = Session.new
     if params[:task] == 'update_airtable'
       UpdateAirtableJob.perform_async(@training, true)

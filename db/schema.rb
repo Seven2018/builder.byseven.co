@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_18_135726) do
+ActiveRecord::Schema.define(version: 2021_05_19_111943) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -346,12 +346,12 @@ ActiveRecord::Schema.define(version: 2021_05_18_135726) do
     t.bigint "client_contact_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "mode"
+    t.string "training_type"
     t.string "satisfaction_survey"
     t.string "refid"
     t.float "unit_price"
     t.boolean "vat"
-    t.string "gdrive_link"
+    t.string "infos"
     t.index ["client_contact_id"], name: "index_trainings_on_client_contact_id"
   end
 

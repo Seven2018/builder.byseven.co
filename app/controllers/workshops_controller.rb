@@ -34,7 +34,7 @@ class WorkshopsController < ApplicationController
     else
       raise
     end
-    Comment.create(object: 'Log', content: "Module #{@workshop.title} added |", user_id: current_user.id, session_id: @workshop.session.id)
+    # Comment.create(object: 'Log', content: "Module #{@workshop.title} added |", user_id: current_user.id, session_id: @workshop.session.id)
   end
 
   def edit
@@ -46,7 +46,7 @@ class WorkshopsController < ApplicationController
     authorize @workshop
     @workshop.update(workshop_params)
     if @workshop.save
-      comment = Comment.create(object: 'Log', content: "Module #{@workshop.title} updated | from #{params.except('id', 'created_at', 'updated_at', 'session_id')} to #{@workshop.attributes.except('id', 'created_at', 'updated_at', 'session_id')}",
+      # comment = Comment.create(object: 'Log', content: "Module #{@workshop.title} updated | from #{params.except('id', 'created_at', 'updated_at', 'session_id')} to #{@workshop.attributes.except('id', 'created_at', 'updated_at', 'session_id')}",
                      user_id: current_user.id, session_id: @workshop.session.id)
       redirect_back(fallback_location: root_path)
     else
@@ -55,7 +55,7 @@ class WorkshopsController < ApplicationController
   end
 
   def destroy
-    Comment.create(object: 'Log', content: "Module #{@workshop.title} removed |", user_id: current_user.id, session_id: @workshop.session.id)
+    # Comment.create(object: 'Log', content: "Module #{@workshop.title} removed |", user_id: current_user.id, session_id: @workshop.session.id)
     authorize @workshop
     @session = @workshop.session
     @workshop.destroy
@@ -146,11 +146,9 @@ class WorkshopsController < ApplicationController
     end
     if new_workshop.save
       # Creates a copy of all WorkshopModules from the source
-      i = 1
       @workshop.workshop_modules.order(position: :asc).each do |mod|
         modul = WorkshopModule.create(mod.attributes.except("id", "created_at", "updated_at", "workshop_id"))
-        modul.update(workshop_id: new_workshop.id, position: i)
-        i += 1
+        modul.update(workshop_id: new_workshop.id)
       end
       redirect_to training_session_path(session.training, session)
     else

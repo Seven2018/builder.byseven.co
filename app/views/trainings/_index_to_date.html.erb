@@ -1,4 +1,4 @@
-<% trainings_to_date = Training.joins(:sessions).where(sessions: {date: nil}).uniq + Training.where_not_exists(:sessions) %>
+<% trainings_to_date = Training.joins(:sessions).where(sessions: {date: nil}).uniq + Training.where(training_type: 'Training').where_not_exists(:sessions) %>
 <% trainings_to_date.each do |training| %>
   <div class="training-card" id="card-index" data-toggle='tooltip' title='<%= training.title %>'>
     <div class="training-card-main">

@@ -20,9 +20,8 @@
         <%= link_to update_calendar_path(training_id: @training.id), class: "btn btn-edit-red btn-icon", data: { toggle: 'tooltip'}, title: 'Update Calendar' do %>
           <i class="fas fa-calendar-check"></i>
         <% end %>
-        <% airtable_training = OverviewTraining.all(filter: "{Builder_id} = '#{@training.id}'")&.first %>
-        <% if airtable_training.present? %>
-          <%= link_to training_path(@training, task: 'update_airtable'), class: "btn btn-edit-yellow btn-icon", data: { toggle: 'tooltip'}, title: "Sync with Airtable - Last sync : #{airtable_training['Builder Update'].to_time.strftime('%d/%m/%Y at %H:%M')}" do %>
+        <% if @airtable_training.present? %>
+          <%= link_to training_path(@training, task: 'update_airtable'), class: "btn btn-edit-yellow btn-icon", data: { toggle: 'tooltip'}, title: "Sync with Airtable - Last sync : #{@airtable_training['Builder Update'].to_time.strftime('%d/%m/%Y at %H:%M')}" do %>
             <span class="iconify" data-icon="simple-icons:airtable" data-inline="false"></span>
           <% end %>
         <% end %>
@@ -63,7 +62,12 @@
   <div class="middle-info">
     <div class='middle-info-main'>
       <h3><strong><%= @training.client_contact.client_company.name %></strong></h3>
-      <h3 style='margin-bottom:1rem;'><%= @training.title %></h3>
+      <div class="flex-row-between-centered">
+        <h3 style='margin-bottom:1rem;'><%= @training.title %></h3>
+        <% if @airtable_training.present? %>
+          <a data-toggle='modal' data-target='#consultObjectives' data-toggle="tooltip" title="See Objectives"><i class="fas fa-info-circle"></i></a>
+        <% end %>
+      </div>
       <p><%="From #{@training.sessions.order(date: :asc).first&.date&.strftime('%d/%m/%y')} to #{@training.sessions.order(date: :asc).last&.date&.strftime('%d/%m/%y')}" %></p>
     </div>
     <div class='middle-info-user'>
@@ -191,27 +195,9 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="editTraining" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog" role="document" style="border-radius: 2rem">
-    <%= render 'edit', training: @training %>
-  </div>
-</div>
-
 <div class="modal fade" id="copyTraining" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document" style="border-radius: 2rem">
     <%= render 'copy', training: @training %>
-  </div>
-</div>
-
-<div class="modal fade" id="newOwner" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-sm" role="document" style="border-radius: 2rem">
-    <%= render 'training_ownerships/new_owner', training_owner: @training_ownership %>
-  </div>
-</div>
-
-<div class="modal fade" id="newWriter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-sm" role="document" style="border-radius: 2rem">
-    <%= render 'training_ownerships/new_writer', training_owner: @training_ownership %>
   </div>
 </div>
 
@@ -233,7 +219,6 @@
   </div>
 </div>
 
-
 <div class="modal fade" id="newSession" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-lg" role="document" style="border-radius: 2rem">
     <%= render '/sessions/new' %>
@@ -246,11 +231,13 @@
   </div>
 </div>
 
-<div class="modal fade" id="createCertificate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog" role="document" style="border-radius: 20px">
-    <%= render 'trainings/new_certificate', training: @training %>
+<% if @airtable_training.present? %>
+  <div class="modal fade" id="consultObjectives" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document" style="border-radius: 20px">
+      <%= render 'show_objectives', training: @training %>
+    </div>
   </div>
-</div>
+<% end %>
 
 <% @training.sessions.each do |session| %>
   <% session.users.each do |trainer| %>
@@ -273,13 +260,7 @@
 <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
   <script>
     formGuardian = false;
-    // survey = document.getElementById('survey-link');
-    // form = document.getElementById('survey-form');
-    // survey.addEventListener('click', (event) => {
-    //   console.log('mescouilles');
-    //   survey.classList.toggle('hidden');
-    //   form.classList.toggle('hidden');
-    // })
+
     function outsideClick(event, notelem) {
       notelem = $(notelem); // jquerize (optional)
       // check outside click for multiple elements
@@ -360,18 +341,4 @@
       });
     });
   });
-
-  // window.onload = function() {
-  //   cards = document.querySelectorAll('.card-lg');
-  //   cards.forEach(element => {
-  //     element.addEventListener('mouseover', (event) => {
-  //       element.querySelector('.mods-list').style.maxHeight = '1000px';
-  //     })
-  //   })
-  //   cards.forEach(element => {
-  //     element.addEventListener('mouseout', (event) => {
-  //       element.querySelector('.mods-list').style.maxHeight = '0px';
-  //     })
-  //   })
-  // }
 </script>

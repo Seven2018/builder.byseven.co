@@ -36,7 +36,8 @@ class ImportAirtableJob < ApplicationJob
         end
         company['Type'] == 'School' ? vat = false : vat = true
         vat = true if card['VAT'] == true
-        training = Training.new(title: card['Title'], client_contact_id: contact['Builder_id'], refid: "#{Time.current.strftime('%y')}-#{(Training.last.refid[-4..-1].to_i + 1).to_s.rjust(4, '0')}", satisfaction_survey: 'https://learn.byseven.co/survey', unit_price: card['Unit Price'].to_f, mode: 'Company', vat: vat)
+        infos = "Besoins\n\n" + card['Besoins'] + "\n\n\nObjectifs\n\n" + card['Objectifs']
+        training = Training.new(title: card['Title'], client_contact_id: contact['Builder_id'], refid: "#{Time.current.strftime('%y')}-#{(Training.last.refid[-4..-1].to_i + 1).to_s.rjust(4, '0')}", satisfaction_survey: 'https://learn.byseven.co/survey', unit_price: card['Unit Price'].to_f, training_type: card['Type'], vat: vat)
         if training.save
           card['Reference SEVEN'] = training.refid
           card['Builder_id'] = training.id

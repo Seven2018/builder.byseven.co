@@ -15,12 +15,6 @@
           <%# f.input :vat, as: :radio_buttons, label: 'VAT' %>
         </div>
       </div>
-      <div class='form-group' style='display:flex;justify-content:space-between;'>
-        <%= f.label :mode %>
-        <div style='width:75%;display:flex;justify-content: space-around;'>
-          <%= f.collection_radio_buttons :mode, [['Regular Training', 'Regular Training'], ['Other', 'Other']], :first, :last %>
-        </div>
-      </div>
       <div class='modal-control'>
         <%= button_tag type: 'submit', class: 'btn btn-edit-green btn-icon', data: { toggle: 'tooltip' }, title: 'Save' do %>
           <i class="fas fa-save"></i>
