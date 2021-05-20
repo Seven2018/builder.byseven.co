@@ -47,7 +47,7 @@ class WorkshopsController < ApplicationController
     @workshop.update(workshop_params)
     if @workshop.save
       # comment = Comment.create(object: 'Log', content: "Module #{@workshop.title} updated | from #{params.except('id', 'created_at', 'updated_at', 'session_id')} to #{@workshop.attributes.except('id', 'created_at', 'updated_at', 'session_id')}",
-                     user_id: current_user.id, session_id: @workshop.session.id)
+      #                user_id: current_user.id, session_id: @workshop.session.id)
       redirect_back(fallback_location: root_path)
     else
       render :edit
