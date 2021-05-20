@@ -249,14 +249,6 @@
   <% end %>
 <% end %>
 
-<% if ['sevener+', 'sevener'].include?(current_user.access_level) %>
-  <div class="modal fade" id="reviewSevener" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" role="document" style="border-radius: 20px">
-      <%= render 'invoice_items/review_sevener', training: @training, sevener: current_user %>
-    </div>
-  </div>
-<% end %>
-
 <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
   <script>
     formGuardian = false;
