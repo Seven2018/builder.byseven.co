@@ -14,9 +14,13 @@ class ImportAirtableJob < ApplicationJob
           end
           next
         end
+        card['Needs'].present? ? needs = card['Needs'] : needs = ''
+        card['Objectives'].present? ? objectives = card['Objectives'] : objectives = ''
+        infos = "Besoins\n\n" + needs + "\n\n\nObjectifs\n\n" + objectives
         training = Training.find(card['Builder_id'])
         training.update(title: card['Title']) if training.title != card['Title']
         training.update(unit_price: card['Unit Price']) if training.unit_price != card['Unit Price']
+        training.update(infos: infos)
       elsif card['Partner Contact'].present?
         owners = OverviewUser.all.select{|x| if card['Owner'].present?; card['Owner'].include?(x.id); end}
         writers = OverviewUser.all.select{|x| if card['Writers'].present?; card['Writers'].include?(x.id); end}
@@ -36,8 +40,10 @@ class ImportAirtableJob < ApplicationJob
         end
         company['Type'] == 'School' ? vat = false : vat = true
         vat = true if card['VAT'] == true
-        infos = "Besoins\n\n" + card['Besoins'] + "\n\n\nObjectifs\n\n" + card['Objectifs']
-        training = Training.new(title: card['Title'], client_contact_id: contact['Builder_id'], refid: "#{Time.current.strftime('%y')}-#{(Training.last.refid[-4..-1].to_i + 1).to_s.rjust(4, '0')}", satisfaction_survey: 'https://learn.byseven.co/survey', unit_price: card['Unit Price'].to_f, training_type: card['Type'], vat: vat)
+        card['Needs'].present? ? needs = card['Needs'] : needs = ''
+        card['Objectives'].present? ? objectives = card['Objectives'] : objectives = ''
+        infos = "Besoins\n\n" + needs + "\n\n\nObjectifs\n\n" + objectives
+        training = Training.new(title: card['Title'], client_contact_id: contact['Builder_id'], refid: "#{Time.current.strftime('%y')}-#{(Training.last.refid[-4..-1].to_i + 1).to_s.rjust(4, '0')}", satisfaction_survey: 'https://learn.byseven.co/survey', unit_price: card['Unit Price'].to_f, training_type: card['Type'], vat: vat, infos: infos)
         if training.save
           card['Reference SEVEN'] = training.refid
           card['Builder_id'] = training.id
