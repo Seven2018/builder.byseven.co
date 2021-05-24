@@ -135,6 +135,7 @@
           <div class="content-index-nested collapse">
             <% invoices.each do |invoice| %>
               <div class="billing-invoice-index flex-row-between-centered">
+                <% invoice = OverviewInvoiceSevener.find(invoice) %>
                 <p class="content-index-card-title"><strong>Invoice n°<%= invoice['Invoice number'] %></strong></p>
                 <p><%= invoice['Amount'] %>€</p>
                 <% if invoice['Status'] == 'Paid' %>

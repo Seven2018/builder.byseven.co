@@ -107,8 +107,6 @@ class SessionTrainersController < ApplicationController
     training.sessions.each do |session|
       sessions_ids += session.id.to_s + ','
     end
-    # event_to_delete = training.gdrive_link[0...-1] unless !training.gdrive_link.present?
-    # training.update(gdrive_link: '')
 
 
     trainers_list = []
