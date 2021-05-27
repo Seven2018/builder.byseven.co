@@ -49,7 +49,7 @@
               <% else %>
                 <a class='btn-link'><i class="fas fa-angle-down" style='color: rgba(0,0,0,0);'></i></a>
               <% end %>
-              <% if training.end_time < Date.today %>
+              <% if training.end_time.present? && training.end_time < Date.today %>
                 <p><strong>Training : Completed</strong> - <%= training.title %></p>
               <% else %>
                 <p><strong>Training : Ongoing</strong> - <%= training.title %></p>
