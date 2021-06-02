@@ -1,0 +1,15 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <div id="modal-title" style=" display: flex; justify-content: space-between;">
+      <h3 class="modal-title" id="myModalLabel"><%= training.title %></h3>
+    </div>
+    <button type="button" class="btn btn-icon-close" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body" id="modalNewBookinBody">
+    <h4>Needs</h4>
+    <p><%= @airtable_training['Needs'] %></p>
+    <br><br>
+    <h4>Objectives</h4>
+    <p><%= @airtable_training['Objectives'] %></p>
+  </div>
+</div>

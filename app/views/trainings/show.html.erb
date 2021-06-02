@@ -5,7 +5,7 @@
         <i class="fas fa-arrow-left"></i>
       <% end %>
     <% else %>
-      <%= link_to trainings_path(page: 1), class: 'btn return-arrow' do %>
+      <%= link_to trainings_path, class: 'btn return-arrow' do %>
         <i class="fas fa-arrow-left"></i>
       <% end %>
     <% end %>
@@ -20,9 +20,8 @@
         <%= link_to update_calendar_path(training_id: @training.id), class: "btn btn-edit-red btn-icon", data: { toggle: 'tooltip'}, title: 'Update Calendar' do %>
           <i class="fas fa-calendar-check"></i>
         <% end %>
-        <% airtable_training = OverviewTraining.all(filter: "{Builder_id} = '#{@training.id}'")&.first %>
-        <% if airtable_training.present? %>
-          <%= link_to training_path(@training, task: 'update_airtable'), class: "btn btn-edit-yellow btn-icon", data: { toggle: 'tooltip'}, title: "Sync with Airtable - Last sync : #{airtable_training['Builder Update'].to_time.strftime('%d/%m/%Y at %H:%M')}" do %>
+        <% if @airtable_training.present? %>
+          <%= link_to training_path(@training, task: 'update_airtable'), class: "btn btn-edit-yellow btn-icon", data: { toggle: 'tooltip'}, title: "Sync with Airtable - Last sync : #{@airtable_training['Builder Update'].to_time.strftime('%d/%m/%Y at %H:%M')}" do %>
             <span class="iconify" data-icon="simple-icons:airtable" data-inline="false"></span>
           <% end %>
         <% end %>
@@ -63,7 +62,12 @@
   <div class="middle-info">
     <div class='middle-info-main'>
       <h3><strong><%= @training.client_contact.client_company.name %></strong></h3>
-      <h3 style='margin-bottom:1rem;'><%= @training.title %></h3>
+      <div class="flex-row-between-centered">
+        <h3 style='margin-bottom:1rem;'><%= @training.title %></h3>
+        <%# if @airtable_training.present? %>
+          <!-- <a data-toggle='modal' data-target='#consultObjectives' data-toggle="tooltip" title="See Objectives"><i class="fas fa-info-circle"></i></a> -->
+        <%# end %>
+      </div>
       <p><%="From #{@training.sessions.order(date: :asc).first&.date&.strftime('%d/%m/%y')} to #{@training.sessions.order(date: :asc).last&.date&.strftime('%d/%m/%y')}" %></p>
     </div>
     <div class='middle-info-user'>
@@ -71,7 +75,11 @@
         <ul id="owner">
           <% @training.owners.each do |user| %>
             <li>
-              <a data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'></a>
+              <% if user.picture.present? %>
+                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm'></a>
+              <% else %>
+                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm'></a>
+              <% end %>
             </li>
             <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
               <div class="modal-dialog" role="document" style="border-radius: 2rem">
@@ -90,7 +98,11 @@
         <ul id="writer">
           <% @training.writers.each do |user| %>
             <li>
-              <a data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'></a>
+              <% if user.picture.present? %>
+                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm'></a>
+              <% else %>
+                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm'></a>
+              <% end %>
             </li>
             <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
               <div class="modal-dialog" role="document" style="border-radius: 2rem">
@@ -120,7 +132,13 @@
               <% session.users.each do |trainer| %>
                 <% trainer_array << trainer %>
                 <% unless trainer_array.count(trainer) > 1 %>
-                  <li><a data-toggle='modal' data-target='#consultUser<%= trainer.id %>' data-toggle="tooltip" title="User Infos"><img src='<%= "#{trainer.picture}" %>' alt="" class='avatar-sm' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'></a></li>
+                  <li>
+                    <% if trainer.picture.present? %>
+                      <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= trainer.id %>'><img src='<%= "#{trainer.picture}" %>' alt="" class='avatar-sm'></a>
+                    <% else %>
+                      <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= trainer.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm'></a>
+                    <% end %>
+                  </li>
                 <% end %>
               <% end %>
             <% end %>
@@ -156,46 +174,9 @@
       <p id='survey-link'>Link to survey : <%= @training.satisfaction_survey %></p>
     <% end %>
   </div>
-  <div class="training_index_controls">
-    <% if @training.sessions.count.to_f / 10 > 2 %>
-      <% if params[:page].to_i > 1 %>
-        <%= link_to url_for(page: 1) do %>
-          <i class="fas fa-backward"></i>
-        <% end %>
-      <% else %>
-        <i class="fas fa-backward" style='color:rgba(0,0,0,0.3'></i>
-      <% end %>
-    <% end %>
-    <% if @training.sessions.count.to_f / 10 > 1 %>
-      <% if params[:page].to_i > 1 %>
-        <%= link_to url_for(page: params[:page].to_i - 1, type: params[:type]) do %>
-          <i class="fas fa-play fa-rotate-180"></i>
-        <% end %>
-      <% else %>
-        <i class="fas fa-play fa-rotate-180" style='color:rgba(0,0,0,0.3)'></i>
-      <% end %>
-      <p><%= "Page #{params[:page]} / #{(@training.sessions.count.to_f / 10).ceil}" %></p>
-      <% if params[:page].to_i < @training.sessions.count.to_f / 10 %>
-        <%= link_to url_for(page: params[:page].to_i + 1) do %>
-          <i class="fas fa-play"></i>
-        <% end %>
-      <% else %>
-        <i class="fas fa-play" style='color:rgba(0,0,0,0.3'></i>
-      <% end %>
-    <% end %>
-    <% if @training.sessions.count.to_f / 10 > 2 %>
-      <% if params[:page].to_i < @training.sessions.count.to_f / 10 %>
-        <%= link_to url_for(page: (@training.sessions.count.to_f / 10).ceil) do %>
-          <i class="fas fa-forward"></i>
-        <% end %>
-      <% else %>
-        <i class="fas fa-forward" style='color:rgba(0,0,0,0.3'></i>
-      <% end %>
-    <% end %>
-  </div>
   <div class="training-info">
     <div class="sessions-cards">
-      <% @training.sessions.order(:date, :start_time).offset((params[:page].to_i-1)*10).first(10).each do |session| %>
+      <% @training.sessions.order(:date, :start_time).each do |session| %>
         <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) || session.users.include?(current_user) %>
           <div id="card-block-<%= session.id %>">
             <%= render 'show_session_card', session: session %>
@@ -214,27 +195,9 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="editTraining" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog" role="document" style="border-radius: 2rem">
-    <%= render 'edit', training: @training %>
-  </div>
-</div>
-
 <div class="modal fade" id="copyTraining" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document" style="border-radius: 2rem">
     <%= render 'copy', training: @training %>
-  </div>
-</div>
-
-<div class="modal fade" id="newOwner" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-sm" role="document" style="border-radius: 2rem">
-    <%= render 'training_ownerships/new_owner', training_owner: @training_ownership %>
-  </div>
-</div>
-
-<div class="modal fade" id="newWriter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-sm" role="document" style="border-radius: 2rem">
-    <%= render 'training_ownerships/new_writer', training_owner: @training_ownership %>
   </div>
 </div>
 
@@ -256,7 +219,6 @@
   </div>
 </div>
 
-
 <div class="modal fade" id="newSession" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-lg" role="document" style="border-radius: 2rem">
     <%= render '/sessions/new' %>
@@ -269,11 +231,13 @@
   </div>
 </div>
 
-<div class="modal fade" id="createCertificate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog" role="document" style="border-radius: 20px">
-    <%= render 'trainings/new_certificate', training: @training %>
+<% if @airtable_training.present? %>
+  <div class="modal fade" id="consultObjectives" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document" style="border-radius: 20px">
+      <%= render 'show_objectives', training: @training %>
+    </div>
   </div>
-</div>
+<% end %>
 
 <% @training.sessions.each do |session| %>
   <% session.users.each do |trainer| %>
@@ -285,23 +249,10 @@
   <% end %>
 <% end %>
 
-<% if ['sevener+', 'sevener'].include?(current_user.access_level) %>
-  <div class="modal fade" id="reviewSevener" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" role="document" style="border-radius: 20px">
-      <%= render 'invoice_items/review_sevener', training: @training, sevener: current_user %>
-    </div>
-  </div>
-<% end %>
-
 <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
   <script>
-    // survey = document.getElementById('survey-link');
-    // form = document.getElementById('survey-form');
-    // survey.addEventListener('click', (event) => {
-    //   console.log('mescouilles');
-    //   survey.classList.toggle('hidden');
-    //   form.classList.toggle('hidden');
-    // })
+    formGuardian = false;
+
     function outsideClick(event, notelem) {
       notelem = $(notelem); // jquerize (optional)
       // check outside click for multiple elements
@@ -316,29 +267,33 @@
     }
 
     function openSessionForm(element) {
-      if (document.querySelectorAll('.hidden-form.active').length == 0) {
-        form = element.parentNode.querySelector('.hidden-form');
-        element.classList.toggle('hidden');
-        form.classList.toggle('hidden');
-        if (form.querySelector('.form-control') != null){
-          initial_value = form.querySelector('.form-control').value;
-        }
-        if (form.querySelector('.datepicker') != null) {
-          flatpickr(".datepicker", {
-            disableMobile: true,
-            dateFormat: "d/m/Y",});
-        }
-        window.addEventListener('click', function(e) {
-           if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
+      if (formGuardian == false) {
+        formGuardian = true;
+        if (document.querySelectorAll('.hidden-form.active').length == 0) {
+          form = element.parentNode.querySelector('.hidden-form');
+          element.classList.toggle('hidden');
+          form.classList.toggle('hidden');
+          if (form.querySelector('.form-control') != null){
+            initial_value = form.querySelector('.form-control').value;
+          }
+          if (form.querySelector('.datepicker') != null) {
+            flatpickr(".datepicker", {
+              disableMobile: true,
+              dateFormat: "d/m/Y",});
+          }
+          window.addEventListener('click', function(e) {
+            if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
               if (form.querySelector('.form-control').value != initial_value) {
                 form.querySelector('.hidden-submit').click();
               } else {
                 form.classList.toggle('hidden');
                 element.classList.toggle('hidden');
               }
+              formGuardian = false;
               this.removeEventListener('click', arguments.callee, false);
-           }
-        });
+            }
+          });
+        }
       }
     };
   </script>
@@ -378,18 +333,4 @@
       });
     });
   });
-
-  // window.onload = function() {
-  //   cards = document.querySelectorAll('.card-lg');
-  //   cards.forEach(element => {
-  //     element.addEventListener('mouseover', (event) => {
-  //       element.querySelector('.mods-list').style.maxHeight = '1000px';
-  //     })
-  //   })
-  //   cards.forEach(element => {
-  //     element.addEventListener('mouseout', (event) => {
-  //       element.querySelector('.mods-list').style.maxHeight = '0px';
-  //     })
-  //   })
-  // }
 </script>

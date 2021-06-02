@@ -84,7 +84,7 @@ $timeline: #115173;
   position: relative;
   background-color: rgb(244, 244, 244);
   border: 1px solid #e0e0e0;
-  font-family: 'Roboto';
+  font-family: 'Montserrat';
   font-weight: lighter;
   box-shadow: none !important;
   background-color: white;
@@ -114,7 +114,7 @@ $timeline: #115173;
   position: relative;
   background-color: rgb(244, 244, 244);
   border: 1px solid #e0e0e0;
-  font-family: 'Roboto';
+  font-family: 'Montserrat';
   font-weight: lighter;
   box-shadow: 1px 1px 1rem rgba(0, 0, 0, 0.1);
   background-color: white;
@@ -251,7 +251,7 @@ $timeline: #115173;
     margin-top: 2rem;
 
     h3 {
-      font-family: "Roboto";
+      font-family: "Montserrat";
       font-weight: 500;
       line-height: 1.1;
       color: inherit;
@@ -279,15 +279,44 @@ $timeline: #115173;
     padding: 0;
   }
 
-  div {
+  & > div {
     height: 100%;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
   }
 
   .card-footer-lg-infos {
-    width: 40%;
+
+    & > div {
+      height: 4.5rem;
+      width: 15rem;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      .form-group {
+        margin: 0;
+      }
+
+      i {
+        margin-right: 1rem;
+      }
+
+      &:nth-of-type(2) {
+        width: 20rem;
+      }
+    }
+
+    input.form-control {
+      font-size: 1.6rem !important;
+      padding: 0 !important;
+    }
+
+    select.form-control {
+      font-size: 1.6rem !important;
+      padding: 0.5rem !important;
+    }
   }
 
   p, i {
@@ -316,6 +345,7 @@ $timeline: #115173;
   align-items: center;
   width: 100%;
   margin-bottom: 2rem;
+  height: 6.7rem;
   position: relative;
   a {
     max-width: 70%;
@@ -328,6 +358,15 @@ $timeline: #115173;
     @include from-large {
       font-size: 2.4rem;
     }
+  }
+
+  input.form-control {
+    font-size: 2.4rem !important;
+    padding: 0 !important;
+  }
+
+  .form-group {
+    margin: 0;
   }
 }
 

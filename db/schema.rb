@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_05_093118) do
+ActiveRecord::Schema.define(version: 2021_05_21_151126) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "unaccent"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
@@ -91,7 +92,7 @@ ActiveRecord::Schema.define(version: 2021_05_05_093118) do
     t.integer "opco_id"
     t.float "unit_price"
     t.string "auth_token"
-    t.string "siret"
+    t.string "siret", default: ""
   end
 
   create_table "client_contacts", force: :cascade do |t|
@@ -133,6 +134,7 @@ ActiveRecord::Schema.define(version: 2021_05_05_093118) do
     t.bigint "content_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "format"
     t.index ["content_id"], name: "index_content_modules_on_content_id"
   end
 
@@ -176,7 +178,7 @@ ActiveRecord::Schema.define(version: 2021_05_05_093118) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "dunning_date"
-    t.string "object"
+    t.string "object", default: ""
     t.index ["client_company_id"], name: "index_invoice_items_on_client_company_id"
     t.index ["training_id"], name: "index_invoice_items_on_training_id"
     t.index ["user_id"], name: "index_invoice_items_on_user_id"
@@ -223,12 +225,7 @@ ActiveRecord::Schema.define(version: 2021_05_05_093118) do
 
   create_table "oblivions", force: :cascade do |t|
     t.string "title"
-    t.date "date"
     t.bigint "session_id"
-    t.integer "content1"
-    t.integer "content2"
-    t.integer "content3"
-    t.integer "content4"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["session_id"], name: "index_oblivions_on_session_id"
@@ -345,12 +342,12 @@ ActiveRecord::Schema.define(version: 2021_05_05_093118) do
     t.bigint "client_contact_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "mode"
+    t.string "training_type"
     t.string "satisfaction_survey"
     t.string "refid"
     t.float "unit_price"
     t.boolean "vat"
-    t.string "gdrive_link"
+    t.string "infos"
     t.index ["client_contact_id"], name: "index_trainings_on_client_contact_id"
   end
 
@@ -393,6 +390,7 @@ ActiveRecord::Schema.define(version: 2021_05_05_093118) do
     t.bigint "workshop_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "format"
     t.index ["user_id"], name: "index_workshop_modules_on_user_id"
     t.index ["workshop_id"], name: "index_workshop_modules_on_workshop_id"
   end

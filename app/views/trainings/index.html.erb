@@ -6,7 +6,7 @@
         <%= simple_form_for :search, url: trainings_path, method: 'GET' do |f| %>
           <% if params[:search].present? %>
             <%= f.input :title, placeholder: 'Search', label: false, input_html: {value: params[:search][:title]} %>
-            <%= link_to trainings_path(page: 1), class: 'search-close' do %>
+            <%= link_to trainings_path, class: 'search-close' do %>
               <i class="far fa-times-circle"></i>
             <% end %>
           <% else %>
@@ -24,7 +24,7 @@
           <% end %>
           <%= hidden_field_tag :page, 1 %>
           <% if params[:search] %>
-            <%= link_to trainings_path(page: 1), class: 'search-close' do %>
+            <%= link_to trainings_path, class: 'search-close' do %>
               <i class="far fa-times-circle"></i>
             <% end %>
           <% end %>
@@ -34,7 +34,6 @@
         <% link_to new_training_path do %>
           <!-- <button class="btn btn-edit-yellow">New Training</button> -->
         <% end %>
-        <%# last_update = OverviewTraining.all.select{|x| x['Builder Update'].present?}.sort{|x,y| x['Builder Update'].to_date <=> y['Builder Update'].to_date}.first %>
         <% last_update = OverviewTraining.all(filter: "{Builder Update} != ''").sort{|x,y| x['Builder Update'].to_date <=> y['Builder Update'].to_date}.first %>
         <%= link_to import_airtable_path, class: "btn btn-edit-yellow" do %>
         <div class='flex-row-between-centered'>
@@ -48,18 +47,26 @@
   <% if (['super admin', 'admin', 'training manager'].include? current_user.access_level) %>
     <div id="trainings_user_filter" class='flex-row-start-centered'>
       <% if params[:user].present? %>
-        <%= link_to 'All', trainings_path(page: 1), class: 'avatar-sm centered-item avatar_filter_all avatar_filter_all_unselected' %>
+        <%= link_to 'All', trainings_path, class: 'avatar-sm centered-item avatar_filter_all avatar_filter_all_unselected' %>
       <% else %>
-        <%= link_to 'All', trainings_path(page: 1), class: 'avatar-sm centered-item avatar_filter_all' %>
+        <%= link_to 'All', trainings_path, class: 'avatar-sm centered-item avatar_filter_all' %>
       <% end %>
       <% User.where.not(access_level: %w[sevener+ sevener]).each do |user| %>
         <% if (params[:user] == user.id&.to_s) || (params[:search] && params[:search][:user] == user.id&.to_s) %>
-          <%= link_to trainings_path(page: 1, user: user.id) do %>
-            <img src="<%= user.picture %>" class='lazyload avatar-sm' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+          <%= link_to trainings_path(user: user.id) do %>
+            <% if user.picture.present? %>
+              <img src="<%= user.picture %>" class='lazyload avatar-sm'>
+            <% else %>
+              <img src='<%= asset_path('empty-avatar.png', type: :image) %>' class='lazyload avatar-sm'>
+            <% end %>
           <% end %>
         <% else %>
-           <%= link_to trainings_path(page: 1, user: user.id) do %>
-            <img src="<%= user.picture %>" class='lazyload avatar-sm' style='opacity: 0.6;' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+           <%= link_to trainings_path(user: user.id) do %>
+            <% if user.picture.present? %>
+              <img src="<%= user.picture %>" class='lazyload avatar-sm' style='opacity: 0.6;'>
+            <% else %>
+              <img src='<%= asset_path('empty-avatar.png', type: :image) %>' class='lazyload avatar-sm' style='opacity: 0.6;'>
+            <% end %>
           <% end %>
         <% end %>
       <% end %>
@@ -69,23 +76,26 @@
     <% if params[:search] %>
       <h3 class="training-update-text">Search</h3>
       <%= render 'search', trainings: @trainings %>
+    <% elsif params[:completed] %>
+      <h3 class="training-update-text">Completed</h3>
+      <%= render_async index_completed_path(user: params[:user])%>
     <% else %>
       <h3 class="training-update-text">Upcoming</h3>
       <div class="trainings-row">
         <%= render_async index_upcoming_path(user: params[:user]) %>
       </div>
-      <h3 class="training-update-text">Completed</h3>
-      <div class="trainings-row">
-        <%= render_async index_completed_path(user: params[:user])%>
-      </div>
       <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
         <h3 class="training-update-text">To Schedule</h3>
         <div class="trainings-row">
-          <%= render 'to_date', trainings: @trainings %>
+          <%= render 'index_to_date', trainings: @trainings %>
         </div>
         <h3 class="training-update-text">To Staff</h3>
         <div class="trainings-row">
-          <%= render 'to_staff', trainings: @trainings %>
+          <%= render 'index_to_staff', trainings: @trainings %>
+        </div>
+        <h3 class="training-update-text">Home</h3>
+        <div class="trainings-row">
+          <%= render 'index_home', trainings: @trainings %>
         </div>
       <% end %>
     <% end %>

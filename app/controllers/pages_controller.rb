@@ -2,7 +2,7 @@ class PagesController < ApplicationController
   skip_before_action :authenticate_user!, only: [:home, :survey, :contact_form, :intel_form, :intel_new_attendee, :intel_create_attendee, :intel_subscription, :intel_thank_you]
 
   def home
-    redirect_to trainings_path(page: 1)
+    redirect_to trainings_path
   end
 
   def sandbox
@@ -46,7 +46,7 @@ class PagesController < ApplicationController
   def import_airtable
     skip_authorization
     ImportAirtableJob.perform_async
-    redirect_to trainings_path(page: 1)
+    redirect_to trainings_path
     flash[:notice] = 'Import en cours, veuillez patienter quelques instants.'
   end
 
@@ -109,7 +109,7 @@ class PagesController < ApplicationController
 
   def export_numbers_activity_cumulation
     UpdateCumulationChartJob.perform_async(Date.today)
-    redirect_to trainings_path(page: 1)
+    redirect_to trainings_path
   end
 end
 

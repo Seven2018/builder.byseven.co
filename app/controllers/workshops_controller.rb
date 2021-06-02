@@ -16,17 +16,14 @@ class WorkshopsController < ApplicationController
     end
     authorize @workshop
     @workshop.session = @session
-    i = 1
     if @workshop.save
       if params[:content_id].present?
         @content.theories.each do |theory|
           TheoryWorkshop.create(theory_id: theory.id, workshop_id: @workshop.id)
         end
-        @content.content_modules.order('position ASC').each do |mod|
-          wmod = WorkshopModule.new(mod.attributes.except("id", "position", "created_at", "updated_at", "content_id"))
+        @content.content_modules.order(position: :asc).each do |mod|
+          wmod = WorkshopModule.new(mod.attributes.except("id", "created_at", "updated_at", "content_id"))
           wmod.workshop = @workshop
-          wmod.position = i
-          i +=1
           wmod.save
         end
       end
@@ -37,7 +34,7 @@ class WorkshopsController < ApplicationController
     else
       raise
     end
-    Comment.create(object: 'Log', content: "Module #{@workshop.title} added |", user_id: current_user.id, session_id: @workshop.session.id)
+    # Comment.create(object: 'Log', content: "Module #{@workshop.title} added |", user_id: current_user.id, session_id: @workshop.session.id)
   end
 
   def edit
@@ -49,8 +46,8 @@ class WorkshopsController < ApplicationController
     authorize @workshop
     @workshop.update(workshop_params)
     if @workshop.save
-      comment = Comment.create(object: 'Log', content: "Module #{@workshop.title} updated | from #{params.except('id', 'created_at', 'updated_at', 'session_id')} to #{@workshop.attributes.except('id', 'created_at', 'updated_at', 'session_id')}",
-                     user_id: current_user.id, session_id: @workshop.session.id)
+      # comment = Comment.create(object: 'Log', content: "Module #{@workshop.title} updated | from #{params.except('id', 'created_at', 'updated_at', 'session_id')} to #{@workshop.attributes.except('id', 'created_at', 'updated_at', 'session_id')}",
+      #                user_id: current_user.id, session_id: @workshop.session.id)
       redirect_back(fallback_location: root_path)
     else
       render :edit
@@ -58,7 +55,7 @@ class WorkshopsController < ApplicationController
   end
 
   def destroy
-    Comment.create(object: 'Log', content: "Module #{@workshop.title} removed |", user_id: current_user.id, session_id: @workshop.session.id)
+    # Comment.create(object: 'Log', content: "Module #{@workshop.title} removed |", user_id: current_user.id, session_id: @workshop.session.id)
     authorize @workshop
     @session = @workshop.session
     @workshop.destroy
@@ -149,12 +146,10 @@ class WorkshopsController < ApplicationController
     end
     if new_workshop.save
       # Creates a copy of all WorkshopModules from the source
-      @workshop.workshop_modules.each do |mod|
+      @workshop.workshop_modules.order(position: :asc).each do |mod|
         modul = WorkshopModule.create(mod.attributes.except("id", "created_at", "updated_at", "workshop_id"))
-        modul.update(workshop_id: new_workshop.id, position: mod.position)
+        modul.update(workshop_id: new_workshop.id)
       end
-      j = 1
-      new_workshop.workshop_modules.order(position: :asc).each{|mod| mod.update(position: j); j += 1}
       redirect_to training_session_path(session.training, session)
     else
       raise

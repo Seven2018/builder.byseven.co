@@ -35,6 +35,7 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
+    @user.picture = '' unless @user.picture.present?
     authorize @user
     if @user.save
       @user.export_airtable_user

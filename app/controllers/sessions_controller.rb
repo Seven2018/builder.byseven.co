@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
   def show
     authorize @session
     @session_trainer = SessionTrainer.new
-    @comment = Comment.new
+    # @comment = Comment.new
     respond_to do |format|
       format.html
       format.pdf do
@@ -52,35 +52,16 @@ class SessionsController < ApplicationController
     prev_start = @session.start_time
     prev_end = @session.end_time
     @session.update(session_params)
-    if prev_date != @session.date || prev_start != @session.start_time || prev_end != @session.end_time
-      @session.session_trainers.each do |session_trainer|
-        if session_trainer.calendar_uuid.present?
-          @session.training.gdrive_link.nil? ? @session.training.update(gdrive_link: session_trainer.user_id.to_s + ':' + session_trainer.calendar_uuid + ',') : @session.training.update(gdrive_link: @session.training.gdrive_link + session_trainer.user_id.to_s + ':' + session_trainer.calendar_uuid + ',')
-          session_trainer.update(calendar_uuid: nil)
-        end
-      end
-    end
     if @session.save && (params[:session][:date].present?)
       # UpdateAirtableJob.perform_async(@session.training, true)
-      params[:session][:session_page].present? ? (redirect_to training_path(@session.training, page: params[:session][:session_page], change: true)) : (redirect_to training_path(@session.training, page: 1, change: true))
+      params[:session][:session_page].present? ? (redirect_to training_path(@session.training, page: params[:session][:session_page], change: true)) : (redirect_to training_path(@session.training, change: true))
     end
   end
 
   def update_ajax
     authorize @session
     training = @session.training
-    prev_date = @session.date
-    prev_start = @session.start_time
-    prev_end = @session.end_time
     @session.update(session_params)
-    if prev_date != @session.date || prev_start != @session.start_time || prev_end != @session.end_time
-      @session.session_trainers.each do |session_trainer|
-        if session_trainer.calendar_uuid.present?
-          @session.training.gdrive_link.nil? ? @session.training.update(gdrive_link: session_trainer.user_id.to_s + ':' + session_trainer.calendar_uuid + ',') : @session.training.update(gdrive_link: @session.training.gdrive_link + session_trainer.user_id.to_s + ':' + session_trainer.calendar_uuid + ',')
-          session_trainer.update(calendar_uuid: nil)
-        end
-      end
-    end
     if @session.save
       respond_to do |format|
         format.html {redirect_to training_path(training)}
@@ -131,12 +112,12 @@ class SessionsController < ApplicationController
       end
     end
     new_sessions.each do |new_session|
-      @session.workshops.each do |workshop|
+      @session.workshops.order(position: :asc).each do |workshop|
         new_workshop = Workshop.create(workshop.attributes.except("id", "created_at", "updated_at", "session_id"))
-        new_workshop.update(session_id: new_session.id, position: workshop.position)
-        workshop.workshop_modules.each do |mod|
+        new_workshop.update(session_id: new_session.id)
+        workshop.workshop_modules.order(position: :asc).each do |mod|
           new_mod = WorkshopModule.create(mod.attributes.except("id", "created_at", "updated_at", "workshop_id", "user_id"))
-          new_mod.update(workshop_id: new_workshop.id, position: mod.position)
+          new_mod.update(workshop_id: new_workshop.id)
         end
       end
     end
