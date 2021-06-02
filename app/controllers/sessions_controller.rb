@@ -61,9 +61,6 @@ class SessionsController < ApplicationController
   def update_ajax
     authorize @session
     training = @session.training
-    prev_date = @session.date
-    prev_start = @session.start_time
-    prev_end = @session.end_time
     @session.update(session_params)
     if @session.save
       respond_to do |format|
