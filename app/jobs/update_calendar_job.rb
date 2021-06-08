@@ -41,8 +41,7 @@ class UpdateCalendarJob < ApplicationJob
               date_time: end_time.rfc3339.slice(0...-1),
               time_zone: 'Europe/Paris',
             },
-            summary: session.training.client_company.name + " - " + session.training.title,
-            attendees: trainers
+            summary: session.training.client_company.name + " - " + session.training.title
           })
         else
           morning = [session.start_time.change(day: day, month: month, year: year)]
@@ -59,8 +58,7 @@ class UpdateCalendarJob < ApplicationJob
                 date_time: event[1].rfc3339.slice(0...-1),
                 time_zone: 'Europe/Paris',
               },
-              summary: session.training.client_company.name + " - " + session.training.title,
-              attendees: trainers
+              summary: session.training.client_company.name + " - " + session.training.title
             })
           end
         end
@@ -74,7 +72,7 @@ class UpdateCalendarJob < ApplicationJob
               event.id = SecureRandom.hex(32)
               session_trainer = SessionTrainer.where(user_id: sevener.id, session_id: session.id).first
               session_trainer.calendar_uuid.nil? ? session_trainer.update(calendar_uuid: event.id) : session_trainer.update(calendar_uuid: session_trainer.calendar_uuid + ' - ' + event.id)
-              service.insert_event(calendars_ids['other'], event, send_notifications: true)
+              service.insert_event(calendars_ids['other'], event)
             end
           #rescue
           #end
@@ -91,7 +89,7 @@ class UpdateCalendarJob < ApplicationJob
     event.id = SecureRandom.hex(32)
     session_trainer = SessionTrainer.where(user_id: user_id, session_id: session_id).first
     session_trainer.calendar_uuid.nil? ? session_trainer.update(calendar_uuid: event.id) : session_trainer.update(calendar_uuid: session_trainer.calendar_uuid + ' - ' + event.id)
-    service.insert_event(hash[user_id.to_i], event, send_updates: 'all')
+    service.insert_event(hash[user_id.to_i], event)
   end
 
   def delete_calendar_id(session_trainer, service)
