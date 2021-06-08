@@ -22,6 +22,10 @@ class UpdateCalendarJob < ApplicationJob
         day, month, year = date.day, date.month, date.year
         start_time = session.start_time.change(day: day, month: month, year: year)
         end_time = session.end_time.change(day: day, month: month, year: year)
+        trainers = []
+        session.users.each do |trainer|
+          trainers << {email: trainer.email}
+        end
         events = []
         break_position = session.workshops.find_by(title: 'Pause Déjeuner')&.position
         if break_position.nil?
@@ -34,7 +38,8 @@ class UpdateCalendarJob < ApplicationJob
               date_time: end_time.rfc3339.slice(0...-1),
               time_zone: 'Europe/Paris',
             },
-            summary: session.training.client_company.name + " - " + session.training.title
+            summary: session.training.client_company.name + " - " + session.training.title,
+            attendees: trainers
           })
         else
           morning = [session.start_time.change(day: day, month: month, year: year)]
@@ -51,25 +56,25 @@ class UpdateCalendarJob < ApplicationJob
                 date_time: event[1].rfc3339.slice(0...-1),
                 time_zone: 'Europe/Paris',
               },
-              summary: session.training.client_company.name + " - " + session.training.title
+              summary: session.training.client_company.name + " - " + session.training.title,
+              attendees: trainers
             })
           end
         end
         events.each do |event|
-          begin
+          #begin
             if User.where(access_level: ['super admin', 'admin']).map{|x| x.id.to_s}.include?(ind)
               create_calendar_id(ind, session.id, event, service, calendars_ids)
             else
               sevener = User.find(ind)
-              initials = sevener.initials
-              event.summary = session.training.client_company.name + " - " + session.training.title + " - " + initials
+              event.summary = session.training.client_company.name + " - " + session.training.title + " - " + sevener.fullname
               event.id = SecureRandom.hex(32)
               session_trainer = SessionTrainer.where(user_id: sevener.id, session_id: session.id).first
               session_trainer.calendar_uuid.nil? ? session_trainer.update(calendar_uuid: event.id) : session_trainer.update(calendar_uuid: session_trainer.calendar_uuid + ' - ' + event.id)
-              service.insert_event(calendars_ids['other'], event)
+              service.insert_event(calendars_ids['other'], event, send_notifications: true)
             end
-          rescue
-          end
+          #rescue
+          #end
         end
       end
     end
@@ -83,7 +88,7 @@ class UpdateCalendarJob < ApplicationJob
     event.id = SecureRandom.hex(32)
     session_trainer = SessionTrainer.where(user_id: user_id, session_id: session_id).first
     session_trainer.calendar_uuid.nil? ? session_trainer.update(calendar_uuid: event.id) : session_trainer.update(calendar_uuid: session_trainer.calendar_uuid + ' - ' + event.id)
-    service.insert_event(hash[user_id.to_i], event)
+    service.insert_event(hash[user_id.to_i], event, send_updates: 'all')
   end
 
   def delete_calendar_id(session_trainer, service)

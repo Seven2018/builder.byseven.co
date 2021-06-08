@@ -64,6 +64,7 @@
       <h3><strong><%= @training.client_contact.client_company.name %></strong></h3>
       <div class="flex-row-between-centered">
         <h3 style='margin-bottom:1rem;'><%= @training.title %></h3>
+        <a data-toggle="modal" data-target="#trainingInfos" style="margin-bottom: .5rem;"><i class="fas fa-info-circle"></i></a>
         <%# if @airtable_training.present? %>
           <!-- <a data-toggle='modal' data-target='#consultObjectives' data-toggle="tooltip" title="See Objectives"><i class="fas fa-info-circle"></i></a> -->
         <%# end %>
@@ -74,6 +75,29 @@
       <div>
         <ul id="owner">
           <% @training.owners.each do |user| %>
+            <li>
+              <% if user.picture.present? %>
+                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm'></a>
+              <% else %>
+                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm'></a>
+              <% end %>
+            </li>
+            <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+              <div class="modal-dialog" role="document" style="border-radius: 2rem">
+                <%= render 'users/consult', user: user, training: @training %>
+              </div>
+            </div>
+          <% end %>
+          <% if (['super admin', 'admin', 'training manager'].include? current_user.access_level) %>
+            <li><button class='btn btn-add-user' data-toggle='modal' data-target='#newOwner' disabled>Owner</button></li>
+          <% else %>
+            <li><button class='btn btn-add-user btn-add-user-disabled'>Owner</button></li>
+          <% end %>
+        </ul>
+      </div>
+      <div>
+        <ul id="owner">
+          <% @training.sidekicks.each do |user| %>
             <li>
               <% if user.picture.present? %>
                 <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm'></a>
@@ -195,6 +219,12 @@
 </div>
 
 <!-- Modal -->
+<div class="modal fade" id="trainingInfos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document" style="border-radius: 2rem">
+    <%= render 'trainings/show_infos', training: @training %>
+  </div>
+</div>
+
 <div class="modal fade" id="copyTraining" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document" style="border-radius: 2rem">
     <%= render 'copy', training: @training %>
