@@ -19,7 +19,7 @@ class UpdateCalendarJob < ApplicationJob
     list.each do |ind|
       Session.where(id: session_ids).each do |session|
         if session.date.nil?
-          break
+          next
         end
         date = session&.date
         day, month, year = date.day, date.month, date.year

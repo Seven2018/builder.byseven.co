@@ -22,7 +22,7 @@
       <div>
         <%= f.input :duration, label: "Billed Duration (hours) per trainer", input_html: {min: 0, style: 'width:11rem;', id: 'edit_duration'}, allow_blank: false %>
       </div>
-      <%= f.input :description %>
+      <%= f.input :description, label: "Google Meet link" %>
       <%= f.hidden_field :session_page, value: params[:page] %>
       <div class='modal-control'>
         <%= button_tag type: 'submit', class: 'btn btn-edit-green btn-icon', data: { toggle: 'tooltip' }, title: 'Save' do %>

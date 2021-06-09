@@ -83,7 +83,7 @@ class Training < ApplicationRecord
 
   def export_airtable
     # begin
-      existing_card = OverviewTraining.all.select{|x| x['Reference SEVEN'] == self.refid}&.first
+      existing_card = OverviewTraining.all.select{|x| x['Builder_id'] == self.id}&.first
       details = "Détail des sessions (date, horaires, intervenants):\n\n"
       seven_invoices = "Factures SEVEN :\n"
       OverviewNumbersRevenue.all.select{|x| x['Training_id'] == self.id}.sort_by{|x| x['Invoice_id']}.each do |invoice|

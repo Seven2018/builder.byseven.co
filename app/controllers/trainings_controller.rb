@@ -26,6 +26,13 @@ class TrainingsController < ApplicationController
         @trainings = trainings_empty + trainings_with_date
         @user = User.find(params[:user])
       end
+    else
+      if params[:search]
+        trainings = ((Training.where("unaccent(lower(title)) LIKE ?", "%#{I18n.transliterate(params[:search][:title].downcase)}%")).select{|x| x.trainers.include?(current_user)} + (Training.joins(client_contact: :client_company).where("lower(client_companies.name) LIKE ?", "%#{params[:search][:title].downcase}%").select{|x| x.trainers.include?(current_user)})).flatten(1).uniq
+        trainings_empty = trainings.reject{|x| x.end_time.present?}
+        trainings_with_date = trainings.reject{|y| !y.end_time.present?}.sort_by{|z| z.end_time}.reverse
+        @trainings = trainings_empty + trainings_with_date
+      end
     end
   end
 
