@@ -63,7 +63,7 @@ class UpdateCalendarJob < ApplicationJob
           end
         end
         events.each do |event|
-          #begin
+          begin
             if User.where(access_level: ['super admin', 'admin']).map{|x| x.id.to_s}.include?(ind)
               create_calendar_id(ind, session.id, event, service, calendars_ids)
             else
@@ -74,8 +74,8 @@ class UpdateCalendarJob < ApplicationJob
               session_trainer.calendar_uuid.nil? ? session_trainer.update(calendar_uuid: event.id) : session_trainer.update(calendar_uuid: session_trainer.calendar_uuid + ' - ' + event.id)
               service.insert_event(calendars_ids['other'], event)
             end
-          #rescue
-          #end
+          rescue
+          end
         end
       end
     end
