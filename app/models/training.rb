@@ -53,6 +53,10 @@ class Training < ApplicationRecord
     self.training_ownerships.where(user_type: 'Owner').map(&:user)
   end
 
+  def sidekicks
+    self.training_ownerships.where(user_type: 'Sidekick').map(&:user)
+  end
+
   def owner_ids
     self.training_ownerships.where(user_type: 'Owner').map(&:user_id)
   end
