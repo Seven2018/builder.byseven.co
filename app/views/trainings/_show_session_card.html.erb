@@ -53,25 +53,9 @@
           <i class="fas fa-eye"></i>
         </button>
       <% end %>
-      <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
-        <button class="edit-fafa" data-toggle='modal' data-target='#addTrainer<%= session.id %>' data-toggle="tooltip" title="Add Trainer"><i class="fas fa-user-astronaut"></i></button>
-        <button class="edit-fafa" data-toggle='modal' data-target='#editSession<%= session.id %>' data-toggle="tooltip" title="Edit"><i class="fas fa-pen"></i></button>
-        <%= link_to training_copy_form_session_path(session.training, session, page: params[:page]), data: { toggle: 'tooltip'}, title: 'Copy Session' do %>
-          <button class='edit-fafa'><i class="fas fa-copy"></i></button>
-        <% end %>
-        <%= link_to remove_session_trainers_path(session_id: session.id, destroy: 'true'), data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
-          <button class='edit-fafa'><i class="fas fa-trash-alt"></i></button>
-        <% end %>
-      <% else %>
-        <button class="edit-fafa disabled" data-toggle="tooltip" title="Disabled"><i class="fas fa-user-astronaut"></i></button>
-        <button class="edit-fafa disabled" data-toggle="tooltip" title="Disabled"><i class="fas fa-pen"></i></button>
-        <a class='disabled' data-toggle="tooltip" title="Disabled">
-          <button class='edit-fafa session_copy disabled'><i class="fas fa-copy"></i></button>
-        </a>
-      <% end %>
     </div>
   </div>
-  <div class="card-main-lg">
+  <div class="card-main-lg" ondblclick="doubleClick(this)">
     <div class="card-session-header">
       <h3 id='<%= "title-form-" + "#{session.id.to_s}" %>' onclick='openSessionForm(this)'><%= session.title %></h3>
       <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id, page: params[:page], type: 'title'), html: { class: "hidden hidden-form", style: 'width:100%;' }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
@@ -83,9 +67,9 @@
           <% session.users.each do |user| %>
             <li>
               <% if user.picture.present? %>
-                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm'></a>
+                <a class="ava2" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-trainer'></a>
               <% else %>
-                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm'></a>
+                <a class="ava2" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-trainer'></a>
               <% end %>
             </li>
             <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -94,6 +78,11 @@
               </div>
             </div>
           <% end %>
+          <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
+            <button class="avatar-sm-add ava2" data-toggle='modal' data-target='#addTrainer<%= session.id %>' data-toggle="tooltip" title="Add Trainer"><i class="fas fa-plus"></i></button>
+          <% else %>
+            <button class="avatar-sm-add ava2" data-toggle="tooltip" title="Disabled"><i class="fas fa-plus"></i></button>
+          <% end %>
         </ul>
       </div>
     </div>
@@ -101,8 +90,24 @@
       <%= render_async show_session_content_path(session_id: session.id) %>
       <% session_number = session.training.sessions.order(date: :asc).find_index(session) + 1 %>
     </div>
-    <div class='flex-row-end-centered'>
-      <h4 class='card-session-number'><%= session_number %>/<%= session.training.sessions.count %> </h4>
+    <div class='sessions-footer'>
+      <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
+        <%= link_to remove_session_trainers_path(session_id: session.id, destroy: 'true'), data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
+          <div class='btn-icon-grey-delete'><i class="fas fa-trash-alt"></i></div>
+        <% end %>
+      <% end %>
+      <div class='sessions-copy'>
+        <h4 class='card-session-number'><%= session_number %>/<%= session.training.sessions.count %> </h4>
+        <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
+          <%= link_to training_copy_form_session_path(session.training, session, page: params[:page]), data: { toggle: 'tooltip'}, title: 'Copy Session' do %>
+            <div class='btn-icon-grey'><i class="fas fa-copy"></i></div>
+          <% end %>
+        <% else %>
+          <a class='disabled' data-toggle="tooltip" title="Disabled">
+            <div class='btn-icon-grey'><i class="fas fa-copy"></i></div>
+          </a>
+        <% end %>
+      </div>
     </div>
 </div>
   <div class="modal fade editSession" id="editSession<%= session.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
@@ -117,3 +122,4 @@
     </div>
   </div>
 </div>
+
