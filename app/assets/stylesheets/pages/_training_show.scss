@@ -43,7 +43,7 @@
   }
 
   .dropdown-menu {
-    width: 17rem;
+    width: 30rem;
     position: absolute;
     right: -5rem;
     padding: 0;
@@ -136,7 +136,9 @@
   // flex-direction: column;
   // align-items: flex-end;
   // justify-content: center;
-
+    li {
+  list-style: none;
+  }
   div {
     margin-bottom: 1rem;
   }
@@ -147,7 +149,6 @@
   justify-content: space-between;
   align-items: center;
   height: 5.2rem;
-
   div > h4 {
     text-align: center;
     font-size: 2rem;
@@ -185,7 +186,6 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  text-align: center;
   min-height: 63px;
 
   @include from-large {
@@ -271,8 +271,10 @@
 }
 
 .sessions-footer {
+  position: relative;
   margin-top: 20px;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
 }
+

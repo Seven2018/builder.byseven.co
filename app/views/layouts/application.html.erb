@@ -88,6 +88,9 @@
     container.style.width = (1440 - 60).toString() + 'px';
     container.style.marginLeft = '60px';
     page_controls.style.width = (1440 - 120).toString() + 'px';
+  } else if (window.innerWidth <= 1024){
+    container.style.width = (window.innerWidth).toString() + 'px';
+    page_controls.style.width = (window.innerWidth).toString() + 'px';
   } else {
     container.style.width = (window.innerWidth - 60).toString() + 'px';
     container.style.marginLeft = '60px';
