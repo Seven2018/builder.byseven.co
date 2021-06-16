@@ -47,13 +47,13 @@
         </div>
       </div>
     <% end %>
-    <div class="flex-row-between-centered">
-      <%= link_to training_session_path(session.training, session), class: 'edit-fafa', data: {toggle: 'tooltip'}, title: 'View Session' do %>
+<!--     <div class="flex-row-between-centered">
+      <%# link_to training_session_path(session.training, session), class: 'edit-fafa', data: {toggle: 'tooltip'}, title: 'View Session' do %>
         <button class='edit-fafa' data-toggle="tooltip" title="View Session">
           <i class="fas fa-eye"></i>
         </button>
-      <% end %>
-    </div>
+      <%# end %>
+    </div> -->
   </div>
   <div class="card-main-lg" ondblclick="doubleClick(this)">
     <div class="card-session-header">
@@ -62,14 +62,14 @@
         <%= f.input :title, label: false, input_html: {value: session.title, style: 'width:100%;'} %>
         <%= button_tag type: 'submit', class: 'hidden hidden-submit' %>
       <% end %>
-      <div style='display:flex;align-items:center;position: absolute;right: 260px;top: -60px;'>
+      <div style='display:flex;align-items:center;position: absolute;right: 0px;top: -60px;'>
         <ul id="owner-session-index">
           <% session.users.each do |user| %>
             <li>
               <% if user.picture.present? %>
-                <a class="ava2" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-trainer'></a>
+                <a class="ava2" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-trainer' data-placement="bottom" title='Trainer:  <%= "#{user.fullname}" %>'></a>
               <% else %>
-                <a class="ava2" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-trainer'></a>
+                <a class="ava2" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-trainer' data-placement="bottom" title='Trainer:  <%= "#{user.fullname}" %>'></a>
               <% end %>
             </li>
             <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
