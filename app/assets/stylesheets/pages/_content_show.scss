@@ -20,7 +20,7 @@
   padding: 0;
   position: relative;
   overflow: visible;
-
+  margin-bottom: 20px;
   &:hover {
     box-shadow: 1px 0px 2rem 1rem rgba(0, 0, 0, 0.2);
   }
@@ -131,11 +131,18 @@
       color: #0782C1;
     }
 
-    ol,ul,dl {
+   ul,dl {
       /* IE7: reset rtl list margin. (#7334) */
       *margin-right: 0px;
       /* Preserved spaces for list items with text direction different than the list. (#6249,#8049)*/
       padding: 0 40px;
+    }
+
+    ol {
+      padding: 20px;
+      @include from-large {
+      padding: 0 40px;
+      }
     }
 
     ul {

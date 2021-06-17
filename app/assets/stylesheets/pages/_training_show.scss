@@ -222,7 +222,7 @@
   }
 }
 
-#owner, #writer, #trainer {
+#writer, #trainer {
   font-size: 2rem;
   font-weight: 300;
   margin: 0;
@@ -233,8 +233,22 @@
   li {
     float:left;
     margin: 0 0.5rem;
-
   }
+}
+
+#owner {
+  font-size: 2rem;
+  font-weight: 300;
+  margin: 0;
+  padding: 0 !important;
+  list-style: none;
+  margin-bottom: 1rem;
+
+  li {
+    float:left;
+    margin: 0 0.4rem;
+  }
+
 }
 
 #owner-session-index {

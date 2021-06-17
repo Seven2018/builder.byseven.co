@@ -5,10 +5,10 @@
     <% end %>
     <div class='flex-row-between-centered'>
       <% if ['super admin', 'admin', 'training manager, sevener+'].include? current_user.access_level %>
-        <button class='show_library btn btn-edit-yellow'>Add a Workshop</button>
+        <div class='show_library btn-icon-grey' data-toggle='tooltip' title='Add Workshop'><i class="fas fa-plus"></i></div>
       <% else %>
         <%= link_to training_session_workshops_path(@session.training, @session), method: :post, remote: true do %>
-          <button class='btn btn-edit-yellow'>Add a Workshop</button>
+          <div class='btn-icon-grey' data-toggle='tooltip' title='Add Workshop'><i class="fas fa-plus"></i></div>
         <% end %>
       <% end %>
       <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
@@ -23,16 +23,18 @@
       <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
         <div class='show_library btn-icon-grey' data-toggle="tooltip" title="Library"><i class="fas fa-book"></i></div>
       <% end %>
-      <div class='btn-icon-grey dropdown-toggle' id="dropdownMenuButton" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></div>
-      <ul class="dropdown-menu dropdown-menu-right navbar-wagon-dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <li><%= link_to 'View mode', training_session_viewer_path(@session.training, @session) %></li>
-        <li><%= link_to 'Export PDF', training_session_path(@session.training, @session, format: :pdf), target: :_blank %></li>
-        <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-          <li><%= link_to 'Participants List', export_attendees_path(@session.training, @session) %></li>
-          <li><a data-toggle='modal' data-target='#addAttendees' data-toggle="tooltip" title="Add Participants">Add participants</a></li>
-          <li><%= link_to 'Presence Sheet', training_session_presence_sheet_path(@session.training, @session, format: :pdf), target: :_blank %></li>
-        <% end %>
-      </ul>
+      <div class="dropdown">
+        <div class='btn-icon-grey dropdown-toggle' id="dropdownMenuButton" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></div>
+        <ul class="dropdown-menu dropdown-menu-right navbar-wagon-dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <li><%= link_to 'View mode', training_session_viewer_path(@session.training, @session) %></li>
+          <li><%= link_to 'Export PDF', training_session_path(@session.training, @session, format: :pdf), target: :_blank %></li>
+          <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+            <li><%= link_to 'Participants List', export_attendees_path(@session.training, @session) %></li>
+            <li><a data-toggle='modal' data-target='#addAttendees' data-toggle="tooltip" title="Add Participants">Add participants</a></li>
+            <li><%= link_to 'Presence Sheet', training_session_presence_sheet_path(@session.training, @session, format: :pdf), target: :_blank %></li>
+          <% end %>
+        </ul>
+      </div>
     </div>
   </div>
   <div class="session-info-container">
@@ -236,6 +238,13 @@
 <script>
   photos = document.querySelectorAll('.ava-session')
   counter = 30;
+  photos.forEach(photo => {
+    photo.style.right = counter.toString() + 'px';
+    counter = counter + 30;
+  });
+
+  photos = document.querySelectorAll('.ava-session-mobile')
+  counter = -225;
   photos.forEach(photo => {
     photo.style.right = counter.toString() + 'px';
     counter = counter + 30;
