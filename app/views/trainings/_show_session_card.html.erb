@@ -109,17 +109,6 @@
       <% end %>
       </div>
     </div>
-</div>
-  <div class="modal fade editSession" id="editSession<%= session.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" role="document" style="border-radius: 2rem">
-      <%= render '/sessions/edit', session: session %>
-    </div>
-  </div>
-  <div class="modal fade" id="addTrainer<%= session.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog %>" role="document" style="border-radius: 2rem">
-      <% @session = session %>
-      <%= render '/session_trainers/new', session: @session, session_trainer: SessionTrainer.new, session_number: session_number %>
-    </div>
   </div>
 </div>
 
@@ -151,29 +140,6 @@
   <div class="card-main-lg-mobile" ondblclick="doubleClick(this)">
     <div class="card-session-header-mobile">
       <h3 id='<%= "title-form-" + "#{session.id.to_s}" %>'><%= session.title %></h3>
-<!--       <div style='display:flex;align-items:center;position: absolute;right: 0px;top: -60px;'>
-        <ul id="owner-session-index">
-          <%# session.users.each do |user| %>
-            <li>
-              <%# if user.picture.present? %>
-                <a class="ava2" data-toggle='modal' data-target='#consultUser<%# user.id %>'><img src='<%#"#{user.picture}" %>' alt="" class='avatar-sm-trainer' data-placement="bottom" title='Trainer:  <%# "#{user.fullname}" %>'></a>
-              <%# else %>
-                <a class="ava2" data-toggle='modal' data-target='#consultUser<%## user.id %>'><img src='<%# asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-trainer' data-placement="bottom" title='Trainer:  <%# "#{user.fullname}" %>'></a>
-              <%# end %>
-            </li>
-            <div class="modal fade" id="consultUser<%# user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-              <div class="modal-dialog" role="document" style="border-radius: 2rem">
-                <%# render 'users/consult', user: user %>
-              </div>
-            </div>
-          <%# end %> -->
-   <!--        <%# if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
-            <button class="avatar-sm-add ava2" data-toggle='modal' data-target='#addTrainer<%= session.id %>' data-toggle="tooltip" title="Add Trainer"><i class="fas fa-plus"></i></button>
-          <%# else %>
-            <button class="avatar-sm-add ava2" data-toggle="tooltip" title="Disabled"><i class="fas fa-plus"></i></button>
-          <%# end %> -->
-<!--         </ul>
-      </div> -->
     </div>
     <div class="mods-list">
       <%= render_async show_session_content_path(session_id: session.id) %>
@@ -190,17 +156,17 @@
       </div>
       </div>
     </div>
-</div>
-  <div class="modal fade " id="editSession<%= session.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" role="document" style="border-radius: 2rem">
-      <%= render '/sessions/edit', session: session %>
-    </div>
-  </div>
-  <div class="modal fade" id="addTrainer<%= session.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog %>" role="document" style="border-radius: 2rem">
-      <% @session = session %>
-      <%= render '/session_trainers/new', session: @session, session_trainer: SessionTrainer.new, session_number: session_number %>
-    </div>
   </div>
 </div>
 
+<div class="modal fade editSession" id="editSession<%= session.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document" style="border-radius: 2rem">
+    <%= render '/sessions/edit', session: session %>
+  </div>
+</div>
+<div class="modal fade" id="addTrainer<%= session.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog %>" role="document" style="border-radius: 2rem">
+    <% @session = session %>
+    <%= render '/session_trainers/new', session: @session, session_trainer: SessionTrainer.new, session_number: session_number %>
+  </div>
+</div>
