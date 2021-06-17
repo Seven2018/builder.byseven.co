@@ -45,6 +45,15 @@
             </div>
           <% end %>
         </div>
+          <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
+          <%= link_to training_copy_form_session_path(session.training, session, page: params[:page]), data: { toggle: 'tooltip'}, title: 'Copy Session' do %>
+            <div class='btn-icon-grey-sm'><i class="fas fa-copy"></i></div>
+          <% end %>
+        <% else %>
+          <a class='disabled' data-toggle="tooltip" title="Disabled">
+            <div class='btn-icon-grey-sm'><i class="fas fa-copy"></i></div>
+          </a>
+        <% end %>
       </div>
     <% end %>
 <!--     <div class="flex-row-between-centered">
@@ -91,22 +100,13 @@
       <% session_number = session.training.sessions.order(date: :asc).find_index(session) + 1 %>
     </div>
     <div class='sessions-footer'>
+      <div class='sessions-copy'>
+        <h4 class='card-session-number'><%= session_number %>/<%= session.training.sessions.count %> </h4>
       <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
         <%= link_to remove_session_trainers_path(session_id: session.id, destroy: 'true'), data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
           <div class='btn-icon-grey-delete'><i class="fas fa-trash-alt"></i></div>
         <% end %>
       <% end %>
-      <div class='sessions-copy'>
-        <h4 class='card-session-number'><%= session_number %>/<%= session.training.sessions.count %> </h4>
-        <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
-          <%= link_to training_copy_form_session_path(session.training, session, page: params[:page]), data: { toggle: 'tooltip'}, title: 'Copy Session' do %>
-            <div class='btn-icon-grey'><i class="fas fa-copy"></i></div>
-          <% end %>
-        <% else %>
-          <a class='disabled' data-toggle="tooltip" title="Disabled">
-            <div class='btn-icon-grey'><i class="fas fa-copy"></i></div>
-          </a>
-        <% end %>
       </div>
     </div>
 </div>

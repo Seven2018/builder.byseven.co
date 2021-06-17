@@ -77,7 +77,6 @@
           <% else %>
             <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-owner ava' data-toggle='tooltip' data-placement="left" title='Owner  <%= "#{user.fullname}" %>'></a>
           <% end %>
-
         <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
           <div class="modal-dialog" role="document" style="border-radius: 2rem">
             <%= render 'users/consult', user: user, training: @training %>
