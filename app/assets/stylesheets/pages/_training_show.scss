@@ -66,7 +66,7 @@
   }
 
   .dropdown-menu {
-    width: 17rem;
+    width: 30rem;
     position: absolute;
     right: -5rem;
     padding: 0;
@@ -154,11 +154,14 @@
 }
 
 .middle-info-user {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: center;
-
+  position:relative;
+  // display: flex;
+  // flex-direction: column;
+  // align-items: flex-end;
+  // justify-content: center;
+    li {
+  list-style: none;
+  }
   div {
     margin-bottom: 1rem;
   }
@@ -169,7 +172,6 @@
   justify-content: space-between;
   align-items: center;
   height: 5.2rem;
-
   div > h4 {
     text-align: center;
     font-size: 2rem;
@@ -207,7 +209,6 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  text-align: center;
   min-height: 63px;
 
   @include from-large {
@@ -239,11 +240,35 @@
 #owner-session-index {
   font-size: 2rem;
   font-weight: 300;
-
+  position: relative;
   li {
     display: inline-block;
     margin: 0 0.5rem;
   }
+  .avatar-sm-add {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid grey;
+  i {
+    color: #888888;
+    font-size: 20px;
+  }
+  }
+.avatar-sm-trainer {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #E64259;
+  }
+  .ava2 {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
 }
 
 #dropdownMenuButton::after, #dropdownNotificationButton::after {
@@ -257,3 +282,25 @@
   text-transform: none !important;
   background-color: white !important;
 }
+
+.sessions-copy {
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  color: #888888;
+  i {
+    color: #888888;
+  }
+}
+
+.sessions-footer {
+  position: relative;
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  i {
+    margin-left: 10px;
+  }
+}
+

@@ -118,7 +118,6 @@
   display: flex;
   flex-direction: row;
   overflow-x: auto;
-  background-color: white;
   margin-right: 0;
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;
@@ -134,7 +133,6 @@
 }
 
 .trainings-row.active {
-  background: rgba(255,255,255,0.3);
   cursor: grabbing;
   cursor: -webkit-grabbing;
   transform: scale(1);

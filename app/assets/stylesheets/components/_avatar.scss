@@ -1,9 +1,59 @@
 /* User Avatar */
-.avatar-sm {
-  width: 3.5rem;
-  height: 3.5rem;
+.avatar-sm-trainer {
+  width: 4rem;
+  height: 4rem;
   border-radius: 50%;
   object-fit: cover;
+  border: 3px solid #E64259;
+}
+
+.avatar-sm-writer {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #FFC447;
+}
+
+.avatar-sm-sidekick {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #4ac2c7;
+}
+
+.avatar-sm-owner {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #80b918;
+}
+
+.avatar-sm-add {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid grey;
+}
+
+.avatar-sm {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ava {
+  position: absolute;
+  right: 0;
+}
+
+.ava-session {
+  position: absolute;
+  right: 30px;
 }
 
 .avatar-xs {

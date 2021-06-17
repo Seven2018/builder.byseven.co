@@ -110,17 +110,16 @@
 }
 
 .mods-list {
-  display: none;
   text-align: left;
   position: relative;
 
   ul {
-    font-size: 2rem;
+    font-size: 1.6rem;
     font-weight: 300;
     letter-spacing: 0.6px;
     line-height: 1.6;
     list-style: none;
-    padding: 0;
+    padding: 10px;
     margin: 0;
   }
 
@@ -141,7 +140,10 @@
   }
 
   @include from-large {
-    display: block;
+    ul {
+       font-size: 2rem;
+        padding: 0;
+    }
     // max-height: 0;
     overflow: hidden;
     padding: 0;
