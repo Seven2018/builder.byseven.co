@@ -273,6 +273,9 @@
 .sessions-footer {
   margin-top: 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: baseline;
+  i {
+    margin-left: 10px;
+  }
 }
