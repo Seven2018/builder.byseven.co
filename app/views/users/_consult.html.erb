@@ -1,14 +1,11 @@
 <div class="modal-content">
-  <div class="modal-header">
-    <div id="modal-title" style=" display: flex; justify-content: space-between;">
-    </div>
+  <div style='display:flex; justify-content: flex-end;'>
     <button type="button" class="btn btn-icon-close" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
   </div>
   <div class="modal-body">
-    <div style='margin-bottom: 1rem;'>
-      <img src='<%= user.picture %>' alt="" class='client-company-logo-show' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
-      <p>Lastname: <strong><%=  user.lastname %></strong></p>
-      <p>Firstname: <strong><%=  user.firstname %></strong></p>
+    <div style='margin-bottom: 1rem; text-align: left !important;'>
+      <div style='display:flex; justify-content: center;'><img src='<%= user.picture %>' alt="" class='avatar-large' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'></div>
+      <p style='font-weight: 800'><strong><%=  user.firstname %> <%=  user.lastname %></strong></p>
       <p>Email: <%= user.email %></p>
       <p>Phone: <%= user.phone_number %></p>
       <p>Access Level: <%= user.access_level.capitalize %></p>

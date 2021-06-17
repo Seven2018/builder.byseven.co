@@ -56,6 +56,11 @@
   right: 30px;
 }
 
+.ava-session-mobile {
+  position: absolute;
+  right: -225px;
+}
+
 .avatar-xs {
   width: 3rem;
   height: 3rem;
@@ -71,10 +76,11 @@
 }
 
 .avatar-large {
-  width: 5.6rem;
-  height: 5.6rem;
+  width: 10.6rem;
+  height: 10.6rem;
   border-radius: 50%;
   object-fit: cover;
+  margin-bottom: 3rem;
 }
 
 .avatar-bordered {

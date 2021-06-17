@@ -8,21 +8,39 @@
     <% end %>
   </div>
   <div>
-    <div style="display: table;margin: 0 auto">
+    <div class='session-trainers'>
       <ul id='owner'>
         <% session.users.each do |user| %>
           <li>
             <% if user.picture.present? %>
-              <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm'></a>
+              <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-trainer ava-session'></a>
             <% else %>
-              <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm'></a>
+              <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-trainer ava-session'></a>
             <% end %>
           </li>
         <% end %>
         <% if ['super admin', 'admin', 'project manager', 'HR'].include?(current_user.access_level) %>
-          <li><button class='btn btn-add-user' data-toggle='modal' data-target='#newUser'>Trainers</button></li>
+          <li><button class='avatar-sm-add ava-session ' data-toggle='modal' data-target='#newUser'><i class="fas fa-plus" style='color:#888888; font-size:20px;' data-toggle='tooltip' title='Add Trainer' data-placement="bottom"></i></button></li>
         <% else %>
-          <li><button class='btn btn-add-user btn-add-user-disabled'>Trainers</button></li>
+          <li><button class='avatar-sm-add ava-session btn-add-user-disabled'><i class="fas fa-plus" style='color:#888888; font-size:20px;' data-toggle='tooltip' title='Add Trainer' data-placement="bottom"></i></button></li>
+        <% end %>
+      </ul>
+    </div>
+    <div class='session-trainers-mobile'>
+      <ul id='owner'>
+        <% session.users.each do |user| %>
+          <li>
+            <% if user.picture.present? %>
+              <a data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-trainer ava-session-mobile'></a>
+            <% else %>
+              <a data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-trainer ava-session-mobile'></a>
+            <% end %>
+          </li>
+        <% end %>
+        <% if ['super admin', 'admin', 'project manager', 'HR'].include?(current_user.access_level) %>
+          <li><button class='avatar-sm-add ava-session-mobile' data-toggle='modal' data-target='#newUser'><i class="fas fa-plus" style='color:#888888; font-size:20px;' data-toggle='tooltip' title='Add Trainer' data-placement="bottom"></i></button></li>
+        <% else %>
+          <li><button class='avatar-sm-add btn-add-user-disabled ava-session-mobile'><i class="fas fa-plus" style='color:#888888; font-size:20px;' data-toggle='tooltip' title='Add Trainer' data-placement="bottom"></i></button></li>
         <% end %>
       </ul>
     </div>
@@ -69,6 +87,18 @@
           <%= button_tag type: 'submit', class: 'hidden hidden-submit' %>
         </div>
       <% end %>
+    </div>
+  <% end %>
+</div>
+<div class="session-info-mobile">
+  <% if @session.start_time && @session.end_time %>
+    <div>
+      <p> <%="#{@session&.date&.strftime('%d/%m/%Y')}"%> </p>
+      <p><%= " #{@session.start_time.strftime("%k:%M")} to #{@session.end_time.strftime("%k:%M")}" %></p>
+    </div>
+    <div>
+      <p id='<%= "duration-form-" + "#{session.id.to_s}" %>'><i class="fas fa-stopwatch"></i><%= session.duration %> h</p>
+      <p><i class="fas fa-users"></i><%= @session.attendees.count %>/<%= @session.attendee_number %></p>
     </div>
   <% end %>
 </div>

@@ -1,7 +1,6 @@
 <div class="container-seven-large container-seven-large-centered">
   <div id='page-index'>
     <div id="page-controls">
-      <h1>Workshops List</h1>
       <div id="page-buttons">
         <%= simple_form_for :search, url: contents_path, method: 'GET' do |f| %>
           <% if params[:search] %>
@@ -15,7 +14,8 @@
         <% end %>
         <% if ['super admin', 'admin', 'training manager', 'sevener+'].include? current_user.access_level %>
           <%= link_to new_content_path do %>
-            <button class="btn btn-edit-yellow">New workshop</button>
+            <div class=" btn-edit-yellow-mobile">New workshop</div>
+            <div class="btn-icon-grey-mobile"><i class="fas fa-plus"></i></div>
           <% end %>
         <% end %>
       </div>
@@ -54,7 +54,6 @@
                 <% theme.children.each do |subtheme| %>
                   <div><%= subtheme.name %>
                     <div class="content-index-nested">
-
                       <% subtheme.contents.each do |content| %>
                         <div><%= link_to content.title, content_path(content) %></div>
                       <% end %>
@@ -68,6 +67,7 @@
       </div>
     <% else %>
       <div id='content-index'>
+      <h1 style="margin-bottom: 20px;">Workshops List</h1>
         <% Theme.includes(:children, :parent).walk_tree do |theme, level| %>
           <% if theme.children.empty? && theme.level == 0 && !['Ice breaker', 'Présentation', 'Conclusion'].include?(theme.name) %>
             <div class="content-index-theme">

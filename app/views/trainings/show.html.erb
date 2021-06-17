@@ -25,6 +25,7 @@
             <span class="iconify" data-icon="simple-icons:airtable" data-inline="false"></span>
           <% end %>
         <% end %>
+        <a class='btn-icon-grey' id='add-session-button' data-toggle='modal' data-target='#newSession' data-toggle="tooltip" title="Add Session"><i class="fas fa-plus"></i></a>
         <a class='btn-icon-grey' data-toggle='modal' data-target='#copyTraining' data-toggle="tooltip" title="Copy"><i class="fas fa-copy"></i></a>
         <div class="dropdown">
           <div class='btn-icon-grey dropdown-toggle' id="dropdownNotificationButton" data-toggle="dropdown"><i class="fas fa-envelope"></i></div>
@@ -192,7 +193,6 @@
       </div>
       <div class="training-info-footer">
         <%# if (['super admin', 'admin', 'training manager'].include? current_user.access_level) && (@training.mode == 'Company' || @training.mode.nil?) %>
-          <a class='btn btn-edit-yellow' id='add-session-button' data-toggle='modal' data-target='#newSession'>Add a session</a>
         <%# elsif (['super admin', 'admin', 'training manager'].include? current_user.access_level) && @training.mode == 'School'%>
           <%# link_to 'Add a session', new_training_session_path(@training), class: 'btn btn-edit-yellow' %>
         <%# end %>
@@ -303,11 +303,10 @@
       sessions = document.querySelectorAll('.card-lg')
       sessions.forEach(card => {
         photos1 = card.querySelectorAll('.ava2')
-        console.log('hi')
         counter1 = 0;
         photos1.forEach(pic => {
           pic.style.right = counter1.toString() + 'px';
-          counter1 = counter1 + 20;
+          counter1 = counter1 + 30;
         });
       });
 
