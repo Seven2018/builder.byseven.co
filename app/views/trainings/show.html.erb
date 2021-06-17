@@ -36,7 +36,9 @@
         <div class="dropdown">
           <div class='btn-icon-grey btn-icon dropdown-toggle' id="dropdownMenuButton" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></div>
           <ul class="dropdown-menu dropdown-menu-right navbar-wagon-dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <li><a data-toggle='modal' data-target='#addAttendees' data-toggle="tooltip" title="Add Participants">Add participants</a></li>
+            <!-- <li><a data-toggle='modal' data-target='#addAttendees' data-toggle="tooltip" title="Add Participants">Add participants</a></li> -->
+            <!-- <li><%# link_to 'Export PDF', training_path(@training, format: :pdf), target: :_blank %></li> -->
+            <li><p onmouseover='exportSubMenu(this);'>Export PDF</p></li>
             <li><%= link_to 'New invoice', new_invoiceitem_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
             <li><%= link_to 'New invoice Airtable', new_airtable_invoiceitem_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
             <li><%= link_to 'New invoice Airtable by Trainer', new_airtable_invoiceitem_by_trainer_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id), method: :post %></li>
@@ -49,6 +51,12 @@
             <!-- <li><a data-toggle='modal' data-target='#createCertificate' data-toggle="tooltip" title="Create certificate">Create certificate</a></li> -->
             <!-- <li><%# link_to 'New Oblivion', new_training_oblivion_path(@training) %></li> -->
           </ul>
+          <div class="dropdown-pdf hidden">
+            <%= simple_form_for :training, url: training_path(@training, format: :pdf), target: :_blank, method: :get do |f| %>
+              <%= f.input :sessions, collection: @training.sessions, as: :check_boxes %>
+              <%= f.submit 'Export', class: 'btn-edit-green' %>
+            <% end %>
+          </div>
         </div>
       </div>
     <% else %>
@@ -64,6 +72,7 @@
       <h3><strong><%= @training.client_contact.client_company.name %></strong></h3>
       <div class="flex-row-between-centered">
         <h3 style='margin-bottom:1rem;'><%= @training.title %></h3>
+        <a data-toggle="modal" data-target="#trainingInfos" style="margin-bottom: .5rem;"><i class="fas fa-info-circle"></i></a>
         <%# if @airtable_training.present? %>
           <!-- <a data-toggle='modal' data-target='#consultObjectives' data-toggle="tooltip" title="See Objectives"><i class="fas fa-info-circle"></i></a> -->
         <%# end %>
@@ -141,15 +150,32 @@
         <% end %>
       </div>
     </div>
-    <div class="middle-info2">
-      <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-        <p id='survey-link'>Link to survey : <%= @training.satisfaction_survey %></p>
-        <%= simple_form_for @training, html: { class: "hidden", id: 'survey-form' } do |f| %>
-          <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
-            <%= f.input :satisfaction_survey, placeholder: 'Add a link to the survey', value: @training.satisfaction_survey, label: false, input_html: { style: 'width: 200px;'} %>
-            <%= button_tag type: 'submit', class: 'btn btn-add-user', input_html: { style: 'height: 3.5rem' } do %>
-              Update
-            <% end %>
+  </div>
+  <div class="middle-info2">
+    <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+      <p id='survey-link'>Link to survey : <%= @training.satisfaction_survey %></p>
+      <%= simple_form_for @training, html: { class: "hidden", id: 'survey-form' } do |f| %>
+        <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+          <%= f.input :satisfaction_survey, placeholder: 'Add a link to the survey', value: @training.satisfaction_survey, label: false, input_html: { style: 'width: 200px;'} %>
+          <%= button_tag type: 'submit', class: 'btn btn-add-user', input_html: { style: 'height: 3.5rem' } do %>
+            Update
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <p id='survey-link'>Link to survey : <%= @training.satisfaction_survey %></p>
+    <% end %>
+    <% next_sessions = @training.sessions.order(date: :asc).where('date >= ?', Date.today) %>
+    <% if next_sessions.present? && next_sessions&.first&.description&.present? %>
+      <a href="<%= next_sessions.first.description %>" target="_blank">Lien Google Meet</a>
+    <% end %>
+  </div>
+  <div class="training-info">
+    <div class="sessions-cards">
+      <% @training.sessions.order(:date, :start_time).each do |session| %>
+        <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) || session.users.include?(current_user) %>
+          <div id="card-block-<%= session.id %>">
+            <%= render 'show_session_card', session: session %>
           </div>
         <% end %>
       <% else %>
@@ -178,6 +204,12 @@
 </div>
 
 <!-- Modal -->
+<div class="modal fade" id="trainingInfos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document" style="border-radius: 2rem">
+    <%= render 'trainings/show_infos', training: @training %>
+  </div>
+</div>
+
 <div class="modal fade" id="copyTraining" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document" style="border-radius: 2rem">
     <%= render 'copy', training: @training %>
@@ -299,7 +331,7 @@
           }
           window.addEventListener('click', function(e) {
             if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
-              if (form.querySelector('.form-control').value != initial_value) {
+              if (form.querySelector('.form-control').value != initial_value || form.querySelector('.form-control').classList.contains('timepicker')) {
                 form.querySelector('.hidden-submit').click();
               } else {
                 form.classList.toggle('hidden');
@@ -349,4 +381,8 @@
       });
     });
   });
+
+  function exportSubMenu(element) {
+    element.parentNode.parentNode.parentNode.querySelector('.dropdown-pdf').classList.remove('hidden')
+  }
 </script>

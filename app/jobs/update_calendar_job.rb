@@ -18,10 +18,17 @@ class UpdateCalendarJob < ApplicationJob
     # Creates the event in all the targeted calendars
     list.each do |ind|
       Session.where(id: session_ids).each do |session|
+        if session.date.nil?
+          next
+        end
         date = session&.date
         day, month, year = date.day, date.month, date.year
         start_time = session.start_time.change(day: day, month: month, year: year)
         end_time = session.end_time.change(day: day, month: month, year: year)
+        trainers = []
+        session.users.each do |trainer|
+          trainers << {email: trainer.email}
+        end
         events = []
         break_position = session.workshops.find_by(title: 'Pause Déjeuner')&.position
         if break_position.nil?
@@ -61,8 +68,7 @@ class UpdateCalendarJob < ApplicationJob
               create_calendar_id(ind, session.id, event, service, calendars_ids)
             else
               sevener = User.find(ind)
-              initials = sevener.initials
-              event.summary = session.training.client_company.name + " - " + session.training.title + " - " + initials
+              event.summary = session.training.client_company.name + " - " + session.training.title + " - " + sevener.fullname
               event.id = SecureRandom.hex(32)
               session_trainer = SessionTrainer.where(user_id: sevener.id, session_id: session.id).first
               session_trainer.calendar_uuid.nil? ? session_trainer.update(calendar_uuid: event.id) : session_trainer.update(calendar_uuid: session_trainer.calendar_uuid + ' - ' + event.id)

@@ -23,6 +23,7 @@ class ImportAirtableJob < ApplicationJob
         training.update(infos: infos)
       elsif card['Partner Contact'].present?
         owners = OverviewUser.all.select{|x| if card['Owner'].present?; card['Owner'].include?(x.id); end}
+        sidekicks = OverviewUser.all.select{|x| if card['Sidekick'].present?; card['Sidekick'].include?(x.id); end}
         writers = OverviewUser.all.select{|x| if card['Writers'].present?; card['Writers'].include?(x.id); end}
         contact = OverviewContact.find(card['Partner Contact'].join)
         company = OverviewClient.find(contact['Company/School'].join)
@@ -51,6 +52,9 @@ class ImportAirtableJob < ApplicationJob
           card.save
           owners.each do |owner|
             TrainingOwnership.create(training_id: training.id, user_id: owner['Builder_id'], user_type: 'Owner')
+          end
+          sidekicks.each do |owner|
+            TrainingOwnership.create(training_id: training.id, user_id: owner['Builder_id'], user_type: 'Sidekick')
           end
           writers.each do |writer|
             TrainingOwnership.create(training_id: training.id, user_id: writer['Builder_id'], user_type: 'Writer')

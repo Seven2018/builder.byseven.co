@@ -139,7 +139,7 @@ GEM
     faraday-excon (1.1.0)
     faraday-net_http (1.0.1)
     faraday-net_http_persistent (1.1.0)
-    ffi (1.15.1)
+    ffi (1.15.3)
     font-awesome-sass (5.5.0.1)
       sassc (>= 1.11)
     gems (1.2.0)

@@ -19,6 +19,29 @@
   }
 }
 
+.dropdown-training {
+  position: relivatve;
+
+  .dropdown-pdf {
+    background: white;
+    z-index: 80;
+    padding: 2rem;
+    width: 15rem;
+    position: absolute;
+    top: 4rem;
+    left: -27.5rem;
+    box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.5);
+
+    form {
+      height: auto !important;
+    }
+
+    label {
+      margin-left: 3rem;
+    }
+  }
+}
+
 .training-info {
   background-color: white;
   text-align: center;
