@@ -15,3 +15,20 @@ if ("<%= @redirect_from %>" == 'session') {
       });
 
 }
+photos = document.querySelectorAll('.ava')
+counter = 0;
+photos.forEach(photo => {
+  photo.style.right = counter.toString() + 'px';
+  counter = counter + 30;
+});
+
+
+sessions = document.querySelectorAll('.card-lg')
+sessions.forEach(card => {
+  photos1 = card.querySelectorAll('.ava2')
+  counter1 = 0;
+  photos1.forEach(pic => {
+    pic.style.right = counter1.toString() + 'px';
+    counter1 = counter1 + 20;
+  });
+});

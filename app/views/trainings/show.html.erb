@@ -34,7 +34,7 @@
             <li><a data-toggle='modal' type='button' data-target='#updateNotificationSelect' style='cursor:pointer;'>Send updated summary</a></li>
           </ul>
         </div>
-        <div class="dropdown">
+        <div class="dropdown dropdown-training">
           <div class='btn-icon-grey btn-icon dropdown-toggle' id="dropdownMenuButton" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></div>
           <ul class="dropdown-menu dropdown-menu-right navbar-wagon-dropdown-menu" aria-labelledby="dropdownMenuButton">
             <!-- <li><a data-toggle='modal' data-target='#addAttendees' data-toggle="tooltip" title="Add Participants">Add participants</a></li> -->
@@ -180,17 +180,6 @@
           <% end %>
         <% end %>
       </div>
-      <div class="training-info">
-        <div class="sessions-cards">
-          <% @training.sessions.order(:date, :start_time).each do |session| %>
-            <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) || session.users.include?(current_user) %>
-              <div class='session-card-block' id="card-block-<%= session.id %>">
-                <%= render 'show_session_card', session: session %>
-              </div>
-            <% end %>
-          <% end %>
-        </div>
-      </div>
       <div class="training-info-footer">
         <%# if (['super admin', 'admin', 'training manager'].include? current_user.access_level) && (@training.mode == 'Company' || @training.mode.nil?) %>
         <%# elsif (['super admin', 'admin', 'training manager'].include? current_user.access_level) && @training.mode == 'School'%>
@@ -278,37 +267,23 @@
       else return false;
     }
 
-  function openContentMenu(element) {
-    dropdown = element.parentNode.querySelector('.content-dropdown');
-    dropdown.classList.toggle('hidden');
-  };
+    function openContentMenu(element) {
+      dropdown = element.parentNode.querySelector('.content-dropdown');
+      dropdown.classList.toggle('hidden');
+    };
 
 
-  function doubleClick(element) {
-   trainingpage = window.location.href + '/sessions/'
-   sessionid = element.closest('.session-card-block').id.split('card-block-')[1]
-   link = trainingpage + sessionid
-   console.log(link)
-   window.location.href = link
-  };
+    function doubleClick(element) {
+      if (window.location.href.split('?').length > 1) {
+        trainingpage = window.location.href.split('?')[0] + '/sessions/'
+      } else {
+        trainingpage = window.location.href + '/sessions/'
+      }
+      sessionid = element.closest('.session-card-block').id.split('card-block-')[1]
+      link = trainingpage + sessionid
+      window.location.href = link
+    };
 
-      photos = document.querySelectorAll('.ava')
-      counter = 0;
-      photos.forEach(photo => {
-        photo.style.right = counter.toString() + 'px';
-        counter = counter + 30;
-      });
-
-
-      sessions = document.querySelectorAll('.card-lg')
-      sessions.forEach(card => {
-        photos1 = card.querySelectorAll('.ava2')
-        counter1 = 0;
-        photos1.forEach(pic => {
-          pic.style.right = counter1.toString() + 'px';
-          counter1 = counter1 + 30;
-        });
-      });
 
     function openSessionForm(element) {
       if (formGuardian == false) {
@@ -379,6 +354,32 @@
   });
 
   function exportSubMenu(element) {
-    element.parentNode.parentNode.parentNode.querySelector('.dropdown-pdf').classList.remove('hidden')
+    dropdown_pdf = element.parentNode.parentNode.parentNode.querySelector('.dropdown-pdf')
+    dropdown_pdf.classList.remove('hidden')
+
+    window.addEventListener('click', function(e) {
+      if (outsideClick(e, dropdown_pdf)) {
+        dropdown_pdf.classList.add('hidden')
+        this.removeEventListener('click', arguments.callee, false);
+      }
+    });
   }
+
+  photos = document.querySelectorAll('.ava')
+  counter = 0;
+  photos.forEach(photo => {
+    photo.style.right = counter.toString() + 'px';
+    counter = counter + 30;
+  });
+    
+      sessions = document.querySelectorAll('.card-lg')
+      sessions.forEach(card => {
+        photos1 = card.querySelectorAll('.ava2')
+        counter1 = 0;
+        photos1.forEach(pic => {
+          pic.style.right = counter1.toString() + 'px';
+          counter1 = counter1 + 30;
+        });
+      });
+
 </script>
