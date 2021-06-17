@@ -141,7 +141,7 @@
         <div class="sessions-menu" onclick="openContentMenu(this);"><i class="fas fa-ellipsis-v"></i></div>
          <div class="content-dropdown hidden">
           <%= link_to 'Copy Session', training_copy_form_session_path(session.training, session, page: params[:page]), data: { toggle: 'tooltip'}, title: 'Copy Session' %>
-          <a class='session-edit' data-toggle='modal' data-target='#editSession<%= session.id %>' data-toggle="tooltip" title="Edit">Edit Session</a>
+          <a class='session-edit' data-toggle='modal' data-target='#editSession<%= session.id %>'>Edit Session</a>
           <%= link_to 'Delete Session', remove_session_trainers_path(session_id: session.id, destroy: 'true'), data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' %>
           </div>
       <% end %>
@@ -191,7 +191,7 @@
       </div>
     </div>
 </div>
-  <div class="modal fade editSession" id="editSession<%= session.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+  <div class="modal fade " id="editSession<%= session.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog" role="document" style="border-radius: 2rem">
       <%= render '/sessions/edit', session: session %>
     </div>

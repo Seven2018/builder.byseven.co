@@ -150,36 +150,23 @@
         <% end %>
       </div>
     </div>
-  </div>
-  <div class="middle-info2">
-    <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-      <p id='survey-link'>Link to survey : <%= @training.satisfaction_survey %></p>
-      <%= simple_form_for @training, html: { class: "hidden", id: 'survey-form' } do |f| %>
-        <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
-          <%= f.input :satisfaction_survey, placeholder: 'Add a link to the survey', value: @training.satisfaction_survey, label: false, input_html: { style: 'width: 200px;'} %>
-          <%= button_tag type: 'submit', class: 'btn btn-add-user', input_html: { style: 'height: 3.5rem' } do %>
-            Update
-          <% end %>
-        </div>
-      <% end %>
-    <% else %>
-      <p id='survey-link'>Link to survey : <%= @training.satisfaction_survey %></p>
-    <% end %>
-    <% next_sessions = @training.sessions.order(date: :asc).where('date >= ?', Date.today) %>
-    <% if next_sessions.present? && next_sessions&.first&.description&.present? %>
-      <a href="<%= next_sessions.first.description %>" target="_blank">Lien Google Meet</a>
-    <% end %>
-  </div>
-  <div class="training-info">
-    <div class="sessions-cards">
-      <% @training.sessions.order(:date, :start_time).each do |session| %>
-        <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) || session.users.include?(current_user) %>
-          <div id="card-block-<%= session.id %>">
-            <%= render 'show_session_card', session: session %>
+    <div class="middle-info2">
+      <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+        <p id='survey-link'>Link to survey : <%= @training.satisfaction_survey %></p>
+        <%= simple_form_for @training, html: { class: "hidden", id: 'survey-form' } do |f| %>
+          <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+            <%= f.input :satisfaction_survey, placeholder: 'Add a link to the survey', value: @training.satisfaction_survey, label: false, input_html: { style: 'width: 200px;'} %>
+            <%= button_tag type: 'submit', class: 'btn btn-add-user', input_html: { style: 'height: 3.5rem' } do %>
+              Update
+            <% end %>
           </div>
         <% end %>
       <% else %>
         <p id='survey-link'>Link to survey : <%= @training.satisfaction_survey %></p>
+      <% end %>
+      <% next_sessions = @training.sessions.order(date: :asc).where('date >= ?', Date.today) %>
+      <% if next_sessions.present? && next_sessions&.first&.description&.present? %>
+        <a href="<%= next_sessions.first.description %>" target="_blank">Lien Google Meet</a>
       <% end %>
     </div>
     <div class="training-info">
@@ -192,17 +179,27 @@
           <% end %>
         <% end %>
       </div>
-    </div>
-    <div class="training-info-footer">
-      <%# if (['super admin', 'admin', 'training manager'].include? current_user.access_level) && (@training.mode == 'Company' || @training.mode.nil?) %>
-        <a class='btn btn-edit-yellow' id='add-session-button' data-toggle='modal' data-target='#newSession'>Add a session</a>
-      <%# elsif (['super admin', 'admin', 'training manager'].include? current_user.access_level) && @training.mode == 'School'%>
-        <%# link_to 'Add a session', new_training_session_path(@training), class: 'btn btn-edit-yellow' %>
-      <%# end %>
+      <div class="training-info">
+        <div class="sessions-cards">
+          <% @training.sessions.order(:date, :start_time).each do |session| %>
+            <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) || session.users.include?(current_user) %>
+              <div class='session-card-block' id="card-block-<%= session.id %>">
+                <%= render 'show_session_card', session: session %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+      <div class="training-info-footer">
+        <%# if (['super admin', 'admin', 'training manager'].include? current_user.access_level) && (@training.mode == 'Company' || @training.mode.nil?) %>
+          <a class='btn btn-edit-yellow' id='add-session-button' data-toggle='modal' data-target='#newSession'>Add a session</a>
+        <%# elsif (['super admin', 'admin', 'training manager'].include? current_user.access_level) && @training.mode == 'School'%>
+          <%# link_to 'Add a session', new_training_session_path(@training), class: 'btn btn-edit-yellow' %>
+        <%# end %>
+      </div>
     </div>
   </div>
 </div>
-
 <!-- Modal -->
 <div class="modal fade" id="trainingInfos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document" style="border-radius: 2rem">
@@ -287,13 +284,13 @@
   };
 
 
-    function doubleClick(element) {
-     trainingpage = window.location.href + '/sessions/'
-     sessionid = element.closest('.session-card-block').id.split('card-block-')[1]
-     link = trainingpage + sessionid
-     console.log(link)
-     window.location.href = link
-    };
+  function doubleClick(element) {
+   trainingpage = window.location.href + '/sessions/'
+   sessionid = element.closest('.session-card-block').id.split('card-block-')[1]
+   link = trainingpage + sessionid
+   console.log(link)
+   window.location.href = link
+  };
 
       photos = document.querySelectorAll('.ava')
       counter = 0;

@@ -1,5 +1,6 @@
 .modal-header {
   align-items: center !important;
+  border-bottom: none !important;
 }
 
 .mod-date {
@@ -55,7 +56,6 @@
 }
 
 .modal-body {
-
   p {
     font-size: 1.6rem !important;
     font-weight: 300;
