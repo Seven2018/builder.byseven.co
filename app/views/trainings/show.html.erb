@@ -249,6 +249,11 @@
       else return false;
     }
 
+  function openContentMenu(element) {
+    dropdown = element.parentNode.querySelector('.content-dropdown');
+    dropdown.classList.toggle('hidden');
+  };
+
 
     function doubleClick(element) {
      trainingpage = window.location.href + '/sessions/'

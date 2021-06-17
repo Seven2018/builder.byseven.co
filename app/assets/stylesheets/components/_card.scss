@@ -236,6 +236,49 @@ $timeline: #115173;
   margin: 0 auto 5rem auto;
   text-decoration: none;
   color: black;
+  display: none;
+  &:hover {
+    background-color: rgba(0,0,0,0.05);
+  }
+
+  p {
+    cursor: zoom-in;
+  }
+
+  .card-main-lg {
+    cursor: pointer;
+    height: auto;
+    position: relative;
+    margin-top: 2rem;
+
+    h3 {
+      font-family: "Montserrat";
+      font-weight: 500;
+      line-height: 1.1;
+      color: inherit;
+      text-align: left;
+      margin: 0;
+      cursor: zoom-in;
+    }
+  }
+  @include from-medium-high {
+    display: inherit;
+  }
+
+  @include from-large {
+    padding: 2rem;
+  }
+}
+
+.card-lg-mobile {
+  background-color: white;
+  width: 100%;
+  height: auto;
+  box-shadow: 1px 1px 1rem rgba(115, 133, 152, 0.6);
+  margin: 0 auto 5rem auto;
+  text-decoration: none;
+  color: black;
+  display:inherit;
 
   &:hover {
     background-color: rgba(0,0,0,0.05);
@@ -261,7 +304,9 @@ $timeline: #115173;
       cursor: zoom-in;
     }
   }
-
+  @include from-medium-high {
+    display:none;
+  }
   @include from-large {
     padding: 2rem;
   }
@@ -336,11 +381,136 @@ $timeline: #115173;
   // }
 }
 
+
+.sessions-menu {
+  width: 6%;
+  margin-left: 15px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1rem;
+  position: relative;
+  i {
+    padding: 10px 15px;
+    &:hover {
+      background-color: #c4c4c4;
+      border-radius: 50%;
+    }
+  }
+}
+
+  .content-dropdown {
+    position: absolute;
+    right: 2px;
+    top: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background: white;
+    padding: 0 1rem;
+    z-index: 1000;
+    a {
+      padding: 5px 20px;
+    }
+  }
+
+.card-footer-lg-mobile {
+  height: 5rem;
+  padding: 2rem .5rem 2rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+
+  @include from-large {
+    height: auto;
+    padding: 0;
+  }
+
+
+  .card-footer-lg-infos-mobile {
+    display: flex;
+    align-items: baseline;
+    width: 100%;
+
+    & > div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .form-group {
+        margin: 0;
+      }
+
+      i {
+        margin-right: 1rem;
+      }
+    }
+
+    input.form-control {
+      font-size: 1.6rem !important;
+      padding: 0 !important;
+    }
+
+    select.form-control {
+      font-size: 1.6rem !important;
+      padding: 0.5rem !important;
+    }
+  }
+
+  p, i {
+    margin: 0;
+    font-weight: 600;
+    color: gray;
+  }
+
+}
+
+
 .sessions-cards .card-lg {
   z-index: 1000;
 }
+.session-date-time {
+  width: 90%;
+}
+
 
 .card-session-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 2rem;
+  height: 6.7rem;
+  position: relative;
+  a {
+    max-width: 70%;
+  }
+
+  h3 {
+    max-width: 100%;
+    font-size: 2rem;
+
+    @include from-large {
+      font-size: 2.4rem;
+    }
+  }
+
+  input.form-control {
+    font-size: 2.4rem !important;
+    padding: 0 !important;
+  }
+
+  .form-group {
+    margin: 0;
+  }
+}
+
+
+.card-session-header-mobile {
+  padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -393,11 +563,14 @@ $timeline: #115173;
     border: none;
     width: auto;
     height: auto;
-    padding: 0 3rem;
+    padding: 0;
     &:hover {
       transition: all 0.8s ease;
       transform: scale(1.0);
       opacity: 1;
+    }
+    @include from-medium {
+      padding: 0 3rem;
     }
   }
   .card-left {
@@ -469,9 +642,9 @@ $timeline: #115173;
     min-height: 25rem;
     box-shadow: 1px 0px 7rem -1.1rem rgba(0, 0, 0, 0.15);
     padding: 1rem;
-    margin-left: 2.5rem;
-    margin-right: 2.5rem;
-    margin-top: 2rem;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
     margin-bottom: 2rem;
 
     &:hover {
@@ -485,6 +658,9 @@ $timeline: #115173;
     }
 
     @include from-large {
+      margin-left: 2.5rem;
+      margin-right: 2.5rem;
+      margin-top: 2rem;
       flex-grow: 1;
       padding: 2rem;
     }
@@ -746,3 +922,4 @@ $timeline: #115173;
     content: "";
     background-color: rgba(0,0,0,0);
 }
+
