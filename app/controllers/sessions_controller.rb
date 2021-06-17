@@ -62,6 +62,7 @@ class SessionsController < ApplicationController
     authorize @session
     training = @session.training
     @session.update(session_params)
+    @redirect_from = params[:redirect_from]
     if @session.save
       respond_to do |format|
         format.html {redirect_to training_path(training)}

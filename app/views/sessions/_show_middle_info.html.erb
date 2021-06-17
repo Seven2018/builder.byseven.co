@@ -1,0 +1,74 @@
+<div class="middle-info">
+  <div class="session-middle-info-main">
+    <h3 id='session-title' onclick='openSessionForm(this)'><%= session.title %>
+    </h3>
+    <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id, type: 'title', redirect_from: 'session'), html: { class: "hidden hidden-form", style: 'width:100%;' }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
+      <%= f.input :title, label: false, input_html: {value: session.title, style: 'width:100%;'} %>
+      <%= button_tag type: 'submit', class: 'hidden hidden-submit' %>
+    <% end %>
+  </div>
+  <div>
+    <div style="display: table;margin: 0 auto">
+      <ul id='owner'>
+        <% session.users.each do |user| %>
+          <li>
+            <% if user.picture.present? %>
+              <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm'></a>
+            <% else %>
+              <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm'></a>
+            <% end %>
+          </li>
+        <% end %>
+        <% if ['super admin', 'admin', 'project manager', 'HR'].include?(current_user.access_level) %>
+          <li><button class='btn btn-add-user' data-toggle='modal' data-target='#newUser'>Trainers</button></li>
+        <% else %>
+          <li><button class='btn btn-add-user btn-add-user-disabled'>Trainers</button></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="session-info">
+  <% if @session.start_time && @session.end_time %>
+    <div>
+      <p onclick='openSessionForm(this)'> <%="#{@session&.date&.strftime('%d/%m/%Y')}"%> </p>
+      <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id, type: 'date', redirect_from: 'session'), html: { class: "hidden hidden-form" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
+        <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+          <%= f.input :date, as: :string, input_html: { class: 'datepicker', value: session.date, style: 'width: 8.5rem' }, label: false %>
+          <%= button_tag type: 'submit', class: 'hidden hidden-submit' %>
+        </div>
+      <% end %>
+    </div>
+    <div>
+      <p onclick='openSessionForm(this)'><%= " #{@session.start_time.strftime("%k:%M")} to #{@session.end_time.strftime("%k:%M")}" %></p>
+      <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id, type: 'time', redirect_from: 'session'), html: { class: "hidden hidden-form" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
+        <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+          <%= f.input :start_time, label: 'Start time:', as: :time, minute_step: 15, input_html: { class: 'timepicker'}, default: session.start_time, label: false %>
+          <p> to </p>
+          <%= f.input :end_time, label: 'End time:', as: :time, minute_step: 15, input_html: { class: 'timepicker'}, default: session.end_time, label: false %>
+          <%= button_tag type: 'submit', class: 'hidden hidden-submit' %>
+        </div>
+      <% end %>
+    </div>
+    <div>
+      <i class="fas fa-stopwatch"></i>
+      <p id='<%= "duration-form-" + "#{session.id.to_s}" %>' onclick='openSessionForm(this)'><%= session.duration %> h</p>
+      <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id, type: 'duration', redirect_from: 'session'), html: { class: "hidden hidden-form" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
+        <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+          <%= f.input :duration, label: false, input_html: {min: 0, style: 'width:5rem;', id: 'edit_duration', type: 'number', value: session.duration}, allow_blank: false %>
+          <%= button_tag type: 'submit', class: 'hidden hidden-submit' %>
+        </div>
+      <% end %>
+    </div>
+    <div>
+      <i class="fas fa-users"></i>
+      <p onclick='openSessionForm(this)'><%= @session.attendees.count %>/<%= @session.attendee_number %></p>
+      <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id, type: 'attendee', redirect_from: 'session'), html: { class: "hidden hidden-form" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
+        <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+          <%= f.input :attendee_number, input_html: { min: 0, value: session.attendee_number, style: 'width: 5rem' }, label: false %>
+          <%= button_tag type: 'submit', class: 'hidden hidden-submit' %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

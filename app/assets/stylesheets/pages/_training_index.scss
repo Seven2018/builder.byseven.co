@@ -19,11 +19,21 @@
 }
 
 
-.training-update-text {
+.training-update-text.active {
   text-decoration: underline;
   text-decoration-color: #F9C553;
+  opacity: 1;
 }
 
+.training-update-text {
+  margin-right: 2rem !important;
+  opacity: .5;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 1;
+  }
+}
 
 .trainings-title {
   h3 {
@@ -103,7 +113,7 @@
 }
 
 .trainings-row {
-  min-height: 25rem;
+  min-height: 22rem;
   width: auto;
   display: flex;
   flex-direction: row;

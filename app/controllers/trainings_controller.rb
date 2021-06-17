@@ -91,11 +91,28 @@ class TrainingsController < ApplicationController
     authorize @training
     @airtable_training = OverviewTraining.all(filter: "{Builder_id} = '#{@training.id}'").first
     @session = Session.new
+    @sessions = Session.where(id: params[:training][:sessions].reject{|x| x.empty?}) if params[:format] == 'pdf'
     if params[:task] == 'update_airtable'
       UpdateAirtableJob.perform_async(@training, true)
       #@training.trainers.each{|y| @training.export_numbers_sevener(y)}
       #@training.export_airtable
       #@training.export_numbers_activity
+    else
+      respond_to do |format|
+      format.html
+      format.pdf do
+        render(
+          pdf: "#{@training.client_company.name} - #{@training.title}",
+          layout: 'pdf.html.erb',
+          template: 'trainings/show',
+          show_as_html: params.key?('debug'),
+          page_size: 'A4',
+          encoding: 'utf8',
+          dpi: 300,
+          zoom: 1,
+        )
+      end
+    end
     end
   end
 

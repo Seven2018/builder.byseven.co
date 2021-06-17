@@ -35,6 +35,33 @@
   }
 }
 
+.session-middle-info-main {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  min-height: 5.7rem;
+
+  @include from-large {
+    text-align: left;
+    width: 60%;
+  }
+
+  div {
+    margin: 0;
+  }
+
+  h3 {
+    padding-right: 2rem;
+    margin: 0;
+  }
+
+  input {
+    font-size: 2.4rem !important;
+    padding-left: 0 !important;
+  }
+}
+
 .session-info {
   display: flex;
   justify-content: space-between;
@@ -45,10 +72,33 @@
     padding-right: 60%;
   }
 
+  div {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 4.5rem;
+    margin: 0;
+  }
+
   p, i {
     margin: 0;
     font-weight: 600;
     color: gray;
+  }
+
+  i {
+    margin-right: 1rem;
+  }
+
+  input {
+    padding: 0 !important;
+    border: none !important;
+  }
+
+  select {
+    width: 2.5rem !important;
+    padding: 0 !important;
+    border: none !important;
   }
 }
 

@@ -76,15 +76,24 @@
     <% if params[:search] %>
       <h3 class="training-update-text">Search</h3>
       <%= render 'search', trainings: @trainings %>
-    <% elsif params[:completed] %>
-      <h3 class="training-update-text">Completed</h3>
-      <%= render_async index_completed_path(user: params[:user])%>
     <% else %>
-      <h3 class="training-update-text">Upcoming</h3>
-      <div class="trainings-row">
+      <div class="flex-row-start-centered">
+        <h3 class="training-update-text training-update-text-upcoming active" onclick="switchView(this)">Upcoming</h3>
+        <h3 class="training-update-text training-update-text-completed" onclick="switchView(this)">Completed</h3>
+        <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+          <h3 class="training-update-text training-update-text-home" onclick="switchView(this)">Home</h3>
+        <% end %>
+      </div>
+      <div class="trainings-row trainings-row-upcoming">
         <%= render_async index_upcoming_path(user: params[:user]) %>
       </div>
+      <div class="trainings-row trainings-row-completed hidden">
+        <%= render_async index_completed_path(user: params[:user])%>
+      </div>
       <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+        <div class="trainings-row trainings-row-home hidden">
+          <%= render 'index_home', trainings: @trainings %>
+        </div>
         <h3 class="training-update-text">To Schedule</h3>
         <div class="trainings-row">
           <%= render 'index_to_date', trainings: @trainings %>
@@ -93,16 +102,44 @@
         <div class="trainings-row">
           <%= render 'index_to_staff', trainings: @trainings %>
         </div>
-        <h3 class="training-update-text">Home</h3>
-        <div class="trainings-row">
-          <%= render 'index_home', trainings: @trainings %>
-        </div>
       <% end %>
     <% end %>
   </div>
 </div>
 
 <script>
+  function switchView(element) {
+    button_upcoming = document.querySelector('.training-update-text-upcoming')
+    button_completed = document.querySelector('.training-update-text-completed')
+    button_home = document.querySelector('.training-update-text-home')
+    row_upcoming = document.querySelector('.trainings-row-upcoming')
+    row_completed = document.querySelector('.trainings-row-completed')
+    row_home = document.querySelector('.trainings-row-home')
+    if (element == button_upcoming) {
+      element.classList.add('active')
+      button_completed.classList.remove('active')
+      button_home.classList.remove('active')
+      row_upcoming.classList.remove('hidden')
+      row_completed.classList.add('hidden')
+      row_home.classList.add('hidden')
+    } else if (element == button_completed) {
+      element.classList.add('active')
+      button_upcoming.classList.remove('active')
+      button_home.classList.remove('active')
+      row_upcoming.classList.add('hidden')
+      row_completed.classList.remove('hidden')
+      row_home.classList.add('hidden')
+    } else {
+      element.classList.add('active')
+      button_upcoming.classList.remove('active')
+      button_completed.classList.remove('active')
+      row_upcoming.classList.add('hidden')
+      row_completed.classList.add('hidden')
+      row_home.classList.remove('hidden')
+    }
+  }
+
+
   sliders = document.querySelectorAll('.trainings-row');
   sliders.forEach((slider) => {
     isDown = false;

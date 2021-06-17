@@ -33,10 +33,12 @@
             <li><a data-toggle='modal' type='button' data-target='#updateNotificationSelect' style='cursor:pointer;'>Send updated summary</a></li>
           </ul>
         </div>
-        <div class="dropdown">
+        <div class="dropdown dropdown-training">
           <button class='btn btn-edit-grey btn-icon dropdown-toggle' id="dropdownMenuButton" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></button>
           <ul class="dropdown-menu dropdown-menu-right navbar-wagon-dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <li><a data-toggle='modal' data-target='#addAttendees' data-toggle="tooltip" title="Add Participants">Add participants</a></li>
+            <!-- <li><a data-toggle='modal' data-target='#addAttendees' data-toggle="tooltip" title="Add Participants">Add participants</a></li> -->
+            <!-- <li><%# link_to 'Export PDF', training_path(@training, format: :pdf), target: :_blank %></li> -->
+            <li><p onmouseover='exportSubMenu(this);'>Export PDF</p></li>
             <li><%= link_to 'New invoice', new_invoiceitem_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
             <li><%= link_to 'New invoice Airtable', new_airtable_invoiceitem_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
             <li><%= link_to 'New invoice Airtable by Trainer', new_airtable_invoiceitem_by_trainer_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id), method: :post %></li>
@@ -49,6 +51,12 @@
             <!-- <li><a data-toggle='modal' data-target='#createCertificate' data-toggle="tooltip" title="Create certificate">Create certificate</a></li> -->
             <!-- <li><%# link_to 'New Oblivion', new_training_oblivion_path(@training) %></li> -->
           </ul>
+          <div class="dropdown-pdf hidden">
+            <%= simple_form_for :training, url: training_path(@training, format: :pdf), target: :_blank, method: :get do |f| %>
+              <%= f.input :sessions, collection: @training.sessions, as: :check_boxes %>
+              <%= f.submit 'Export', class: 'btn-edit-green' %>
+            <% end %>
+          </div>
         </div>
       </div>
     <% else %>
@@ -317,7 +325,7 @@
           }
           window.addEventListener('click', function(e) {
             if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
-              if (form.querySelector('.form-control').value != initial_value) {
+              if (form.querySelector('.form-control').value != initial_value || form.querySelector('.form-control').classList.contains('timepicker')) {
                 form.querySelector('.hidden-submit').click();
               } else {
                 form.classList.toggle('hidden');
@@ -367,4 +375,8 @@
       });
     });
   });
+
+  function exportSubMenu(element) {
+    element.parentNode.parentNode.parentNode.querySelector('.dropdown-pdf').classList.remove('hidden')
+  }
 </script>

@@ -28,38 +28,8 @@
       </ul>
     </div>
   </div>
-  <div class="middle-info">
-    <div class="middle-info-main">
-      <h3 id='session-title'><%= @session.title %>
-      </h3>
-    </div>
-    <div>
-      <div style="display: table;margin: 0 auto">
-        <ul id='owner'>
-          <% @session.users.each do |user| %>
-            <li>
-              <% if user.picture.present? %>
-                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm'></a>
-              <% else %>
-                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm'></a>
-              <% end %>
-            </li>
-          <% end %>
-          <% if ['super admin', 'admin', 'project manager', 'HR'].include?(current_user.access_level) %>
-            <li><button class='btn btn-add-user' data-toggle='modal' data-target='#newUser'>Trainers</button></li>
-          <% else %>
-            <li><button class='btn btn-add-user btn-add-user-disabled'>Trainers</button></li>
-          <% end %>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="session-info">
-    <% if @session.start_time && @session.end_time %>
-      <p> <%="#{@session&.date&.strftime('%d/%m/%y')}"%> </p>
-      <div><p><%= " #{@session.start_time.strftime("%k:%M")} to #{@session.end_time.strftime("%k:%M")}" %></p></div>
-      <i class="fas fa-users"> <%= @session.attendees.count %>/<%= @session.attendee_number %></i>
-    <% end %>
+  <div class="session-info-container">
+    <%= render "sessions/show_middle_info", session: @session %>
   </div>
   <div id="mods" style="min-height: 50vh;">
     <%= render 'workshops/index', session: @session %>
@@ -164,6 +134,52 @@
 </div>
 
 <script>
+  formGuardian = false;
+
+  function outsideClick(event, notelem) {
+    notelem = $(notelem); // jquerize (optional)
+    // check outside click for multiple elements
+    var clickedOut = true, i, len = notelem.length;
+    for (i = 0;i < len;i++)  {
+        if (event.target == notelem[i] || notelem[i].contains(event.target)) {
+            clickedOut = false;
+        }
+    }
+    if (clickedOut) return true;
+    else return false;
+  }
+
+  function openSessionForm(element) {
+    if (formGuardian == false) {
+      formGuardian = true;
+      if (document.querySelectorAll('.hidden-form.active').length == 0) {
+        form = element.parentNode.querySelector('.hidden-form');
+        element.classList.toggle('hidden');
+        form.classList.toggle('hidden');
+        if (form.querySelector('.form-control') != null){
+          initial_value = form.querySelector('.form-control').value;
+        }
+        if (form.querySelector('.datepicker') != null) {
+          flatpickr(".datepicker", {
+            disableMobile: true,
+            dateFormat: "d/m/Y",});
+        }
+        window.addEventListener('click', function(e) {
+          if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
+            if (form.querySelector('.form-control').value != initial_value || form.querySelector('.form-control').classList.contains('timepicker')) {
+              form.querySelector('.hidden-submit').click();
+            } else {
+              form.classList.toggle('hidden');
+              element.classList.toggle('hidden');
+            }
+            formGuardian = false;
+            this.removeEventListener('click', arguments.callee, false);
+          }
+        });
+      }
+    }
+  };
+
   var button_show = document.querySelectorAll('.show_library');
   var button_close = document.getElementById('close_library');
   var library = document.getElementById('library');
