@@ -495,6 +495,7 @@ DEPENDENCIES
   simple_form
   spring
   spring-watcher-listen (~> 2.0.0)
+  sprockets-rails
   sucker_punch (~> 2.0)
   trix-rails
   turbolinks (~> 5)
@@ -511,4 +512,4 @@ RUBY VERSION
    ruby 2.7.2p137
 
 BUNDLED WITH
-   2.2.15
+   2.2.20
