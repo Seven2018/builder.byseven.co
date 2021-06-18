@@ -20,8 +20,8 @@
         <%= f.input :rating, input_html: { min: '0', max: '5' }  %>
       <% end %>
       <div style=" display: flex; justify-content: flex-end;">
-        <%= link_to type: 'submit', class: 'btn-edit-green' do %>
-          <div class='btn-edit-green'> <p>Save</p> </div>
+        <%= button_tag type: 'submit', class: 'btn btn-edit-green' do %>
+          <p>Save</p>
         <% end %>
         <%= link_to user_path(@user), method: :delete, data: { confirm: 'Are you sure ?'} do %>
           <div class="btn-icon-grey">

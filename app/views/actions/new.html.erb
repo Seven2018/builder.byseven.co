@@ -11,8 +11,8 @@
     <%= f.association :intelligence1, collection: Intelligence.all, include_blank: false %>
     <%= f.association :intelligence2, collection: Intelligence.all, include_blank: true %>
     <div style='display:flex; justify-content: center;'>
-      <%= link_to type: 'submit' do %>
-          <div class='btn-edit-green'><p>Save</p></div>
+      <%= button_tag type: 'submit', class:'btn btn-edit-green' do %>
+         <p>Save</p>
       <% end %>
     </div>
   <% end %>
