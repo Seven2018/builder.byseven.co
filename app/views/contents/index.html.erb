@@ -1,7 +1,6 @@
 <div class="container-seven-large container-seven-large-centered">
   <div id='page-index'>
     <div id="page-controls">
-      <div id="page-buttons">
         <%= simple_form_for :search, url: contents_path, method: 'GET' do |f| %>
           <% if params[:search] %>
             <%= f.input :title, placeholder: params[:search][:title], label: false %>
@@ -9,9 +8,10 @@
               <i class="far fa-times-circle"></i>
             <% end %>
           <% else %>
-            <%= f.input :title, placeholder: 'Search', label: false %>
+            <%= f.input :title, placeholder: 'Search Workshops', label: false %>
           <% end %>
         <% end %>
+      <div id="page-buttons">
         <% if ['super admin', 'admin', 'training manager', 'sevener+'].include? current_user.access_level %>
           <%= link_to new_content_path do %>
             <div class=" btn-edit-yellow-mobile">New workshop</div>
@@ -32,7 +32,7 @@
               <div class="content-index-nested collapse">
                 <% theme.contents.where("lower(title) LIKE ?", "%#{params[:search][:title].downcase}%").order(title: :asc).each do |content| %>
                   <div class="content-index-card">
-                    <%= link_to content_path(content) do %>
+                  <%= link_to content_path(content) do %>
                       <span class="content-index-card-title"><strong><%= content.title %></strong></span>
                       <% if !content.theories.nil? %>
                         <div class="content-index-card-theories">
@@ -100,7 +100,6 @@
                 <% theme.children.each do |subtheme| %>
                   <div><%= subtheme.name %>
                     <div class="content-index-nested">
-
                       <% subtheme.contents.each do |content| %>
                         <div><%= link_to content.title, content_path(content) %></div>
                       <% end %>

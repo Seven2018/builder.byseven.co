@@ -19,14 +19,14 @@
         <%= f.input :description, :input_html => { :rows => 5 , :style => 'width: 100%'} %>
         <%= f.input :rating, input_html: { min: '0', max: '5' }  %>
       <% end %>
-      <div style=" display: flex; justify-content: space-between;">
-        <%= button_tag type: 'submit', class: 'btn btn-edit-green btn-icon' do %>
-          <i class="fas fa-save"></i>
+      <div style=" display: flex; justify-content: flex-end;">
+        <%= link_to type: 'submit', class: 'btn-edit-green' do %>
+          <div class='btn-edit-green'> <p>Save</p> </div>
         <% end %>
         <%= link_to user_path(@user), method: :delete, data: { confirm: 'Are you sure ?'} do %>
-          <button class="btn btn-edit-red btn-icon">
+          <div class="btn-icon-grey">
             <i class="fas fa-trash-alt"></i>
-          </button>
+          </div>
         <% end %>
       </div>
     <% end %>

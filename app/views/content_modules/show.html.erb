@@ -4,10 +4,10 @@
       <i class="fas fa-arrow-left"></i>
     <% end %>
     <div class="page-controls-buttons flex-row-between-centered">
-      <%= link_to edit_content_content_module_path(@content_module.content, @content_module), data: { toggle: 'tooltip' }, title: 'Edit', class: 'btn btn-edit-yellow btn-icon' do %>
+      <%= link_to edit_content_content_module_path(@content_module.content, @content_module), data: { toggle: 'tooltip' }, title: 'Edit', class: 'btn-icon-grey' do %>
         <i class="fas fa-pen"></i>
       <% end %>
-      <%= link_to content_content_module_path(@content_module.content, @content_module), method: :delete, data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete', class: 'btn btn-edit-red btn-icon' do %>
+      <%= link_to content_content_module_path(@content_module.content, @content_module), method: :delete, data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete', class: 'btn-icon-grey' do %>
         <i class="fas fa-trash-alt"></i>
       <% end %>
     </div>

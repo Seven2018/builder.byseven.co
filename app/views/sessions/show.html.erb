@@ -59,6 +59,18 @@
               <% end %>
             <% end %>
           <% end %>
+            <%= link_to training_session_workshops_path(@session.training, @session), method: :post, remote: true do %>
+                <li>Vide - à personnaliser</li>
+              <% end %>
+              <% pause = Content.where(title: 'Pause') %>
+              <% pausedej = Content.where(title: 'Pause Déjeuner') %>
+              <%= link_to training_session_workshops_path(@session.training, @session, content_id: pause.first.id), method: :post, remote: true do %>
+                <li>Pause</li>
+              <% end %>
+              <%= link_to training_session_workshops_path(@session.training, @session, content_id: pausedej.first.id), method: :post, remote: true do %>
+                <li>Pause Déjeuner</li>
+              <% end %>
+            </ul>
           <% if status %>
             <ul id='myUL'>
               <% (Content.where("lower(title) LIKE :query", query:"%#{params[:search][:title].downcase}%") + Content.joins(:content_modules).where("lower(content_modules.title) LIKE :query", query:"%#{params[:search][:title].downcase}%") + Content.joins(:theories).where("lower(theories.description) LIKE :query", query:"%#{params[:search][:title].downcase}%") + Content.joins(:theories).where("lower(theories.name) LIKE :query", query:"%#{params[:search][:title].downcase}%")).uniq.each do |content| %>
@@ -98,19 +110,6 @@
                   </li>
                 <% end %>
               <% end %>
-              <%= link_to training_session_workshops_path(@session.training, @session), method: :post, remote: true do %>
-                <li>Vide - à personnaliser</li>
-              <% end %>
-              <% pause = Content.where(title: 'Pause') %>
-              <% pausedej = Content.where(title: 'Pause Déjeuner') %>
-              <%= link_to training_session_workshops_path(@session.training, @session, content_id: pause.first.id), method: :post, remote: true do %>
-                <li>Pause</li>
-              <% end %>
-              <%= link_to training_session_workshops_path(@session.training, @session, content_id: pausedej.first.id), method: :post, remote: true do %>
-                <li>Pause Déjeuner</li>
-              <% end %>
-            </ul>
-            <br>
             <ul id='myUL' class='myUL-sidebar'>
               <% Theme.all.each do |theme| %>
                 <% if ['Ice breaker', 'Présentation', 'Conclusion'].include?(theme.name) %>

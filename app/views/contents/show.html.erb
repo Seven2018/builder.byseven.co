@@ -1,7 +1,20 @@
 <div class="container-seven-large">
   <div id='page-controls'>
+    <%= link_to contents_path, class: 'btn return-arrow' do %><i class="fas fa-arrow-left"></i><% end %>
+      <div class="page-controls-buttons">
+        <%= link_to new_content_content_module_path(@content) do %>
+          <div class="btn-edit-yellow-mobile">New Module</div>
+          <div class="btn-icon-grey-mobile"><i class="fas fa-plus"></i></div>
+        <% end %>
+        <a class="btn-icon-grey" data-toggle='modal' data-target='#editContent' title='Copy'><i class="fas fa-pen"></i></a>
+        <%= link_to content_path(@content), class: "btn-icon-grey", method: :delete, data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
+          <i class="fas fa-trash-alt"></i>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- <a class="edit-fafa" data-toggle='modal' data-target='#viewImage'><img src="<%= @content.description %>" alt="" style='height:15rem;'></a> -->
     <div class="workshop-title">
-      <%= link_to contents_path, class: 'btn return-arrow' do %><i class="fas fa-arrow-left"></i><% end %>
        <div class="workshop-title-details">
         <h4><%= @content.title %> - <i class="fas fa-stopwatch fa-1x"></i> <%= @content.duration %> min</h4>
         <% if @content.theme %>
@@ -9,21 +22,7 @@
         <% end %>
       </div>
     </div>
-    <div>
-      <div class="page-controls-buttons">
-        <a class="btn btn-edit-green btn-icon" data-toggle='modal' data-target='#editContent' title='Copy'><i class="fas fa-pen"></i></a>
-        <%= link_to content_path(@content), class: "btn btn-edit-red btn-icon", method: :delete, data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
-          <i class="fas fa-trash-alt"></i>
-        <% end %>
-      </div>
-    </div>
-  </div>
-
-    <!-- <a class="edit-fafa" data-toggle='modal' data-target='#viewImage'><img src="<%= @content.description %>" alt="" style='height:15rem;'></a> -->
   <div class="show-control-links">
-    <%= link_to new_content_content_module_path(@content) do %>
-      <button class="btn btn-edit-yellow">New Module</button>
-    <% end %>
     <div class="theory-buttons">
       <div class="theories-hover">
         <% @content.theories.each do |theory|%>

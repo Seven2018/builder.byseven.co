@@ -8,7 +8,7 @@
     <h3>Add a client company or school</h3>
     <%= simple_form_for @client_company do |f| %>
       <%= f.input :name %>
-      <div style='display:flex;justify-content:space-between;'>
+      <div class='new-client'>
         <%= f.input :address, placeholder: 'ex: 5 rue Moret', input_html: { style: 'width: 20rem;'} %>
         <%= f.input :zipcode, input_html: { maxlength: 5, style: 'width: 20rem;' } %>
         <%= f.input :city, placeholder: 'ex: Paris', input_html: { style: 'width: 20rem;'} %>

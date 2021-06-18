@@ -4,14 +4,14 @@
       <%= link_to content_path(@content), class: 'btn return-arrow' do %>
         <i class="fas fa-arrow-left"></i>
       <% end %>
+    </div>
+  </div>
       <div class="workshop-title-details">
         <h4><%= @content.title %> - <i class="fas fa-stopwatch fa-1x"></i> <%= @content.duration %> min</h4>
         <% if @content.theme %>
           <p><%= @content.theme.name %></p>
         <% end %>
       </div>
-    </div>
-  </div>
   <h3>Add a module</h3>
 
   <%= simple_form_for [@content, @content_module] do |f| %>
@@ -33,7 +33,7 @@
     <div class="center-button" style='margin-bottom: 3rem;'>
       <%= button_tag type: 'submit', class: 'btn btn-edit-green' do %>
         <div class= "save-button">
-          <p>SAVE<i class="fas fa-save"></i></p>
+          <p>SAVE</p>
         </div>
       <% end %>
     </div>

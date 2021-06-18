@@ -19,8 +19,8 @@
         <%# f.grouped_collection_select :client_contact_id, ClientCompany.all.order(:name), :client_contacts, :name, :id, :name, options = { include_blank: true }, html_options = {} %>
       </div> -->
       <div class='modal-control'>
-        <%= button_tag type: 'submit', class: 'btn btn-edit-green btn-icon', data: { toggle: 'tooltip' }, title: 'Copy' do %>
-          <i class="fas fa-copy"></i>
+        <%= link_to type: 'submit', data: { toggle: 'tooltip' }, title: 'Copy' do %>
+         <div class="btn-edit-green"><p>Copy</p></div>
         <% end %>
       </div>
       <!-- <script>

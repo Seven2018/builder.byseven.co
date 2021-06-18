@@ -39,15 +39,13 @@
 
 .myUL-sidebar .theme-active{
 
-  &:hover {
-    background-color: #2E353D !important;
-  }
+
 }
 
 .theme-active {
 
   .caret-down {
-    color: #FDC553;
+    color: black;
     transition: color 0.5s;
   }
 
@@ -125,10 +123,16 @@
 .nested-active {
   width: 100%;
   padding: 0;
-  max-height: 100vh;
+  max-height: 300vh;
   -webkit-transition: max-height 2s ease 0.2s;
   -moz-transition: max-height 2s ease 0.2s;
   -ms-transition: max-height 2s ease 0.2s;
   -o-transition: max-height 2s ease 0.2s;
   transition: max-height 2s ease 0.2s;
+li {
+  border-bottom: 1px solid #e2e2e2 !important;
+  &:hover {
+    color: grey;
+  }
+}
 }
