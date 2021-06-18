@@ -1,8 +1,6 @@
 <div class="container-seven-large">
   <div id='page-index'>
     <div id="page-controls">
-      <h1>Clients List</h1>
-      <div id="page-buttons">
         <%= simple_form_for :search, url: client_companies_path, method: 'GET' do |f| %>
           <% if params[:search] %>
             <%= f.input :name, placeholder: params[:search][:name], label: false %>
@@ -10,17 +8,20 @@
               <i class="far fa-times-circle"></i>
             <% end %>
           <% else %>
-            <%= f.input :name, placeholder: 'Search', label: false %>
+            <%= f.input :name, placeholder: 'Search Clients', label: false %>
           <% end %>
         <% end %>
+      <div id="page-buttons">
         <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>
           <%= link_to new_client_company_path do %>
-            <button class="btn btn-edit-yellow">New Customer</button>
+            <div class="btn-edit-yellow-mobile">New Client</div>
+            <div class="btn-icon-grey-mobile"><i class="fas fa-plus"></i></div>
           <% end %>
         <% end %>
       </div>
     </div>
     <ul class='client-company-list'>
+      <h1>Clients List</h1>
       <% @client_companies.each do |company| %>
         <li>
           <%= link_to client_company_path(company) do %>

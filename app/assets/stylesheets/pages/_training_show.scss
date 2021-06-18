@@ -155,6 +155,7 @@
 
 .middle-info-user {
   position:relative;
+  display: none;
   // display: flex;
   // flex-direction: column;
   // align-items: flex-end;
@@ -164,6 +165,9 @@
   }
   div {
     margin-bottom: 1rem;
+  }
+  @include from-medium-high {
+    display: inherit;
   }
 }
 

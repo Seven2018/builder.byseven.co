@@ -12,13 +12,13 @@
       <%= f.association :intelligence1, collection: Intelligence.all, include_blank: false %>
       <%= f.association :intelligence2, collection: Intelligence.all, include_blank: true %>
       <div class='modal-control'>
-        <%= button_tag type: 'submit', data: { toggle: 'tooltip' }, title: 'Save', class: 'btn btn-edit-green btn-icon' do %>
-          <i class="fas fa-save"></i>
+        <%= link_to type: 'submit', data: { toggle: 'tooltip' }, title: 'Save' do %>
+          <div class='btn-icon-grey' > <p>Save</p> </div>
         <% end %>
         <%= link_to action_path(action), method: :delete, data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
-          <button class="btn btn-edit-red btn-icon">
+          <div class="btn-icon-grey">
             <i class="fas fa-trash-alt"></i>
-          </button>
+          </div>
         <% end %>
       </div>
     <% end %>

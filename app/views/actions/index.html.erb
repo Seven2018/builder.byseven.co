@@ -1,8 +1,6 @@
 <div class="container-seven-large container-seven-large-centered">
   <div id='page-index'>
     <div id='page-controls'>
-      <h1>Actions List</h1>
-      <div id="page-buttons">
         <%= simple_form_for :search, url: actions_path, method: 'GET' do |f| %>
           <% if params[:search] %>
             <%= f.input :name, placeholder: params[:search][:name], label: false %>
@@ -10,33 +8,36 @@
               <i class="far fa-times-circle"></i>
             <% end %>
           <% else %>
-            <%= f.input :name, placeholder: 'Search', label: false %>
+            <%= f.input :name, placeholder: 'Search Actions', label: false %>
           <% end %>
         <% end %>
+      <div id="page-buttons">
         <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>
           <%= link_to new_action_path do %>
-            <button class="btn btn-edit-yellow">New Action</button>
+            <div class="btn-edit-yellow-mobile">New Action</div>
+            <div class="btn-icon-grey-mobile"><i class="fas fa-plus"></i></div>
           <% end %>
         <% end %>
       </div>
     </div>
     <ul class='action-list'>
+      <h1>Actions List</h1>
       <div class="index-card-large">
-            <div class="action-infos">
-              <p><b>Action Name:</b></p>
-              <div>
-                <p><b>Intelligence linked:</b></p>
-              </div>
-              <p><b>Description:</b></p>
-            </div>
+        <div class="action-infos">
+          <p><b>Action Name:</b></p>
+          <div>
+            <p class='action-mobile'><b>Intelligence linked:</b></p>
           </div>
+          <p class='action-mobile'><b>Description:</b></p>
+        </div>
+      </div>
     <% @actions.each do |action| %>
       <li>
         <%= link_to action_path(action) do %>
           <div class="index-card-large">
             <div class="action-infos">
               <p><%= action.name %></p>
-              <div>
+              <div class='action-mobile'>
                 <% if action.intelligence1 %>
                   <p><%= action.intelligence1.name %></p>
                 <% end %>
@@ -44,7 +45,7 @@
                   <p><%= action.intelligence2.name %></p>
                 <% end %>
               </div>
-              <p><%= action.description %></p>
+              <p class='action-mobile'><%= action.description %></p>
             </div>
           </div>
         <% end %>

@@ -10,10 +10,9 @@
   margin-left: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
 
   h4 {
-    font-size: 2rem;
+    font-size: 4rem;
   }
 }
 
@@ -24,6 +23,13 @@
   background-color: #FDF1D5;
   border-radius: 10px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  @include from-large {
+  display: flex;
+  flex-direction: row;
+  align-items: inherit;
+  }
 }
 
 
@@ -41,3 +47,5 @@
     justify-content: space-between;
   }
 }
+
+

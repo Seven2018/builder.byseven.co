@@ -12,6 +12,10 @@
   }
 }
 
+.modal-title {
+  font-size: 1.6rem !important;
+}
+
 #modal-title {
   display: flex;
   align-items: center;
@@ -58,7 +62,6 @@
 .modal-body {
   p {
     font-size: 1.6rem !important;
-    font-weight: 300;
   }
 }
 

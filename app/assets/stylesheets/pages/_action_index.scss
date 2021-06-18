@@ -23,7 +23,10 @@
 
   > p:first-child {
     color: black;
-    width: 30%;
+    width: 80%;
+  @include from-medium-high {
+    width: 30%
+  }
   }
 
   > p:last-child {
@@ -57,4 +60,11 @@
 .description {
   margin-top: 30px;
   margin-bottom: 30px;
+}
+
+.action-mobile {
+  display:none;
+  @include from-medium-high {
+    display: inherit;
+  }
 }

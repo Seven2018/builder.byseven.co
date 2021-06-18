@@ -5,7 +5,6 @@
     <% end %>
   </div>
   <h3>Edit <%= @theory.name %></h3>
-
   <%= simple_form_for @theory do |f| %>
     <%= f.input :name %>
     <%# f.label :description %>
@@ -18,13 +17,13 @@
     <%# f.cktext_area :instructions %>
     <%= f.trix_editor :references %>
     <div class='modal-control'>
-      <%= button_tag type: 'submit', class: 'btn btn-edit-green btn-icon', data: { toggle: 'tooltip' }, title: 'Save' do %>
-        <i class="fas fa-save"></i>
+      <%= button_tag type: 'submit', class: 'btn btn-edit-green', data: { toggle: 'tooltip' }, title: 'Save' do %>
+        <p>Save</p>
       <% end %>
       <%= link_to theory_path(@theory), method: :delete, data: { confirm: 'Are you sure ?', toggle: 'tooltip' }, title: 'Delete' do %>
-        <button class="btn btn-edit-red btn-icon">
-          <i class="fas fa-trash-alt"></i>
-        </button>
+        <div class="btn-icon-grey" style='margin-left: 10px;'>
+          <i class="fas fa-trash-alt" data-toggle='tooltip' title='Delete Theory'></i>
+        </div>
       <% end %>
     </div>
   <% end %>
