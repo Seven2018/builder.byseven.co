@@ -20,11 +20,15 @@ class TrainingsController < ApplicationController
           @trainings = trainings_empty + trainings_with_date
         end
       elsif params[:user]
+        @upcoming_trainings = (Training.joins(:training_ownerships).where(training_ownerships: {user_id: params[:user]}) + Training.joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:user]})).uniq
+        @upcoming_trainings = @upcoming_trainings.select{|x| x.end_time.present? && x.end_time >= Date.today}.sort_by{|y| y.next_session} if @upcoming_trainings.present?
         trainings = (Training.joins(:training_ownerships).where(training_ownerships: {user_id: params[:user]}) + Training.joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:user]})).uniq
         trainings_empty = trainings.reject{|x| x.end_time.present?}
         trainings_with_date = trainings.reject{|y| !y.end_time.present?}.sort_by{|z| z.end_time}.reverse
         @trainings = trainings_empty + trainings_with_date
         @user = User.find(params[:user])
+      else
+        @upcoming_trainings = Training.all.select{|x| x.end_time.present? && x.end_time >= Date.today}.sort_by{|y| y.next_session}
       end
     else
       if params[:search]

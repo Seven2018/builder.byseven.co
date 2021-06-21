@@ -252,6 +252,7 @@ class SessionTrainersController < ApplicationController
   def create_calendar_id(user_id, session_id, event, service, hash)
     event.id = SecureRandom.hex(32)
     session_trainer = SessionTrainer.where(user_id: user_id, session_id: session_id).first
+    return if session_trainer.nil?
     session_trainer.calendar_uuid.nil? ? session_trainer.update(calendar_uuid: event.id) : session_trainer.update(calendar_uuid: session_trainer.calendar_uuid + ' - ' + event.id)
     service.insert_event(hash[user_id.to_i], event)
   end

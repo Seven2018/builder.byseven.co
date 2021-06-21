@@ -85,7 +85,8 @@
         <% end %>
       </div>
       <div class="trainings-row trainings-row-upcoming">
-        <%= render_async index_upcoming_path(user: params[:user]) %>
+        <%# render_async index_upcoming_path(user: params[:user]) %>
+        <%= render 'trainings/index_upcoming' %>
       </div>
       <div class="trainings-row trainings-row-completed hidden">
         <%= render_async index_completed_path(user: params[:user])%>
