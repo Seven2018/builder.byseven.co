@@ -8,7 +8,7 @@ class TrainingsController < ApplicationController
     if ['super admin', 'admin', 'project manager'].include?(current_user.access_level)
       if params[:search]
         if params[:search][:user]
-          trainings = ((Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(training_ownerships: {user_id: params[:search][:user]}).or(Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:search][:user]})).where("lower(trainings.title) LIKE ?", "%#{params[:search][:title].downcase}%")) + (Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(training_ownerships: {user_id: params[:search][:user]}).or(Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:search][:user]})).joins(client_contact: :client_company).where("lower(client_companies.name) LIKE ?", "%#{params[:search][:title].downcase}%"))).flatten(1).uniq
+          trainings = ((Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(training_ownerships: {user_id: params[:search][:user]}).or(Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:search][:user]})).where("unaccent(lower(trainings.title)) LIKE ?", "%#{I18n.transliterate(params[:search][:title].downcase)}%")) + (Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(training_ownerships: {user_id: params[:search][:user]}).or(Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:search][:user]})).joins(client_contact: :client_company).where("lower(client_companies.name) LIKE ?", "%#{params[:search][:title].downcase}%"))).flatten(1).uniq
           trainings_empty = trainings.reject{|x| x.end_time.present?}
           trainings_with_date = trainings.reject{|y| !y.end_time.present?}.sort_by{|z| z.end_time}.reverse
           @trainings = trainings_empty + trainings_with_date
@@ -36,6 +36,9 @@ class TrainingsController < ApplicationController
         trainings_empty = trainings.reject{|x| x.end_time.present?}
         trainings_with_date = trainings.reject{|y| !y.end_time.present?}.sort_by{|z| z.end_time}.reverse
         @trainings = trainings_empty + trainings_with_date
+      else
+        @trainings = (Training.joins(sessions: :users).where(users: {id: current_user.id}).uniq.select{|x| if (sessions = Session.joins(:session_trainers).where(training_id: x.id, session_trainers: {user_id: current_user.id}).order(date: :asc).reject{|c| !c.date.present?}).present?; sessions.last.date >= Date.today; end;}.sort_by{|y| y.next_session} + Training.joins(sessions: :users).where(sessions: {date: nil}, users: {id: current_user.id}).uniq).uniq
+        @trainings_count = @trainings.count
       end
     end
   end
