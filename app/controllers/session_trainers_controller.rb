@@ -258,7 +258,7 @@ class SessionTrainersController < ApplicationController
   end
 
   def delete_calendar_id(session_trainer, service)
-    #begin
+    begin
       return if session_trainer.calendar_uuid.nil?
       calendar_uuids = session_trainer.calendar_uuid.split(' - ')
       if ['super admin', 'admin'].include?(session_trainer.user.access_level)
@@ -270,8 +270,8 @@ class SessionTrainersController < ApplicationController
           service.delete_event('vum1670hi88jgei65u5uedb988@group.calendar.google.com', calendar_uuid)
         end
       end
-    #rescue
-    #end
+    rescue
+    end
   end
 
   def session_trainer_params
