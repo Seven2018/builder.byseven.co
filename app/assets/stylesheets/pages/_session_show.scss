@@ -85,7 +85,7 @@
   margin-bottom: 4rem;
 
   @include from-large {
-    padding-right: 60%;
+    padding-right: 40%;
   }
 
   div {
@@ -96,10 +96,18 @@
     margin: 0;
   }
 
+  & > div:last-of-type {
+    width: 135px;
+  }
+
   p, i {
     margin: 0;
     font-weight: 600;
     color: gray;
+  }
+
+  p {
+    cursor: zoom-in;
   }
 
   i {

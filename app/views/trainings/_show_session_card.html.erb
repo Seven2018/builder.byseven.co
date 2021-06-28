@@ -37,7 +37,11 @@
         </div>
         <div>
           <i class="fas fa-users"></i>
-          <p id='<%= "attendee-form-" + "#{session.id.to_s}" %>' onclick='openSessionForm(this)'><%= session.attendees.count %>/<%= session.attendee_number %></p>
+          <% attendees = '' %>
+          <% session.attendees.order(lastname: :asc).each do |attendee| %>
+            <% attendees += attendee.fullname + "\n" %>
+          <% end %>
+          <p id='<%= "attendee-form-" + "#{session.id.to_s}" %>' onclick='openSessionForm(this)' data-toggle='tooltip' title="<%= attendees %>"><%= session.attendees.count %>/<%= session.attendee_number %></p>
           <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id, page: params[:page], type: 'attendee'), html: { class: "hidden hidden-form" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
             <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
               <%= f.input :attendee_number, input_html: { min: 0, value: session.attendee_number, style: 'width: 5rem' }, label: false %>
@@ -45,7 +49,22 @@
             </div>
           <% end %>
         </div>
-          <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
+        <div>
+          <% if session.session_type == 'Face-to-face' %>
+            <i class="fas fa-chalkboard-teacher"></i>
+            <p id='<%= "session_type-form-" + "#{session.id.to_s}"%>' onclick='openSessionForm(this)'>Face-to-face</p>
+          <% else %>
+            <i class="fas fa-laptop"></i>
+            <p id='<%= "session_type-form-" + "#{session.id.to_s}"%>' onclick='openSessionForm(this)'>Online</p>
+          <% end %>
+          <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id, page: params[:page], type: 'session_type'), html: { class: "hidden-form radio-form hidden" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
+            <div class='flex-column-between-left'>
+              <%= f.collection_radio_buttons :session_type, [['Face-to-face', 'Face-to-face'], ['Online', 'Online']], :first, :last, checked: [session.session_type, session.session_type] %>
+            </div>
+            <%= button_tag type: 'submit', class: 'hidden hidden-submit' %>
+          <% end %>
+        </div>
+        <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
           <%= link_to training_copy_form_session_path(session.training, session, page: params[:page]), data: { toggle: 'tooltip'}, title: 'Copy Session' do %>
             <div class='btn-icon-grey-sm'><i class="fas fa-copy"></i></div>
           <% end %>

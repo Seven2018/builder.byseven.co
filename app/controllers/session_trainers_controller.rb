@@ -153,7 +153,11 @@ class SessionTrainersController < ApplicationController
       return
     end
     # UpdateAirtableJob.perform_async(@session.training, true)
-    redirect_back(fallback_location: root_path)
+    if params[:session_trainer][:page] == 'session'
+      redirect_to training_session_path(@session.training, @session)
+    else
+      redirect_to training_path(@session.training)
+    end
   end
 
   def create_all

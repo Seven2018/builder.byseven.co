@@ -87,6 +87,7 @@ Rails.application.routes.draw do
     get 'sessions/:id/copy_form', to: 'sessions#copy_form', as: 'copy_form_session'
     get 'sessions/:id/presence_sheet', to: 'sessions#presence_sheet', as: 'session_presence_sheet'
     patch 'sessions/:id/update_ajax', to: 'sessions#update_ajax', as: 'update_ajax_session'
+    get 'sessions/:id/import_attendees', to: 'sessions#import_attendees', as: 'import_attendees_session'
     resources :sessions, only: [:new, :show, :create, :update, :destroy] do
       post 'workshops/:id', to: 'workshops#move', as: 'move_workshop'
       get 'workshops/:id/save', to: 'workshops#save', as: 'save_workshop'
@@ -134,6 +135,7 @@ Rails.application.routes.draw do
   get 'trainings/:id/trainer_notification_email', to: 'trainings#trainer_notification_email', as: 'trainer_notification_email'
   get 'trainings/:id/trainer_session_reminder', to: 'trainings#trainer_reminder_email', as: 'trainer_reminder_email'
   get 'show_session_content', to: 'trainings#show_session_content', as: 'show_session_content'
+  get 'trainings/:id/import_attendees', to: 'trainings#import_attendees', as: 'import_attendees_training'
 
   # ATTENDEES
   resources :attendees, only: [:index, :show, :new, :create]

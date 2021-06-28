@@ -5,8 +5,17 @@ class AttendeesController < ApplicationController
   invisible_captcha only: [:create], honeypot: :subtitle
 
   def index
-    @client_company = ClientCompany.find(params[:client_company_id]) if params[:client_company_id].present?
-    @client_company.present? ? @attendees = policy_scope(Attendee).where(client_company_id: @client_company.id) : @attendees = policy_scope(ClientCompany)
+    skip_authorization
+    if params[:client_company_id].present?
+      @client_company = ClientCompany.find(params[:client_company_id])
+      @attendees = policy_scope(Attendee).where(client_company_id: @client_company.id).order(lastname: :asc)
+    elsif params[:training_id].present?
+      @attendees = policy_scope(Attendee).joins(:session_attendees).where(session_attendees: {session_id: Training.find(params[:training_id]).sessions.ids}).uniq
+    elsif params[:session_id].present?
+      @attendees = Session.find(params[:session_id]).attendees
+    else
+      @attendees = policy_scope(Attendee).order(lastname: :asc)
+    end
   end
 
   def show

@@ -3,25 +3,7 @@ if ("<%= @redirect_from %>" == 'session') {
 } else {
   document.querySelector('#card-block-<%= @session.id %>').innerHTML = '<%= j (render("trainings/show_session_card", session: @session)) %>';
   document.querySelector('#card-block-<%= @session.id %>').querySelector('.mods-list').innerHTML = '<%= j (render("trainings/show_session_content", session: @session)) %>';
-
-      sessions = document.querySelectorAll('.card-lg')
-      sessions.forEach(card => {
-        photos1 = card.querySelectorAll('.ava2')
-        counter1 = 0;
-        photos1.forEach(pic => {
-          pic.style.right = counter1.toString() + 'px';
-          counter1 = counter1 + 30;
-        });
-      });
-
 }
-photos = document.querySelectorAll('.ava')
-counter = 0;
-photos.forEach(photo => {
-  photo.style.right = counter.toString() + 'px';
-  counter = counter + 30;
-});
-
 
 sessions = document.querySelectorAll('.card-lg')
 sessions.forEach(card => {
@@ -29,6 +11,20 @@ sessions.forEach(card => {
   counter1 = 0;
   photos1.forEach(pic => {
     pic.style.right = counter1.toString() + 'px';
-    counter1 = counter1 + 20;
+    counter1 = counter1 + 30;
   });
+});
+
+photos = document.querySelectorAll('.ava-session')
+counter = 30;
+photos.forEach(photo => {
+  photo.style.right = counter.toString() + 'px';
+  counter = counter + 30;
+});
+
+photos = document.querySelectorAll('.ava-session-mobile')
+counter = -225;
+photos.forEach(photo => {
+  photo.style.right = counter.toString() + 'px';
+  counter = counter + 30;
 });
