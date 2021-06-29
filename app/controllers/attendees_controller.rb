@@ -70,6 +70,10 @@ class AttendeesController < ApplicationController
     end
   end
 
+  def test
+    skip_authorization
+  end
+
   private
 
   def attendee_params

@@ -146,7 +146,7 @@ Rails.application.routes.draw do
   post 'attendee/create_kea_partners', to: 'attendees#create_kea_partners', as: 'create_kea_partners_attendee'
   post 'new_session_attendee/kea_partners', to: 'session_attendees#create_kea_partners', as: 'new_kea_partners_session_attendee'
   delete 'delete_session_attendee/kea_partners', to: 'session_attendees#destroy_kea_partners', as: 'destroy_kea_partners_session_attendee'
-  get 'test', to: 'session_attendees#test', as: 'test_session_attendee'
+  get 'test', to: 'attendees#test', as: 'test_session_attendee'
 
   # SESSION ATTENDEES
   post 'session/:id/session_attendees/link_attendees', to: 'session_attendees#link_attendees', as: 'link_attendees'
