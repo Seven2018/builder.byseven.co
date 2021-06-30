@@ -272,16 +272,6 @@
       dropdown.classList.toggle('hidden');
     };
 
-    function formSubmit(element, form, initial_value) {
-      if (form.querySelector('.form-control').value != initial_value || form.querySelector('.form-control').classList.contains('timepicker')) {
-        form.querySelector('.hidden-submit').click();
-      } else {
-        form.classList.toggle('hidden');
-        element.classList.toggle('hidden');
-      }
-      formGuardian = false;
-    }
-
     function openSessionForm(element) {
       if (formGuardian == false) {
         formGuardian = true;
@@ -299,21 +289,32 @@
           }
           inputs = form.querySelectorAll('input:not([type="hidden"])')
           selects = form.querySelectorAll('select')
-          if (selects.length == 0) {
+          if (selects.length > 0) {
+            window.addEventListener('click', function(e) {
+              if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
+                form.querySelector('.hidden-submit').click();
+                formGuardian = false;
+                this.removeEventListener('click', arguments.callee, false);
+              }
+            });
+          } else {
+            console.log(inputs[0])
             inputs[0].click()
             inputs.forEach((input) => {
               input.addEventListener('change', function(e) {
-                formSubmit(element, form, initial_value)
+                form.querySelector('.hidden-submit').click();
+                formGuardian = false;
                 this.removeEventListener('change', arguments.callee, false);
               })
             })
+            window.addEventListener('click', function(e) {
+              if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
+                form.querySelector('.hidden-submit').click();
+                formGuardian = false;
+                this.removeEventListener('click', arguments.callee, false);
+              }
+            });
           }
-          window.addEventListener('click', function(e) {
-            if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
-              formSubmit(element, form, initial_value)
-              this.removeEventListener('click', arguments.callee, false);
-            }
-          });
         }
       }
     };
