@@ -1,7 +1,7 @@
 <div class="container-seven-large container-seven-large-centered">
   <div id='page-index'>
     <div id="page-controls">
-      <h1>Participants list</h1>
+      <h1>Attendees list</h1>
       <div id="page-buttons">
         <%= simple_form_for :search, url: users_path, method: 'GET' do |f| %>
           <%= f.input :name, placeholder: 'Search', label: false %>
@@ -19,7 +19,9 @@
       </div>
     </div>
     <ul class="client-contact-list">
-      <h3><%= @client_company.name %> : Employees</h3>
+      <% if @client_company.present? %>
+        <h3><%= @client_company.name %> : Employees</h3>
+      <% end %>
       <% @attendees.each do |attendee| %>
         <li>
           <%= link_to attendee_path(attendee) do %>
@@ -29,6 +31,9 @@
                 <p><%= "#{attendee.lastname.upcase} #{attendee.firstname}" %></p>
                 <div>
                   <p><%= attendee.email %></p>
+                </div>
+                <div>
+                  <p><%= attendee.client_company.name %></p>
                 </div>
               </div>
             </div>

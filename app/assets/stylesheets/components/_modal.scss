@@ -4,12 +4,15 @@
 }
 
 .mod-date {
-
   text-align: left;
 
   @include from-large {
     flex-direction: row;
   }
+}
+
+.modal-div {
+  margin-bottom: 2rem;
 }
 
 .modal-title {

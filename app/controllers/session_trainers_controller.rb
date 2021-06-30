@@ -153,7 +153,11 @@ class SessionTrainersController < ApplicationController
       return
     end
     # UpdateAirtableJob.perform_async(@session.training, true)
-    redirect_back(fallback_location: root_path)
+    if params[:session_trainer][:page] == 'session'
+      redirect_to training_session_path(@session.training, @session)
+    else
+      redirect_to training_path(@session.training)
+    end
   end
 
   def create_all
@@ -252,12 +256,13 @@ class SessionTrainersController < ApplicationController
   def create_calendar_id(user_id, session_id, event, service, hash)
     event.id = SecureRandom.hex(32)
     session_trainer = SessionTrainer.where(user_id: user_id, session_id: session_id).first
+    return if session_trainer.nil?
     session_trainer.calendar_uuid.nil? ? session_trainer.update(calendar_uuid: event.id) : session_trainer.update(calendar_uuid: session_trainer.calendar_uuid + ' - ' + event.id)
     service.insert_event(hash[user_id.to_i], event)
   end
 
   def delete_calendar_id(session_trainer, service)
-    #begin
+    begin
       return if session_trainer.calendar_uuid.nil?
       calendar_uuids = session_trainer.calendar_uuid.split(' - ')
       if ['super admin', 'admin'].include?(session_trainer.user.access_level)
@@ -269,8 +274,8 @@ class SessionTrainersController < ApplicationController
           service.delete_event('vum1670hi88jgei65u5uedb988@group.calendar.google.com', calendar_uuid)
         end
       end
-    #rescue
-    #end
+    rescue
+    end
   end
 
   def session_trainer_params

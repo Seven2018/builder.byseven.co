@@ -29,8 +29,7 @@
           <li><%= link_to 'View mode', training_session_viewer_path(@session.training, @session) %></li>
           <li><%= link_to 'Export PDF', training_session_path(@session.training, @session, format: :pdf), target: :_blank %></li>
           <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-            <li><%= link_to 'Participants List', export_attendees_path(@session.training, @session) %></li>
-            <li><a data-toggle='modal' data-target='#addAttendees' data-toggle="tooltip" title="Add Participants">Add participants</a></li>
+            <li><%= link_to 'Import Attendees', training_import_attendees_session_path(@session.training, @session) %></li>
             <li><%= link_to 'Presence Sheet', training_session_presence_sheet_path(@session.training, @session, format: :pdf), target: :_blank %></li>
           <% end %>
         </ul>
@@ -165,7 +164,9 @@
         }
         window.addEventListener('click', function(e) {
           if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
-            if (form.querySelector('.form-control').value != initial_value || form.querySelector('.form-control').classList.contains('timepicker')) {
+            if (form.classList.contains('radio-form')) {
+              form.querySelector('.hidden-submit').click();
+            } else if (form.querySelector('.form-control').value != initial_value || form.querySelector('.form-control').classList.contains('timepicker')) {
               form.querySelector('.hidden-submit').click();
             } else {
               form.classList.toggle('hidden');
@@ -215,7 +216,7 @@
 
 <div class="modal fade" id="newUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-sm" role="document" style="border-radius: 20px">
-    <%= render 'session_trainers/new', session: @session, session_trainer: @session_trainer, session_number: @session.id %>
+    <%= render 'session_trainers/new', session: @session, session_trainer: @session_trainer, session_number: @session.id, page: 'session' %>
   </div>
 </div>
 

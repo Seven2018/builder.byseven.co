@@ -1,10 +1,29 @@
-<% ongoing_trainings = @trainings %>
+<% if @upcoming_trainings.present? %>
+  <% ongoing_trainings = @upcoming_trainings %>
+<% else %>
+  <% ongoing_trainings = @trainings %>
+<% end %>
 <% ongoing_trainings.each do |training| %>
   <% if training.sessions.where(date: nil).empty? || ['sevener+', 'sevener'].include?(current_user.access_level) %>
       <div class="training-card" id="card-index" data-toggle='tooltip' title='<%= training.title %>'>
         <div class="training-card-main">
           <%= link_to training_path(training), class: 'stretched-link' do %>
             <h4><%= training.title %></h4>
+            <% if params[:user].present? %>
+              <% user = User.find(params[:user]) %>
+              <% training.training_ownerships.where(user_id: user.id).each do |ownership| %>
+                <% if ownership.user_type == 'Owner' %>
+                  <i class="fas fa-circle" style='color:red;'></i>
+                <% elsif ownership.user_type == 'Sidekick' %>
+                  <i class="fas fa-circle" style='color:orange;'></i>
+                <% elsif ownership.user_type == 'Writer' %>
+                  <i class="fas fa-circle" style='color:yellow;'></i>
+                <% end %>
+              <% end %>
+              <% if training.trainers.include?(user) %>
+                <i class="fas fa-circle" style='color:cyan;'></i>
+              <% end %>
+            <% end %>
             <img src="<%= Training.includes(:client_contact).find(training.id).client_contact.client_company.logo %>" class='lazyload client-logo'>
             <div class="training-card-infos">
               <% sessions = training.sessions %>

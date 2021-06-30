@@ -1,5 +1,5 @@
 class TrainingsController < ApplicationController
-  before_action :set_training, only: [:show, :edit, :update, :destroy, :copy, :sevener_billing, :invoice_form, :trainer_notification_email]
+  before_action :set_training, only: [:show, :edit, :update, :destroy, :copy, :sevener_billing, :invoice_form, :trainer_notification_email, :import_attendees]
 
   def index
     # Index with 'search' option and global visibility for SEVEN Users
@@ -8,7 +8,7 @@ class TrainingsController < ApplicationController
     if ['super admin', 'admin', 'project manager'].include?(current_user.access_level)
       if params[:search]
         if params[:search][:user]
-          trainings = ((Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(training_ownerships: {user_id: params[:search][:user]}).or(Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:search][:user]})).where("lower(trainings.title) LIKE ?", "%#{params[:search][:title].downcase}%")) + (Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(training_ownerships: {user_id: params[:search][:user]}).or(Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:search][:user]})).joins(client_contact: :client_company).where("lower(client_companies.name) LIKE ?", "%#{params[:search][:title].downcase}%"))).flatten(1).uniq
+          trainings = ((Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(training_ownerships: {user_id: params[:search][:user]}).or(Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:search][:user]})).where("unaccent(lower(trainings.title)) LIKE ?", "%#{I18n.transliterate(params[:search][:title].downcase)}%")) + (Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(training_ownerships: {user_id: params[:search][:user]}).or(Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:search][:user]})).joins(client_contact: :client_company).where("lower(client_companies.name) LIKE ?", "%#{params[:search][:title].downcase}%"))).flatten(1).uniq
           trainings_empty = trainings.reject{|x| x.end_time.present?}
           trainings_with_date = trainings.reject{|y| !y.end_time.present?}.sort_by{|z| z.end_time}.reverse
           @trainings = trainings_empty + trainings_with_date
@@ -20,11 +20,15 @@ class TrainingsController < ApplicationController
           @trainings = trainings_empty + trainings_with_date
         end
       elsif params[:user]
+        @upcoming_trainings = (Training.joins(:training_ownerships).where(training_ownerships: {user_id: params[:user]}) + Training.joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:user]})).uniq
+        @upcoming_trainings = @upcoming_trainings.select{|x| x.end_time.present? && x.end_time >= Date.today}.sort_by{|y| y.next_session} if @upcoming_trainings.present?
         trainings = (Training.joins(:training_ownerships).where(training_ownerships: {user_id: params[:user]}) + Training.joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:user]})).uniq
         trainings_empty = trainings.reject{|x| x.end_time.present?}
         trainings_with_date = trainings.reject{|y| !y.end_time.present?}.sort_by{|z| z.end_time}.reverse
         @trainings = trainings_empty + trainings_with_date
         @user = User.find(params[:user])
+      else
+        @upcoming_trainings = Training.all.select{|x| x.end_time.present? && x.end_time >= Date.today}.sort_by{|y| y.next_session}
       end
     else
       if params[:search]
@@ -32,6 +36,9 @@ class TrainingsController < ApplicationController
         trainings_empty = trainings.reject{|x| x.end_time.present?}
         trainings_with_date = trainings.reject{|y| !y.end_time.present?}.sort_by{|z| z.end_time}.reverse
         @trainings = trainings_empty + trainings_with_date
+      else
+        @trainings = (Training.joins(sessions: :users).where(users: {id: current_user.id}).uniq.select{|x| if (sessions = Session.joins(:session_trainers).where(training_id: x.id, session_trainers: {user_id: current_user.id}).order(date: :asc).reject{|c| !c.date.present?}).present?; sessions.last.date >= Date.today; end;}.sort_by{|y| y.next_session} + Training.joins(sessions: :users).where(sessions: {date: nil}, users: {id: current_user.id}).uniq).uniq
+        @trainings_count = @trainings.count
       end
     end
   end
@@ -268,6 +275,20 @@ class TrainingsController < ApplicationController
   def redirect_docusign
     skip_authorization
     redirect_to "https://account-d.docusign.com/oauth/auth?response_type=token&scope=signature&client_id=ce366c33-e8f1-4aa7-a8eb-a83fbffee4ca&redirect_uri=http://localhost:3000/docusign/callback"
+  end
+
+  def import_attendees
+    authorize @training
+    AirtableAttendee.all.each do |attendee|
+      new_attendee = Attendee.find_by(email: attendee['Email'])
+      attendee['Company_id'].present? ? company_id = attendee['Company_id'] : company_id = @training.client_company.id
+      new_attendee = Attendee.create(firstname: attendee['Firstname'], lastname: attendee['Lastname'], email: attendee['Email'], client_company_id: company_id) if new_attendee.nil?
+      @training.sessions.each do |session|
+        SessionAttendee.create(attendee_id: new_attendee.id, session_id: session.id)
+      end
+    end
+    redirect_to training_path(@training)
+    flash[:notice] = 'Import successful'
   end
 
   private

@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  before_action :set_session, only: [:show, :edit, :update, :update_ajax, :destroy, :viewer, :copy_form, :copy, :copy_content, :presence_sheet]
+  before_action :set_session, only: [:show, :edit, :update, :update_ajax, :destroy, :viewer, :copy_form, :copy, :copy_content, :presence_sheet, :import_attendees]
   skip_before_action :verify_authenticity_token, only: [:update_ajax]
 
   # Shows an InvoiceItem in html or pdf version
@@ -160,6 +160,17 @@ class SessionsController < ApplicationController
     end
   end
 
+  def import_attendees
+    authorize @session
+    AirtableAttendee.all.each do |attendee|
+      new_attendee = Attendee.find_by(email: attendee['Email'])
+      attendee['Company_id'].present? ? company_id = attendee['Company_id'] : company_id = @session.training.client_company.id
+      new_attendee = Attendee.create(firstname: attendee['Firstname'], lastname: attendee['Lastname'], email: attendee['Email'], client_company_id: company_id) if new_attendee.nil?
+      SessionAttendee.create(attendee_id: new_attendee.id, session_id: @session.id)
+    end
+    redirect_to training_session_path(@session.training, @session)
+  end
+
   private
 
   def set_session
@@ -167,6 +178,6 @@ class SessionsController < ApplicationController
   end
 
   def session_params
-    params.require(:session).permit(:title, :date, :start_time, :end_time, :training_id, :duration, :lunch_duration, :attendee_number, :description, :teaser, :image, :address, :room, { user_ids: [] }, session_trainers_attributes: [:id, :session_id, :user_id])
+    params.require(:session).permit(:title, :date, :start_time, :end_time, :training_id, :duration, :lunch_duration, :attendee_number, :description, :teaser, :image, :address, :room, :session_type, { user_ids: [] }, session_trainers_attributes: [:id, :session_id, :user_id])
   end
 end

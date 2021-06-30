@@ -20,6 +20,8 @@
               <%= b.check_box + b.text %>
             <% end %>
           <% end %>
+          <% page = nil unless page.present? %>
+          <%= f.hidden_field :page, value: page %>
         </div>
         <div class='modal-control'>
           <%= button_tag :submit, class: 'btn btn-edit-green btn-icon', data: { toggle: 'tooltip' }, title: 'Save' do %>

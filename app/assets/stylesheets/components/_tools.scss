@@ -69,6 +69,6 @@
 .flex-column-between-left {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
 }

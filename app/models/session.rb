@@ -11,6 +11,7 @@ class Session < ApplicationRecord
   has_many :attendee_interests, dependent: :destroy
   has_one :oblivion, dependent: :destroy
   validates :title, :duration, presence: true
+  validates :session_type, inclusion: { in: [ 'Face-to-face', 'Online' ] }
   accepts_nested_attributes_for :session_trainers
   default_scope { order(:date, :start_time) }
 

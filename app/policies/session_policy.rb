@@ -41,6 +41,10 @@ class SessionPolicy < ApplicationPolicy
     check_access_seven
   end
 
+  def import_attendees?
+    check_access_seven
+  end
+
   private
 
   def check_access_seven
