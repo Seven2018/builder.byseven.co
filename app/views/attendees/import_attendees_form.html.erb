@@ -1,0 +1,64 @@
+<div class="container-seven-large">
+  <% if @training.present? %>
+    <h2>Import Attendees for Training : <%= @training.client_company.name + ' - ' + @training.title %></h2>
+  <% elsif @session.present? %>
+    <h2>Import Attendees for Session : <%= @session.title %></h2>
+  <% end %>
+  <div id="example"></div>
+  <%= simple_form_for :import, url: import_attendees_path, method: :post do |f| %>
+    <%= f.hidden_field :attendees %>
+    <% if params[:training_id].present? %>
+      <%= f.hidden_field :training_id, value: params[:training_id] %>
+    <% elsif params[:session_id].present? %>
+      <%= f.hidden_field :session_id, value: params[:session_id] %>
+    <% end %>
+    <%= f.submit 'Import', class: 'hidden-submit hidden' %>
+    <button class="btn" onclick="extractData()">Import</button>
+  <% end %>
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+
+<script>
+  window.onload = function() {
+    const data = [
+      ['', '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', '']
+    ];
+
+    table_container = document.getElementById('example');
+    const hot = new Handsontable(table_container, {
+      data: data,
+      rowHeaders: true,
+      colHeaders: ['Firstname', 'Lastname', 'Email', 'Company Id (optional)'],
+      colWidths: 200,
+      width: '100%',
+      height: 320
+    });
+    document.getElementById('hot-display-license-info').remove();
+  }
+
+  function extractData() {
+    rows = document.querySelector('.ht_master').querySelector('tbody').querySelectorAll('tr')
+    list = []
+    rows.forEach((row) => {
+      cells = row.querySelectorAll('td')
+      row_list = []
+      cells.forEach((cell) => {
+        row_list.push(cell.innerHTML)
+      })
+      list.push(row_list)
+    })
+    document.querySelector('#import_attendees').value = JSON.stringify(list)
+    document.querySelector('.hidden-submit').click()
+  }
+</script>

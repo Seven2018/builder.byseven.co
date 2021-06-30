@@ -29,7 +29,7 @@
           <li><%= link_to 'View mode', training_session_viewer_path(@session.training, @session) %></li>
           <li><%= link_to 'Export PDF', training_session_path(@session.training, @session, format: :pdf), target: :_blank %></li>
           <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-            <li><%= link_to 'Import Attendees', training_import_attendees_session_path(@session.training, @session) %></li>
+            <li><%= link_to 'Import Attendees', import_attendees_form_path(session_id: @session.id) %></li>
             <li><%= link_to 'Presence Sheet', training_session_presence_sheet_path(@session.training, @session, format: :pdf), target: :_blank %></li>
           <% end %>
         </ul>
