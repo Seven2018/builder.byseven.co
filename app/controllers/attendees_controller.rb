@@ -43,7 +43,6 @@ class AttendeesController < ApplicationController
 
   # Creates new Attendees from an imported list
   def import
-    raise
     @attendees = Attendee.import(params[:file], Training.find(params[:id]).client_contact.client_company_id)
     skip_authorization
     flash[:notice] = 'Import terminé'
@@ -70,8 +69,42 @@ class AttendeesController < ApplicationController
     end
   end
 
-  def test
+  def import_attendees_form
     skip_authorization
+    @training = Training.find(params[:training_id]) if params[:training_id].present?
+    @session = Session.find(params[:session_id]) if params[:session_id].present?
+  end
+
+  def import_attendees
+    skip_authorization
+    attendees_array = JSON.parse(params[:import][:attendees])
+    params[:import][:training_id].present? ? training = Training.find(params[:import][:training_id]) : training = nil
+    params[:import][:session_id].present? ? session = Session.find(params[:import][:session_id]) : session = nil
+    attendees_array.each do |attendee|
+      new_attendee = Attendee.new(firstname: attendee[0], lastname: attendee[1], email: attendee[2])
+      if attendee[3].present?
+        new_attendee.client_company_id = attendee[3].to_i
+      else
+        if training.present?
+          new_attendee.client_company_id = training.client_company.id
+        else
+          new_attendee.client_company_id = session.training.client_company.id
+        end
+      end
+      new_attendee.save
+      if training.present?
+        training.sessions.each do |tr_session|
+          SessionAttendee.create(session_id: tr_session.id, attendee_id: new_attendee.id)
+        end
+      elsif session.present?
+        SessionAttendee.create(session_id: params[:import][:session_id], attendee_id: new_attendee.id)
+      end
+    end
+    if training.present?
+      redirect_to training_path(training), notice: "Attendees successfully imported to #{training.client_company.name} - #{training.title}"
+    else
+      redirect_to training_path(session.training), notice: "Attendees successfully imported to #{session.title}"
+    end
   end
 
   private

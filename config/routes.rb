@@ -135,18 +135,19 @@ Rails.application.routes.draw do
   get 'trainings/:id/trainer_notification_email', to: 'trainings#trainer_notification_email', as: 'trainer_notification_email'
   get 'trainings/:id/trainer_session_reminder', to: 'trainings#trainer_reminder_email', as: 'trainer_reminder_email'
   get 'show_session_content', to: 'trainings#show_session_content', as: 'show_session_content'
-  get 'trainings/:id/import_attendees', to: 'trainings#import_attendees', as: 'import_attendees_training'
+  # get 'trainings/:id/import_attendees', to: 'trainings#import_attendees', as: 'import_attendees_training'
 
   # ATTENDEES
   resources :attendees, only: [:index, :show, :new, :create]
   get 'attendees/template_csv', to: 'attendees#template_csv', as: 'template_csv_attendees'
-  post 'attendees/import', to: 'attendees#import', as: 'import_attendees'
+  # post 'attendees/import', to: 'attendees#import', as: 'import_attendees'
   get 'training/:training_id/session/:id/attendees/export.csv', to: 'attendees#export', as: 'export_attendees'
   get 'attendee/new_kea_partners', to: 'attendees#new_kea_partners', as: 'new_kea_partners_attendee'
   post 'attendee/create_kea_partners', to: 'attendees#create_kea_partners', as: 'create_kea_partners_attendee'
   post 'new_session_attendee/kea_partners', to: 'session_attendees#create_kea_partners', as: 'new_kea_partners_session_attendee'
   delete 'delete_session_attendee/kea_partners', to: 'session_attendees#destroy_kea_partners', as: 'destroy_kea_partners_session_attendee'
-  get 'test', to: 'attendees#test', as: 'test_session_attendee'
+  get :import_attendees_form, controller: :attendees
+  post :import_attendees, controller: :attendees
 
   # SESSION ATTENDEES
   post 'session/:id/session_attendees/link_attendees', to: 'session_attendees#link_attendees', as: 'link_attendees'
