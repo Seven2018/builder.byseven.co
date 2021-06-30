@@ -5,6 +5,13 @@ if ("<%= @redirect_from %>" == 'session') {
   document.querySelector('#card-block-<%= @session.id %>').querySelector('.mods-list').innerHTML = '<%= j (render("trainings/show_session_content", session: @session)) %>';
 }
 
+photos = document.querySelectorAll('.ava')
+counter = 0;
+photos.forEach(photo => {
+  photo.style.right = counter.toString() + 'px';
+  counter = counter + 30;
+});
+
 sessions = document.querySelectorAll('.card-lg')
 sessions.forEach(card => {
   photos1 = card.querySelectorAll('.ava2')

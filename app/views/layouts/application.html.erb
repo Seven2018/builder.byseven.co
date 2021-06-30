@@ -25,6 +25,12 @@
     <%= action_cable_meta_tag %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= stylesheet_pack_tag 'application' %>
+    <script>
+      host = "seven-builder.herokuapp.com"
+      if ((host == window.location.host) && (window.location.protocol != "https:")) {
+        window.location.protocol = "https"
+      }
+    </script>
   </head>
     <body>
      <div class='<%= "wrapper" unless params[:controller] == "pages" && params[:action] == "home" %>'>
