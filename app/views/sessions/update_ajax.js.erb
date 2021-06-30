@@ -21,3 +21,17 @@ sessions.forEach(card => {
     counter1 = counter1 + 30;
   });
 });
+
+photos = document.querySelectorAll('.ava-session')
+counter = 30;
+photos.forEach(photo => {
+  photo.style.right = counter.toString() + 'px';
+  counter = counter + 30;
+});
+
+photos = document.querySelectorAll('.ava-session-mobile')
+counter = -225;
+photos.forEach(photo => {
+  photo.style.right = counter.toString() + 'px';
+  counter = counter + 30;
+});

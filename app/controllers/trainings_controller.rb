@@ -1,5 +1,5 @@
 class TrainingsController < ApplicationController
-  before_action :set_training, only: [:show, :edit, :update, :destroy, :copy, :sevener_billing, :invoice_form, :trainer_notification_email]
+  before_action :set_training, only: [:show, :edit, :update, :destroy, :copy, :sevener_billing, :invoice_form, :trainer_notification_email, :import_attendees]
 
   def index
     # Index with 'search' option and global visibility for SEVEN Users
@@ -275,6 +275,20 @@ class TrainingsController < ApplicationController
   def redirect_docusign
     skip_authorization
     redirect_to "https://account-d.docusign.com/oauth/auth?response_type=token&scope=signature&client_id=ce366c33-e8f1-4aa7-a8eb-a83fbffee4ca&redirect_uri=http://localhost:3000/docusign/callback"
+  end
+
+  def import_attendees
+    authorize @training
+    AirtableAttendee.all.each do |attendee|
+      new_attendee = Attendee.find_by(email: attendee['Email'])
+      attendee['Company_id'].present? ? company_id = attendee['Company_id'] : company_id = @training.client_company.id
+      new_attendee = Attendee.create(firstname: attendee['Firstname'], lastname: attendee['Lastname'], email: attendee['Email'], client_company_id: company_id) if new_attendee.nil?
+      @training.sessions.each do |session|
+        SessionAttendee.create(attendee_id: new_attendee.id, session_id: session.id)
+      end
+    end
+    redirect_to training_path(@training)
+    flash[:notice] = 'Import successful'
   end
 
   private

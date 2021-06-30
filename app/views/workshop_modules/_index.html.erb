@@ -3,8 +3,10 @@
 </div>
 <% unless @workshop.workshop_modules.present? %>
   <div class="no-workshop">
-   <h5>Sorry, there are no modules for this workshop.</h5>
-   <h5>Create a module  <%= link_to new_training_session_workshop_workshop_module_path(@workshop.session.training, @workshop.session, @workshop)do %> <u>here.</u><% end %>
+    <h5>Sorry, there are no modules for this workshop.</h5>
+    <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+      <h5>Create a module  <%= link_to new_training_session_workshop_workshop_module_path(@workshop.session.training, @workshop.session, @workshop)do %> <u>here.</u><% end %>
+    <% end %>
   </h5>
   </div>
 <% else %>

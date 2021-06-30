@@ -26,7 +26,7 @@
   <div class="trainings-row">
     <% trainings.each do |training| %>
       <%# if training.end_time.present? && training.end_time >= Date.today %>
-      <% if training.end_time.present? && Session.joins(:session_trainers).where(training_id: training.id, session_trainers: {user_id: @user.id}).where.not(date: nil).order(date: :asc).last.date >= Date.today %>
+      <% if training.end_time.present? && Session.joins(:session_trainers).where(training_id: training.id, session_trainers: {user_id: @user.id}).where.not(date: nil).order(date: :asc)&.last&.date >= Date.today %>
         <div class="training-card" id="card-index" data-toggle='tooltip' title='<%= training.title %>'>
           <div class="training-card-main">
             <%= link_to training_path(training), class: 'stretched-link' do %>
