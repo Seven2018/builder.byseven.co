@@ -295,7 +295,7 @@
           }
           inputs = form.querySelectorAll('input:not([type="hidden"])')
           selects = form.querySelectorAll('select')
-          if (selects.length > 0) {
+          if (selects.length > 0 || inputs[0].type == 'radio') {
             window.addEventListener('click', function(e) {
               if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
                 form.querySelector('.hidden-submit').click();
@@ -304,7 +304,6 @@
               }
             });
           } else {
-            console.log(inputs[0])
             inputs[0].click()
             inputs.forEach((input) => {
               input.addEventListener('change', function(e) {
