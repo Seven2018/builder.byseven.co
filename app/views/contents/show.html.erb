@@ -1,12 +1,12 @@
 <div class="container-seven-large">
   <div id='page-controls'>
-    <%= link_to contents_path, class: 'btn return-arrow' do %><i class="fas fa-arrow-left"></i><% end %>
+    <%= link_to contents_path, class: 'btn return-arrow' do %><i class="fas fa-arrow-left" data-toggle='tooltip' title='Back'></i><% end %>
       <div class="page-controls-buttons">
         <%= link_to new_content_content_module_path(@content) do %>
           <div class="btn-edit-yellow-mobile">New Module</div>
           <div class="btn-icon-grey-mobile"><i class="fas fa-plus"></i></div>
         <% end %>
-        <a class="btn-icon-grey" data-toggle='modal' data-target='#editContent' title='Copy'><i class="fas fa-pen"></i></a>
+        <a class="btn-icon-grey" data-toggle='modal' data-target='#editContent' title='Edit'><i class="fas fa-pen"></i></a>
         <%= link_to content_path(@content), class: "btn-icon-grey", method: :delete, data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
           <i class="fas fa-trash-alt"></i>
         <% end %>
