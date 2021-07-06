@@ -61,7 +61,7 @@
           <div class="dropdown-pdf hidden">
             <%= simple_form_for :training, url: training_path(@training, format: :pdf), target: :_blank, method: :get do |f| %>
               <%= f.input :sessions, collection: @training.sessions, as: :check_boxes %>
-              <%= f.submit 'Export', class: 'btn-edit-green' %>
+              <%= f.submit 'Export', class: ' btn btn-edit-green' %>
             <% end %>
           </div>
         </div>
@@ -390,7 +390,7 @@
     photo.style.right = counter.toString() + 'px';
     counter = counter + 30;
   });
-    
+
   sessions = document.querySelectorAll('.card-lg')
   sessions.forEach(card => {
     photos1 = card.querySelectorAll('.ava2')

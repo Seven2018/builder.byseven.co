@@ -7,7 +7,7 @@
   </div>
   <div class="modal-body" id="modalNewBookinBody">
     <%= simple_form_for [@workshop.session.training, @workshop.session, @workshop, @theory_workshop] do |f| %>
-        <%= f.input :theory, :collection => Theory.all, :label_method => :name, include_blank: false %>
+        <%= f.input :theory, :collection => Theory.all, as: :check_boxes, :label_method => :name, include_blank: false %>
   </div>
   <div class="modal-footer" id="modalNewBookingFooter">
     <div>
