@@ -34,7 +34,7 @@
       <div id="client-company-buttons">
         <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>
           <%= link_to new_client_company_client_contact_path(@client_company) do %>
-            <div class="btn-icon-grey-mobile"><i class="fas fa-plus"></i></div>
+            <div class="btn-icon-grey-mobile" data-toggle='tooltip' title='Add Client'><i class="fas fa-plus"></i></div>
           <% end %>
         <% end %>
       </div>

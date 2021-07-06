@@ -321,3 +321,9 @@
     margin-left: 10px;
   }
 }
+
+.info {
+  &:hover {
+    opacity: 80%;
+  }
+}

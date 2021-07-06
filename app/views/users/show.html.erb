@@ -3,8 +3,8 @@
       <%= link_to users_path, class: 'btn return-arrow' do %><i class="fas fa-arrow-left"></i><% end %>
     <div class='page-control-buttons'>
       <% if current_user.access_level == 'super admin' || @user == current_user || (current_user.access_level == 'admin' && (@user.access_level == 'sevener' || @user.access_level == 'sevener+')) %>
-        <a class="btn-icon-grey" data-toggle='modal' data-target='#editUser'><i class="fas fa-user-edit"></i></a>
-        <a class="btn-icon-grey" data-toggle='modal' data-target='#editPassword'><i class="fas fa-key"></i></a>
+        <a class="btn-icon-grey" data-toggle='modal' data-target='#editUser' data-toggle='tooltip' title='Edit User'><i class="fas fa-user-edit"></i></a>
+        <a class="btn-icon-grey" data-toggle='modal' data-target='#editPassword' data-toggle='tooltip' title='Edit Password'><i class="fas fa-key"></i></a>
       <% end %>
     </div>
   </div>

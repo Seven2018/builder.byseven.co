@@ -211,6 +211,9 @@
   @include from-medium-high {
     display: none;
   }
+  &:hover {
+    opacity: 80%;
+  }
 }
 
 .btn-edit-checkbox {
@@ -404,6 +407,9 @@
     color: #888888;
     font-size: 15px;
   }
+  i:hover {
+    opacity: 80%;
+  }
   height: 4rem;
   background-color: transparent;
   &:hover {
@@ -531,6 +537,9 @@
   textarea {
     color: black;
   }
+  &:focus {
+    border: 1px solid #FFC447;
+  }
 }
 
 .side-search {
@@ -546,6 +555,10 @@
   padding: 10px;
   font-family: 'Montserrat';
   font-weight: 300;
+}
+
+.collection_check_boxes:hover {
+  opacity: 80%;
 }
 
 //// button on workshop add ////

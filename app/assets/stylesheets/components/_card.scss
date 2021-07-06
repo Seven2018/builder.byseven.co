@@ -353,6 +353,12 @@ $timeline: #115173;
         width: 20rem;
       }
     }
+      p:hover {
+        opacity: 80%;
+      }
+      i:hover {
+        opacity: 80%;
+      }
 
     input.form-control {
       font-size: 1.6rem !important;
@@ -498,6 +504,11 @@ $timeline: #115173;
     }
   }
 
+  h3 {
+    &:hover {
+      opacity: 80%;
+    }
+  }
   input.form-control {
     font-size: 2.4rem !important;
     padding: 0 !important;

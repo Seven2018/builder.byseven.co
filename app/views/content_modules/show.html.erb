@@ -1,7 +1,7 @@
 <div class="container-seven-large">
   <div id='page-controls'>
-    <%= link_to content_path(@content_module.content), class: 'return-arrow' do %>
-      <i class="fas fa-arrow-left"></i>
+    <%= link_to content_path(@content_module.content), class: 'btn return-arrow' do %>
+      <i class="fas fa-arrow-left" data-toggle='tooltip' title='Back'></i>
     <% end %>
     <div class="page-controls-buttons flex-row-between-centered">
       <%= link_to edit_content_content_module_path(@content_module.content, @content_module), data: { toggle: 'tooltip' }, title: 'Edit', class: 'btn-icon-grey' do %>

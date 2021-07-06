@@ -4,9 +4,9 @@
       <div class="card-footer-lg-infos">
         <div>
           <% if session.date.present? %>
-            <p id='<%= "date-form-" + "#{session.id.to_s}" %>' onclick='openSessionForm(this)'> <%="#{session&.date&.to_s}"%> </p>
+            <p id='<%= "date-form-" + "#{session.id.to_s}" %>' data-toggle='tooltip' title='Modify Date' onclick='openSessionForm(this)'> <%="#{session&.date&.to_s}"%> </p>
           <% else %>
-            <p id='<%= "date-form-" + "#{session.id.to_s}" %>' onclick='openSessionForm(this)'> A dater </p>
+            <p id='<%= "date-form-" + "#{session.id.to_s}" %>' data-toggle='tooltip' title='Modify Date' onclick='openSessionForm(this)'> A dater </p>
           <% end %>
           <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id, page: params[:page], type: 'date'), html: { class: "hidden hidden-form" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
             <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
@@ -16,7 +16,7 @@
           <% end %>
         </div>
         <div>
-          <p id='<%= "time-form-" + "#{session.id.to_s}" %>' onclick='openSessionForm(this)'><%= " #{session.start_time.strftime("%k:%M")} to #{session.end_time.strftime("%k:%M")}" %></p>
+          <p id='<%= "time-form-" + "#{session.id.to_s}" %>' data-toggle='tooltip' title='Modify Time' onclick='openSessionForm(this)'><%= " #{session.start_time.strftime("%k:%M")} to #{session.end_time.strftime("%k:%M")}" %></p>
           <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id, page: params[:page], type: 'time'), html: { class: "hidden hidden-form" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
             <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
               <%= f.input :start_time, label: 'Start time:', as: :time, minute_step: 15, input_html: { class: 'timepicker'}, default: session.start_time, label: false %>
@@ -27,7 +27,7 @@
         </div>
         <div>
           <i class="fas fa-stopwatch"></i>
-          <p id='<%= "duration-form-" + "#{session.id.to_s}" %>' onclick='openSessionForm(this)'><%= session.duration %> h</p>
+          <p id='<%= "duration-form-" + "#{session.id.to_s}" %>' data-toggle='tooltip' title='Modify Duration' onclick='openSessionForm(this)'><%= session.duration %> h</p>
           <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id, page: params[:page], type: 'duration'), html: { class: "hidden hidden-form" }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
             <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
               <%= f.input :duration, label: false, input_html: {min: 0, style: 'width:11rem;', id: 'edit_duration', value: session.duration}, allow_blank: false %>
@@ -85,7 +85,7 @@
   </div>
   <div class="card-main-lg" ondblclick="doubleClick(this)">
     <div class="card-session-header">
-      <h3 id='<%= "title-form-" + "#{session.id.to_s}" %>' onclick='openSessionForm(this)'><%= session.title %></h3>
+      <h3 id='<%= "title-form-" + "#{session.id.to_s}" %>' onclick='openSessionForm(this)' data-toggle='tooltip' title='Modify Title'><%= session.title %></h3>
       <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id, page: params[:page], type: 'title'), html: { class: "hidden hidden-form", style: 'width:100%;' }, method: :patch, remote: true, input_html: {multipart: true} do |f| %>
         <%= f.input :title, label: false, input_html: {value: session.title, style: 'width:100%;'} %>
         <%= button_tag type: 'submit', class: 'hidden hidden-submit' %>
