@@ -43,3 +43,67 @@
     margin: 0;
   }
 }
+
+
+
+.completed {
+  th {
+    color: #888888;
+  }
+  width: 100%;
+  td, th {
+    text-align: left;
+    padding: 8px;
+    width: 19%;
+    border-bottom: 1px solid #c4c4c4;
+  }
+    tr {
+    height: 8rem;
+  }
+}
+
+.invoices-to-do {
+  th {
+    color: #888888;
+  }
+  width: 100%;
+  td, th {
+    text-align: left;
+    padding: 8px;
+    width: 20%;
+    border-bottom: 1px solid #c4c4c4;
+  }
+  tr {
+    height: 8rem;
+  }
+}
+
+.btn-link {
+  display: flex;
+  align-items: baseline;
+  i {
+    margin-right: 10px;
+  }
+}
+
+.completed-btn {
+  p {
+  padding: 5px 10px;
+  color: #004b23;
+  background-color: #b5c99a;
+  border-radius: 30px;
+  margin-bottom: 0px;
+  }
+  display: flex;
+}
+
+.ongoing-btn {
+  p {
+  padding: 5px 10px;
+  color: #22577a;
+  background-color: #a9def9;
+  border-radius: 30px;
+  margin-bottom: 0px;
+  }
+  display: flex;
+}
