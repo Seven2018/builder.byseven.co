@@ -54,17 +54,17 @@
         <% if (params[:user] == user.id&.to_s) || (params[:search] && params[:search][:user] == user.id&.to_s) %>
           <%= link_to trainings_path(user: user.id) do %>
             <% if user.picture.present? %>
-              <img src="<%= user.picture %>" class='lazyload avatar-sm' style='margin-bottom: 1rem;'>
+              <img src="<%= user.picture %>" class='lazyload avatar-sm' style='margin-bottom: 1rem;' data-toggle='tooltip' title='<%= user.firstname %> <%= user.lastname %>'>
             <% else %>
-              <img src='<%= asset_path('empty-avatar.png', type: :image) %>' class='lazyload avatar-sm' style='margin-bottom: 1rem;'>
+              <img src='<%= asset_path('empty-avatar.png', type: :image) %>' class='lazyload avatar-sm' style='margin-bottom: 1rem;' data-toggle='tooltip' title='<%= user.firstname %> <%= user.lastname %>'>
             <% end %>
           <% end %>
         <% else %>
            <%= link_to trainings_path(user: user.id) do %>
             <% if user.picture.present? %>
-              <img src="<%= user.picture %>" class='lazyload avatar-sm' style='opacity: 0.6; margin-bottom: 1rem;'>
+              <img src="<%= user.picture %>" class='lazyload avatar-sm' style='opacity: 0.6; margin-bottom: 1rem;' data-toggle='tooltip' title='<%= user.firstname %> <%= user.lastname %>'>
             <% else %>
-              <img src='<%= asset_path('empty-avatar.png', type: :image) %>' class='lazyload avatar-sm' style='opacity: 0.6; margin-bottom: 1rem;'>
+              <img src='<%= asset_path('empty-avatar.png', type: :image) %>' class='lazyload avatar-sm' style='opacity: 0.6; margin-bottom: 1rem;' data-toggle='tooltip' title='<%= user.firstname %> <%= user.lastname %>'>
             <% end %>
           <% end %>
         <% end %>

@@ -37,6 +37,10 @@
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid grey;
+  cursor: pointer;
+  &:hover {
+    opacity: 80%;
+  }
 }
 
 .avatar-sm {

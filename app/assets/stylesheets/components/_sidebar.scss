@@ -24,6 +24,9 @@
   div {
     width: 34rem;
   }
+  li:hover {
+    opacity: 80%;
+  }
 }
 
 #close_library {
@@ -32,6 +35,9 @@
   position: absolute;
   top: 15.5px;
   right: 0;
+  &:hover {
+    opacity: 80%;
+  }
 }
 
 .nav-side-menu .brand {
