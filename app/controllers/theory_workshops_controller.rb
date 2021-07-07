@@ -1,7 +1,7 @@
 class TheoryWorkshopsController < ApplicationController
   def create
     @workshop = Workshop.find(params[:workshop_id])
-    @theory = Theory.find(params[:theory_workshop][:theory].to_s)
+    @theories = Theory.where(params[:theory_workshop][:theory].reject{|x| x.empty?}.map{|y| y.to_i})
     @theory_workshop = TheoryWorkshop.new(workshop: @workshop, theory: @theory)
     skip_authorization
     unless @workshop.theories.include?(@theory)
