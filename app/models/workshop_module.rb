@@ -6,4 +6,9 @@ class WorkshopModule < ApplicationRecord
   validates :title, :duration, presence: true
   acts_as_list scope: :workshop
   # has_rich_text :instructions
+
+
+  def actions
+    return Action.where(id: [self.action1_id, self.action2_id])
+  end
 end

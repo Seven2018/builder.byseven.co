@@ -1,9 +1,4 @@
-<% if @upcoming_trainings.present? %>
-  <% ongoing_trainings = @upcoming_trainings %>
-<% else %>
-  <% ongoing_trainings = @trainings %>
-<% end %>
-<% ongoing_trainings.each do |training| %>
+<% @upcoming_trainings.each do |training| %>
   <% if training.sessions.where(date: nil).empty? || ['sevener+', 'sevener'].include?(current_user.access_level) %>
       <div class="training-card" id="card-index" data-toggle='tooltip' title='<%= training.title %>'>
         <div class="training-card-main">

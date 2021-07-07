@@ -32,7 +32,6 @@
           <p>Add a Theory</p>
         <% end %>
         <a data-toggle='modal' data-target='#newTheoryContent'><i class="fas fa-plus"></i></a>
-        <a data-toggle='modal' data-target='#destroyTheoryContent'><i class="fas fa-minus"></i></a>
       </div>
     </div>
   </div>
@@ -48,15 +47,8 @@
   </div>
 </div>
 
-
-<div class="modal fade" id="destroyTheoryContent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-lg" role="document" style="border-radius: 2rem">
-    <%= render 'theory_contents/destroy', theory_content: @theory_content %>
-  </div>
-</div>
-
 <div class="modal fade" id="newTheoryContent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document" style="border-radius: 2rem">
-    <%= render 'theory_contents/new', theory_content: @theory_content %>
+    <%= render 'theory_contents/manage_linked_theories' %>
   </div>
 </div>

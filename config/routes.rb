@@ -42,7 +42,8 @@ Rails.application.routes.draw do
     resources :content_modules, only: [:show, :new, :create, :edit, :update, :destroy]
       get 'content_module/:id/move_up', to: 'content_modules#move_up', as: 'move_up_content_module'
       get 'content_module/:id/move_down', to: 'content_modules#move_down', as: 'move_down_content_module'
-    resources :theory_contents, only: [:create, :destroy]
+    get :manage_linked_theories, controller: :theory_contents
+    get :remove_linked_theory, controller: :theory_contents
   end
 
   # CLIENT COMPANIES
@@ -104,6 +105,8 @@ Rails.application.routes.draw do
         get 'workshop_modules/:id/copy_form', to: 'workshop_modules#copy_form', as: 'copy_form_workshop_module'
         get 'workshop_modules/:id/copy', to: 'workshop_modules#copy', as: 'copy_workshop_module'
         resources :theory_workshops, only: [:create, :destroy]
+        get :manage_linked_theories, controller: :theory_workshops
+        get :remove_linked_theory, controller: :theory_workshops
       end
       resources :session_trainers, only: [:create, :destroy]
       resources :session_attendees, only: [:create, :destroy]
