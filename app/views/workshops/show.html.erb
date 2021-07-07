@@ -42,7 +42,6 @@
             <p>Add a Theory</p>
           <% end %>
           <a data-toggle='modal' data-target='#newTheoryWorkshop'><i class="fas fa-plus"></i></a>
-          <a data-toggle='modal' data-target='#destroyTheoryWorkshop'><i class="fas fa-minus"></i></a>
         <% end %>
       </div>
     </div>
@@ -55,7 +54,7 @@
 <!-- Modal -->
 <div class="modal fade" id="editMod" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document" style="border-radius: 2rem">
-    <%= render 'edit', mod: @workshop %>
+    <%= render 'edit', workshop: @workshop %>
   </div>
 </div>
 
@@ -67,12 +66,6 @@
 
 <div class="modal fade" id="newTheoryWorkshop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document" style="border-radius: 2rem">
-    <%= render 'theory_workshops/new', theory_workshop: @theory_workshop %>
-  </div>
-</div>
-
-<div class="modal fade" id="destroyTheoryWorkshop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document" style="border-radius: 2rem">
-    <%= render 'theory_workshops/destroy', theory_workshop: @theory_workshop %>
+    <%= render 'theory_workshops/manage_linked_theories' %>
   </div>
 </div>

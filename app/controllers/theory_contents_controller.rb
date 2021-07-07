@@ -1,26 +1,30 @@
 class TheoryContentsController < ApplicationController
-  def create
-    @content = Content.find(params[:content_id])
-    @theory = Theory.find(params[:theory_content][:theory].to_s)
-    @theory_content = TheoryContent.new(content: @content, theory: @theory)
+
+  # Manage linked theories through a checkbox interface (contents/show)
+  def manage_linked_theories
     skip_authorization
-    unless @content.theories.include?(@theory)
-      if @theory_content.save
-        redirect_back(fallback_location: root_path)
-      else
-        raise
+    @content = Content.find(params[:content_id])
+    chosen_theories = Theory.where(id: params[:content][:theory_ids].reject{|x| x.empty?}.map{|y| y.to_i})
+    ignored_theories = Theory.all - chosen_theories
+    chosen_theories.each do |theory|
+      unless TheoryContent.find_by(content_id: @content.id, theory_id: theory.id).present?
+        TheoryContent.create(content_id: @content.id, theory_id: theory.id)
       end
-    else
-      redirect_back(fallback_location: root_path)
+    end
+    TheoryContent.where(content_id: @content.id, theory_id: ignored_theories.map(&:id)).destroy_all
+    respond_to do |format|
+      format.html {redirect_back(fallback_location: root_path)}
+      format.js
     end
   end
 
-  def destroy
-    @content = Content.find(params[:content_id])
-    @theory = Theory.find(params[:theory_content][:theory].to_s)
-    @theory_content = TheoryContent.where(content: @content).where(theory: @theory)
+  # Delete selected theory_content (contents/show)
+  def remove_linked_theory
     skip_authorization
-    @theory_content.first.destroy
+    content = Content.find(params[:content_id])
+    theory = Theory.find(params[:theory_content][:theory])
+    theory_content = TheoryContent.where(content: content).where(theory: theory)
+    theory_content.first.destroy
     redirect_back(fallback_location: root_path)
   end
 end

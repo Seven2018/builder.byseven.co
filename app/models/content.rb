@@ -11,4 +11,9 @@ class Content < ApplicationRecord
   def default_values
     self.duration ||= 0 if self.duration.nil?
   end
+
+
+  def actions
+    return Action.where(id: [self.action1_id, self.action2_id])
+  end
 end
