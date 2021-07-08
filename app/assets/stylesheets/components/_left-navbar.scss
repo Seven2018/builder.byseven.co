@@ -15,7 +15,7 @@
   padding-top: 4rem;
 
   @include from-large {
-    display: flex;
+    display: none;
   }
 }
 
@@ -196,16 +196,16 @@
   font-weight: lighter;
 }
 
-.left-menu-title {
-  text-align: left;
-  margin-left: 2rem;
+// .left-menu-title {
+//   text-align: left;
+//   margin-left: 2rem;
 
-  h4 {
-    font-size: 1.8rem;
-    font-weight: 400;
-    margin: 0 0 0 5px;
-  }
-}
+//   h4 {
+//     font-size: 1.8rem;
+//     font-weight: 400;
+//     margin: 0 0 0 5px;
+//   }
+// }
 
 .active-menu {
   background-color: #FFC552;

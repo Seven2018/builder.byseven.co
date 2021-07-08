@@ -359,6 +359,7 @@
 }
 
 .btn-icon-grey {
+  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -530,6 +531,7 @@
 }
 
 #search_title, #search_name {
+  box-shadow: 10px 10px 23px -13px rgba(0,0,0,0.13);
   margin-right: 1rem;
   background-color: white;
   border-radius: 5px;

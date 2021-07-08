@@ -1,17 +1,15 @@
 html {
-  display: flex;
-  justify-content: center;
-  overflow: -moz-scrollbars-vertical;
-  overflow-y: scroll !important;
-  font-size: 62.5%;
+//   display: flex;
+//   justify-content: center;
+//   overflow: -moz-scrollbars-vertical;
+//   overflow-y: scroll !important;
+   font-size: 62.5%;
 }
 
 body {
   display: flex;
   justify-content: center;
   position: relative;
-  max-width: 144rem !important;
-  width: 100vw !important;
   margin: 0 !important;
   padding: 0 !important;
 }
@@ -31,21 +29,22 @@ a {
 }
 
 .container-seven-large {
-  margin-top: 10rem;
-  margin-left:0rem;
-  width: 100%;
-  min-height: calc(100vh-5rem);
+  // margin-top: 3rem;
+  background-color: #f7f7f7;
+  // margin-left:0rem;
+  // width: 100%;
+  min-height: 100vh;
   padding: 0 1rem;
-  position: relative;
-  transition: all .25s ease-in-out;
-  margin-bottom: 100px;
-  @include from-large {
-    margin-top: 8rem;
-    padding: 0 3rem;
-    margin-left: 6rem;
-    min-height: calc(100vh - 13rem);
-    max-width: 138rem;
-    width: calc(100vw - 6rem);
+  // position: relative;
+  // transition: all .25s ease-in-out;
+  // margin-bottom: 100px;
+   @include from-large {
+  //   margin-top: 8rem;
+   padding: 1.5rem 4rem;
+  //   margin-left: 6rem;
+  //   min-height: calc(100vh - 13rem);
+  //   max-width: 138rem;
+  //   width: calc(100vw - 6rem);
   }
 }
 
@@ -103,49 +102,53 @@ a {
 }
 
 #page-controls {
-  border-bottom: 1px solid #c4c4c4;
-  position: fixed;
-  top: 0rem;
-  right: 0;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  height: 6rem;
-  padding: 2rem;
-  background-color: white;
-  z-index: 20;
-  transition: all 0.25s ease-in-out;
-
-  h4 {
-    font-weight: 700;
-  }
-
-
-  @include from-large {
-    top: 1rem;
-    padding: 0;
-    height: 5rem;
-    margin: 0 auto 0 auto;
-    max-width: 132rem;
-    width: calc(100vw - 12rem);
-    right: auto;
-  }
-
-  form, input, button {
-    height: 4rem;
-  }
-
-  & > div {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-
-  div > a {
-    // margin-left: 2rem;
-  }
+    padding: 20px 0px;
 }
+
+// #page-controls {
+//   position: fixed;
+//   top: 0rem;
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-between;
+//   align-items: center;
+//   height: 6rem;
+//   padding: 2rem;
+//   background-color: white;
+//   z-index: 20;
+//   transition: all 0.25s ease-in-out;
+
+//   h4 {
+//     font-weight: 700;
+//   }
+
+
+//   @include from-large {
+//     top: 7rem;
+//     padding: 0;
+//     height: 5rem;
+//     margin: 0 auto 0 auto;
+//     width: 100%;
+//     right: auto;
+//   }
+
+//   form, input, button {
+//     height: 4rem;
+//   }
+
+//   & > div {
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+//   }
+
+//   div > a {
+//     // margin-left: 2rem;
+//   }
+// }
 
 #page-buttons {
   display: flex;

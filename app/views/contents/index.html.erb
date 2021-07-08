@@ -67,7 +67,6 @@
       </div>
     <% else %>
       <div id='content-index'>
-      <h1 style="margin-bottom: 20px;">Workshops List</h1>
         <% Theme.includes(:children, :parent).walk_tree do |theme, level| %>
           <% if theme.children.empty? && theme.level == 0 && !['Ice breaker', 'Présentation', 'Conclusion'].include?(theme.name) %>
             <div class="content-index-theme">

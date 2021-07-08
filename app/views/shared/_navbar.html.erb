@@ -1,19 +1,118 @@
-<!-- <div class="navbar navbar-light">
+<div class="navbar-builder navbar-expand-sm navbar-light">
+  <% if user_signed_in? %>
+  <%= link_to trainings_path(page: 1) do %>
+    <%= image_tag('/assets/SEVENLOGO_SQUARE4.png', width:'45px', height:'30px', style:'margin-right:3rem;') %>
+  <% end %>
+  <div class="top-left-nav">
+    <ul>
+      <li>
+        <% if params[:controller] == 'trainings' || params[:controller] == 'sessions' || params[:controller] == 'workshops' || params[:controller] == 'workshop_modules'%>
+          <%= link_to trainings_path(page: 1), class: 'left-buttons' do %>
+            <div class="left-menu-title" style='color: #FFC447;'><h4>Trainings</h4></div>
+          <% end %>
+            <div class="isactive"></div>
+        <% else %>
+          <%= link_to trainings_path(page: 1), class: 'left-buttons' do %>
+            <div class="left-menu-title"><h4>Trainings</h4></div>
+          <% end %>
+        <% end %>
+      </li>
+      <% if ['super admin', 'admin', 'training manager', 'sevener+'].include? current_user.access_level %>
+        <li>
+          <% if params[:action] == 'contents' || params[:controller] == 'contents' %>
+            <%= link_to contents_path, class: 'left-buttons' do %>
+              <div class="left-menu-title " style='color: #FFC447;'><h4>Workshops</h4></div>
+            <% end %>
+              <div class="isactive"></div>
+          <% else %>
+            <%= link_to contents_path, class: 'left-buttons' do %>
+              <div class="left-menu-title"><h4>Workshops</h4></div>
+            <% end %>
+          <% end %>
+        </li>
+      <% end %>
+      <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>
+        <li>
+          <% if params[:controller] == 'theories' || params[:action] == 'theories' %>
+            <%= link_to theories_path, class: 'left-buttons' do %>
+              <div class="left-menu-title " style='color: #FFC447;'><h4>Theories</h4></div>
+            <% end %>
+              <div class="isactive"></div>
+          <% else %>
+            <%= link_to theories_path, class: 'left-buttons' do %>
+              <div class="left-menu-title"><h4>Theories</h4></div>
+            <% end %>
+          <% end %>
+        </li>
+        <li>
+          <% if params[:action] == 'users' || params[:controller] == 'users' %>
+            <%= link_to users_path, class: 'left-buttons' do %>
+              <div class="left-menu-title " style='color: #FFC447;'><h4>Users</h4></div>
+            <% end %>
+              <div class="isactive"></div>
+          <% else %>
+            <%= link_to users_path, class: 'left-buttons' do %>
+              <div class="left-menu-title"><h4>Users</h4></div>
+            <% end %>
+          <% end %>
+        </li>
+        <li>
+           <% if params[:action] == 'actions' || params[:controller] == 'actions' %>
+            <%= link_to actions_path, class: 'left-buttons' do %>
+              <div class="left-menu-title " style='color: #FFC447;'><h4>Actions</h4></div>
+            <% end %>
+              <div class="isactive"></div>
+          <% else %>
+            <%= link_to actions_path, class: 'left-buttons' do %>
+              <div class="left-menu-title"><h4>Actions</h4></div>
+            <% end %>
+          <% end %>
+        </li>
+        <li>
+          <% if params[:action] == 'report' || params[:controller] == 'report'  %>
+            <%= link_to report_path, class: 'left-buttons' do %>
+              <div class="left-menu-title " style='color: #FFC447;'><h4>Reports</h4></div>
+            <% end %>
+              <div class="isactive"></div>
+          <% else %>
+            <%= link_to report_path, class: 'left-buttons' do %>
+              <div class="left-menu-title"><h4>Reports</h4></div>
+            <% end %>
+          <% end %>
+        </li>
+      <% end %>
+        <% if ['sevener+', 'sevener'].include? current_user.access_level %>
+          <li>
+             <% if params[:action] == 'billing' %>
+              <%= link_to billing_path(user_id: current_user), class: 'left-buttons' do %>
+                <div class="left-menu-title " style='color: #FFC447;'><h4>Billing</h4></div>
+              <% end %>
+                <div class="isactive"></div>
+            <% else %>
+              <%= link_to billing_path(user_id: current_user), class: 'left-buttons' do %>
+                <div class="left-menu-title"><h4>Billing</h4></div>
+              <% end %>
+            <% end %>
+          </li>
+        <% end %>
+      <% end %>
+    </ul>
+  </div>
   <div class="navbar-controls-right flex-row-between-centered">
-    <div class="dropdown show">
-      <a class="navbar-user-card flex-row-between-centered" href="#" role="button" id="dropdownMenuLogout" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <div>
-          <h6><%= current_user.fullname %></h6>
-        </div>
+    <div class="user-top-nav">
+      <div class="dropdown show">
+        <a class="navbar-user-card  dropdown-toggle flex-row-between-centered" href="#" role="button" id="dropdownMenuLogout" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <img src="<%= current_user.picture %>" alt="<%= current_user.fullname %>" class='avatar-sm' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
       </a>
       <div class="dropdown-menu dropdown-menu-right" id='dropdown-user-menu' aria-labelledby="dropdownMenuLogout">
-        <div class="dropdown-card dropdown-item flex-row-between-centered">
-          <p>Account</p>
+        <div class="dropdown-card">
+          <div class="user-info-dropdown">
+            <p><%= current_user.fullname%></p>
+            <h6><%= current_user.email%></h6>
+          </div>
         </div>
         <%= link_to user_path(current_user) do %>
-          <div class="dropdown-card dropdown-item flex-row-between-centered">
-            <i class="fas fa-user"></i>
+          <div class="dropdown-card dropdown-item ">
             <div class='dropdown-card-text'>
               <h6>Profile</h6>
             </div>
@@ -21,20 +120,13 @@
         <% end %>
         <%= link_to destroy_user_session_path, method: :delete do %>
           <div class="dropdown-card dropdown-item flex-row-between-centered">
-            <i class="fas fa-sign-out-alt"></i>
             <div class='dropdown-card-text'>
               <h6>Log out</h6>
             </div>
           </div>
         <% end %>
+        </div>
       </div>
     </div>
   </div>
-</div> -->
-<!-- <script>
-  $('.dropdown-menu').on('click', function(event){
-    // The event won't be propagated up to the document NODE and
-    // therefore delegated events won't be fired
-    event.stopPropagation();
-});
-</script> -->
+</div>

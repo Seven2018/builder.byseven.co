@@ -89,3 +89,56 @@ $table-border: #d9d9d9;
   flex-flow: row wrap;
 
 }
+
+
+#report-btns {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  padding: 100px;
+  @include from-medium {
+    flex-direction: row;
+  }
+}
+
+.invoice-btn, .estimates-btn {
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 250px;
+  height: 250px;
+  border-radius: 5px;
+  box-shadow: 10px 10px 23px -13px rgba(0,0,0,0.34);
+  p {
+    margin-top: 30px;
+    font-size: 2rem;
+  }
+  &:hover {
+    box-shadow: 10px 10px 23px -13px rgba(0,0,0,0.5);
+  }
+  @include from-medium {
+    margin: 30px;
+  }
+}
+
+.invoice-btn {
+  color: white;
+  border: 1px solid #FFC447;
+  background: #FFC447;
+  p {
+    color: white;
+  }
+}
+
+.estimates-btn {
+  background: #FFF7E5;
+  color:#FFC447;
+  border: 1px solid #FFF7E5;
+  p {
+    color: #FFC447;
+  }
+}
