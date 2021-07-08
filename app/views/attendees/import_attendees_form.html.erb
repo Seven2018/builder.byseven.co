@@ -9,7 +9,8 @@
   <% elsif @session.present? %>
     <h2 style='margin-bottom: 30px;'>Import Attendees for Session : <%= @session.title %></h2>
   <% end %>
-  <div><div id="example"></div></div>
+  <div id='attendee-table-container'><div id="attendee-table"><button class="btn-add-row"><i class="fas fa-plus"></i></button></div></div>
+
   <%= simple_form_for :import, url: import_attendees_path, method: :post do |f| %>
     <%= f.hidden_field :attendees %>
     <% if params[:training_id].present? %>
@@ -40,17 +41,21 @@
       ['', '', '', '']
     ];
 
-    table_container = document.getElementById('example');
+    table_container = document.getElementById('attendee-table');
     const hot = new Handsontable(table_container, {
       data: data,
       rowHeaders: true,
       colHeaders: ['First Name', 'Last Name', 'Email', 'Company Id (optional)'],
-      colWidths: 200,
-      width: '100%',
-      height: 320
+      colWidths: 200
     });
     document.getElementById('hot-display-license-info').remove();
+
+    document.querySelector('.btn-add-row').addEventListener('click', function() {
+      var col = hot.countRows();
+      hot.alter('insert_row', col, 1);
+    })
   }
+
 
   function extractData() {
     rows = document.querySelector('.ht_master').querySelector('tbody').querySelectorAll('tr')

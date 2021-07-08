@@ -318,3 +318,23 @@
     list-style-type: disc;
   }
 }
+
+.btn-add-row {
+  width: 5.1rem;
+  margin-bottom: 3rem;
+  border: 1px solid #ccc;
+  border-top: none;
+  cursor: pointer;
+}
+
+#attendee-table-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+#attendee-table {
+  width: 85rem;
+}
+
+
