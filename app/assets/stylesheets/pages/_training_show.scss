@@ -28,9 +28,10 @@
     padding: 2rem;
     width: 15rem;
     position: absolute;
-    top: 4rem;
-    left: -42.5rem;
-    box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.5);
+    top: 0;
+    left: -15rem;
+    // box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.5);
+    box-shadow: -5px 0px 8px -2px rgba(0, 0, 0, 0.5);
 
     form {
       height: auto !important;

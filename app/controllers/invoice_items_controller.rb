@@ -353,8 +353,7 @@ class InvoiceItemsController < ApplicationController
   def marked_as_paid
     authorize @invoice_item
     @invoice_item.update(payment_date: params[:edit_payment][:payment_date], status: 'Paid')
-    @invoice_item.export_numbers_revenue if @invoice_item.type = 'Invoice'
-    UpdateAirtableJob.perform_async(@invoice_item.training)
+    UpdateAirtableJob.perform_async(@invoice_item.training, false, @invoice_item)
     redirect_back(fallback_location: invoice_item_path(@invoice_item))
   end
 
