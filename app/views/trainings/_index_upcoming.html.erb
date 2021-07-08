@@ -30,6 +30,7 @@
                 <% end %>
               </div>
             </div>
+              <%= training.sessions.count.to_s + " " + "Sessions" %>
               <% owners = training.owners %>
               <% u = 1 %>
               <% if owners.present? %>
