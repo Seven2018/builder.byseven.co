@@ -113,16 +113,12 @@
         </div>
         <%= link_to user_path(current_user) do %>
           <div class="dropdown-card dropdown-item ">
-            <div class='dropdown-card-text'>
               <h6>Profile</h6>
-            </div>
           </div>
         <% end %>
         <%= link_to destroy_user_session_path, method: :delete do %>
           <div class="dropdown-card dropdown-item flex-row-between-centered">
-            <div class='dropdown-card-text'>
               <h6>Log out</h6>
-            </div>
           </div>
         <% end %>
         </div>

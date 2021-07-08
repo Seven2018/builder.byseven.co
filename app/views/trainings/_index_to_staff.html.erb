@@ -2,28 +2,50 @@
   <div class="training-card" id="card-index" data-toggle='tooltip' title='<%= training.title %>'>
     <div class="training-card-main">
       <%= link_to training_path(training), class: 'stretched-link' do %>
-        <h4><%= training.title %></h4>
-        <img src="<%= Training.includes(:client_contact).find(training.id).client_contact.client_company.logo %>" class='lazyload client-logo'>
         <div class="training-card-infos">
           <% sessions = training.sessions %>
           <div class='training-card-infos-elements'>
             <% if sessions.count == 1 %>
-              <i class="far fa-calendar-alt"></i><%= "  On #{sessions.first&.date&.strftime('%d/%m/%y')}" %>
+              <%= " On #{sessions.first&.date&.strftime('%d %b, %Y')}" %>
             <% else %>
-              <i class="far fa-calendar-alt"></i><%= "  From #{sessions.order(date: :asc).first&.date&.strftime('%d/%m/%y')} to #{sessions.order(date: :asc).last&.date&.strftime('%d/%m/%y')}" %>
+              <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+                <%= " #{sessions.order(date: :asc).first&.date&.strftime('%d %b, %Y')} to #{sessions.order(date: :asc).last&.date&.strftime('%d %b, %Y')}" %>
+              <% else %>
+                <% trainer_sessions = Session.joins(:session_trainers).where(training_id: training.id, session_trainers: {user_id: current_user.id}).order(date: :asc) %>
+                <%= " #{trainer_sessions.first&.date&.strftime('%d %b %Y')} to #{trainer_sessions.last&.date&.strftime('%d %b, %Y')}" %>
+              <% end %>
             <% end %>
-            <br>
-            <i class="far fa-calendar-check"></i>
-            <%= training.sessions.count.to_s + " " + "Sessions" %>
           </div>
         </div>
-        <% users_list = [training.owners + training.writers + training.trainers].flatten.uniq.first(3) %>
-        <% u = 1 %>
-        <% users_list.each do |user| %>
-        <img class="lazyload avatar-sm training-card-user training-card-user-<%= u %>" src="<%= user.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
-        <% u += 1 %>
+        <div class="training-card-bottom">
+          <div class="training-client-titles">
+            <div class="training-titles">
+            <img src="<%= Training.includes(:client_contact).find(training.id).client_contact.client_company.logo %>" class='lazyload client-logo'>
+              <p><b><%= training.client_company.name %></b></p>
+              <% if training.title.length >= 100 %>
+                <p><%= training.title.first(100) + '...' %></p>
+              <% else %>
+                <p><%= training.title %></p>
+              <% end %>
+            </div>
+          </div>
+            <% owners = training.owners %>
+          <% u = 1 %>
+          <% if owners.present? %>
+            <img class="lazyload avatar-sm-owner training-card-user training-card-user-<%= u %>" src="<%= training.owners.first.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+            <% u += 1 %>
+          <% end %>
+          <% sidekicks = training.sidekicks %>
+          <% if sidekicks.present? %>
+            <img class="lazyload avatar-sm-sidekick training-card-user training-card-user-<%= u %>" src="<%= sidekicks.first.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+            <% u += 1 %>
+          <% end %>
+          <% writers = training.writers%>
+          <% if writers.present? %>
+            <img class="lazyload avatar-sm-writer training-card-user training-card-user-<%= u %>" src="<%= writers.first.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+          <% end %>
         <% end %>
-      <% end %>
+        </div>
     </div>
   </div>
 <% end %>
