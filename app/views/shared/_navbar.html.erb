@@ -6,7 +6,7 @@
   <div class="top-left-nav">
     <ul>
       <li>
-        <% if params[:action] == 'trainings' || params[:controller] == 'trainings' %>
+        <% if params[:controller] == 'trainings' || params[:controller] == 'sessions' || params[:controller] == 'workshops' || params[:controller] == 'workshop_modules'%>
           <%= link_to trainings_path(page: 1), class: 'left-buttons' do %>
             <div class="left-menu-title" style='color: #FFC447;'><h4>Trainings</h4></div>
           <% end %>
