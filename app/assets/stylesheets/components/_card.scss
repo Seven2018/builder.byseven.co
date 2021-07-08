@@ -4,7 +4,7 @@ $timeline: #115173;
 .training-card {
   margin: 20px;
   width: 260px;
-  height: 180px;
+  height: 250px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
@@ -21,9 +21,16 @@ $timeline: #115173;
     overflow: hidden;
   }
 
-  .training-card-user {
-    border: 3px white solid;
+.training-client-titles {
+  min-height: 170px;
+  .training-titles {
+    width: 235px;
   }
+}
+
+.training-card-bottom {
+  padding: 0px 10px;
+}
 
   .training-card-user-1 {
     position: absolute;
@@ -46,14 +53,22 @@ $timeline: #115173;
 }
 
 .training-card-infos {
-  width: 260px;
-  position: absolute;
-  background-color: #FFF1D5;
   display: flex;
-  justify-items: flex-end;
-  margin-top: 35px;
-  padding: 12px 12px;
-  bottom: 10px;
+  justify-content: center;
+  align-items: center;
+  height: 38px;
+  margin-bottom: 5px;
+  background-color: #FFF1D5;
+  border-bottom: 1px solid #FFC447;
+}
+.training-card-infos-completed {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 38px;
+  margin-bottom: 5px;
+  background-color: #C4C4C4;
+  border-bottom: 1px solid #888888;
 }
 
 .completed-training-card-infos {
@@ -162,10 +177,8 @@ $timeline: #115173;
 .client-logo {
   height: 5rem;
   width: 5rem;
+  float:right;
   object-fit: contain;
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
 }
 
 .card-trainers {
