@@ -1,4 +1,4 @@
-<div class="container-seven-large" style="background-color: white">
+<div class="container-seven-large">
   <div id="page-controls">
       <% if params[:user] %>
         <%= simple_form_for :search, url: trainings_path, method: 'GET' do |f| %>
@@ -71,7 +71,6 @@
       <% end %>
     </div>
   <% end %>
-      <h1 style='margin-bottom: 2rem;'>Trainings</h1>
   <div class="trainings-title">
     <% if params[:search] %>
       <h3 class="training-update-text">Search</h3>

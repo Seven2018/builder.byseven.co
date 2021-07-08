@@ -41,7 +41,7 @@
         <% elsif !user_signed_in? %>
         <% else %>
           <%= render 'shared/navbar' %>
-          <%= render 'shared/left-navbar' %>
+          <%# render 'shared/left-navbar' %>
           <%= render 'shared/left-navbar-mobile' %>
         <% end %>
         <%= render 'shared/flashes' %>
@@ -60,8 +60,7 @@
   </div>
 </div>
 
-<script>
-  function resizeShow() {
+<!--   function resizeShow() {
     left_navbar = document.querySelector('.left-navbar');
     container = document.querySelector('.container-seven-large');
     page_controls = document.getElementById('page-controls');
@@ -80,9 +79,8 @@
       page_controls.style.width = window.innerWidth.toString() + 'px';
       container.style.width = window.innerWidth.toString() + 'px';
     }
-  }
-
-  open = document.querySelector('.left-navbar-control-open');
+  } -->
+  <!-- open = document.querySelector('.left-navbar-control-open');
   close = document.querySelector('.left-navbar-control-close');
   left_navbar = document.querySelector('.left-navbar');
   logo = document.querySelector('.left-navbar-logo');
@@ -132,7 +130,9 @@
       container.style.marginLeft = '60px';
       page_controls.style.width = (window.innerWidth - 120).toString() + 'px';
     }
-  })
+  }) -->
+<script>
+
 
   window.addEventListener('resize', resizeShow);
   lazyload();
