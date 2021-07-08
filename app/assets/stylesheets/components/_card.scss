@@ -795,6 +795,12 @@ $timeline: #115173;
   }
 }
 
+.card-title {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 #card-index:hover {
   box-shadow: 1px 1px 1rem rgba(0, 0, 0, 0.7);
   transition: 0.8s ease;

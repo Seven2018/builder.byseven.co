@@ -6,13 +6,13 @@
     <button type="button" class="btn btn-icon-close" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
   </div>
   <div class="modal-body" id="modalNewBookinBody">
-    <%= simple_form_for [@content, @theory_content] do |f| %>
-        <%= f.input :theory, :collection => Theory.all, :label_method => :name, include_blank: false %>
-  </div>
-  <div class="modal-footer" id="modalNewBookingFooter">
-    <div>
-      <%= f.submit "Link", class: 'btn btn-edit-yellow' %>
+    <%= simple_form_for :theory_content, url: content_manage_linked_theories_path(@content), method: :get do |f| %>
+      <%= collection_check_boxes(:content, :theory_ids, Theory.all, :id, :name) do |b| %>
+        <%= b.label class: 'label-checkbox' do %>
+          <%= b.check_box + b.text %>
+        <% end %>
       <% end %>
-    </div>
+      <%= f.button :submit, "Link", class: 'btn btn-edit-yellow' %>
+    <% end %>
   </div>
 </div>

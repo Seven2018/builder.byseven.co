@@ -39,9 +39,15 @@
           <ul class="dropdown-menu dropdown-menu-right navbar-wagon-dropdown-menu" aria-labelledby="dropdownMenuButton">
             <!-- <li><a data-toggle='modal' data-target='#addAttendees' data-toggle="tooltip" title="Add Participants">Add participants</a></li> -->
             <!-- <li><%# link_to 'Export PDF', training_path(@training, format: :pdf), target: :_blank %></li> -->
-            <li>
-              <div onmouseover='exportSubMenu(this);'>
+            <li onmouseover='exportSubMenu(this);'>
+              <div>
                 <p>Export PDF</p>
+                <div class="dropdown-pdf hidden">
+                  <%= simple_form_for :training, url: training_path(@training, format: :pdf), target: :_blank, method: :get do |f| %>
+                    <%= f.input :sessions, collection: @training.sessions, as: :check_boxes %>
+                    <%= f.submit 'Export', class: ' btn btn-edit-green' %>
+                  <% end %>
+                </div>
               </div>
             </li>
             <li><%= link_to 'Import Attendees', import_attendees_form_path(training_id: @training.id) %></li>
@@ -58,12 +64,6 @@
             <!-- <li><a data-toggle='modal' data-target='#createCertificate' data-toggle="tooltip" title="Create certificate">Create certificate</a></li> -->
             <!-- <li><%# link_to 'New Oblivion', new_training_oblivion_path(@training) %></li> -->
           </ul>
-          <div class="dropdown-pdf hidden">
-            <%= simple_form_for :training, url: training_path(@training, format: :pdf), target: :_blank, method: :get do |f| %>
-              <%= f.input :sessions, collection: @training.sessions, as: :check_boxes %>
-              <%= f.submit 'Export', class: ' btn btn-edit-green' %>
-            <% end %>
-          </div>
         </div>
       </div>
     <% else %>
@@ -343,8 +343,18 @@
   };
 
   function exportSubMenu(element) {
-    dropdown_pdf = element.parentNode.parentNode.parentNode.querySelector('.dropdown-pdf')
+    dropdown_pdf = element.parentNode.parentNode.querySelector('.dropdown-pdf')
     dropdown_pdf.classList.remove('hidden')
+
+    // element.addEventListener('mouseout', function(e) {
+      element.addEventListener('mouseout', function(f) {
+        console.log("test")
+        dropdown_pdf.classList.add('hidden')
+        element.removeEventListener('mouseout', arguments.callee, false);
+        // element.removeEventListener('mouseout', arguments.callee, false);
+        return
+      })
+    // })
 
     window.addEventListener('click', function(e) {
       if (outsideClick(e, dropdown_pdf)) {
