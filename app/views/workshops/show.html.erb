@@ -34,16 +34,16 @@
   <div class= "show-control-links">
     <div class="theory-buttons">
       <div class="theories-hover">
-        <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-          <% @workshop.theories.each do |theory|%>
-            <%= link_to theory.name, theory_path(theory) %>
-          <% end %>
-          <% unless @workshop.theories.present? %>
-            <p>Add a Theory</p>
-          <% end %>
-          <a data-toggle='modal' data-target='#newTheoryWorkshop'><i class="fas fa-plus"></i></a>
+        <% @workshop.theories.each do |theory|%>
+        <div class="theories-pill">
+          <%= link_to theory.name, theory_path(theory) %>
+          <%= link_to theory_path(theory), method: :delete, data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, remote: true do %>
+            <i class="fas fa-times" data-target='tooltip' title='Remove Theory'></i>
+         <% end %>
+        </div>
         <% end %>
       </div>
+        <a class='add-theory' data-toggle='modal' data-target='#newTheoryWorkshop' data-target='tooltip' title='Link Theory'><i class="fas fa-plus"></i></a>
     </div>
   </div>
   <div id="content-mods">

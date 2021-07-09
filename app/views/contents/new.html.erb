@@ -10,7 +10,7 @@
     <%= simple_form_for @content do |f| %>
       <%= f.input :title %>
       <%= f.association :theme, collection: Theme.order('name ASC'), include_blank: false, allow_blank: false %>
-      <p class="center-button"> <%= f.button :submit, 'Save', class: 'btn btn-edit-yellow' %> </p>
+      <p class="center-button"> <%= f.button :submit, 'Create', class: 'btn btn-edit-yellow' %> </p>
     <% end %>
   </div>
 </div>

@@ -25,6 +25,9 @@ class TheoryContentsController < ApplicationController
     theory = Theory.find(params[:theory_content][:theory])
     theory_content = TheoryContent.where(content: content).where(theory: theory)
     theory_content.first.destroy
-    redirect_back(fallback_location: root_path)
+    respond_to do |format|
+      format.html {redirect_back(fallback_location: root_path)}
+      format.js
+    end
   end
 end
