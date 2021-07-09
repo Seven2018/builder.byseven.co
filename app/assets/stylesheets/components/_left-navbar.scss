@@ -163,33 +163,33 @@
   list-style: none;
 }
 
-// .dropdown-menu {
-//   z-index: 1000;
-//   min-width: unset;
-//   padding: 0 !important;
+.dropdown-menu {
+  z-index: 1000;
+  min-width: unset;
+  padding: 0 !important;
 
-//   li {
-//     padding: 20px;
-//   }
+  li {
+    padding: 20px;
+  }
 
-//   li:hover {
-//     background-color: rgba(0, 0, 0, 0.05);
-//   }
-// }
+  li:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}
 
-// .dropdown-menu-center {
-//   top: 100% !important;
-//   right: 0 !important;
-//   left: 0 !important;
-//   -webkit-transform: translate(0, 0) !important;
-//   -o-transform: translate(0, 0) !important;
-//   transform: translate(0, 0) !important;
-// }
+.dropdown-menu-center {
+  top: 100% !important;
+  right: 0 !important;
+  left: 0 !important;
+  -webkit-transform: translate(0, 0) !important;
+  -o-transform: translate(0, 0) !important;
+  transform: translate(0, 0) !important;
+}
 
-// .dropdown-menu-right {
-//   right: auto;
-//   left: auto;
-// }
+.dropdown-menu-right {
+  right: auto;
+  left: auto;
+}
 
 .left-buttons {
   font-size: 0.8rem;
