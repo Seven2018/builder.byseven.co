@@ -21,10 +21,10 @@ class TheoryContentsController < ApplicationController
   # Delete selected theory_content (contents/show)
   def remove_linked_theory
     skip_authorization
-    content = Content.find(params[:content_id])
-    theory = Theory.find(params[:theory_content][:theory])
-    theory_content = TheoryContent.where(content: content).where(theory: theory)
-    theory_content.first.destroy
+    @content = Content.find(params[:content_id])
+    theory = Theory.find(params[:theory_id])
+    theory_content = TheoryContent.find_by(content_id: @content.id, theory_id: theory.id)
+    theory_content.destroy
     respond_to do |format|
       format.html {redirect_back(fallback_location: root_path)}
       format.js
