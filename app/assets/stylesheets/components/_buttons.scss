@@ -687,7 +687,6 @@ input[type='checkbox'] {
 
 
 .theories-hover {
-  color: #FDC553;
   font-weight: 500;
   border-radius: 25px;
   display: flex;
@@ -695,12 +694,37 @@ input[type='checkbox'] {
   align-items: center;
   justify-content: flex-start;
   padding: 5px;
-
-  a {
+  flex-wrap: wrap;
+  .theories-pill {
+    border: 1px solid #FDC553;
     margin-right: 1rem;
-
-    &:first-of-type {
-      margin-left: 1rem;
+    background-color: #FFF1D5;
+    padding: 5px 8px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-shadow: 10px 10px 16px -5px rgba(0,0,0,0.1);
+    i {
+      color: #FDC553;
+      margin-left: 10px;
     }
+  }
+  .theories-pill:hover {
+    box-shadow: 10px 10px 16px -5px rgba(0,0,0,0.4);
+
+  }
+}
+
+.theory-buttons {
+  display: flex;
+  align-items: baseline;
+}
+
+.add-theory {
+  i {
+  color: #FDC553;
+  &:hover {
+    opacity: 80%;
+  }
+
   }
 }

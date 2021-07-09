@@ -25,6 +25,9 @@ class TheoryWorkshopsController < ApplicationController
     theory = Theory.find(params[:theory_workshop][:theory])
     theory_workshop = TheoryWorkshop.where(workshop: workshop).where(theory: theory)
     theory_workshop.first.destroy
-    redirect_back(fallback_location: root_path)
+    respond_to do |format|
+      format.html {redirect_back(fallback_location: root_path)}
+      format.js
+    end
   end
 end
