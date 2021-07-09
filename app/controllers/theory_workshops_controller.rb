@@ -21,10 +21,10 @@ class TheoryWorkshopsController < ApplicationController
   # Delete selected theory_workshop (workshops/show)
   def remove_linked_theory
     skip_authorization
-    workshop = Workshop.find(params[:workshop_id])
-    theory = Theory.find(params[:theory_workshop][:theory])
-    theory_workshop = TheoryWorkshop.where(workshop: workshop).where(theory: theory)
-    theory_workshop.first.destroy
+    @workshop = Workshop.find(params[:workshop_id])
+    theory = Theory.find(params[:theory_id])
+    theory_workshop = TheoryWorkshop.find_by(workshop_id: @workshop.id, theory_id: theory.id)
+    theory_workshop.destroy
     respond_to do |format|
       format.html {redirect_back(fallback_location: root_path)}
       format.js

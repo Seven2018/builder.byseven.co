@@ -1,1 +1,1 @@
-document.querySelector('.theory-buttons').innerHTML = '<%= j render("theory_workshops/manage_linked_theories, workshop_theories: @workshop_theories) %>';
+document.querySelector('.theory-buttons').innerHTML = '<%= j render("workshops/workshop_theories", workshop: @workshop) %>';
