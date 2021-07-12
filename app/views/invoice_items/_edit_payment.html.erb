@@ -7,7 +7,7 @@
   </div>
   <div class="modal-body">
     <%= simple_form_for :edit_payment, url: marked_as_paid_invoice_item_path(item), method: 'GET' do |f| %>
-      <%= f.input :payment_date, as: :string, input_html: { class: 'datepicker'} %>
+      <%= f.input :payment_date, as: :string, input_html: { class: 'datepicker', value: item.payment_date.to_s} %>
       <div class='modal-control'>
         <%= button_tag type: 'submit', class: 'btn btn-edit-green btn-icon', data: { toggle: 'tooltip' }, title: 'Save' do %>
           <i class="fas fa-save"></i>

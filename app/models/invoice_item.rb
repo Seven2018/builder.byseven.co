@@ -103,6 +103,9 @@ class InvoiceItem < ApplicationRecord
       else
         invoice['Paid'] = false
       end
+      if self.sending_date.present?
+        invoice['Sending Date'] = self.sending_date.strftime('%Y-%m-%d')
+      end
       if self.status == "Cancelled"
         invoice['Type'] = 'Cancelled'
       elsif self.status == "Credit"
