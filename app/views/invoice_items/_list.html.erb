@@ -38,7 +38,7 @@
             <!-- MODAL -->
             <div class="modal fade" id="editSending<%= item.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
               <div class="modal-dialog" role="document" style="border-radius: 2rem">
-                <%= render 'edit_sending', item: item %>
+                <%= render 'invoice_items/edit_sending', item: item %>
               </div>
             </div>
             <a class='btn btn-icon' data-toggle='modal' type='button' data-target='#editPayment<%= item.id %>' style='cursor:pointer;'>
@@ -47,7 +47,7 @@
             <!-- MODAL -->
             <div class="modal fade" id="editPayment<%= item.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
               <div class="modal-dialog" role="document" style="border-radius: 2rem">
-                <%= render 'edit_payment', item: item %>
+                <%= render 'invoice_items/edit_payment', item: item %>
               </div>
             </div>
             <!--  -->

@@ -346,6 +346,7 @@ class InvoiceItemsController < ApplicationController
   def marked_as_send
     authorize @invoice_item
     @invoice_item.update(sending_date: params[:edit_sending][:sending_date], status: 'Send')
+    UpdateAirtableJob.perform_async(@invoice_item.training, false, @invoice_item)
     redirect_back(fallback_location: invoice_item_path(@invoice_item))
   end
 

@@ -34,11 +34,12 @@ class User < ApplicationRecord
   end
 
   def export_airtable_user
-    existing_user = OverviewUser.all.select{|x| x['Builder_id'] == self.id}&.first
+    existing_user = OverviewUser.all.select{|x| x['Builder_id'] == self.id || x['Email'] == self.email}&.first
     if existing_user.present?
       existing_user['Firstname'] = self.firstname
       existing_user['Lastname'] = self.lastname
       existing_user['Email'] = self.email
+      existing_user['Builder_id'] = self.id
     else
       existing_user = OverviewUser.create('Firstname' => self.firstname, 'Lastname' => self.lastname, 'Email' => self.email, 'Builder_id' => self.id)
     end
