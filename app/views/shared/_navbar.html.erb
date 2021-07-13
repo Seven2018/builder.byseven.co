@@ -57,6 +57,18 @@
           <% end %>
         </li>
         <li>
+          <% if params[:action] == 'companies' || params[:controller] == 'companies' %>
+            <%= link_to client_companies_path, class: 'left-buttons' do %>
+              <div class="left-menu-title " style='color: #FFC447;'><h4>Clients</h4></div>
+            <% end %>
+              <div class="isactive"></div>
+          <% else %>
+            <%= link_to users_path, class: 'left-buttons' do %>
+              <div class="left-menu-title"><h4>Clients</h4></div>
+            <% end %>
+          <% end %>
+        </li>
+        <li>
            <% if params[:action] == 'actions' || params[:controller] == 'actions' %>
             <%= link_to actions_path, class: 'left-buttons' do %>
               <div class="left-menu-title " style='color: #FFC447;'><h4>Actions</h4></div>
