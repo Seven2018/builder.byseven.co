@@ -16,7 +16,7 @@
       <% end %>
     <% end %>
     <div class='billing-index-category'>
-      <h2>Invoices To Do</h2>
+      <h2>Pending</h2>
      <table class="invoices-to-do">
       <tbody>
         <tbody>
@@ -25,7 +25,7 @@
           <th>Date</th>
           <th>Training Status</th>
           <th>Invoices</th>
-          <th>Total Due</th>
+          <th>Total Paid</th>
           <th></th>
         </tr>
         <% if to_pay.empty? %>
@@ -52,7 +52,7 @@
             <td>
               <% if training.end_time.present? && training.end_time < Date.today %>
                 <%= training.start_time.strftime("%b %d") %> - <%= training.end_time.strftime("%b %d, %Y") %>
-              <% else %>
+              <% elsif training.end_time.present? %>
                 <div style='display: flex;'><p><%= training.start_time.strftime("%b %d") %> - </p><p style='font-style: italic; margin-left: 2px;'> <%= training.end_time.strftime("%b %d, %Y") %></p></div>
               <% end %>
             </td>
@@ -119,7 +119,7 @@
     </table>
     </div>
     <div class='billing-index-category'>
-      <h2 style='color:#888888'>Treated Invoices</h2>
+      <h2 style='color:#888888'>Archived</h2>
         <table class='completed'>
         <tr>
           <th>Training</th>
@@ -160,7 +160,7 @@
               </td>
               <td>
                 <% total_due = intervention['Total Due (excl. VAT)'].to_f - intervention['Total Paid'].to_f %>
-                <p><%= total_due %>€</p></td>
+                <p><%= intervention['Total Paid'].to_f %>€</p></td>
               <td>
                 <% unless total_due == 0 %>
                   <%= link_to invoice_form_path(training), class: 'btn btn-edit-green btn-icon invisible', data: {toggle:'tooltip'}, title: 'Submit an invoice' do %>
