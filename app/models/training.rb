@@ -73,6 +73,10 @@ class Training < ApplicationRecord
     SessionTrainer.where(session_id: [self.sessions.ids]).includes([:user]).map{|x| x.user}.uniq
   end
 
+  def trainer_last_session(trainer)
+    self.sessions.joins(:session_trainers).where(session_trainers: {user_id: trainer.id}).order(date: :asc).last.date
+  end
+
   def attendees
     SessionAttendee.where(session_id: [self.sessions.ids]).map{|x| x.attendee}.uniq
   end
