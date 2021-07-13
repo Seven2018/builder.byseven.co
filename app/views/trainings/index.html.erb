@@ -72,7 +72,6 @@
     </div>
   <% end %>
   <div class="trainings-title">
-
       <div class="flex-row-start-centered">
         <h3 class="training-update-text training-update-text-upcoming active" onclick="switchView(this)">Upcoming</h3>
         <h3 class="training-update-text training-update-text-completed" onclick="switchView(this)">Completed</h3>
@@ -108,24 +107,30 @@
   function switchView(element) {
     button_upcoming = document.querySelector('.training-update-text-upcoming')
     button_completed = document.querySelector('.training-update-text-completed')
-    button_home = document.querySelector('.training-update-text-home')
+    if (document.querySelector('.training-update-text-home') != null) {
+      button_home = document.querySelector('.training-update-text-home')
+    }
     row_upcoming = document.querySelector('.trainings-row-upcoming')
     row_completed = document.querySelector('.trainings-row-completed')
     row_home = document.querySelector('.trainings-row-home')
     if (element == button_upcoming) {
       element.classList.add('active')
       button_completed.classList.remove('active')
-      button_home.classList.remove('active')
+      if (document.querySelector('.training-update-text-home') != null) {
+        button_home.classList.remove('active')
+        row_home.classList.add('hidden')
+      }
       row_upcoming.classList.remove('hidden')
       row_completed.classList.add('hidden')
-      row_home.classList.add('hidden')
     } else if (element == button_completed) {
       element.classList.add('active')
       button_upcoming.classList.remove('active')
-      button_home.classList.remove('active')
+      if (document.querySelector('.training-update-text-home') != null) {
+        button_home.classList.remove('active')
+        row_home.classList.add('hidden')
+      }
       row_upcoming.classList.add('hidden')
       row_completed.classList.remove('hidden')
-      row_home.classList.add('hidden')
     } else {
       element.classList.add('active')
       button_upcoming.classList.remove('active')

@@ -28,8 +28,8 @@ class TrainingsController < ApplicationController
         trainings = ((Training.where("unaccent(lower(title)) LIKE ?", "%#{I18n.transliterate(params[:search][:title].downcase)}%")).select{|x| x.trainers.include?(current_user)} + (Training.joins(client_contact: :client_company).where("lower(client_companies.name) LIKE ?", "%#{params[:search][:title].downcase}%").select{|x| x.trainers.include?(current_user)})).flatten(1).uniq
       # Trainings index involving current user (Sevener)
       else
-        trainings = (Training.joins(sessions: :users).where(users: {id: current_user.id}).uniq.select{|x| if (sessions = Session.joins(:session_trainers).where(training_id: x.id, session_trainers: {user_id: current_user.id}).order(date: :asc).reject{|c| !c.date.present?}).present?; sessions.last.date >= Date.today; end;}.sort_by{|y| y.next_session} + Training.joins(sessions: :users).where(sessions: {date: nil}, users: {id: current_user.id}).uniq).uniq
-        @trainings_count = @trainings.count
+        # trainings = (Training.joins(sessions: :users).where(users: {id: current_user.id}).uniq.select{|x| if (sessions = Session.joins(:session_trainers).where(training_id: x.id, session_trainers: {user_id: current_user.id}).order(date: :asc).reject{|c| !c.date.present?}).present?; sessions.last.date >= Date.today; end;}.sort_by{|y| y.next_session} + Training.joins(sessions: :users).where(sessions: {date: nil}, users: {id: current_user.id}).uniq).uniq
+        trainings = Training.joins(sessions: :users).where(users: {id: current_user.id}).uniq.select{|x| (x.end_time.present? && x.end_time >= Date.today && x.trainer_last_session(current_user) >= Date.today)}
       end
     end
     @upcoming_trainings = trainings_ordered(trainings, 'upcoming')
@@ -50,7 +50,6 @@ class TrainingsController < ApplicationController
   #   # Index for Sevener Users, with limited visibility
   #   else
   #     @trainings = (Training.joins(sessions: :users).where(users: {id: current_user.id}).uniq.select{|x| if (sessions = Session.joins(:session_trainers).where(training_id: x.id, session_trainers: {user_id: current_user.id}).order(date: :asc).reject{|c| !c.date.present?}).present?; sessions.last.date >= Date.today; end;}.sort_by{|y| y.next_session} + Training.joins(sessions: :users).where(sessions: {date: nil}, users: {id: current_user.id}).uniq).uniq
-  #     @trainings_count = @trainings.count
   #   end
   #   skip_authorization
   #   render partial: "index_upcoming"
@@ -70,10 +69,12 @@ class TrainingsController < ApplicationController
         trainings = Training.all
       end
     # Index for Sevener Users, with limited visibility
+      @trainings = trainings_ordered(trainings, 'completed')
     else
-      trainings = (Training.joins(sessions: :users).where(users: {id: current_user.id}).uniq.select{|x| Session.joins(:session_trainers).where(training_id: x.id, session_trainers: {user_id: current_user.id}).order(date: :asc).reject{|c| !c.date.present?}.last.date < Date.today}.sort_by{|y| y.end_time}.reverse - Training.joins(sessions: :users).where(sessions: {date: nil}, users: {id: current_user.id}).uniq).uniq
+      # trainings = (Training.joins(sessions: :users).where(users: {id: current_user.id}).uniq.select{|x| Session.joins(:session_trainers).where(training_id: x.id, session_trainers: {user_id: current_user.id}).order(date: :asc).reject{|c| !c.date.present?}.last.date < Date.today}.sort_by{|y| y.end_time}.reverse - Training.joins(sessions: :users).where(sessions: {date: nil}, users: {id: current_user.id}).uniq).uniq
+      trainings = Training.joins(sessions: :users).where(users: {id: current_user.id}).uniq.select{|x| x.end_time.present? && (x.end_time < Date.today || (x.end_time >= Date.today && x.trainer_last_session(current_user) < Date.today))}
+      @trainings = trainings.sort_by{|y| y.trainer_last_session(current_user)}.reverse
     end
-    @trainings = trainings_ordered(trainings, 'completed')
     skip_authorization
     render partial: "index_completed"
   end
