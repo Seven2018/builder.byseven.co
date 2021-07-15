@@ -172,28 +172,28 @@
             </tr>
           </tbody>
           <tbody class='hide hidden'>
-           <tr>
             <% total = 0 %>
             <% invoices.each do |invoice| %>
-              <td>
-                <% invoice = OverviewInvoiceSevener.find(invoice) %>
-                <p style='padding-left:20px;'>Invoice n°<%= invoice['Invoice number'] %></p>
-              </td>
-              <td></td>
-              <td></td>
-              <td>
-               <p><%= invoice['Amount'] %>€</p>
-              </td>
-              <td>
-                <% if invoice['Status'] == 'Paid' %>
-                  <div class='status'><i class="far fa-check-circle" data-toggle='tooltip' title='Paid' style='color:#004b23;'></i> <p style='color:#004b23;'>Paid</p></div>
-                <% else %>
-                  <div class='status'><i class="fas fa-hourglass-half" data-toggle='tooltip' title='Pending' style='color:#f3722c;'></i><p style='color:#f3722c;'>Pending</p></div>
-                <% end %>
-              </td>
-              <td></td>
-              <% end %>
-            </tr>
+              <tr>
+                <td>
+                  <% invoice = OverviewInvoiceSevener.find(invoice) %>
+                  <p style='padding-left:20px;'>Invoice n°<%= invoice['Invoice number'] %></p>
+                </td>
+                <td></td>
+                <td></td>
+                <td>
+                 <p><%= invoice['Amount'] %>€</p>
+                </td>
+                <td>
+                  <% if invoice['Status'] == 'Paid' %>
+                    <div class='status'><i class="far fa-check-circle" data-toggle='tooltip' title='Paid' style='color:#004b23;'></i> <p style='color:#004b23;'>Paid</p></div>
+                  <% else %>
+                    <div class='status'><i class="fas fa-hourglass-half" data-toggle='tooltip' title='Pending' style='color:#f3722c;'></i><p style='color:#f3722c;'>Pending</p></div>
+                  <% end %>
+                </td>
+                <td></td>
+              </tr>
+            <% end %>
           </tbody>
         </tbody>
       <% end %>
