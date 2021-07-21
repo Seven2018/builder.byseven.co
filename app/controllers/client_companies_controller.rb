@@ -19,7 +19,7 @@ before_action :authenticate_user!, except: [:new_attendees, :create_attendees]
 
   def create
     reference = (ClientCompany.where.not(reference: nil).order(id: :asc).last.reference[-8..-1].to_i + 1).to_s.rjust(8, '0') if ClientCompany.all.count != 0
-    @client_company = ClientCompany.new(clientcompany_params.merge(referece: reference))
+    @client_company = ClientCompany.new(clientcompany_params.merge(reference: reference))
     authorize @client_company
     @client_company.save ? (redirect_to client_company_path(@client_company)) : (render :new)
   end
