@@ -179,12 +179,12 @@ class Training < ApplicationRecord
   def export_numbers_activity
     # begin
       activities = OverviewNumbersActivity.all(filter: "{Builder_id} = #{self.id}")
+      activities.each{|record| record.destroy}
       updated = []
       card = OverviewTraining.all(filter: "{Builder_id} = '#{self.id}'")&.first
       self.sessions.each do |session|
         if session.date.present?
           session.session_trainers.each do |trainer|
-            new_activity = activities.select{|x| x['Training'] == [card.id] && x['Date'] == session.date.strftime('%Y-%m-%d') && x['Trainer'] == [OverviewUser.all(filter: "{Builder_id} = '#{trainer.user_id}'")&.first&.id]}.first
             new_activity = OverviewNumbersActivity.create('Training' => [card.id], 'Date' => session.date.strftime('%Y-%m-%d'), 'Trainer' => [OverviewUser.all(filter: "{Builder_id} = '#{trainer.user_id}'")&.first&.id]) unless new_activity.present?
             new_activity['Hours'] = session.duration
             if card['Unit Type'] == 'Hour'
