@@ -74,7 +74,7 @@ class Training < ApplicationRecord
   end
 
   def trainer_last_session(trainer)
-    self.sessions.joins(:session_trainers).where(session_trainers: {user_id: trainer.id}).order(date: :asc).last.date
+    self.sessions.joins(:session_trainers).where(session_trainers: {user_id: trainer.id}).where.not(date: nil).order(date: :asc).last.date
   end
 
   def attendees
