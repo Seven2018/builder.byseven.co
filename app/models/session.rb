@@ -19,6 +19,10 @@ class Session < ApplicationRecord
     "#{self.title} - #{self.date&.strftime('%d/%m/%y')}"
   end
 
+  def period
+    start_time..end_time
+  end
+
   def self.send_reminders
     Session.where(date: Date.today + 2.days).each do |session|
       session.users.each do |user|

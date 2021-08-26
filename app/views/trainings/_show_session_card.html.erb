@@ -119,6 +119,20 @@
       <% session_number = session.training.sessions.order(date: :asc).find_index(session) + 1 %>
     </div>
     <div class='sessions-footer'>
+      <div class="sessions-alert">
+        <% unavailable = [] %>
+        <% SessionTrainer.joins(:session).where(sessions: {date: session.date}, user_id: session.session_trainers.map(&:user_id)).group_by{|y| y.user_id}.each do |key, value| %>
+          <% if value.count > 1 %>
+            <% is_overlapping = value.sort_by{|x| x.session.start_time}.each_cons(2).any? do |x,y| %>
+              <% x.session.period.last > y.session.period.first %>
+            <% end %>
+            <% unavailable << User.find(key).fullname if is_overlapping %>
+          <% end %>
+        <% end %>
+        <% if unavailable.count > 0 %>
+          <p class='error'>Sevener(s) non disponible(s) : <%= unavailable.sort.join(', ') %></p>
+        <% end %>
+      </div>
       <div class='sessions-copy'>
         <h4 class='card-session-number'><%= session_number %>/<%= session.training.sessions.count %> </h4>
       <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
