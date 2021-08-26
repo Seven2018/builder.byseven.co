@@ -32,4 +32,17 @@ class Session < ApplicationRecord
       # Training.joins(sessions: :session_attendees).where()
     end
   end
+
+  def copy_workshops(target)
+    self.workshops.each do |workshop|
+      new_workshop = Workshop.new(workshop.attributes.except("id", "created_at", "updated_at", "session_id"))
+      new_workshop.session_id = target
+      new_workshop.save
+      workshop.workshop_modules.each do |mod|
+        new_module = WorkshopModule.new(mod.attributes.except("id", "created_at", "updated_at", "workshop_id"))
+        new_module.workshop_id = new_workshop.id
+        new_module.save
+      end
+    end
+  end
 end
