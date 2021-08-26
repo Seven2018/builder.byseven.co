@@ -2,17 +2,14 @@
   <div id='billing-index'>
     <% to_pay = [] %>
     <% paid = [] %>
-    <% Training.joins(sessions: :session_trainers).where(sessions: {session_trainers: {user_id: current_user.id}}).uniq.each do |training| %>
-      <%# intervention = OverviewNumbersSevener.all.select{|x| x['Training_id'] == training.id && x['User_id'] == current_user.id}.first %>
-      <%# intervention = OverviewNumbersSevener.all(filter: "Training_id = '#{training.id}'" && "User_id = '#{current_user.id}'").first %>
-      <% intervention = OverviewNumbersSevener.all(filter: "Training_id = '#{training.id}'") %>
-      <% if intervention.present? %>
-        <% intervention = intervention.select{|x| x['User_id'] == current_user.id}.first %>
-        <% if intervention['Total Due (excl. VAT)'].to_f - intervention['Total Paid'].to_f <= 0 %>
-          <% paid << {training: training, intervention: intervention} %>
-        <% else %>
-          <% to_pay << {training: training, intervention: intervention} %>
-        <% end %>
+    <% OverviewNumbersSevener.all(filter: "User_id = '#{current_user.id}'").sort_by{|x| x['Due Date (Training)']}.each do |intervention| %>
+      <% training = Training.find_by(id: intervention['Training_id']) %>
+      <% next if training.nil? %>
+      <% next if training.end_time.nil? %>
+      <% if intervention['Total Due (excl. VAT)'].to_f - intervention['Total Paid'].to_f <= 0 %>
+        <% paid << {training: training, intervention: intervention} %>
+      <% else %>
+        <% to_pay << {training: training, intervention: intervention} %>
       <% end %>
     <% end %>
     <div class='billing-index-category'>
@@ -21,6 +18,7 @@
       <tbody>
         <tbody>
         <tr>
+          <th>Company/School</th>
           <th>Training</th>
           <th>Date</th>
           <th>Training Status</th>
@@ -44,27 +42,28 @@
           <tr>
             <td>
               <% if invoices.count != 0 %>
-                <a class='btn-link' onclick='showInvoice(this);'><i class="fas fa-angle-down"></i> <p><b><%= training.title %></b></p></a>
+                <a class='btn-link' onclick='showInvoice(this);'><i class="fas fa-angle-down"></i> <p><b><%= training.client_company.name %></b></p></a>
               <% else %>
-                <p style='padding-left:20px;'><b><%= training.title %></b></p></a>
+                <p style='padding-left:20px;'><b><%= training.client_company.name %></b></p></a>
               <% end %>
             </td>
             <td>
-              <% if training.end_time.present? && training.end_time < Date.today %>
+              <p><b><%= training.title %></b></p>
+            </td>
+            <td>
+              <% if training.end_time.present? %>
                 <%= training.start_time.strftime("%b %d") %> - <%= training.end_time.strftime("%b %d, %Y") %>
-              <% elsif training.end_time.present? %>
-                <div style='display: flex;'><p><%= training.start_time.strftime("%b %d") %> - </p><p style='font-style: italic; margin-left: 2px;'> <%= training.end_time.strftime("%b %d, %Y") %></p></div>
               <% end %>
             </td>
             <td>
               <% if training.end_time.present? && training.end_time < Date.today %>
-              <div class="completed-btn">
-                <p>Completed</p>
-              </div>
-              <% else %>
-              <div class="ongoing-btn">
-                <p>Ongoing</p>
-              </div>
+                <div class="completed-btn">
+                  <p>Completed</p>
+                </div>
+                <% else %>
+                <div class="ongoing-btn">
+                  <p>Ongoing</p>
+                </div>
               <% end %>
             </td>
             <td>
