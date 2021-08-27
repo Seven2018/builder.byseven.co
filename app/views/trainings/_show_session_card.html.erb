@@ -130,7 +130,9 @@
           <% end %>
         <% end %>
         <% if unavailable.count > 0 %>
-          <p class='error'>Sevener(s) non disponible(s) : <%= unavailable.sort.join(', ') %></p>
+          <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
+            <p class='error'>Sevener(s) non disponible(s) : <%= unavailable.sort.join(', ') %></p>
+          <% end %>
         <% end %>
       </div>
       <div class='sessions-copy'>
