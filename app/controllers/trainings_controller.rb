@@ -6,7 +6,19 @@ class TrainingsController < ApplicationController
     # Scope : all trainings
     trainings = policy_scope(Training)
     # Scope : search trainings
-    trainings = ((trainings.where("unaccent(lower(title)) LIKE ?", "%#{I18n.transliterate(params[:search][:title].downcase)}%")) + (trainings.joins(client_contact: :client_company).where("lower(client_companies.name) LIKE ?", "%#{params[:search][:title].downcase}%"))).flatten(1).uniq if params[:search].present? && !params[:search][:user].present? && !params[:user].present?
+    # trainings = ((trainings.where("unaccent(lower(title)) LIKE ?", "%#{I18n.transliterate(params[:search][:title].downcase)}%")) + (trainings.joins(client_contact: :client_company).where("lower(client_companies.name) LIKE ?", "%#{params[:search][:title].downcase}%"))).flatten(1).uniq if params[:search].present? && !params[:search][:user].present? && !params[:user].present?
+    # raise if params[:search]
+
+    if params[:search].present?
+      words_splited = params[:search][:title].split
+      new_trainings = trainings.where("unaccent(title) ILIKE ?", "%#{words_splited.first}%")
+      words_splited.each do |word| 
+        new_trainings = new_trainings.where("unaccent(title) ILIKE ?", "%#{word}%")
+      end
+      trainings = new_trainings
+    end
+
+    # trainings = ((trainings.where("unaccent(lower(title)) LIKE ?", "%#{I18n.transliterate(params[:search][:title].downcase)}%")) + (trainings.joins(client_contact: :client_company).where("lower(client_companies.name) LIKE ?", "%#{params[:search][:title].downcase}%"))).flatten(1).uniq if params[:search].present? && !params[:search][:user].present? && !params[:user].present?
 
     # If user in team SEVEN
     if ['super admin', 'admin', 'project manager'].include?(current_user.access_level)
