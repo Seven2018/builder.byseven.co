@@ -121,6 +121,7 @@
       <h2 style='color:#888888'>Archived</h2>
         <table class='completed'>
         <tr>
+          <th>Company/School</th>
           <th>Training</th>
           <th>Date</th>
           <th>Invoices</th>
@@ -146,10 +147,13 @@
             <tr>
               <td>
                 <% if invoices.count != 0 %>
-                  <a class='btn-link' onclick='showInvoice(this);'><i class="fas fa-angle-down"></i> <p><b><%= training.title %></b></p></a>
+                  <a class='btn-link' onclick='showInvoice(this);'><i class="fas fa-angle-down"></i> <p><b><%= training.client_company.name %></b></p></a>
                 <% else %>
-                  <p style='padding-left:20px;'><b><%= training.title %></b></p>
+                  <p style='padding-left:20px;'><b><%= training.client_company.name %></b></p>
                 <% end %>
+              </td>
+              <td>
+                <p><b><%= training.title %></b></p>
               </td>
               <td>
                 <%= training.start_time.strftime("%b %d") %> - <%= training.end_time.strftime("%b %d, %Y") %>

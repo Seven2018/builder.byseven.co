@@ -92,7 +92,7 @@
       <% end %>
       <div style='display:flex;align-items:center;position: absolute;right: 0px;top: -60px;'>
         <ul id="owner-session-index">
-          <% session.users.each do |user| %>
+          <% session.users.order(firstname: :asc).each do |user| %>
             <li>
               <% if user.picture.present? %>
                 <a class="ava2" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-trainer' data-placement="bottom" title='Trainer:  <%= "#{user.fullname}" %>'></a>

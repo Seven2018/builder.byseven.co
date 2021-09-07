@@ -20,11 +20,6 @@
         <%= link_to update_calendar_path(training_id: @training.id), class: "btn-icon-red", data: { toggle: 'tooltip'}, title: 'Update Calendar' do %>
           <i class="fas fa-calendar-check" style='font-size: 20px'></i>
         <% end %>
-        <% if @airtable_training.present? %>
-          <%= link_to training_path(@training, task: 'update_airtable'), class: "btn-icon-yellow", data: { toggle: 'tooltip'}, title: "Sync with Airtable - Last sync : #{@airtable_training['Builder Update'].to_time.strftime('%d/%m/%Y at %H:%M')}" do %>
-            <span class="iconify" data-icon="simple-icons:airtable" data-inline="false"></span>
-          <% end %>
-        <% end %>
         <a class='btn-icon-grey' id='add-session-button' data-toggle='modal' data-target='#newSession' data-toggle="tooltip" title="Add Session"><i class="fas fa-plus"></i></a>
         <a class='btn-icon-grey' data-toggle='modal' data-target='#copyTraining' data-toggle="tooltip" title="Copy"><i class="fas fa-copy"></i></a>
         <div class="dropdown">
@@ -43,7 +38,7 @@
               <div>
                 <p>Export PDF</p>
                 <div class="dropdown-pdf hidden">
-                  <%= simple_form_for :training, url: training_path(@training, format: :pdf), target: :_blank, method: :get do |f| %>
+                  <%= simple_form_for :training, url: training_path(@training, format: :pdf), html: { target: "_blank" }, method: :get do |f| %>
                     <%= f.input :sessions, collection: @training.sessions, as: :check_boxes %>
                     <%= f.submit 'Export', class: ' btn btn-edit-green' %>
                   <% end %>

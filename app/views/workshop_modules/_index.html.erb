@@ -16,9 +16,9 @@
       <div class="module-card-main">
         <div class="module-card-infos">
           <% if i % 2 == 1 %>
-            <h4><%= link_to mod.title, training_session_workshop_workshop_module_path(@workshop.session.training, @workshop.session, @workshop, mod), style: "color:#4AC2C7;" %></h4>
+            <h4 style='color: #4AC2C7;'><%= mod.title %></h4>
           <% else %>
-            <h4><%= link_to mod.title, training_session_workshop_workshop_module_path(@workshop.session.training, @workshop.session, @workshop, mod), style: "color:#E64259;" %></h4>
+            <h4 style='color: #E64259;'><%= mod.title %></h4>
           <% end %>
           <% i += 1 %>
           <% if mod.instructions != ''  %>
