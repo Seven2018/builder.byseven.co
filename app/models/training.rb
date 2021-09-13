@@ -21,7 +21,8 @@ class Training < ApplicationRecord
   pg_search_scope :search_by_title_and_company,
     against: [ :title ],
     associated_against: {
-      client_company: :name
+      client_company: :name,
+      users: [:firstname, :lastname]
     },
     using: {
       tsearch: { prefix: true }
