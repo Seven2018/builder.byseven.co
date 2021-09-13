@@ -17,7 +17,7 @@ class User < ApplicationRecord
   require 'net/http'
 
   def fullname
-    "#{firstname} #{lastname}"
+    "#{firstname.capitalize} #{lastname.upcase}"
   end
 
   def initials

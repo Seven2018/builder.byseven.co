@@ -98,7 +98,7 @@ Rails.application.routes.draw do
       get 'workshops/:id/copy_form', to: 'workshops#copy_form', as: 'copy_form_workshop'
       get 'workshops/:id/copy', to: 'workshops#copy', as: 'copy_workshop'
       resources :workshops, only: [:show, :create, :edit, :update, :destroy] do
-        resources :workshop_modules, only: [:create, :edit, :update, :destroy]
+        resources :workshop_modules, only: [:show, :new, :create, :edit, :update, :destroy]
         get 'workshop_modules_viewer/:id', to: 'workshop_modules#viewer', as: 'workshop_module_viewer'
         get 'workshop_modules/:id/move_up', to: 'workshop_modules#move_up', as: 'move_up_workshop_module'
         get 'workshop_modules/:id/move_down', to: 'workshop_modules#move_down', as: 'move_down_workshop_module'

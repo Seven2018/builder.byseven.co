@@ -8,7 +8,7 @@
   <div class="modal-body" id="modalNewBookinBody" style='display:flex;flex-direction:column;align-items:center;'>
     <%= simple_form_for :trainers, url: trainer_notification_email_path(training), method: 'GET' do |f| %>
         <div style=" display:flex;justify-content:space-between;flex-direction:column;">
-          <%= collection_check_boxes(:session, :user_ids, User.select{|x| Training.last.trainers.select{|x| ['sevener+','sevener'].include?(x.access_level)}.include?(x)}, :id, :fullname) do |b| %>
+          <%= collection_check_boxes(:session, :user_ids, User.select{|x| training.trainers.include?(x)}, :id, :fullname) do |b| %>
             <%= b.label class: 'label-checkbox' do %>
               <%= b.check_box + b.text %>
             <% end %>
