@@ -7,7 +7,9 @@ class TrainingsController < ApplicationController
     trainings = policy_scope(Training)
     # Scope : search trainings
 
+    #########################################
     # SEARCH TRAININGS
+
     # METHODE BRICE PAS MULTIPLES TERMS
     # trainings = ((trainings.where("unaccent(lower(title)) LIKE ?", "%#{I18n.transliterate(params[:search][:title].downcase)}%")) + (trainings.joins(client_contact: :client_company).where("lower(client_companies.name) LIKE ?", "%#{params[:search][:title].downcase}%"))).flatten(1).uniq if params[:search].present? && !params[:search][:user].present? && !params[:user].present?
 
@@ -17,19 +19,21 @@ class TrainingsController < ApplicationController
     #   trainings.where(sql_query, query: "%#{params[:search][:title]}%")
     # end
   
-    # METHODE FONCTIONNELLE MAIS PAS PROPRE (PAS PLAIN ACTIVE RECORD)
-    if params[:search].present?
-      words_splited = params[:search][:title].split
-      new_trainings = Training.joins(client_contact: :client_company)
-      words_splited.each do |word| 
-        sql_query = " \
-        unaccent(trainings.title) ILIKE :query \
-        OR unaccent(client_companies.name) ILIKE :query "
-        new_trainings = new_trainings.where(sql_query, query: "%#{word}%")
-      end
-      trainings = new_trainings
-    end
+    # METHODE MULTIPLES TERMS FONCTIONNELLE MAIS PAS PROPRE (PAS PLAIN ACTIVE RECORD)
+    # if params[:search].present?
+    #   words_splited = params[:search][:title].split
+    #   new_trainings = Training.joins(client_contact: :client_company)
+    #   words_splited.each do |word| 
+    #     sql_query = " \
+    #     unaccent(trainings.title) ILIKE :query \
+    #     OR unaccent(client_companies.name) ILIKE :query "
+    #     new_trainings = new_trainings.where(sql_query, query: "%#{word}%")
+    #   end
+    #   trainings = new_trainings
+    # end
 
+    # METHODE PG SEARCH OK
+    trainings = Training.search_by_title_and_company("#{params[:search][:title]}") if params[:search].present?
 
     # If user in team SEVEN
     if ['super admin', 'admin', 'project manager'].include?(current_user.access_level)
