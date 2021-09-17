@@ -180,7 +180,6 @@ class Training < ApplicationRecord
     # begin
       activities = OverviewNumbersActivity.all(filter: "{Builder_id} = #{self.id}")
       activities.each{|record| record.destroy}
-      updated = []
       card = OverviewTraining.all(filter: "{Builder_id} = '#{self.id}'")&.first
       self.sessions.each do |session|
         if session.date.present?
@@ -194,11 +193,9 @@ class Training < ApplicationRecord
             end
             new_activity['Revenue'] = 0 unless new_activity['Revenue'].present?
             new_activity.save
-            updated << new_activity
           end
         end
       end
-      (activities - updated).each{|x| x.destroy}
     # rescue
     # end
   end
