@@ -18,7 +18,7 @@ class WorkshopModulePolicy < ApplicationPolicy
   end
 
   def destroy?
-    check_access
+    check_access_seven
   end
 
   def move_up?
@@ -30,7 +30,7 @@ class WorkshopModulePolicy < ApplicationPolicy
   end
 
   def save?
-    check_access
+    check_access_seven
   end
 
   def viewer?
@@ -38,11 +38,11 @@ class WorkshopModulePolicy < ApplicationPolicy
   end
 
   def copy_form?
-    check_access
+    check_access_seven
   end
 
   def copy?
-    check_access
+    check_access_seven
   end
 
   private
@@ -52,6 +52,6 @@ class WorkshopModulePolicy < ApplicationPolicy
   end
 
   def check_access
-    ['super admin', 'admin', 'training manager', 'sevener+', 'sevener'].include? user.access_level
+    ['super admin', 'admin', 'training manager', 'sevener+',].include? user.access_level
   end
 end

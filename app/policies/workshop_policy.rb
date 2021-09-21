@@ -6,7 +6,7 @@ class WorkshopPolicy < ApplicationPolicy
   end
 
   def create?
-    check_access
+    check_access_seven
   end
 
   def show?
@@ -14,39 +14,39 @@ class WorkshopPolicy < ApplicationPolicy
   end
 
   def update?
-    check_access
+    check_access_seven
   end
 
   def destroy?
-    check_access
+    check_access_seven
   end
 
   def move?
-    check_access
+    check_access_seven
   end
 
   def move_up?
-    check_access
+    check_access_seven
   end
 
   def move_down?
-    check_access
+    check_access_seven
   end
 
   def save?
-    check_access
+    check_access_seven
   end
 
   def viewer?
-    check_access
+    check_access_seven
   end
 
   def copy_form?
-    check_access
+    check_access_seven
   end
 
   def copy?
-    check_access
+    check_access_seven
   end
 
   private

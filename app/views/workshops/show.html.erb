@@ -5,25 +5,27 @@
         <i class="fas fa-arrow-left"></i>
       <% end %>
     </div>
-    <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
       <div class="page-controls-buttons flex-row-between-centered">
-        <%= link_to new_training_session_workshop_workshop_module_path(@workshop.session.training, @workshop.session, @workshop) do %>
-          <div class="btn-icon-grey" data-toggle='tooltip' title='Add Module'><i class="fas fa-plus"></i></div>
+        <% if ['super admin', 'admin', 'training manager', 'sevener+'].include?(current_user.access_level) %>
+          <%= link_to new_training_session_workshop_workshop_module_path(@workshop.session.training, @workshop.session, @workshop) do %>
+            <div class="btn-icon-grey" data-toggle='tooltip' title='Add Module'><i class="fas fa-plus"></i></div>
+          <% end %>
         <% end %>
-        <div class="btn-icon-grey" data-toggle='modal' data-target='#editMod' data-toggle='tooltip' title='Edit'><i class="fas fa-pen"></i></div>
-        <%= link_to training_session_workshop_path(@workshop.session.training, @workshop.session, @workshop), class: "btn-icon-grey", method: :delete, data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
-          <i class="fas fa-trash-alt"></i>
-        <% end %>
-        <%= link_to training_session_copy_form_workshop_path(@workshop.session.training, @workshop.session, @workshop), class: 'btn-icon-grey', data: {toggle: 'tooltip'}, title: 'Copy Workshop' do %>
-          <i class="fas fa-copy"></i>
-        <% end %>
-        <% unless @workshop.title.split(' ').first == 'Pause' %>
-          <%= link_to training_session_save_workshop_path(@workshop.session.training, @workshop.session), data: { toggle: 'tooltip', confirm: 'Do you want to save this workshop in the Database ?' }, title: 'Save to DB', class: 'btn-icon-grey' do %>
-            <i class="fas fa-cloud-upload-alt"></i>
+        <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+          <div class="btn-icon-grey" data-toggle='modal' data-target='#editMod' data-toggle='tooltip' title='Edit'><i class="fas fa-pen"></i></div>
+          <%= link_to training_session_workshop_path(@workshop.session.training, @workshop.session, @workshop), class: "btn-icon-grey", method: :delete, data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
+            <i class="fas fa-trash-alt"></i>
+          <% end %>
+          <%= link_to training_session_copy_form_workshop_path(@workshop.session.training, @workshop.session, @workshop), class: 'btn-icon-grey', data: {toggle: 'tooltip'}, title: 'Copy Workshop' do %>
+            <i class="fas fa-copy"></i>
+          <% end %>
+          <% unless @workshop.title.split(' ').first == 'Pause' %>
+            <%= link_to training_session_save_workshop_path(@workshop.session.training, @workshop.session), data: { toggle: 'tooltip', confirm: 'Do you want to save this workshop in the Database ?' }, title: 'Save to DB', class: 'btn-icon-grey' do %>
+              <i class="fas fa-cloud-upload-alt"></i>
+            <% end %>
           <% end %>
         <% end %>
       </div>
-    <% end %>
   </div>
   <div class="workshop-title-details">
     <h4><%= @workshop.title %> - <i class="fas fa-stopwatch fa-1x"></i> <%= @workshop.duration %> min</h4>

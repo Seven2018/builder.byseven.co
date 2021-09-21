@@ -17,7 +17,7 @@
           <% end %>
         <% end %>
       </li>
-      <% if ['super admin', 'admin', 'training manager', 'sevener+'].include? current_user.access_level %>
+      <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>
         <li>
           <% if params[:action] == 'contents' || params[:controller] == 'contents' %>
             <%= link_to contents_path, class: 'left-buttons' do %>
