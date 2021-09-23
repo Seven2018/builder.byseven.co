@@ -38,7 +38,8 @@ class UsersController < ApplicationController
     authorize @user
     if @user.save
       @user.export_airtable_user
-      @user.update(picture: OverviewUser.all(filter: "{Email} = '#{@user.email}'").first['Photo']&.first['url'])
+      airtable_user_photo = OverviewUser.all(filter: "{Email} = '#{@user.email}'")&.first['Photo']
+      @user.update(picture: airtable_user_photo&.first['url']) if airtable_user_photo.present?
       redirect_to user_path(@user)
     else
       render :new
