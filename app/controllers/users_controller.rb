@@ -35,10 +35,10 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-    @user.picture = OverviewUser.all(filter: "{Email} = '#{@user.email}'").first['Photo'].first['url']
     authorize @user
     if @user.save
       @user.export_airtable_user
+      @user.update(picture: OverviewUser.all(filter: "{Email} = '#{@user.email}'").first['Photo']&.first['url'])
       redirect_to user_path(@user)
     else
       render :new

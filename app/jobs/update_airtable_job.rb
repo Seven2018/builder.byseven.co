@@ -7,8 +7,9 @@ class UpdateAirtableJob < ApplicationJob
     end
     if invoice_item.present?
       invoice_item.export_numbers_revenue if invoice_item.type = 'Invoice'
+    else
+      training.export_numbers_activity
     end
     training.export_airtable
-    training.export_numbers_activity
   end
 end

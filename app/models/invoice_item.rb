@@ -51,76 +51,76 @@ class InvoiceItem < ApplicationRecord
 
   # Exports the data to Airtable DB
   def export_numbers_revenue
-    # begin
-    #   return if self.type != 'Invoice'
-    #   training = OverviewTraining.all.select{|x| x['Builder_id'] == self.training.id}&.first if self.training.present?
-    #   invoice = OverviewNumbersRevenue.all.select{|x| x['Invoice_id'] == self.id}&.first
-    #   unless invoice.present?
-    #     if training.present?
-    #       invoice = OverviewNumbersRevenue.create('Training' => [training&.id], 'Invoice SEVEN' => self.uuid, 'Issue Date' => Date.today.strftime('%Y-%m-%d'), 'Invoice_id' => self.id)
-    #     else
-    #       invoice = OverviewNumbersRevenue.create('Invoice SEVEN' => self.uuid, 'Issue Date' => Date.today.strftime('%Y-%m-%d'), 'Invoice_id' => self.id)
-    #     end
-    #   end
-    #   lines = []
-    #   if self.products.include?(Product.find(1))
-    #     lines = self.invoice_lines.select{|x| x.product_id == 1}
-    #   elsif self.products.include?(Product.find(2))
-    #     lines = self.invoice_lines.select{|x| x.product_id == 2}
-    #   elsif self.products.include?(Product.find(7))
-    #     lines = self.invoice_lines.select{|x| x.product_id == 7}
-    #   elsif self.products.include?(Product.find(9))
-    #     lines = self.invoice_lines.select{|x| x.product_id == 9}
-    #   else
-    #     invoice['Unit Number'] = 0
-    #   end
+    begin
+      return if self.type != 'Invoice'
+      training = OverviewTraining.all.select{|x| x['Builder_id'] == self.training.id}&.first if self.training.present?
+      invoice = OverviewNumbersRevenue.all.select{|x| x['Invoice_id'] == self.id}&.first
+      unless invoice.present?
+        if training.present?
+          invoice = OverviewNumbersRevenue.create('Training' => [training&.id], 'Invoice SEVEN' => self.uuid, 'Issue Date' => Date.today.strftime('%Y-%m-%d'), 'Invoice_id' => self.id)
+        else
+          invoice = OverviewNumbersRevenue.create('Invoice SEVEN' => self.uuid, 'Issue Date' => Date.today.strftime('%Y-%m-%d'), 'Invoice_id' => self.id)
+        end
+      end
+      lines = []
+      if self.products.include?(Product.find(1))
+        lines = self.invoice_lines.select{|x| x.product_id == 1}
+      elsif self.products.include?(Product.find(2))
+        lines = self.invoice_lines.select{|x| x.product_id == 2}
+      elsif self.products.include?(Product.find(7))
+        lines = self.invoice_lines.select{|x| x.product_id == 7}
+      elsif self.products.include?(Product.find(9))
+        lines = self.invoice_lines.select{|x| x.product_id == 9}
+      else
+        invoice['Unit Number'] = 0
+      end
 
-    #   lines.present? ? invoice['Unit Price'] = (lines.map{|x| x&.net_amount}&.sum / lines&.length).to_f : invoice['Unit Price'] = 0
-    #   invoice['Unit Number'] = lines.map{|x| x&.quantity}&.sum
-    #   if self.products.include?(Product.find(3))
-    #     lines = self.invoice_lines.select{|x| x.product_id == 3}
-    #     invoice['Preparation'] = lines.map{|x| x.net_amount * x.quantity}.sum.to_f
-    #   end
-    #   if self.products.include?(Product.find(8))
-    #     lines = self.invoice_lines.select{|x| x.product_id == 8}
-    #     invoice['Deposit'] = lines.map{|x| x.net_amount * x.quantity}.sum.to_f
-    #   end
-    #   expenses = self.products.compact.select{|x| [4,5,6].include?(x.id)}
-    #   if expenses.present?
-    #     lines = self.invoice_lines.select{|x| expenses.include?(x.product)}
-    #     invoice['Billed Expenses'] = lines.map{|x| x.net_amount * x.quantity}.sum.to_f
-    #   else
-    #     invoice['Billed Expenses'] = nil
-    #   end
-    #   self.update_price
-    #   invoice['Former / Credit / New'] = 'Credit' if self.total_amount < 0
-    #   invoice['VAT'] = self.tax_amount.to_f
-    #   invoice['OPCO'] = self.client_company.name if self.client_company.client_company_type == 'OPCO'
-    #   invoice['Training_id'] = self.training.id if training.present?
-    #   if self.payment_date.present?
-    #     invoice['Paid'] = true
-    #     invoice['Payment Date'] = self.payment_date.strftime('%Y-%m-%d')
-    #   else
-    #     invoice['Paid'] = false
-    #   end
-    #   if self.sending_date.present?
-    #     invoice['Sending Date'] = self.sending_date.strftime('%Y-%m-%d')
-    #   end
-    #   if self.status == "Cancelled"
-    #     invoice['Type'] = 'Cancelled'
-    #   elsif self.status == "Credit"
-    #     invoice['Type'] = 'Credit'
-    #   elsif self.products.include?(Product.find(7))
-    #     invoice['Type'] = 'Home'
-    #   elsif self.products.include?(Product.find(8))
-    #     invoice['Type'] = 'Deposit (Home)'
-    #   else
-    #     invoice['Type'] = 'Training'
-    #   end
-    #   self.training.export_airtable if training.present?
-    #   invoice.save
-    # rescue
-    # end
+      lines.present? ? invoice['Unit Price'] = (lines.map{|x| x&.net_amount}&.sum / lines&.length).to_f : invoice['Unit Price'] = 0
+      invoice['Unit Number'] = lines.map{|x| x&.quantity}&.sum
+      if self.products.include?(Product.find(3))
+        lines = self.invoice_lines.select{|x| x.product_id == 3}
+        invoice['Preparation'] = lines.map{|x| x.net_amount * x.quantity}.sum.to_f
+      end
+      if self.products.include?(Product.find(8))
+        lines = self.invoice_lines.select{|x| x.product_id == 8}
+        invoice['Deposit'] = lines.map{|x| x.net_amount * x.quantity}.sum.to_f
+      end
+      expenses = self.products.compact.select{|x| [4,5,6].include?(x.id)}
+      if expenses.present?
+        lines = self.invoice_lines.select{|x| expenses.include?(x.product)}
+        invoice['Billed Expenses'] = lines.map{|x| x.net_amount * x.quantity}.sum.to_f
+      else
+        invoice['Billed Expenses'] = nil
+      end
+      self.update_price
+      invoice['Former / Credit / New'] = 'Credit' if self.total_amount < 0
+      invoice['VAT'] = self.tax_amount.to_f
+      invoice['OPCO'] = self.client_company.name if self.client_company.client_company_type == 'OPCO'
+      invoice['Training_id'] = self.training.id if training.present?
+      if self.payment_date.present?
+        invoice['Paid'] = true
+        invoice['Payment Date'] = self.payment_date.strftime('%Y-%m-%d')
+      else
+        invoice['Paid'] = false
+      end
+      if self.sending_date.present?
+        invoice['Sending Date'] = self.sending_date.strftime('%Y-%m-%d')
+      end
+      if self.status == "Cancelled"
+        invoice['Type'] = 'Cancelled'
+      elsif self.status == "Credit"
+        invoice['Type'] = 'Credit'
+      elsif self.products.include?(Product.find(7))
+        invoice['Type'] = 'Home'
+      elsif self.products.include?(Product.find(8))
+        invoice['Type'] = 'Deposit (Home)'
+      else
+        invoice['Type'] = 'Training'
+      end
+      self.training.export_airtable if training.present?
+      invoice.save
+    rescue
+    end
   end
 
   # Updates InvoiceItem price and tax amount
