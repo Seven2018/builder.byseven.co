@@ -27,7 +27,7 @@ class PagesController < ApplicationController
 
   def contact_form_becos
     unless params[:email_2].present? || params[:email].empty?
-      contact = IncomingContact.create('Lastname' => params[:lastname], 'Firstname' => params[:firstname], 'Email' => params[:email], 'Tel' => params[:phone], 'Callback Date' => params[:date], 'Callback Time' => params[:time], 'Created At' => DateTime.now.strftime('%Y-%m-%d'))
+      contact = IncomingContactBecos.create('Lastname' => params[:lastname], 'Firstname' => params[:firstname], 'Email' => params[:email], 'Tel' => params[:phone], 'Callback Date' => params[:date], 'Callback Time' => params[:time], 'Created At' => DateTime.now.strftime('%Y-%m-%d'))
       # IncomingContactMailer.with(user: User.find(2)).new_incoming_contact(contact, User.find(2)).deliver
       # IncomingContactMailer.with(user: User.find(3)).new_incoming_contact(contact).deliver
       # IncomingContactMailer.with(user: User.find(4)).new_incoming_contact(contact).deliver
