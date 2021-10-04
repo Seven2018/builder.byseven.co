@@ -8,9 +8,10 @@ Rails.application.routes.draw do
   get 'numbers_activity', to: 'pages#numbers_activity', as: 'numbers_activity'
   get 'numbers_sales', to: 'pages#numbers_sales', as: 'numbers_sales'
   get 'dashboard_sevener', to: 'pages#dashboard_sevener', as: 'dashboard_sevener'
-  get 'contact_form', to: 'pages#contact_form', as: 'contact_form'
   get 'billing', to: 'pages#billing', as: 'billing'
   get :sandbox, controller: :pages
+  get :contact_form, controller: :pages
+  get :contact_form_becos, controller: :pages
   get 'intel_form', to: 'pages#intel_form', as: 'intel_form'
   get 'intel_subscription', to: 'pages#intel_subscription', as: 'intel_subscription'
   get 'intel_thank_you', to: 'pages#intel_thank_you', as: 'intel_thank_you'
