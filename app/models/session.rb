@@ -19,6 +19,10 @@ class Session < ApplicationRecord
     "#{self.title} - #{self.date&.strftime('%d/%m/%y')}"
   end
 
+  def period
+    start_time..end_time
+  end
+
   def self.send_reminders
     Session.where(date: Date.today + 2.days).each do |session|
       session.users.each do |user|
@@ -30,6 +34,19 @@ class Session < ApplicationRecord
   def final_session_attendee_list
     self.attendees.each do |attendee|
       # Training.joins(sessions: :session_attendees).where()
+    end
+  end
+
+  def copy_workshops(target)
+    self.workshops.each do |workshop|
+      new_workshop = Workshop.new(workshop.attributes.except("id", "created_at", "updated_at", "session_id"))
+      new_workshop.session_id = target
+      new_workshop.save
+      workshop.workshop_modules.each do |mod|
+        new_module = WorkshopModule.new(mod.attributes.except("id", "created_at", "updated_at", "workshop_id"))
+        new_module.workshop_id = new_workshop.id
+        new_module.save
+      end
     end
   end
 end

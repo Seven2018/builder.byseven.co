@@ -152,7 +152,7 @@ class SessionTrainersController < ApplicationController
       redirect_to redirect_path(training_id: "/#{@session.training.id}/", session_id: "|#{@session.id}|", list: "remove_trainers", user_ids: "##{to_delete.map(&:id).join(',')}#")
       return
     end
-    # UpdateAirtableJob.perform_async(@session.training, true)
+    UpdateAirtableJob.perform_async(@session.training, true)
     if params[:session_trainer][:page] == 'session'
       redirect_to training_session_path(@session.training, @session)
     else
@@ -179,7 +179,7 @@ class SessionTrainersController < ApplicationController
       redirect_to redirect_path(training_id: "/#{training.id}/", session_id: "|#{training.sessions.ids.join(',')}|", list: "remove_trainers_global", user_ids: "##{to_delete.map(&:id).join(',')}#")
       return
     end
-    # UpdateAirtableJob.perform_async(training, true)
+    UpdateAirtableJob.perform_async(training, true)
     redirect_to training_path(training)
   end
 
@@ -198,9 +198,6 @@ class SessionTrainersController < ApplicationController
       trainers_list << user.id.to_s
     end
     # UpdateAirtableJob.perform_now(training, true)
-    # training.trainers.each{|y| training.export_numbers_sevener(y)}
-    # training.export_airtable
-    # training.export_numbers_activity
     redirect_to redirect_path(training_id: "/#{training.id}/", session_id: "|#{training.sessions.ids.join(',')}|", list: trainers_list.join(','))
   end
 

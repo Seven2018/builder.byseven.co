@@ -35,7 +35,11 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-    @user.picture = '' unless @user.picture.present?
+    if @user.picture.present?
+      @user.picture = 'https://drive.google.com/uc?id=' + @user.picture.split('https://drive.google.com/file/d/')[1].split('/').first
+    else
+      @user.picture = ''
+    end
     authorize @user
     if @user.save
       @user.export_airtable_user
@@ -52,6 +56,11 @@ class UsersController < ApplicationController
   def update
     authorize @user
     @user.update(user_params)
+    if @user.picture.present?
+      @user.picture = 'https://drive.google.com/uc?id=' + @user.picture.split('https://drive.google.com/file/d/')[1].split('/').first
+    else
+      @user.picture = ''
+    end
     if @user.save
       @user.export_airtable_user
       redirect_to user_path(@user)

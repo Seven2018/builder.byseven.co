@@ -36,7 +36,7 @@ class TrainingsController < ApplicationController
     @trainings = trainings_ordered(trainings, 'all')
   end
 
-  # Index for upcoming rainings (async render) NOT USED
+  # Index for upcoming trainings (async render) NOT USED
   # def index_upcoming
   #   # Index with 'search' option and global visibility for SEVEN Users
   #   if ['super admin', 'admin', 'project manager'].include?(current_user.access_level)
