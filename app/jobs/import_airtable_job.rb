@@ -17,7 +17,12 @@ class ImportAirtableJob < ApplicationJob
         card['Needs'].present? ? needs = card['Needs'] : needs = ''
         card['Objectives'].present? ? objectives = card['Objectives'] : objectives = ''
         infos = "Besoins\n\n" + needs + "\n\n\nObjectifs\n\n" + objectives
-        training = Training.find(card['Builder_id'])
+        training = Training.find_by(id: card['Builder_id'])
+        if training.nil?
+          card['Builder_id'] = ''
+          card.save
+          next
+        end
         training.update(title: card['Title']) if training.title != card['Title']
         training.update(unit_price: card['Unit Price']) if training.unit_price != card['Unit Price']
         training.update(infos: infos)

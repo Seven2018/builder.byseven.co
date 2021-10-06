@@ -35,14 +35,11 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-    if @user.picture.present?
-      @user.picture = 'https://drive.google.com/uc?id=' + @user.picture.split('https://drive.google.com/file/d/')[1].split('/').first
-    else
-      @user.picture = ''
-    end
     authorize @user
     if @user.save
       @user.export_airtable_user
+      airtable_user_photo = OverviewUser.all(filter: "{Email} = '#{@user.email}'")&.first['Photo']
+      @user.update(picture: airtable_user_photo&.first['url']) if airtable_user_photo.present?
       redirect_to user_path(@user)
     else
       render :new
@@ -56,11 +53,6 @@ class UsersController < ApplicationController
   def update
     authorize @user
     @user.update(user_params)
-    if @user.picture.present?
-      @user.picture = 'https://drive.google.com/uc?id=' + @user.picture.split('https://drive.google.com/file/d/')[1].split('/').first
-    else
-      @user.picture = ''
-    end
     if @user.save
       @user.export_airtable_user
       redirect_to user_path(@user)
@@ -133,7 +125,7 @@ class UsersController < ApplicationController
 
   def index_function(parameter)
     if params[:search]
-      @users = (parameter.where('lower(firstname) LIKE ?', "%#{params[:search][:name].downcase}%") + parameter.where('lower(lastname) LIKE ?', "%#{params[:search][:name].downcase}%"))
+      @users = parameter.search_by_name("#{params[:search][:title]}")
       @users = @users.sort_by{ |user| user.lastname } if @users.present?
     else
       @users = parameter.order(lastname: :asc)

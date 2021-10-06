@@ -16,8 +16,17 @@ class User < ApplicationRecord
   require 'uri'
   require 'net/http'
 
+  # SEARCHING USERS BY firstname and lastname
+  include PgSearch::Model
+  pg_search_scope :search_by_name,
+    against: [ :firstname, :lastname ],
+    using: {
+      tsearch: { prefix: true }
+    },
+    ignoring: :accents
+
   def fullname
-    "#{firstname.capitalize} #{lastname.upcase}"
+    "#{lastname.upcase} #{firstname.capitalize}"
   end
 
   def initials

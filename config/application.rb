@@ -10,7 +10,7 @@ Bundler.require(*Rails.groups)
 module BuilderBysevenCo
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 5.2
+    config.load_defaults 6.0
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
@@ -49,5 +49,10 @@ module BuilderBysevenCo
       }
     }
     config.active_job.queue_adapter = :sucker_punch
+
+    config.after_initialize do
+      ActionText::ContentHelper.allowed_attributes.add 'style'
+      ActionText::ContentHelper.allowed_tags.add 'span'
+    end
   end
 end

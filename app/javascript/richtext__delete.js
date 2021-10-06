@@ -1,4 +1,4 @@
-import Trix from "trix"
+// import Trix from "trix"
 
 addHeadingAttributes()
 addForegroundColorAttributes()

@@ -60,31 +60,17 @@
   }
 
   .module-card-instructions {
-    // color: gray;
-    // margin: 1rem 0;
-    // padding: 0 1rem;
-
-    // p, ul {
-    //   margin: 0;
-    // }
-
-    // img {
-    //   max-width: 100%;
-    // }
     all: initial;
     max-width: 100%;
-    /* Font */
-    /* Emoji fonts are added to visualise them nicely in Internet Explorer. */
     font-family: sans-serif, Arial, Verdana, "Trebuchet MS", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
     font-size: 14px;
-
-    /* Text color */
     color: #333;
-
-    /* Remove the background color to make it transparent. */
-
     margin: 20px;
 
+    div {
+      max-width: 100%;
+      overflow: hidden;
+    }
 
     h1 {
       margin: 17.4167px 0;
@@ -94,17 +80,34 @@
       margin: 16.1833px 0;
     }
 
+    h1,h2,h3,h4,h5,h6 {
+      font-weight: normal;
+      line-height: 1.2;
+    }
+
     p, a, ul, ol, li, span {
       margin: 13px 0;
       font-size: 14px;
     }
 
-    .cke_editable {
-      font-size: 16px;
-      line-height: 1.6;
+    a {
+      color: #0782C1;
+    }
 
-      /* Fix for missing scrollbars with RTL texts. (#10488) */
-      word-wrap: break-word;
+    a > img {
+      padding: 1px;
+      margin: 1px;
+      border: none;
+      outline: 1px solid #0782C1;
+    }
+
+    img {
+      width: 75vw;
+      object-fit: scale-down;
+
+      @include from-large {
+        width: 65vw;
+      }
     }
 
     blockquote {
@@ -116,23 +119,7 @@
       border-width: 0;
     }
 
-    .cke_contents_ltr blockquote {
-      padding-left: 20px;
-      padding-right: 8px;
-      border-left-width: 5px;
-    }
-
-    .cke_contents_rtl blockquote {
-      padding-left: 8px;
-      padding-right: 20px;
-      border-right-width: 5px;
-    }
-
-    a {
-      color: #0782C1;
-    }
-
-   ul,dl {
+    ul,dl {
       /* IE7: reset rtl list margin. (#7334) */
       *margin-right: 0px;
       /* Preserved spaces for list items with text direction different than the list. (#6249,#8049)*/
@@ -150,28 +137,9 @@
       list-style-type: disc;
     }
 
-    h1,h2,h3,h4,h5,h6 {
-      font-weight: normal;
-      line-height: 1.2;
-    }
-
     hr {
       border: 0px;
       border-top: 1px solid #ccc;
-    }
-
-    img.right {
-      border: 1px solid #ccc;
-      float: right;
-      margin-left: 15px;
-      padding: 5px;
-    }
-
-    img.left {
-      border: 1px solid #ccc;
-      float: left;
-      margin-right: 15px;
-      padding: 5px;
     }
 
     pre {
@@ -179,14 +147,6 @@
       word-wrap: break-word; /* IE7 */
       -moz-tab-size: 4;
       tab-size: 4;
-    }
-
-    .marker {
-      background-color: Yellow;
-    }
-
-    span[lang] {
-      font-style: italic;
     }
 
     figure {
@@ -203,11 +163,47 @@
       display: block; /* For IE8 */
     }
 
-    a > img {
-      padding: 1px;
-      margin: 1px;
-      border: none;
-      outline: 1px solid #0782C1;
+
+    .cke_editable {
+      font-size: 16px;
+      line-height: 1.6;
+
+      /* Fix for missing scrollbars with RTL texts. (#10488) */
+      word-wrap: break-word;
+    }
+
+    .cke_contents_ltr blockquote {
+      padding-left: 20px;
+      padding-right: 8px;
+      border-left-width: 5px;
+    }
+
+    .cke_contents_rtl blockquote {
+      padding-left: 8px;
+      padding-right: 20px;
+      border-right-width: 5px;
+    }
+
+    img.right {
+      border: 1px solid #ccc;
+      float: right;
+      margin-left: 15px;
+      padding: 5px;
+    }
+
+    img.left {
+      border: 1px solid #ccc;
+      float: left;
+      margin-right: 15px;
+      padding: 5px;
+    }
+
+    .marker {
+      background-color: Yellow;
+    }
+
+    span[lang] {
+      font-style: italic;
     }
 
     /* Widget Styles */

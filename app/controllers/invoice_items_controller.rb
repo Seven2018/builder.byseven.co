@@ -112,7 +112,7 @@ class InvoiceItemsController < ApplicationController
     InvoiceLine.create(invoice_item: @invoice, description: "Animation", quantity: quantity, net_amount: product.price, tax_amount: product.tax, product_id: product.id, position: 1)
     @invoice.update_price
     if @invoice.save
-      @invoice.export_numbers_revenue if @invoice.type == 'Invoice'
+      UpdateAirtableJob.perform_async(@training, false, @invoice)
       redirect_to invoice_item_path(@invoice)
     end
   end
@@ -157,7 +157,7 @@ class InvoiceItemsController < ApplicationController
     end
     @invoice.update_price
     if @invoice.save
-      @invoice.export_numbers_revenue if @invoice.type = 'Invoice'
+      UpdateAirtableJob.perform_async(@training, false, @invoice)
       redirect_to invoice_item_path(@invoice)
     end
   end
@@ -195,7 +195,7 @@ class InvoiceItemsController < ApplicationController
       new_line.save
       new_invoice.save
       new_invoice.update_price
-      new_invoice.export_numbers_revenue if new_invoice.type = 'Invoice'
+      UpdateAirtableJob.perform_async(@training, false, new_invoice)
     end
     redirect_to invoice_items_path(type: 'Invoice', training_id: @training.id, page: 1)
   end
@@ -230,7 +230,7 @@ class InvoiceItemsController < ApplicationController
         new_line.save
         new_invoice.save
         new_invoice.update_price
-        new_invoice.export_numbers_revenue if new_invoice.type = 'Invoice'
+        UpdateAirtableJob.perform_async(@training, false, new_invoice)
       end
     end
     redirect_to invoice_items_path(type: 'Invoice', training_id: @training.id)
@@ -280,7 +280,7 @@ class InvoiceItemsController < ApplicationController
         new_invoice_line.update(invoice_item_id: new_invoice_item.id)
       end
       new_invoice_item.update_price
-      new_invoice_item.export_numbers_revenue if new_invoice_item.type == 'Invoice'
+      UpdateAirtableJob.perform_async(@new_invoice.training, false, new_invoice) if new_invoice_item.type == 'Invoice'
       redirect_to invoice_item_path(new_invoice_item)
     else
       raise
@@ -300,6 +300,7 @@ class InvoiceItemsController < ApplicationController
         new_invoice_line.update(invoice_item_id: new_invoice_item.id)
       end
       new_invoice_item.update_price
+      UpdateAirtableJob.perform_async(new_invoice_item.training, false, new_invoice_item) if new_invoice_item.training.present?
       redirect_to invoice_item_path(new_invoice_item)
     else
       raise
@@ -315,7 +316,6 @@ class InvoiceItemsController < ApplicationController
     elsif company.client_company_type == 'OPCO'
       @invoice_item.update(client_company_id: @invoice_item.description.to_i, description: nil)
     end
-    @invoice_item.export_numbers_revenue
     redirect_to invoice_item_path(@invoice_item)
   end
 
@@ -332,6 +332,7 @@ class InvoiceItemsController < ApplicationController
       end
       credit.update(total_amount: -@invoice_item.total_amount)
       credit.update(status: "Credit") if credit.total_amount < 0
+      UpdateAirtableJob.perform_async(credit.training, false, credit) if credit.training.present?
       redirect_to invoice_item_path(credit)
     else
       raise

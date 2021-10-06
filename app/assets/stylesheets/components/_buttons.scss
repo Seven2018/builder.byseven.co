@@ -530,34 +530,6 @@
   background-color: rgba(0,0,0,0.3) !important;
 }
 
-#search_title, #search_name {
-  box-shadow: 10px 10px 23px -13px rgba(0,0,0,0.13);
-  margin-right: 1rem;
-  background-color: white;
-  border-radius: 5px;
-  border: 1px solid #c4c4c4;
-  textarea {
-    color: black;
-  }
-  &:focus {
-    border: 1px solid #FFC447;
-  }
-}
-
-.side-search {
-  background-color: transparent !important;
-}
-
-#search {
-  padding-right: 35px !important;
-  margin-right: 1rem;
-  background-color: #F1F3F4;
-  border-radius: 5px;
-  border: none;
-  padding: 10px;
-  font-family: 'Montserrat';
-  font-weight: 300;
-}
 
 .collection_check_boxes:hover {
   opacity: 80%;

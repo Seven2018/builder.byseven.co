@@ -6,15 +6,15 @@ class ContentPolicy < ApplicationPolicy
   end
 
   def create?
-    check_access
+    check_access_seven
   end
 
   def show?
-    check_access
+    check_access_seven
   end
 
   def update?
-    check_access
+    check_access_seven
   end
 
   def destroy?

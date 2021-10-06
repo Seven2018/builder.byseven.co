@@ -16,7 +16,7 @@ class InvoiceLinesController < ApplicationController
     authorize @invoiceline
     @invoiceline.net_amount = 0 unless @invoiceline.net_amount.present?
     if @invoiceline.save
-      @invoice_item.export_numbers_revenue
+      UpdateAirtableJob.perform_async(@invoice_item.training, false, @invoice_item) if @invoice_item.training.present?
       redirect_to invoice_item_path(@invoice_item)
     end
   end
@@ -29,14 +29,14 @@ class InvoiceLinesController < ApplicationController
     authorize @invoiceline
     @invoiceline.update(invoiceline_params)
     @invoiceline.invoice_item.update_price
-    @invoiceline.invoice_item.export_numbers_revenue
+    UpdateAirtableJob.perform_async(@invoiceline.invoice_item.training, false, @invoiceline.invoice_item) if @invoiceline.invoice_item.training.present?
     redirect_to invoice_item_path(@invoiceline.invoice_item) if @invoiceline.save
   end
 
   def destroy
     authorize @invoiceline
     @invoiceline.destroy
-    @invoiceline.invoice_item.export_numbers_revenue
+    UpdateAirtableJob.perform_async(@invoiceline.invoice_item.training, false, @invoiceline.invoice_item) if @invoiceline.invoice_item.training.present?
     redirect_to invoice_item_path(@invoiceline.invoice_item)
   end
 

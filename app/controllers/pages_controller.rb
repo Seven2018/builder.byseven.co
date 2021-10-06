@@ -1,5 +1,5 @@
 class PagesController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:home, :survey, :contact_form, :intel_form, :intel_new_attendee, :intel_create_attendee, :intel_subscription, :intel_thank_you]
+  skip_before_action :authenticate_user!, only: [:home, :survey, :contact_form, :contact_form_becos]
 
   def home
     redirect_to trainings_path
@@ -17,12 +17,19 @@ class PagesController < ApplicationController
     unless params[:email_2].present? || params[:email].empty?
       contact = IncomingContact.create('Name' => params[:name], 'Email' => params[:email], 'Tel' => params[:tel], 'Message' => params[:message], 'Training' => params[:training], 'Date' => DateTime.now.strftime('%Y-%m-%d'))
       IncomingContactMailer.with(user: User.find(2)).new_incoming_contact(contact, User.find(2)).deliver
-      # IncomingContactMailer.with(user: User.find(3)).new_incoming_contact(contact).deliver
-      # IncomingContactMailer.with(user: User.find(4)).new_incoming_contact(contact).deliver
     else
       IncomingSpam.create('Name' => params[:name], 'Email' => params[:email], 'Message' => params[:message])
     end
     redirect_to 'https://learn.byseven.co/thank-you.html'
+  end
+
+  def contact_form_becos
+    unless params[:email_2].present? || params[:email].empty?
+      contact = IncomingContactBecos.create('Lastname' => params[:lastname], 'Firstname' => params[:firstname], 'Email' => params[:email], 'Tel' => params[:phone], 'Linkedin' => params[:linkedin], 'Message' => params[:message], 'Chosen Date' => params[:date], 'Chosen Time' => params[:time], 'Newsletter' => params[:newsletter].present?, 'Created At' => DateTime.now.strftime('%Y-%m-%d'))
+      IncomingContactMailer.with(user: User.find(1)).new_incoming_contact(contact, User.find(1)).deliver
+      IncomingContactMailer.with(user: User.find(109)).new_incoming_contact(contact, User.find(109)).deliver
+    end
+    redirect_to 'https://learn.byseven.co/thank-you-becos.html'
   end
 
   def survey
@@ -48,58 +55,6 @@ class PagesController < ApplicationController
     ImportAirtableJob.perform_async
     redirect_to trainings_path
     flash[:notice] = 'Import en cours, veuillez patienter quelques instants.'
-  end
-
-# Temp
-
-  def intel_form
-    skip_authorization
-    # @client_company = ClientCompany.find(7)
-    @attendee = IntelAttendee.all(filter: "{Email} = '#{params[:attendee][:email]}'").first if params[:attendee].present?
-  end
-
-  def intel_new_attendee
-    skip_authorization
-  end
-
-  def intel_create_attendee
-    attendee = IntelAttendee.new('Email' => params[:attendee][:email], 'Firstname' => params[:attendee][:firstname], 'Lastname' => params[:attendee][:lastname])
-    attendee.save
-    redirect_to intel_form_path(auth_token: params[:attendee][:auth_token], attendee: {email: attendee['Email']})
-  end
-
-  def intel_subscription
-    event1_id = "recx4QlAxuGX1oKSv"
-    event2_id = "recTtCEak1ME1Nd8j"
-    attendee = IntelAttendee.find(params[:subscription][:attendee])
-    if params[:subscription][:event1] == '1'
-      if attendee['Events'].present?
-        attendee['Events'] = attendee['Events'].push(event1_id).uniq
-      else
-        attendee['Events'] = [event1_id]
-      end
-    else
-      if attendee['Events'].present? && attendee['Events'].include?('recx4QlAxuGX1oKSv')
-        attendee['Events'].delete('recx4QlAxuGX1oKSv')
-      end
-    end
-    if params[:subscription][:event2] == '1'
-      if attendee['Events'].present?
-        attendee['Events'] = attendee['Events'].push(event2_id).uniq
-      else
-        attendee['Events'] = [event2_id]
-      end
-    else
-      if attendee['Events'].present? && attendee['Events'].include?('recTtCEak1ME1Nd8j')
-        attendee['Events'].delete('recTtCEak1ME1Nd8j')
-      end
-    end
-    attendee['Events'] = nil if attendee['Events'] == []
-    attendee.save
-    redirect_to intel_thank_you_path(auth_token: params[:subscription][:auth_token])
-  end
-
-  def intel_thank_you
   end
 
   def account_invoice

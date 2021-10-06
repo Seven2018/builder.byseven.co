@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.7.2'
+ruby '2.7.3'
 
 gem 'rails', '6.0.0'
 gem 'pg', '~> 0.21'
@@ -24,8 +24,8 @@ gem 'wicked_pdf', '~> 1.1'
 gem 'wkhtmltopdf-binary'
 gem 'wkhtmltopdf-heroku', '2.12.5.0'
 gem 'ckeditor', git: 'https://github.com/galetahub/ckeditor'
-gem 'google-api-client', require: 'google/apis/calendar_v3'
-# gem 'google-apis-calendar_v3'
+# gem 'google-api-client', require: 'google/apis/calendar_v3'
+gem 'google-apis-calendar_v3'
 gem 'google-http-actionmailer'
 gem 'oauth2'
 gem "omniauth-rails_csrf_protection"
@@ -39,7 +39,7 @@ gem 'acts_as_list'
 gem "acts_as_tree"
 gem "simple_calendar", "~> 2.0"
 gem 'google_drive'
-gem 'datagrid'
+# gem 'datagrid'
 gem 'render_async'
 gem 'image_processing'
 gem 'invisible_captcha'

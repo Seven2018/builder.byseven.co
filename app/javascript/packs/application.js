@@ -7,5 +7,3 @@ try {
 }
 catch(err) {
 }
-
-// require("richtext")
