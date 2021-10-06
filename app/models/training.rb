@@ -1,5 +1,6 @@
 class Training < ApplicationRecord
   belongs_to :client_contact
+  has_one :client_company, through: :client_contact
   has_many :sessions, dependent: :destroy
   has_many :training_ownerships, dependent: :destroy
   has_many :users, through: :training_ownerships
@@ -13,6 +14,19 @@ class Training < ApplicationRecord
   validates :vat, inclusion: { in: [ true, false ] }
   validates_uniqueness_of :refid
   accepts_nested_attributes_for :training_ownerships
+
+
+  # SEARCHING TRANINGS BY TRANING.title AND CLIENT_COMPANY.name
+  include PgSearch::Model
+  pg_search_scope :search_by_title_and_company,
+    against: [ :title ],
+    associated_against: {
+      client_company: :name,
+      users: [:firstname, :lastname]
+    },
+    using: {
+      tsearch: { prefix: true }
+    }
 
   def start_time
     Session.where(training_id: self).where.not(date: nil).order(date: :asc).first&.date
