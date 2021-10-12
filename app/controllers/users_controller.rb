@@ -125,7 +125,8 @@ class UsersController < ApplicationController
 
   def index_function(parameter)
     if params[:search]
-      @users = parameter.search_by_name("#{params[:search][:title]}")
+      @users = parameter
+      @users = User.all.search_by_name("#{params[:search][:name]}")
       @users = @users.sort_by{ |user| user.lastname } if @users.present?
     else
       @users = parameter.order(lastname: :asc)

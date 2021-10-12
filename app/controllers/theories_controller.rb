@@ -10,6 +10,11 @@ class TheoriesController < ApplicationController
     end
   end
 
+  def theories_search
+    skip_authorization
+    @theories = Theory.ransack(name_cont: params[:search]).result(distinct: true).limit(5)
+  end
+
   def show
     authorize @theory
   end

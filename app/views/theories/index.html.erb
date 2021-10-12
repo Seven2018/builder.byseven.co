@@ -1,15 +1,16 @@
 <div class="container-seven-large container-seven-large-centered">
   <div id='page-index'>
     <div id="page-controls">
-        <%= simple_form_for :search, url: theories_path, method: 'GET' do |f| %>
+        <%= simple_form_for :search, url: theories_path, method: :get do |f| %>
           <% if params[:search] %>
-            <%= f.input :name, placeholder: params[:search][:name], label: false %>
+            <%= f.text_field :name, placeholder: 'Search', label: false, data: {behavior: 'autocomplete'}, value: params[:search][:name] %>
             <%= link_to theories_path, class: 'search-close' do %>
               <i class="far fa-times-circle"></i>
             <% end %>
           <% else %>
-            <%= f.input :name, placeholder: 'Search Theories', label: false %>
+            <%= f.text_field :name, placeholder: 'Search', label: false, data: {behavior: 'autocomplete'} %>
           <% end %>
+          <%= f.submit 'Search', class: 'btn-search' %>
         <% end %>
       <div id="page-buttons">
         <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>
@@ -40,3 +41,34 @@
     </ul>
   </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/jquery.easy-autocomplete.min.js"></script>
+
+<script>
+  form = document.querySelector('.search')
+  input = form.querySelector('input')
+  input.addEventListener('keypress', function(e) {
+    if (event.which == '13') {
+      event.preventDefault();
+    }
+  })
+
+  $input = $("[data-behavior='autocomplete']");
+
+  var options = {
+    listLocation: "theories",
+    getValue: 'name',
+    url: function(phrase) {
+      return "/theories_search.json?search=" + phrase
+    },
+    list: {
+      onChooseEvent: function() {
+      },
+      match: {
+        enabled: true
+      }
+    }
+  }
+
+  $input.easyAutocomplete(options);
+</script>

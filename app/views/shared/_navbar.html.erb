@@ -1,18 +1,18 @@
 <div class="navbar-builder navbar-expand-sm navbar-light">
   <% if user_signed_in? %>
-  <%= link_to trainings_path(page: 1) do %>
+  <%= link_to trainings_path do %>
     <%= image_tag('SEVENLOGO_SQUARE4.png', width:'45px', height:'30px', style:'margin-right:3rem;') %>
   <% end %>
   <div class="top-left-nav">
     <ul>
       <li>
         <% if params[:controller] == 'trainings' || params[:controller] == 'sessions' || params[:controller] == 'workshops' || params[:controller] == 'workshop_modules'%>
-          <%= link_to trainings_path(page: 1), class: 'left-buttons' do %>
+          <%= link_to trainings_path, class: 'left-buttons' do %>
             <div class="left-menu-title" style='color: #FFC447;'><h4>Trainings</h4></div>
           <% end %>
             <div class="isactive"></div>
         <% else %>
-          <%= link_to trainings_path(page: 1), class: 'left-buttons' do %>
+          <%= link_to trainings_path, class: 'left-buttons' do %>
             <div class="left-menu-title"><h4>Trainings</h4></div>
           <% end %>
         <% end %>

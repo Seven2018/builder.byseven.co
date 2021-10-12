@@ -22,11 +22,12 @@ class Training < ApplicationRecord
     against: [ :title ],
     associated_against: {
       client_company: :name,
-      users: [:firstname, :lastname]
+      users: [:firstname, :lastname],
     },
     using: {
       tsearch: { prefix: true }
-    }
+    },
+    ignoring: :accents
 
   def start_time
     Session.where(training_id: self).where.not(date: nil).order(date: :asc).first&.date

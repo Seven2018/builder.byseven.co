@@ -197,7 +197,7 @@ class InvoiceItemsController < ApplicationController
       new_invoice.update_price
       UpdateAirtableJob.perform_async(@training, false, new_invoice)
     end
-    redirect_to invoice_items_path(type: 'Invoice', training_id: @training.id, page: 1)
+    redirect_to invoice_items_path(type: 'Invoice', training_id: @training.id)
   end
 
   # Creates new InvoiceItems using data from Airtable DB for each attendee

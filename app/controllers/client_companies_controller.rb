@@ -1,10 +1,14 @@
 class ClientCompaniesController < ApplicationController
 before_action :set_clientcompany, only: [:show, :edit, :update, :destroy]
-before_action :authenticate_user!, except: [:new_attendees, :create_attendees]
 
   # Index with "search" option
   def index
     params[:search] ? @client_companies = policy_scope(ClientCompany).where("lower(name) LIKE ?", "%#{params[:search][:name].downcase}%").order(name: :asc) : @client_companies = policy_scope(ClientCompany).order(name: :asc)
+  end
+
+  def client_companies_search
+    skip_authorization
+    @client_companies = ClientCompany.ransack(name_cont: params[:search]).result(distinct: true).limit(5)
   end
 
   def show

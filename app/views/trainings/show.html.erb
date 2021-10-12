@@ -50,7 +50,7 @@
             <li><%= link_to 'New invoice', new_invoiceitem_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
             <li><%= link_to 'New invoice Airtable', new_airtable_invoiceitem_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
             <li><%= link_to 'New invoice Airtable by Trainer', new_airtable_invoiceitem_by_trainer_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id), method: :post %></li>
-            <li><%= link_to 'Invoices List', invoice_items_path(training_id: @training.id, type: 'Invoice', page: 1) %></li>
+            <li><%= link_to 'Invoices List', invoice_items_path(training_id: @training.id, type: 'Invoice') %></li>
             <%# if @training.forms.empty? %>
               <!-- <li><a data-toggle='modal' type='button' data-target='#newForm' style='cursor:pointer;'>New form</a></li> -->
             <%# else %>
@@ -83,29 +83,23 @@
     </div>
     <div class='middle-info-user'>
       <% @training.owners.each do |user| %>
-          <% if user.picture.present? %>
-            <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-owner ava' data-toggle='tooltip' data-placement="left" title='Owner: <%= "#{user.fullname}" %>'></a>
-          <% else %>
-            <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-owner ava' data-toggle='tooltip' data-placement="left" title='Owner  <%= "#{user.fullname}" %>'></a>
-          <% end %>
+        <% if user.picture.present? %>
+          <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-owner ava' data-toggle='tooltip' data-placement="left" title='Owner: <%= "#{user.fullname}" %>'></a>
+        <% else %>
+          <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-owner ava' data-toggle='tooltip' data-placement="left" title='Owner  <%= "#{user.fullname}" %>'></a>
+        <% end %>
         <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
           <div class="modal-dialog" role="document" style="border-radius: 2rem">
             <%= render 'users/consult', user: user, training: @training %>
           </div>
         </div>
       <% end %>
-<!--           <%# if (['super admin', 'admin', 'training manager'].include? current_user.access_level) %>
-            <li><button class='btn btn-add-user' data-toggle='modal' data-target='#newOwner' disabled>Owner</button></li>
-          <%# else %>
-            <li><button class='btn btn-add-user btn-add-user-disabled'>Owner</button></li>
-          <%# end %> -->
-
       <% @training.writers.each do |user| %>
-          <% if user.picture.present? %>
-            <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-writer ava' data-toggle='tooltip' data-placement="bottom" title='Writer:  <%= "#{user.fullname}" %>'></a>
-          <% else %>
-            <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-writer ava' data-toggle='tooltip' data-placement="bottom" title='Writer:  <%= "#{user.fullname}" %>'></a>
-          <% end %>
+        <% if user.picture.present? %>
+          <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-writer ava' data-toggle='tooltip' data-placement="bottom" title='Writer:  <%= "#{user.fullname}" %>'></a>
+        <% else %>
+          <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-writer ava' data-toggle='tooltip' data-placement="bottom" title='Writer:  <%= "#{user.fullname}" %>'></a>
+        <% end %>
         <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
           <div class="modal-dialog" role="document" style="border-radius: 2rem">
             <%= render 'users/consult', user: user, training: @training %>
@@ -113,11 +107,11 @@
         </div>
       <% end %>
       <% @training.sidekicks.each do |user| %>
-          <% if user.picture.present? %>
-            <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-writer ava' data-toggle='tooltip' data-placement="bottom" title='Sidekick:  <%= "#{user.fullname}" %>'></a>
-          <% else %>
-            <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-writer ava' data-toggle='tooltip' data-placement="bottom" title='Sidekick:  <%= "#{user.fullname}" %>'></a>
-          <% end %>
+        <% if user.picture.present? %>
+          <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-writer ava' data-toggle='tooltip' data-placement="bottom" title='Sidekick:  <%= "#{user.fullname}" %>'></a>
+        <% else %>
+          <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-writer ava' data-toggle='tooltip' data-placement="bottom" title='Sidekick:  <%= "#{user.fullname}" %>'></a>
+        <% end %>
         <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
           <div class="modal-dialog" role="document" style="border-radius: 2rem">
             <%= render 'users/consult', user: user, training: @training %>
@@ -129,27 +123,27 @@
         <% session.users.each do |trainer| %>
           <% trainer_array << trainer %>
           <% unless trainer_array.count(trainer) > 1 %>
-              <% if trainer.picture.present? %>
-                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= trainer.id %>'><img src='<%= "#{trainer.picture}" %>' alt="" class='avatar-sm-trainer ava' data-toggle='tooltip' data-placement="bottom" title='Trainer:  <%= "#{trainer.fullname}" %>'></a>
-              <% else %>
-                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= trainer.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-trainer ava' data-toggle='tooltip' data-placement="bottom" title='Trainer:  <%= "#{trainer.fullname}" %>'></a>
-              <% end %>
+            <% if trainer.picture.present? %>
+              <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= trainer.id %>'><img src='<%= "#{trainer.picture}" %>' alt="" class='avatar-sm-trainer ava' data-toggle='tooltip' data-placement="bottom" title='Trainer:  <%= "#{trainer.fullname}" %>'></a>
+            <% else %>
+              <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= trainer.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-trainer ava' data-toggle='tooltip' data-placement="bottom" title='Trainer:  <%= "#{trainer.fullname}" %>'></a>
+            <% end %>
           <% end %>
         <% end %>
       <% end %>
-        <% if (['super admin', 'admin', 'training manager'].include? current_user.access_level) %>
-          <% if trainer_array.uniq.count > 1 %>
-            <li><button class='avatar-sm-add ava' data-toggle='modal' data-target='#newTrainers'><i class="fas fa-plus" style='color:#888888; font-size:20px;' data-toggle='tooltip' title='Add Trainer' data-placement="bottom"></i></button></li>
-          <% else %>
-            <li><button class='avatar-sm-add ava' data-toggle='modal' data-target='#newTrainers'><i class="fas fa-plus" style='color:#888888; font-size:20px;' data-toggle='tooltip' title='Add Trainer' data-placement="bottom"></i></button></li>
-          <% end %>
+      <% if (['super admin', 'admin', 'training manager'].include? current_user.access_level) %>
+        <% if trainer_array.uniq.count > 1 %>
+          <li><button class='avatar-sm-add ava' data-toggle='modal' data-target='#newTrainers'><i class="fas fa-plus" style='color:#888888; font-size:20px;' data-toggle='tooltip' title='Add Trainer' data-placement="bottom"></i></button></li>
         <% else %>
-          <% if trainer_array.uniq.count > 1 %>
-            <li><button class='avatar-sm-add ava btn-add-user-disabled'><i class="fas fa-plus"></i></button></li>
-          <% else %>
-            <li><button class='avatar-sm-add ava btn-add-user-disabled'><i class="fas fa-plus"></i></button></li>
-          <% end %>
+          <li><button class='avatar-sm-add ava' data-toggle='modal' data-target='#newTrainers'><i class="fas fa-plus" style='color:#888888; font-size:20px;' data-toggle='tooltip' title='Add Trainer' data-placement="bottom"></i></button></li>
         <% end %>
+      <% else %>
+        <% if trainer_array.uniq.count > 1 %>
+          <li><button class='avatar-sm-add ava btn-add-user-disabled'><i class="fas fa-plus"></i></button></li>
+        <% else %>
+          <li><button class='avatar-sm-add ava btn-add-user-disabled'><i class="fas fa-plus"></i></button></li>
+        <% end %>
+      <% end %>
       </div>
     </div>
     <div class="middle-info2">

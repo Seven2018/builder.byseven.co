@@ -54,6 +54,7 @@ gem 'sendgrid-ruby'
 gem 'whenever', require: false
 gem 'ransack'
 gem 'trix-rails', require: 'trix'
+gem 'kaminari'
 gem 'where_exists'
 gem 'bullet', group: 'development'
 

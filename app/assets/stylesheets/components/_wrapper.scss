@@ -105,6 +105,20 @@ a {
   justify-content: space-between;
   align-items: flex-start;
   padding: 2rem 0;
+
+  form {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    .easy-autocomplete {
+      margin-right: 1rem;
+    }
+
+    .btn-search {
+      height: 4rem;
+    }
+  }
 }
 
 #page-buttons {
@@ -130,9 +144,26 @@ a {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
 
+    ul {
+      padding: 0;
+    }
+
     li {
+      min-height: 3rem;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
       cursor: pointer;
-      margin-bottom: 1rem;
+      padding-left: 4rem;
+      transition: background-color .3s ease-in-out;
+
+      &:hover {
+        background-color: rgba(0,0,0,0.1);
+      }
+
+      .eac-item {
+        width: 100%;
+      }
     }
   }
 
@@ -143,7 +174,7 @@ a {
     height: 1.6rem;
     width: 1.6rem;
     position: absolute;
-    right: 1rem;
+    left: 27rem;
     top: 1.2rem;
   }
 }
@@ -170,6 +201,10 @@ a {
 .side-search {
   background-color: transparent !important;
 }
+
+// #paginate-container {
+//   display: none;
+// }
 
 
 .index-card-large {

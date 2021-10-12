@@ -1,15 +1,16 @@
 <div class="container-seven-large container-seven-large-centered">
   <div id='page-index'>
     <div id="page-controls">
-        <%= simple_form_for :search, url: users_path, method: 'GET' do |f| %>
+        <%= simple_form_for :search, url: users_path, method: :get do |f| %>
           <% if params[:search] %>
-            <%= f.text_field :name, placeholder: 'Search for Users', label: false, data: {behavior: 'autocomplete'}, value: params[:search][:name] %>
+            <%= f.text_field :name, placeholder: 'Search', label: false, data: {behavior: 'autocomplete'}, value: params[:search][:name] %>
             <%= link_to users_path, class: 'search-close' do %>
               <i class="far fa-times-circle"></i>
             <% end %>
           <% else %>
             <%= f.text_field :name, placeholder: 'Search for Users', label: false, data: {behavior: 'autocomplete'} %>
           <% end %>
+          <%= f.submit 'Search', class: 'btn-search' %>
         <% end %>
       <div id="page-buttons">
         <% if ['super admin', 'admin', 'HR'].include? current_user.access_level %>
@@ -82,6 +83,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/jquery.easy-autocomplete.min.js"></script>
 
 <script>
+  form = document.querySelector('.search')
+  input = form.querySelector('input')
+  input.addEventListener('keypress', function(e) {
+    if (event.which == '13') {
+      event.preventDefault();
+    }
+  })
+
   $input = $("[data-behavior='autocomplete']");
 
   var options = {

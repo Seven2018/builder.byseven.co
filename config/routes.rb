@@ -37,6 +37,7 @@ Rails.application.routes.draw do
 
   # THEORIES
   resources :theories
+  get :theories_search, controller: :theories
 
   # CONTENTS
   resources :contents, only: [:index, :show, :new, :create, :update, :destroy] do
@@ -46,6 +47,7 @@ Rails.application.routes.draw do
     get :manage_linked_theories, controller: :theory_contents
     get :remove_linked_theory, controller: :theory_contents
   end
+  get :contents_search, controller: :contents
 
   # CLIENT COMPANIES
   resources :client_companies, path: '/companies' do
@@ -53,6 +55,7 @@ Rails.application.routes.draw do
     get 'new_attendees', to: 'client_companies#new_attendees', as: 'new_attendees'
     get 'create_attendees', to: 'client_companies#create_attendees', as: 'create_attendees'
   end
+  get :client_companies_search, controller: :client_companies
 
   # INVOICE ITEMS
   resources :invoice_items, only: [:index, :show, :edit, :update, :destroy]
