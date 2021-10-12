@@ -1,11 +1,8 @@
 class PagesController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:home, :survey, :contact_form, :contact_form_becos]
+  skip_before_action :authenticate_user!, only: [:home, :contact_form, :contact_form_becos]
 
   def home
     redirect_to trainings_path
-  end
-
-  def sandbox
   end
 
   def billing
@@ -30,13 +27,6 @@ class PagesController < ApplicationController
       IncomingContactMailer.with(user: User.find(109)).new_incoming_contact(contact, User.find(109)).deliver
     end
     redirect_to 'https://learn.byseven.co/thank-you-becos.html'
-  end
-
-  def survey
-    redirect_to 'https://docs.google.com/forms/d/1knOYJWvoVV7T3IVCbNqoMtTbgMiDG6zroZSPrRJm5vY/edit'
-  end
-
-  def dashboard_sevener
   end
 
   def airtable_import_users

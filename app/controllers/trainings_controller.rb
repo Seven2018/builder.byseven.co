@@ -5,16 +5,14 @@ class TrainingsController < ApplicationController
     # Index for trainings / Homepage (trainings/index)
     trainings = policy_scope(Training)
     trainings = trainings
-
-
     # If user in team SEVEN
     if ['super admin', 'admin', 'project manager'].include?(current_user.access_level)
-      # Search trainings involving selected user
+      # Search trainings
       if params[:search].present?
+        # Search trainings involving selected user
         if params[:search][:user].present?
           @user = User.find(params[:search][:user])
           trainings = ((Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(training_ownerships: {user_id: params[:search][:user]}).or(Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:search][:user]})).where("unaccent(lower(trainings.title)) LIKE ?", "%#{I18n.transliterate(params[:search][:title].downcase)}%")) + (Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(training_ownerships: {user_id: params[:search][:user]}).or(Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:search][:user]})).joins(client_contact: :client_company).where("lower(client_companies.name) LIKE ?", "%#{params[:search][:title].downcase}%"))).flatten(1).uniq
-          # trainings = Training.search_by_title_and_company("#{params[:search][:title]} #{@user.fullname}")
           trainings = Training.where(id: trainings)
         else
           trainings = Training.search_by_title_and_company("#{params[:search][:title]}")
@@ -26,22 +24,21 @@ class TrainingsController < ApplicationController
         # trainings = Training.search_by_title_and_company("#{@user.fullname}")
         trainings = Training.where(id: trainings)
       end
-      @upcoming_trainings = trainings_ordered(trainings, 'upcoming')
-      @trainings = trainings_ordered(trainings, 'all')
     # If user is Sevener
     else
       # Search trainings involving current user (Sevener)
       if params[:search]
-        trainings = Training.search_by_title_and_company("#{params[:search][:title]} #{current_user.fullname}") if params[:search].present?
+        # WIP
+        # trainings = Training.search_by_title_and_company("#{params[:search][:title]} #{current_user.fullname}") if params[:search].present?
       # Trainings index involving current user (Sevener)
       else
-        # trainings = (Training.joins(sessions: :users).where(users: {id: current_user.id}).uniq.select{|x| if (sessions = Session.joins(:session_trainers).where(training_id: x.id, session_trainers: {user_id: current_user.id}).order(date: :asc).reject{|c| !c.date.present?}).present?; sessions.last.date >= Date.today; end;}.sort_by{|y| y.next_session} + Training.joins(sessions: :users).where(sessions: {date: nil}, users: {id: current_user.id}).uniq).uniq
         trainings = Training.joins(sessions: :users).where(users: {id: current_user.id}).uniq.select{|x| (x.end_time.present? && x.end_time >= Date.today && x.trainer_last_session(current_user) >= Date.today)}
+        trainings = Training.where(id: trainings.map{|x| x.id})
       end
     end
-    @upcoming_trainings = trainings.where(id: trainings_ordered(trainings, 'upcoming').map{|x| x.id})
-    @trainings = trainings.where(id: trainings_ordered(trainings, 'all').map{|x| x.id})
-
+    @upcoming_trainings = trainings_ordered(trainings, 'upcoming')
+    all_ids = trainings_ordered(trainings, 'all').map{|x| x.id}
+    @trainings = trainings.where(id: all_ids).order_as_specified(id: all_ids)
     respond_to do |format|
       format.html {}
       format.js
@@ -68,48 +65,36 @@ class TrainingsController < ApplicationController
   # end
 
   def index_completed
+    # If user in team SEVEN
     if ['super admin', 'admin', 'project manager'].include?(current_user.access_level)
+      # Search trainings
       if params[:search].present?
+        # Search trainings involving selected user
         if params[:search][:user].present?
           @user = User.find(params[:user])
           trainings = ((Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(training_ownerships: {user_id: params[:user]}).or(Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:user]})).where("unaccent(lower(trainings.title)) LIKE ?", "%#{I18n.transliterate(params[:search][:title].downcase)}%")) + (Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(training_ownerships: {user_id: params[:user]}).or(Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:user]})).joins(client_contact: :client_company).where("lower(client_companies.name) LIKE ?", "%#{params[:search][:title].downcase}%"))).flatten(1).uniq
-          # trainings = Training.search_by_title_and_company("#{params[:search][:title]} #{@user.fullname}")
           trainings = Training.where(id: trainings)
         else
-        # trainings = Training.search_by_title_and_company("#{params[:search][:title]}") if params[:search].present?
           trainings = Training.search_by_title_and_company("#{params[:search][:title]}")
         end
       elsif params[:user].present?
         @user = User.find(params[:user])
         trainings = (Training.joins(:training_ownerships).where(training_ownerships: {user_id: params[:user]}) + Training.joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:user]})).uniq
-        # trainings = Training.search_by_title_and_company("#{@user.fullname}")
         trainings = Training.where(id: trainings)
       else
         trainings = Training.all
       end
-    # Index for Sevener Users, with limited visibility
       @trainings = trainings_ordered(trainings, 'completed')
+    # Index for Sevener Users, with limited visibility
     else
-      # trainings = (Training.joins(sessions: :users).where(users: {id: current_user.id}).uniq.select{|x| Session.joins(:session_trainers).where(training_id: x.id, session_trainers: {user_id: current_user.id}).order(date: :asc).reject{|c| !c.date.present?}.last.date < Date.today}.sort_by{|y| y.end_time}.reverse - Training.joins(sessions: :users).where(sessions: {date: nil}, users: {id: current_user.id}).uniq).uniq
-      trainings = Training.search_by_title_and_company("#{params[:search][:title]} + #{current_user.fullname}") if params[:search].present?
-      @trainings = trainings.sort_by{|y| y.trainer_last_session(current_user)}.reverse
+      if params[:search].present?
+        # WIP
+      else
+        @trainings = Training.joins(sessions: :users).where(users: {id: current_user.id}).where_not_exists(:sessions, 'date >= ?', Date.today).distinct.sort_by{|y| y.trainer_last_session(current_user) || Date.new(1970)}.reverse
+      end
     end
     skip_authorization
     render partial: "trainings/partials/index_completed"
-  end
-
-  # Index with weekly calendar view
-  def index_week
-    @trainings = Training.all
-    @sessions = Session.all
-    authorize @trainings
-  end
-
-  # Index with monthly calendar view
-  def index_month
-    @trainings = Training.all
-    @sessions = Session.all
-    authorize @trainings
   end
 
   def show

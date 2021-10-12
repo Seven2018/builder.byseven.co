@@ -1,4 +1,4 @@
-<% trainings_to_date = @trainings.where.not(training_type: 'Home').where_exists(:sessions, date: nil) + @trainings.where.not(training_type: 'Home').where_not_exists(:sessions)%>
+<% trainings_to_date = @trainings.where(training_type: ['Training', nil]).where_exists(:sessions, date: nil) + @trainings.where(training_type: ['Training', nil]).where_not_exists(:sessions)%>
 <% trainings_to_date.each do |training| %>
   <div class="training-card" id="card-index" data-toggle='tooltip' title='<%= training.title %>'>
     <div class="training-card-main">

@@ -74,7 +74,6 @@ class InvoiceItemsController < ApplicationController
 
   # Access to InvoiceItems
   def report
-    @invoice_items = InvoiceItem.all
     authorize @invoice_items
   end
 
@@ -339,10 +338,6 @@ class InvoiceItemsController < ApplicationController
     end
   end
 
-  def send_invoice_mail
-    raise
-  end
-
   # Marks an InvoiceItem as send
   def marked_as_send
     authorize @invoice_item
@@ -395,17 +390,6 @@ class InvoiceItemsController < ApplicationController
       @invoice_items_total = InvoiceItem.where(type: params[:type]).order('id DESC')
       @invoice_items = @invoice_items_total.offset((n-1)*50).first(50)
     end
-  end
-
-  def client_options
-    {
-      client_id: Rails.application.credentials.google_client_id,
-      client_secret: Rails.application.credentials.google_client_secret,
-      authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
-      token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
-      scope: Google::Apis::DriveV3::AUTH_DRIVE,
-      redirect_uri: "#{request.base_url}/upload_to_drive"
-    }
   end
 
   def set_invoice_item

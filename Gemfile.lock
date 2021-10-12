@@ -285,6 +285,8 @@ GEM
     omniauth-rails_csrf_protection (1.0.0)
       actionpack (>= 4.2)
       omniauth (~> 2.0)
+    order_as_specified (1.7)
+      activerecord (>= 5.0.0)
     orm_adapter (0.5.0)
     os (1.1.1)
     pg (0.21.0)
@@ -494,6 +496,7 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-linkedin-oauth2
   omniauth-rails_csrf_protection
+  order_as_specified
   pg (~> 0.21)
   pg_search
   pry-byebug

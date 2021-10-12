@@ -6,11 +6,6 @@ before_action :set_clientcompany, only: [:show, :edit, :update, :destroy]
     params[:search] ? @client_companies = policy_scope(ClientCompany).where("lower(name) LIKE ?", "%#{params[:search][:name].downcase}%").order(name: :asc) : @client_companies = policy_scope(ClientCompany).order(name: :asc)
   end
 
-  def client_companies_search
-    skip_authorization
-    @client_companies = ClientCompany.ransack(name_cont: params[:search]).result(distinct: true).limit(5)
-  end
-
   def show
     authorize @client_company
     @client_contacts = ClientContact.where(client_company: @client_company)
@@ -44,13 +39,9 @@ before_action :set_clientcompany, only: [:show, :edit, :update, :destroy]
     redirect_to client_companies_path
   end
 
-  def new_attendees
+  def client_companies_search
     skip_authorization
-    @client_company = ClientCompany.find(params[:client_company_id])
-  end
-
-  def create_attendees
-    skip_authorization
+    @client_companies = ClientCompany.ransack(name_cont: params[:search]).result(distinct: true).limit(5)
   end
 
   private

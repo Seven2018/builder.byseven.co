@@ -17,10 +17,6 @@ class ActionPolicy < ApplicationPolicy
     true
   end
 
-  def edit?
-    check_access_seven
-  end
-
   def update?
     check_access_seven
   end

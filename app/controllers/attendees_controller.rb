@@ -1,7 +1,6 @@
 class AttendeesController < ApplicationController
-  before_action :set_training, only: [:form]
   before_action :set_attendee, only: [:show]
-  before_action :authenticate_user!, except: [:form, :new, :create, :new_kea_partners, :create_kea_partners, :template_csv, :import]
+  before_action :authenticate_user!, except: [:new, :create, :template_csv, :import]
   invisible_captcha only: [:create], honeypot: :subtitle
 
   def index
@@ -111,10 +110,6 @@ class AttendeesController < ApplicationController
 
   def attendee_params
     params.require(:attendee).permit(:firstname, :lastname, :employee_id, :email)
-  end
-
-  def set_training
-    @training = Training.find(params[:training_id])
   end
 
   def set_attendee

@@ -1,4 +1,5 @@
 class SessionTrainersController < ApplicationController
+
   def redirect
     skip_authorization
     client = Signet::OAuth2::Client.new(client_options)

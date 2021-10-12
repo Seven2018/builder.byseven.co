@@ -47,9 +47,9 @@
             </li>
             <li><%= link_to 'Import Attendees', import_attendees_form_path(training_id: @training.id) %></li>
             <li><%= link_to 'Attendees List', attendees_path(training_id: @training.id) %></li>
-            <li><%= link_to 'New invoice', new_invoiceitem_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
-            <li><%= link_to 'New invoice Airtable', new_airtable_invoiceitem_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
-            <li><%= link_to 'New invoice Airtable by Trainer', new_airtable_invoiceitem_by_trainer_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id), method: :post %></li>
+            <li><%= link_to 'New invoice', new_invoice_item_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
+            <li><%= link_to 'New invoice Airtable', new_airtable_invoice_item_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
+            <li><%= link_to 'New invoice Airtable by Trainer', new_airtable_invoice_item_by_trainer_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id), method: :post %></li>
             <li><%= link_to 'Invoices List', invoice_items_path(training_id: @training.id, type: 'Invoice') %></li>
             <%# if @training.forms.empty? %>
               <!-- <li><a data-toggle='modal' type='button' data-target='#newForm' style='cursor:pointer;'>New form</a></li> -->
