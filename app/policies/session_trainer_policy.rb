@@ -17,10 +17,6 @@ class SessionTrainerPolicy < ApplicationPolicy
     check_access_seven
   end
 
-  def destroy?
-    check_access_seven
-  end
-
   private
 
   def check_access_seven

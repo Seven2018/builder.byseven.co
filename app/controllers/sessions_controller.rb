@@ -2,6 +2,23 @@ class SessionsController < ApplicationController
   before_action :set_session, only: [:show, :edit, :update, :update_ajax, :destroy, :viewer, :copy_form, :copy, :copy_content, :presence_sheet, :import_attendees]
   skip_before_action :verify_authenticity_token, only: [:update_ajax]
 
+  def new
+    @training = Training.find(params[:training_id])
+    @session = Session.new
+    authorize @session
+  end
+
+  def create
+    @training = Training.find(params[:training_id])
+    @session = Session.new(session_params)
+    authorize @session
+    @session.training = @training
+    if @session.save
+      UpdateAirtableJob.perform_async(@training)
+      redirect_to training_path(@training)
+    end
+  end
+
   # Shows an InvoiceItem in html or pdf version
   def show
     authorize @session
@@ -21,23 +38,6 @@ class SessionsController < ApplicationController
           zoom: 1,
         )
       end
-    end
-  end
-
-  def new
-    @training = Training.find(params[:training_id])
-    @session = Session.new
-    authorize @session
-  end
-
-  def create
-    @training = Training.find(params[:training_id])
-    @session = Session.new(session_params)
-    authorize @session
-    @session.training = @training
-    if @session.save
-      UpdateAirtableJob.perform_async(@training)
-      redirect_to training_path(@training)
     end
   end
 
@@ -82,10 +82,6 @@ class SessionsController < ApplicationController
 
   # Shows a Session in "viewer mode"
   def viewer
-    authorize @session
-  end
-
-  def copy_form
     authorize @session
   end
 
@@ -138,6 +134,10 @@ class SessionsController < ApplicationController
         new_mod.update(workshop_id: new_workshop.id, position: mod.position)
       end
     end
+  end
+
+  def copy_form
+    authorize @session
   end
 
   def presence_sheet

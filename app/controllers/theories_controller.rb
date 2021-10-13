@@ -4,19 +4,10 @@ class TheoriesController < ApplicationController
   # Index with "search" option
   def index
     if params[:search]
-      @theories = policy_scope(Theory).where("lower(name) LIKE ?", "%#{params[:search][:name].downcase}%").order(name: :asc)
+      @theories = policy_scope(Theory).search_by_name("#{params[:search][:name]}")
     else
       @theories = policy_scope(Theory).order(name: :asc)
     end
-  end
-
-  def theories_search
-    skip_authorization
-    @theories = Theory.ransack(name_cont: params[:search]).result(distinct: true).limit(5)
-  end
-
-  def show
-    authorize @theory
   end
 
   def new
@@ -28,6 +19,10 @@ class TheoriesController < ApplicationController
     @theory = Theory.new(theory_params)
     authorize @theory
     @theory.save ? (redirect_to theories_path) : (render :new)
+  end
+
+  def show
+    authorize @theory
   end
 
   def edit
@@ -44,6 +39,11 @@ class TheoriesController < ApplicationController
     authorize @theory
     @theory.destroy
     redirect_to theories_path
+  end
+
+  def theories_search
+    skip_authorization
+    @theories = Theory.ransack(name_cont: params[:search]).result(distinct: true).limit(5)
   end
 
   private

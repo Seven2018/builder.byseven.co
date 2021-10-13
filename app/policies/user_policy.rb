@@ -17,10 +17,6 @@ class UserPolicy < ApplicationPolicy
     check_access
   end
 
-  def edit?
-    check_access
-  end
-
   def update?
     check_access
   end

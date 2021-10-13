@@ -29,11 +29,15 @@ class SessionPolicy < ApplicationPolicy
     check_access
   end
 
-  def copy_form?
+  def copy?
     check_access_seven
   end
 
-  def copy?
+  def copy_content?
+    check_access_seven
+  end
+
+  def copy_form?
     check_access_seven
   end
 

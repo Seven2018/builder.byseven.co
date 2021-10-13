@@ -21,15 +21,27 @@ class InvoiceItemPolicy < ApplicationPolicy
     check_access_seven
   end
 
+  def report?
+    check_access_seven
+  end
+
+  def new_invoice_item?
+    check_access_seven
+  end
+
+  def new_estimate?
+    check_access_seven
+  end
+
   def copy?
     check_access_seven
   end
 
-  def copy_here?
+  def transform_to_invoice?
     check_access_seven
   end
 
-  def transform_to_invoice?
+  def edit_client?
     check_access_seven
   end
 
@@ -38,18 +50,6 @@ class InvoiceItemPolicy < ApplicationPolicy
   end
 
   def destroy?
-    check_access_seven
-  end
-
-  def new_invoice_item?
-    check_access_seven
-  end
-
-  def new_sevener_invoice?
-    check_access_seven
-  end
-
-  def new_estimate?
     check_access_seven
   end
 
@@ -62,22 +62,6 @@ class InvoiceItemPolicy < ApplicationPolicy
   end
 
   def marked_as_cancelled?
-    check_access_seven
-  end
-
-  def upload_to_sheet?
-    check_access_seven
-  end
-
-  def upload_to_drive?
-    check_access_seven
-  end
-
-  def report?
-    check_access_seven
-  end
-
-  def edit_client?
     check_access_seven
   end
 

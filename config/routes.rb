@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  # get 'session_trainers/new'
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
 
   # ACTIONS
@@ -124,7 +123,7 @@ Rails.application.routes.draw do
         get :manage_linked_theories, controller: :theory_workshops
         get :remove_linked_theory, controller: :theory_workshops
       end
-      resources :session_trainers, only: [:create, :destroy]
+      resources :session_trainers, only: [:create]
       resources :session_attendees, only: [:create, :destroy]
       resources :comments, only: [:create, :destroy]
     end

@@ -1,5 +1,5 @@
 class TrainingsController < ApplicationController
-  before_action :set_training, only: [:show, :edit, :update, :destroy, :copy, :sevener_billing, :invoice_form, :trainer_notification_email, :import_attendees]
+  before_action :set_training, only: [:show, :edit, :update, :destroy, :copy, :invoice_form, :trainer_notification_email, :import_attendees]
 
   def index
     # Index for trainings / Homepage (trainings/index)
@@ -45,25 +45,6 @@ class TrainingsController < ApplicationController
     end
   end
 
-  # Index for upcoming trainings (async render) NOT USED
-  # def index_upcoming
-  #   # Index with 'search' option and global visibility for SEVEN Users
-  #   if ['super admin', 'admin', 'project manager'].include?(current_user.access_level)
-  #     if params[:user].present?
-  #       @trainings = (Training.joins(:training_ownerships).where(training_ownerships: {user_id: params[:user]}) + Training.joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:user]})).uniq
-  #       @trainings = @trainings.select{|x| x.end_time.present? && x.end_time >= Date.today}.sort_by{|y| y.next_session}
-  #       @user = User.find(params[:user])
-  #     else
-  #       @trainings = Training.all.select{|x| x.end_time.present? && x.end_time >= Date.today}.sort_by{|y| y.next_session}
-  #     end
-  #   # Index for Sevener Users, with limited visibility
-  #   else
-  #     @trainings = (Training.joins(sessions: :users).where(users: {id: current_user.id}).uniq.select{|x| if (sessions = Session.joins(:session_trainers).where(training_id: x.id, session_trainers: {user_id: current_user.id}).order(date: :asc).reject{|c| !c.date.present?}).present?; sessions.last.date >= Date.today; end;}.sort_by{|y| y.next_session} + Training.joins(sessions: :users).where(sessions: {date: nil}, users: {id: current_user.id}).uniq).uniq
-  #   end
-  #   skip_authorization
-  #   render partial: "index_upcoming"
-  # end
-
   def index_completed
     # If user in team SEVEN
     if ['super admin', 'admin', 'project manager'].include?(current_user.access_level)
@@ -95,6 +76,28 @@ class TrainingsController < ApplicationController
     end
     skip_authorization
     render partial: "trainings/partials/index_completed"
+  end
+
+  def new
+    @training = Training.new
+    @training_ownership = TrainingOwnership.new
+    @clients = ClientContact.all
+    authorize @training
+  end
+
+  def create
+    @training = Training.new(training_params)
+    authorize @training
+    begin
+      @training.refid = "#{Time.current.strftime('%y')}-#{(Training.last.refid[-4..-1].to_i + 1).to_s.rjust(4, '0')}"
+    rescue
+    end
+    @training.satisfaction_survey = 'https://learn.byseven.co/survey'
+    if @training.save
+      redirect_to training_path(@training)
+    else
+      render :new
+    end
   end
 
   def show
@@ -130,28 +133,6 @@ class TrainingsController < ApplicationController
     skip_authorization
     @session = Session.find(params[:session_id])
     render partial: "show_session_content"
-  end
-
-  def new
-    @training = Training.new
-    @training_ownership = TrainingOwnership.new
-    @clients = ClientContact.all
-    authorize @training
-  end
-
-  def create
-    @training = Training.new(training_params)
-    authorize @training
-    begin
-      @training.refid = "#{Time.current.strftime('%y')}-#{(Training.last.refid[-4..-1].to_i + 1).to_s.rjust(4, '0')}"
-    rescue
-    end
-    @training.satisfaction_survey = 'https://learn.byseven.co/survey'
-    if @training.save
-      redirect_to training_path(@training)
-    else
-      render :new
-    end
   end
 
   def edit

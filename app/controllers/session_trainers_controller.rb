@@ -231,13 +231,6 @@ class SessionTrainersController < ApplicationController
     redirect_to redirect_path(training_id: "/#{training.id}/", session_id: "|#{sessions_ids[0...-1]}|", list: 'purge_training')
   end
 
-  def update
-    @session_trainer = SessionTrainer.find(:id)
-    authorize @session_trainer
-    @session_trainer.update(session_trainer_params)
-    redirect_to request.referrer if @session_trainer.present?
-  end
-
   private
 
   def client_options
