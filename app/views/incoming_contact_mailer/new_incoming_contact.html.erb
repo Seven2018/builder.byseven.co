@@ -69,7 +69,11 @@
         <p>Voici les informations collectées :</p>
         <br>
         <ul>
-          <li><%= @contact['Nom'] %></li>
+          <% if @contact['Nom'].present? %>
+            <li><%= @contact['Nom'] %></li>
+          <% else %>
+            <li><%= "#{@contact['Firstname']} #{@contact['Lastname']}" %></li>
+          <% end %>
           <li><%= @contact['Email'] %></li>
           <li><%= @contact['Message'] %></li>
         </ul>

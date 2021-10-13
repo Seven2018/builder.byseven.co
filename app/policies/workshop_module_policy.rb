@@ -18,7 +18,7 @@ class WorkshopModulePolicy < ApplicationPolicy
   end
 
   def destroy?
-    check_access_seven
+    check_access
   end
 
   def move_up?

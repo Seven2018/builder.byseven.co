@@ -273,7 +273,7 @@
 
 
 .module-card-controls {
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   flex-shrink: 0;
   display: none;
@@ -284,9 +284,14 @@
     flex-direction: column;
   }
 
- div {
-  margin: 2rem 0;
- }
+  div {
+    margin: 2rem 0;
+  }
+
+  a {
+    width: 4rem;
+    height: 4rem;
+  }
 }
 
 .module-card-viewer-title {
