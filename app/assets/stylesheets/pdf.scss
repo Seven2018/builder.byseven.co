@@ -168,12 +168,12 @@ p.logistics-pdf {
 // }
 
 .invoice-desc-headline-description-pdf {
-  width: 300px !important;
+  width: 290px !important;
   margin-right: 0px;
 }
 
 .invoice-desc-line-description-pdf {
-  width: 300px !important;
+  width: 290px !important;
   margin-right: 0px;
 }
 
@@ -185,8 +185,12 @@ p.logistics-pdf {
     margin-left: 3rem;
   }
 
-  p:nth-of-type(3) {
-    width: 120px;
+  p:nth-of-type(2), p:nth-of-type(3) {
+    width: 100px;
+  }
+
+  p:nth-of-type(4) {
+    width: 60px;
   }
 }
 
