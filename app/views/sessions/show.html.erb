@@ -230,19 +230,23 @@
     }
   };
 
-  function selectTrainer(element) {
-    selected = element.closest('.users-select').querySelector('select').value
-    user_id = selected.split('|')[0]
+  function selectTrainer(element, add) {
+    if (add == true) {
+      selected = element.closest('.users-select').querySelector('select').value
+      user_id = selected.split('|')[0]
+    }
     form = element.closest('.modal-body').querySelector('form')
     selected_storage = form.querySelector('#link_trainer_ids')
     selected_array = []
-    if (!selected_storage.value.includes(user_id)){
-      pill_container = element.closest('.modal-body').querySelector('.users-list')
+    pill_container = element.closest('.modal-body').querySelector('.users-list')
+    if (add == true && !selected_storage.value.includes(user_id)){
       new_pill = document.createElement('div');
       new_pill.classList.add('trainer-pill')
       new_pill.id = 'user-' + user_id
-      new_pill.innerHTML = "<p>" + selected.split('|')[1] + "</p><i class='fas fa-times' onclick='this.parentNode.remove();'></i>"
+      new_pill.innerHTML = "<p>" + selected.split('|')[1] + "</p><i class='fas fa-times' onclick='selectTrainer(this, false);'></i>"
       pill_container.appendChild(new_pill)
+    } else if (add == false) {
+      element.closest('.trainer-pill').remove();
     }
     pill_container.querySelectorAll('.trainer-pill').forEach((pill) =>{
       if (pill.id != '') {

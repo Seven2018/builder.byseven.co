@@ -24,7 +24,7 @@
           <% end %>
         </select>
       </div>
-      <button onclick='selectTrainer(this);'>Add</button>
+      <button onclick='selectTrainer(this, true);'>Add</button>
     </div>
     <div class="users-list">
       <div class="trainer-pill trainer-pill-template hidden">
@@ -35,7 +35,7 @@
       <% users.each do |user| %>
         <div id='user-<%= user.id %>'class="trainer-pill">
           <p><%= user.fullname %></p>
-          <i class="fas fa-times" onclick='this.parentNode.remove();'></i>
+          <i class="fas fa-times" onclick='selectTrainer(this, false);'></i>
         </div>
       <% end %>
     </div>
@@ -43,13 +43,13 @@
       <% if training.present? %>
         <%= simple_form_for :link, url: trainers_link_to_training_path, method: :get, remote: true do |f| %>
           <%= f.hidden_field :training_id, value: training.id %>
-          <%= f.hidden_field :trainer_ids %>
+          <%= f.hidden_field :trainer_ids, value: users.map(&:id).join(',') %>
           <%= f.submit '', class: 'hidden-submit hidden' %>
         <% end %>
       <% else %>
         <%= simple_form_for :link, url: trainers_link_to_session_path, method: :get, remote: true do |f| %>
           <%= f.hidden_field :session_id, value: session.id %>
-          <%= f.hidden_field :trainer_ids %>
+          <%= f.hidden_field :trainer_ids, value: users.map(&:id).join(',') %>
           <%= f.hidden_field :page, value: page %>
           <%= f.submit '', class: 'hidden-submit hidden' %>
         <% end %>

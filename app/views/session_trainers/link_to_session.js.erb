@@ -1,4 +1,5 @@
 if ('<%= @page %>' == 'training') {
+  document.querySelector('.middle-info-user').innerHTML = '<%= j render "trainings/partials/show_training_users", training: @session.training %>';
   document.querySelector('#card-block-<%= @session.id %>').innerHTML = '<%= j render "trainings/partials/show_session_card", session: @session %>';
 
   photos = document.querySelectorAll('.ava')
