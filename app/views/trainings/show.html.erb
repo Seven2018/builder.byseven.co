@@ -107,16 +107,11 @@
       <div class="sessions-cards">
         <%= render 'trainings/partials/show_sessions', training: @training %>
       </div>
-      <div class="training-info-footer">
-        <%# if (['super admin', 'admin', 'training manager'].include? current_user.access_level) && (@training.mode == 'Company' || @training.mode.nil?) %>
-        <%# elsif (['super admin', 'admin', 'training manager'].include? current_user.access_level) && @training.mode == 'School'%>
-          <%# link_to 'Add a session', new_training_session_path(@training), class: 'btn btn-edit-yellow' %>
-        <%# end %>
-      </div>
     </div>
   </div>
 </div>
-<!-- Modal -->
+
+<!-- Modals -->
 <div class="modal fade" id="trainingInfos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document" style="border-radius: 2rem">
     <%= render 'trainings/show_infos', training: @training %>
@@ -129,12 +124,6 @@
   </div>
 </div>
 
-<!-- <div class="modal fade" id="newTrainers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-lg" role="document" style="border-radius: 2rem">
-    <%# render 'session_trainers/new_trainers', training: @training %>
-  </div>
-</div>
- -->
 <div class="modal fade" id="newTrainers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document" style="border-radius: 2rem">
     <%= render 'session_trainers/trainers_link', training: @training %>
@@ -253,21 +242,15 @@
 
     function openSessionForm(element) {
       if (formGuardian == false) {
-        formGuardian = true;
-        element.closest('.card-lg').querySelectorAll('.hidden-form').forEach((form) => {
-          form.parentNode.querySelector('p, h3').classList.toggle('hidden');
-          form.classList.toggle('hidden');
-          if (form.querySelector('.form-control') != null){
-            initial_value = form.querySelector('.form-control').value;
-          }
-          if (form.querySelector('.datepicker') != null) {
-            flatpickr(".datepicker", {
-              disableMobile: true,
-              dateFormat: "d/m/Y",});
-          }
-        })
+        formGuardian = true
+        card = element.closest('.card-lg')
+        card.querySelector('.card-footer-lg-infos').classList.add('hidden')
+        card.querySelector('.card-footer-lg-form').classList.remove('hidden')
+        flatpickr(".datepicker", {
+          disableMobile: true,
+          dateFormat: "d/m/Y",});
       }
-    };
+    }
   </script>
 <% end %>
 

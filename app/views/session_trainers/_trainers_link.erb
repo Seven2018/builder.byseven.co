@@ -50,6 +50,7 @@
         <%= simple_form_for :link, url: trainers_link_to_session_path, method: :get, remote: true do |f| %>
           <%= f.hidden_field :session_id, value: session.id %>
           <%= f.hidden_field :trainer_ids %>
+          <%= f.hidden_field :page, value: page %>
           <%= f.submit '', class: 'hidden-submit hidden' %>
         <% end %>
       <% end %>

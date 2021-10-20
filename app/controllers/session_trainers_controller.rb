@@ -139,6 +139,7 @@ class SessionTrainersController < ApplicationController
   def link_to_session
     session_trainer = SessionTrainer.new
     authorize session_trainer
+    @page = params[:link][:page]
     @session = Session.find(params[:link][:session_id])
     user_ids = params[:link][:trainer_ids].split(',')
 
@@ -159,7 +160,7 @@ class SessionTrainersController < ApplicationController
         session_trainer.update(status: 'to_delete')
       end
     end
-    UpdateAirtableJob.perform_async(@session.training, true)
+    # UpdateAirtableJob.perform_async(@session.training, true)
     respond_to do |format|
       format.js
     end
@@ -190,7 +191,7 @@ class SessionTrainersController < ApplicationController
       end
     end
 
-    UpdateAirtableJob.perform_async(@training, true)
+    # UpdateAirtableJob.perform_async(@training, true)
     respond_to do |format|
       format.js
     end
