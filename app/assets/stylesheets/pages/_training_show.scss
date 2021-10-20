@@ -259,34 +259,42 @@
   font-size: 2rem;
   font-weight: 300;
   position: relative;
+
   li {
     display: inline-block;
     margin: 0 0.5rem;
   }
-  .avatar-sm-add {
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid grey;
-  i {
-    color: #888888;
-    font-size: 20px;
-  }
-  }
-.avatar-sm-trainer {
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #E64259;
-  }
-  .ava2 {
-  position: absolute;
-  right: 0;
-  top: 0;
-}
 
+  .avatar-sm-add {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: white;
+    border: 3px solid grey;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    i {
+      color: #888888;
+      font-size: 20px;
+    }
+  }
+
+  .avatar-sm-trainer {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #E64259;
+  }
+
+  .ava2 {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
 }
 
 #dropdownMenuButton::after, #dropdownNotificationButton::after {
@@ -316,8 +324,9 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+
   i {
-    margin-left: 10px;
+    margin-right: 1rem;
   }
 }
 

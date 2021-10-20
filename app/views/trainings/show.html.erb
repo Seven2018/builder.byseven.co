@@ -244,8 +244,9 @@
       if (formGuardian == false) {
         formGuardian = true
         card = element.closest('.card-lg')
-        card.querySelector('.card-footer-lg-infos').classList.add('hidden')
-        card.querySelector('.card-footer-lg-form').classList.remove('hidden')
+        card.querySelector('.card-footer-lg__infos').classList.add('hidden')
+        card.querySelector('.card-session-header').querySelector('h3').classList.add('hidden')
+        card.querySelector('.card-footer-lg__form').classList.remove('hidden')
         flatpickr(".datepicker", {
           disableMobile: true,
           dateFormat: "d/m/Y",});

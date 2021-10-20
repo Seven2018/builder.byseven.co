@@ -35,7 +35,7 @@
   </div>
 <% end %>
 <% trainer_array = [] %>
-<% User.joins(:session_trainers).where(session_trainers: {session_id: training.sessions.map(&:id), status: nil}).uniq.each do |trainer| %>
+<% User.joins(:session_trainers).where(session_trainers: {session_id: training.sessions.map(&:id), status: nil}).order(lastname: :asc).uniq.each do |trainer| %>
   <% trainer_array << trainer %>
   <% unless trainer_array.count(trainer) > 1 %>
     <% if trainer.picture.present? %>
