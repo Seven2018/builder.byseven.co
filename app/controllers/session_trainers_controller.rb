@@ -41,17 +41,17 @@ class SessionTrainersController < ApplicationController
       Session.find(session_ids.join).destroy
       redirect_to training_path(training)
       return
-    elsif command[0...-1] == 'remove_trainers' || command[0...-1] == 'remove_trainers_global'
-      trainers_to_delete = Base64.decode64(params[:state]).split('#')[1].split(',')
-      SessionTrainer.where(id: trainers_to_delete).each do |session_trainer|
-        delete_calendar_id(session_trainer, service)
-        session_trainer.destroy
-      end
-      redirect_to training_path(training)
-      return
+    # elsif command[0...-1] == 'remove_trainers' || command[0...-1] == 'remove_trainers_global'
+    #   trainers_to_delete = Base64.decode64(params[:state]).split('#')[1].split(',')
+    #   SessionTrainer.where(id: trainers_to_delete).each do |session_trainer|
+    #     delete_calendar_id(session_trainer, service)
+    #     session_trainer.destroy
+    #   end
+    #   redirect_to training_path(training)
+    #   return
     else
       # UpdateCalendarJob.perform_async(session_ids, command, service, client_options)
-          # Calendars ids
+      # Calendars ids
       calendars_ids = {'other' => 'vum1670hi88jgei65u5uedb988@group.calendar.google.com'}
       User.where(access_level: ['super admin','admin']).each{|x| calendars_ids[x.id] = x.email}
       # Lists the users and the ids of the events to be deleted
@@ -60,7 +60,7 @@ class SessionTrainersController < ApplicationController
           delete_calendar_id(session_trainer, service)
         #rescue
         #end
-        session_trainer.update(calendar_uuid: nil)
+        session_trainer.status == 'to_delete' ? session_trainer.destroy : session_trainer.update(calendar_uuid: nil)
       end
       # Lists the users for whom an event will be created
       list = command.split(',')
@@ -135,53 +135,65 @@ class SessionTrainersController < ApplicationController
     redirect_to training_path(training)
   end
 
-  # Allows management of SessionTrainers through a checkbox collection
-  def create
-    @session_trainer = SessionTrainer.new
-    authorize @session_trainer
-    @session = Session.find(params[:session_id])
-    user_ids = params[:session][:user_ids].reject{|c| c.empty?}
-    # Select all Users whose checkbox is checked and create a SessionTrainer
+  # Allows management of SessionTrainers for target Session
+  def link_to_session
+    session_trainer = SessionTrainer.new
+    authorize session_trainer
+    @session = Session.find(params[:link][:session_id])
+    user_ids = params[:link][:trainer_ids].split(',')
+
+    # Select all selected Users and create a SessionTrainer
     user_ids.each do |user_id|
-      unless SessionTrainer.find_by(user_id: user_id, session_id: @session.id).present?
+      if SessionTrainer.where(user_id: user_id, session_id: @session.id).empty?
         SessionTrainer.create(user_id: user_id, session_id: @session.id)
+      elsif existing = SessionTrainer.find_by(user_id: user_id, session_id: @session.id, status: 'to_delete')
+        existing.update(status: nil)
       end
     end
-    # Select all Users whose checkbox is unchecked and destroy their SessionTrainer, if existing
-    to_delete = SessionTrainer.where(session_id: @session.id).where.not(user_id: user_ids)
-    if to_delete.present?
-      redirect_to redirect_path(training_id: "/#{@session.training.id}/", session_id: "|#{@session.id}|", list: "remove_trainers", user_ids: "##{to_delete.map(&:id).join(',')}#")
-      return
+
+    # Select all not selected Users and get rid of their SessionTrainer (destroy if calendar_uuid is nil, mark for deletion otherwise)
+    SessionTrainer.where(session_id: @session.id).where.not(user_id: user_ids).each do |session_trainer|
+      if session_trainer.calendar_uuid.nil?
+        session_trainer.destroy
+      else
+        session_trainer.update(status: 'to_delete')
+      end
     end
     UpdateAirtableJob.perform_async(@session.training, true)
-    if params[:session_trainer][:page] == 'session'
-      redirect_to training_session_path(@session.training, @session)
-    else
-      redirect_to training_path(@session.training)
+    respond_to do |format|
+      format.js
     end
   end
 
-  def create_all
-    @session_trainer = SessionTrainer.new
-    authorize @session_trainer
-    training = Training.find(params[:training_id])
+  # Allows management of SessionTrainers for target Session
+  def link_to_training
+    session_trainer = SessionTrainer.new
+    authorize session_trainer
+    @training = Training.find(params[:link][:training_id])
+    user_ids = params[:link][:trainer_ids].split(',')
+
     # Select all Users whose checkbox is checked and create a SessionTrainer
-    user_ids = params[:training][:user_ids].reject{|c| c.empty?}
     user_ids.each do |user_id|
-      training.sessions.each do |session|
+      @training.sessions.each do |session|
         unless SessionTrainer.find_by(user_id: user_id, session_id: session.id).present?
           SessionTrainer.create(user_id: user_id, session_id: session.id)
         end
       end
     end
-    # Select all Users whose checkbox is unchecked and destroy their SessionTrainer, if existing
-    to_delete = SessionTrainer.where(session_id: training.sessions.ids).where.not(user_id: user_ids)
-    if to_delete.present?
-      redirect_to redirect_path(training_id: "/#{training.id}/", session_id: "|#{training.sessions.ids.join(',')}|", list: "remove_trainers_global", user_ids: "##{to_delete.map(&:id).join(',')}#")
-      return
+
+    # Select all not selected Users and get rid of their SessionTrainer (destroy if calendar_uuid is nil, mark for deletion otherwise)
+    SessionTrainer.where(session_id: @training.sessions.ids).where.not(user_id: user_ids).each do |session_trainer|
+      if session_trainer.calendar_uuid.nil?
+        session_trainer.destroy
+      else
+        session_trainer.update(status: 'to_delete')
+      end
     end
-    UpdateAirtableJob.perform_async(training, true)
-    redirect_to training_path(training)
+
+    UpdateAirtableJob.perform_async(@training, true)
+    respond_to do |format|
+      format.js
+    end
   end
 
   def update_calendar

@@ -6,7 +6,7 @@
             <% sessions = training.sessions.order(date: :asc).pluck(:date) %>
             <div class='training-card-infos-elements'>
               <% if sessions.count == 1 %>
-                <%= " On #{sessions.first&.date&.strftime('%d %b, %Y')}" %>
+                <%= " On #{sessions.first&.strftime('%d %b, %Y')}" %>
               <% else %>
                 <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
                   <%= " #{sessions.first&.strftime('%d %b, %Y')} to #{sessions.last&.strftime('%d %b, %Y')}" %>

@@ -1,11 +1,11 @@
 <div class="modal-content">
-  <div class="modal-header">
+  <div class="modal-header modal-header-yellow">
     <div id="modal-title" style="display: flex; justify-content: space-between;">
       <h3 class="modal-title" id="myModalLabel">Add a session</h3>
     </div>
     <button type="button" class="btn btn-icon-close" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
   </div>
-  <div class="modal-body" id="modalNewBookinBody">
+  <div class="modal-body modal-body-yellow" id="modalNewBookinBody">
     <% num_of_session = @training.sessions.count %>
     <%= simple_form_for [@training, Session.new] do |f| %>
       <div class="modal-div">
@@ -27,9 +27,9 @@
       <%# f.input :room %>
       <%# f.input :image, label: 'Image link' %>
       <%# f.input :teaser, label: 'Teaser' %>
-      <div class='modal-control'>
-        <%= button_tag type: 'submit', class: 'btn btn-edit-green btn-icon', data: { toggle: 'tooltip' }, title: 'Save' do %>
-          <i class="fas fa-save"></i>
+      <div class='centered-item'>
+        <%= button_tag type: 'submit', class: 'btn-yellow', data: { toggle: 'tooltip' }, title: 'Save' do %>
+          Create
         <% end %>
       </div>
     <% end %>

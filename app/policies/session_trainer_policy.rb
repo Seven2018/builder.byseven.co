@@ -5,11 +5,11 @@ class SessionTrainerPolicy < ApplicationPolicy
     end
   end
 
-  def create?
+  def link_to_session?
     check_access_seven
   end
 
-  def create_all?
+  def link_to_training?
     check_access_seven
   end
 

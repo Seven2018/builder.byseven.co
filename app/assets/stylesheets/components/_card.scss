@@ -247,6 +247,7 @@ $timeline: #115173;
   text-decoration: none;
   color: black;
   display: none;
+
   &:hover {
     background-color: rgba(0,0,0,0.05);
   }
@@ -319,6 +320,20 @@ $timeline: #115173;
   }
   @include from-large {
     padding: 2rem;
+  }
+}
+
+.card-lg-empty {
+  height: 25.2rem;
+  display: flex;
+  background-color: #E7E7E7;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 1px 1px 1rem rgba(115, 133, 152, 0.6);
+  margin: 0 auto 5rem auto;
+
+  &:hover {
+    background-color: white;
   }
 }
 
@@ -488,6 +503,8 @@ $timeline: #115173;
 .sessions-cards .card-lg {
   z-index: 1000;
 }
+
+
 .session-date-time {
   width: 90%;
 }
@@ -569,7 +586,6 @@ $timeline: #115173;
   bottom: 0;
   right: 0;
 }
-
 
 #items, #items-viewer {
     margin-bottom: 2rem;

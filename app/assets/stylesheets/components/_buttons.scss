@@ -151,10 +151,39 @@
     opacity: 1;
     text-decoration: none !important;
   }
+
   @include from-large {
   font-size: 16px !important;
   font-weight: 800 !important;
   padding: 1.1rem 1.6rem !important;
+  }
+}
+
+.btn-yellow {
+  padding: .8575rem 1rem;
+  background-color: #FFC447;
+  border: 2px solid #FFC447;
+  border-radius: .5rem;
+  box-sizing: border-box;
+  color: white;
+  font-size: 1.4rem;
+  letter-spacing: 1.5px;
+  font-weight: 800;
+  transition: all 0.3s ease-in-out;
+  margin-left: 0.5rem;
+
+  i {
+    color: white;
+    margin-left: 2px;
+  }
+
+  &:hover{
+    background-color: white;
+    color: #FFC447;
+  }
+
+  @include from-large {
+    font-size: 1.6rem;
   }
 }
 
@@ -298,6 +327,7 @@
 
 .btn-edit, .btn-edit-yellow, .btn-edit-yellow-mobile, .btn-edit-yellow-large {
   background-color: #FFC447 !important;
+
 }
 
 .btn-edit-red {

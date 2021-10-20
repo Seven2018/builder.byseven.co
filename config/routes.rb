@@ -89,6 +89,8 @@ Rails.application.routes.draw do
   get :redirect, controller: :session_trainers
   get :callback, controller: :session_trainers
   get :calendars, controller: :session_trainers
+  get :link_to_session, controller: :session_trainers, as: :trainers_link_to_session
+  get :link_to_training, controller: :session_trainers, as: :trainers_link_to_training
   get :remove_session_trainers, controller: :session_trainers
   get :remove_training_trainers, controller: :session_trainers
 
@@ -123,11 +125,9 @@ Rails.application.routes.draw do
         get :manage_linked_theories, controller: :theory_workshops
         get :remove_linked_theory, controller: :theory_workshops
       end
-      resources :session_trainers, only: [:create]
       resources :session_attendees, only: [:create, :destroy]
       resources :comments, only: [:create, :destroy]
     end
-    get 'session_trainers/create_all', to: 'session_trainers#create_all', as: 'create_all_session_trainers'
     resources :training_ownerships, only: [:create, :destroy]
     resources :forms, only: [:index, :show, :create, :update, :destroy]
 
