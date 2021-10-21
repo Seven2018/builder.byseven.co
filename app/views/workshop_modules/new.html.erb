@@ -11,8 +11,6 @@
     </div>
   </div>
   <div class="add-module">
-    <h3>Add a module</h3>
-
     <%= simple_form_for [@workshop.session.training, @workshop.session, @workshop, @workshop_module] do |f| %>
       <%= f.input :title %>
       <div class="text-box" style="margin: 20px 0px">
