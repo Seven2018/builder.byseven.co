@@ -246,10 +246,14 @@
         card = element.closest('.card-lg')
         card.querySelector('.card-footer-lg__infos').classList.add('hidden')
         card.querySelector('.card-session-header').querySelector('h3').classList.add('hidden')
+        card.querySelector('.sessions-copy').classList.add('hidden')
+        card.querySelector('#owner-session-index').classList.add('hidden')
         card.querySelector('.card-footer-lg__form').classList.remove('hidden')
+        card.querySelector('.card-main-lg').setAttribute('ondblclick','writeLED(1,1)')
         flatpickr(".datepicker", {
           disableMobile: true,
           dateFormat: "d/m/Y",});
+        setTimeout(function(){ formGuardian = false }, 100);
       }
     }
   </script>

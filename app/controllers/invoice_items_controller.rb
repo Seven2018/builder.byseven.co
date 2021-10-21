@@ -112,7 +112,7 @@ class InvoiceItemsController < ApplicationController
     InvoiceLine.create(invoice_item: @invoice, description: "Animation", quantity: quantity, net_amount: product.price, tax_amount: product.tax, product_id: product.id, position: 1)
     @invoice.update_price
     if @invoice.save
-      UpdateAirtableJob.perform_async(@training, false, @invoice)
+      # UpdateAirtableJob.perform_async(@training, false, @invoice)
       redirect_to invoice_item_path(@invoice)
     end
   end
@@ -157,7 +157,7 @@ class InvoiceItemsController < ApplicationController
     end
     @invoice.update_price
     if @invoice.save
-      UpdateAirtableJob.perform_async(@training, false, @invoice)
+      # UpdateAirtableJob.perform_async(@training, false, @invoice)
       redirect_to invoice_item_path(@invoice)
     end
   end
@@ -195,7 +195,7 @@ class InvoiceItemsController < ApplicationController
       new_line.save
       new_invoice.save
       new_invoice.update_price
-      UpdateAirtableJob.perform_async(@training, false, new_invoice)
+      # UpdateAirtableJob.perform_async(@training, false, new_invoice)
     end
     redirect_to invoice_items_path(type: 'Invoice', training_id: @training.id)
   end
@@ -230,7 +230,7 @@ class InvoiceItemsController < ApplicationController
         new_line.save
         new_invoice.save
         new_invoice.update_price
-        UpdateAirtableJob.perform_async(@training, false, new_invoice)
+        # UpdateAirtableJob.perform_async(@training, false, new_invoice)
       end
     end
     redirect_to invoice_items_path(type: 'Invoice', training_id: @training.id)
@@ -280,7 +280,7 @@ class InvoiceItemsController < ApplicationController
         new_invoice_line.update(invoice_item_id: new_invoice_item.id)
       end
       new_invoice_item.update_price
-      UpdateAirtableJob.perform_async(@new_invoice.training, false, new_invoice) if new_invoice_item.type == 'Invoice'
+      # UpdateAirtableJob.perform_async(@new_invoice.training, false, new_invoice) if new_invoice_item.type == 'Invoice'
       redirect_to invoice_item_path(new_invoice_item)
     else
       raise
@@ -300,7 +300,7 @@ class InvoiceItemsController < ApplicationController
         new_invoice_line.update(invoice_item_id: new_invoice_item.id)
       end
       new_invoice_item.update_price
-      UpdateAirtableJob.perform_async(new_invoice_item.training, false, new_invoice_item) if new_invoice_item.training.present?
+      # UpdateAirtableJob.perform_async(new_invoice_item.training, false, new_invoice_item) if new_invoice_item.training.present?
       redirect_to invoice_item_path(new_invoice_item)
     else
       raise
@@ -332,7 +332,7 @@ class InvoiceItemsController < ApplicationController
       end
       credit.update(total_amount: -@invoice_item.total_amount)
       credit.update(status: "Credit") if credit.total_amount < 0
-      UpdateAirtableJob.perform_async(credit.training, false, credit) if credit.training.present?
+      # UpdateAirtableJob.perform_async(credit.training, false, credit) if credit.training.present?
       redirect_to invoice_item_path(credit)
     else
       raise
@@ -350,7 +350,7 @@ class InvoiceItemsController < ApplicationController
   def marked_as_send
     authorize @invoice_item
     @invoice_item.update(sending_date: params[:edit_sending][:sending_date], status: 'Send')
-    UpdateAirtableJob.perform_async(@invoice_item.training, false, @invoice_item)
+    # UpdateAirtableJob.perform_async(@invoice_item.training, false, @invoice_item)
     redirect_back(fallback_location: invoice_item_path(@invoice_item))
   end
 
@@ -358,7 +358,7 @@ class InvoiceItemsController < ApplicationController
   def marked_as_paid
     authorize @invoice_item
     @invoice_item.update(payment_date: params[:edit_payment][:payment_date], status: 'Paid')
-    UpdateAirtableJob.perform_async(@invoice_item.training, false, @invoice_item)
+    # UpdateAirtableJob.perform_async(@invoice_item.training, false, @invoice_item)
     redirect_back(fallback_location: invoice_item_path(@invoice_item))
   end
 
@@ -373,7 +373,7 @@ class InvoiceItemsController < ApplicationController
   def marked_as_cancelled
     authorize @invoice_item
     @invoice_item.update(status: "Cancelled")
-    UpdateAirtableJob.perform_async(@invoice_item.training)
+    # UpdateAirtableJob.perform_async(@invoice_item.training)
     redirect_back(fallback_location: invoice_item_path(@invoice_item))
   end
 

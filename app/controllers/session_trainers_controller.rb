@@ -160,7 +160,7 @@ class SessionTrainersController < ApplicationController
         session_trainer.update(status: 'to_delete')
       end
     end
-    UpdateAirtableJob.perform_async(@session.training, true)
+    # UpdateAirtableJob.perform_async(@session.training, true)
     respond_to do |format|
       format.js
     end
@@ -191,7 +191,7 @@ class SessionTrainersController < ApplicationController
       end
     end
 
-    UpdateAirtableJob.perform_async(@training, true)
+    # UpdateAirtableJob.perform_async(@training, true)
     respond_to do |format|
       format.js
     end
@@ -211,7 +211,7 @@ class SessionTrainersController < ApplicationController
     training.trainers.each do |user|
       trainers_list << user.id.to_s
     end
-    UpdateAirtableJob.perform_async(training, true)
+    # UpdateAirtableJob.perform_async(training, true)
     redirect_to redirect_path(training_id: "/#{training.id}/", session_id: "|#{training.sessions.ids.join(',')}|", list: trainers_list.join(','))
   end
 
@@ -220,7 +220,7 @@ class SessionTrainersController < ApplicationController
     @session = Session.find(params[:session_id])
     training = @session.training
 
-    UpdateAirtableJob.perform_async(@session.training, true)
+    # UpdateAirtableJob.perform_async(@session.training, true)
     # @session.training.export_airtable
     # @session.training.export_trainer_airtable
     # if params[:destroy] == 'true'
@@ -238,7 +238,7 @@ class SessionTrainersController < ApplicationController
       sessions_ids += session.id.to_s + ','
     end
 
-    UpdateAirtableJob.perform_async(training, true)
+    # UpdateAirtableJob.perform_async(training, true)
     # training.export_airtable
     # training.export_trainer_airtable
     redirect_to redirect_path(training_id: "/#{training.id}/", session_id: "|#{sessions_ids[0...-1]}|", list: 'purge_training')

@@ -106,7 +106,7 @@ class TrainingsController < ApplicationController
     @session = Session.new
     @sessions = Session.where(id: params[:training][:sessions].reject{|x| x.empty?}) if params[:format] == 'pdf'
     if params[:task] == 'update_airtable'
-      UpdateAirtableJob.perform_async(@training, true)
+      # UpdateAirtableJob.perform_async(@training, true)
       #@training.trainers.each{|y| @training.export_numbers_sevener(y)}
       #@training.export_airtable
       #@training.export_numbers_activity
@@ -144,7 +144,7 @@ class TrainingsController < ApplicationController
     authorize @training
     @training.update(training_params)
     @training.save
-    UpdateAirtableJob.perform_async (@training)
+    # UpdateAirtableJob.perform_async (@training)
     # @training.export_airtable
     redirect_to training_path(@training)
   end
