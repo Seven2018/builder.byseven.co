@@ -144,7 +144,7 @@ class TrainingsController < ApplicationController
     authorize @training
     @training.update(training_params)
     @training.save
-    # UpdateAirtableJob.perform_async (@training)
+    UpdateAirtableJob.perform_async (@training)
     # @training.export_airtable
     redirect_to training_path(@training)
   end
