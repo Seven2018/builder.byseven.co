@@ -22,7 +22,11 @@ class PagesController < ApplicationController
 
   def contact_form_becos
     unless params[:email_2].present? || params[:email].empty?
-      contact = IncomingContactBecos.create('Lastname' => params[:lastname].strip.titleize, 'Firstname' => params[:firstname].strip.titleize, 'Email' => params[:email].strip.downcase, 'Tel' => params[:phone], 'Linkedin' => params[:linkedin], 'Type' => params[:type], 'Message' => params[:message], 'Chosen Date' => params[:date], 'Chosen Time' => params[:time], 'Newsletter' => params[:newsletter].present?)
+      if params[:type] == 'Participant'
+        contact = IncomingContactBecos.create('Lastname' => params[:lastname].strip.titleize, 'Firstname' => params[:firstname].strip.titleize, 'Email' => params[:email].strip.downcase, 'Tel' => params[:phone], 'Linkedin' => params[:linkedin], 'Message' => params[:message], 'Chosen Date' => params[:date], 'Chosen Time' => params[:time], 'Newsletter' => params[:newsletter].present?)
+      elsif params[:type] == 'Recruiter'
+        contact = IncomingContactBecosRecruiter.create('Lastname' => params[:lastname].strip.titleize, 'Firstname' => params[:firstname].strip.titleize, 'Email' => params[:email].strip.downcase, 'Tel' => params[:phone], 'Linkedin' => params[:linkedin], 'Company' => params[:company].strip.titleize, 'Message' => params[:message], 'Newsletter' => params[:newsletter].present?)
+      end
     end
     redirect_to 'https://learn.byseven.co/thank-you-becos.html'
   end
