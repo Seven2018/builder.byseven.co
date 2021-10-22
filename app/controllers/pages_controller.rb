@@ -22,9 +22,7 @@ class PagesController < ApplicationController
 
   def contact_form_becos
     unless params[:email_2].present? || params[:email].empty?
-      contact = IncomingContactBecos.create('Lastname' => params[:lastname], 'Firstname' => params[:firstname], 'Email' => params[:email], 'Tel' => params[:phone], 'Linkedin' => params[:linkedin], 'Message' => params[:message], 'Chosen Date' => params[:date], 'Chosen Time' => params[:time], 'Newsletter' => params[:newsletter].present?, 'Created At' => DateTime.now.strftime('%Y-%m-%d'))
-      # IncomingContactMailer.with(user: User.find(1)).new_incoming_contact(contact, User.find(1)).deliver
-      # IncomingContactMailer.with(user: User.find(109)).new_incoming_contact(contact, User.find(109)).deliver
+      contact = IncomingContactBecos.create('Lastname' => params[:lastname].strip.titleize, 'Firstname' => params[:firstname].strip.titleize, 'Email' => params[:email].strip.downcase, 'Tel' => params[:phone], 'Linkedin' => params[:linkedin], 'Type' => params[:type], 'Message' => params[:message], 'Chosen Date' => params[:date], 'Chosen Time' => params[:time], 'Newsletter' => params[:newsletter].present?)
     end
     redirect_to 'https://learn.byseven.co/thank-you-becos.html'
   end

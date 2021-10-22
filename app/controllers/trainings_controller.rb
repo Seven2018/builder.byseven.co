@@ -192,50 +192,6 @@ class TrainingsController < ApplicationController
     invoices.present? ? @amount_to_bill = amount_due - amount_billed : @amount_to_bill = amount_due
   end
 
-  def certificate
-    skip_authorization
-    @attendee = params[:attendee][:name]
-    set_training
-    respond_to do |format|
-      format.pdf do
-        render(
-          pdf: "#{@training.title} - Certificat de réalisation - #{@attendee}",
-          layout: 'pdf.html.erb',
-          template: 'pdfs/certificate',
-          margin: { bottom: 30 },
-          footer: { margin: { top: 0, bottom: 0 }, html: { template: 'pdfs/certificate_footer.pdf.erb' } },
-          show_as_html: params.key?('debug'),
-          page_size: 'A4',
-          encoding: 'utf8',
-          dpi: 300,
-          zoom: 1,
-        )
-      end
-    end
-  end
-
-  def certificate_rs
-    skip_authorization
-    @attendee = params[:attendee][:name]
-    set_training
-    respond_to do |format|
-      format.pdf do
-        render(
-          pdf: "#{@training.title} - Certificat de réalisation - #{@attendee}",
-          layout: 'pdf.html.erb',
-          template: 'pdfs/certificate_rs',
-          margin: { bottom: 30 },
-          footer: { margin: { top: 0, bottom: 0 }, html: { template: 'pdfs/certificate_rs_footer.pdf.erb' } },
-          show_as_html: params.key?('debug'),
-          page_size: 'A4',
-          encoding: 'utf8',
-          dpi: 300,
-          zoom: 1,
-        )
-      end
-    end
-  end
-
   def trainer_notification_email
     authorize @training
     if params[:status] == 'new'

@@ -87,7 +87,7 @@ class Training < ApplicationRecord
   end
 
   def trainers
-    SessionTrainer.where(session_id: [self.sessions.ids]).includes([:user]).map{|x| x.user}.uniq
+    SessionTrainer.where(session_id: [self.sessions.ids], status: nil).includes([:user]).map{|x| x.user}.uniq
   end
 
   def trainer_last_session(trainer)
@@ -200,8 +200,8 @@ class Training < ApplicationRecord
       card = OverviewTraining.all(filter: "{Builder_id} = '#{self.id}'")&.first
       self.sessions.each do |session|
         if session.date.present?
-          session.session_trainers.each do |trainer|
-            new_activity = OverviewNumbersActivity.create('Training' => [card.id], 'Date' => session.date.strftime('%Y-%m-%d'), 'Trainer' => [OverviewUser.all(filter: "{Builder_id} = '#{trainer.user_id}'")&.first&.id]) unless new_activity.present?
+          session.session_trainers.where(status: nil).each do |trainer|
+            new_activity = OverviewNumbersActivity.create('Training' => [card.id], 'Date' => session.date.strftime('%Y-%m-%d'), 'Trainer' => [OverviewUser.all(filter: "{Builder_id} = '#{trainer.user_id}'")&.first&.id])
             new_activity['Hours'] = session.duration
             if card['Unit Type'] == 'Hour'
               new_activity['Revenue'] = new_activity['Hours'] * card['Unit Price']

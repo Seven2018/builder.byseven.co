@@ -143,8 +143,6 @@ Rails.application.routes.draw do
   get 'trainings_upcoming', to: 'trainings#index_upcoming', as: 'index_upcoming'
   get 'trainings/:id/copy', to: 'trainings#copy', as: 'copy_training'
   get 'training/redirect_docusign', to: 'trainings#redirect_docusign', as: 'redirect_docusign'
-  post 'trainings/:id/certificate', to: 'trainings#certificate', as: 'certificate_training'
-  post 'trainings/:id/certificate_rs', to: 'trainings#certificate_rs', as: 'certificate_rs_training'
   get 'trainings/:id/invoice_form', to: 'trainings#invoice_form', as: 'invoice_form'
   get 'trainings/:id/update_calendar', to: 'session_trainers#update_calendar', as: 'update_calendar'
   get 'trainings/:id/trainer_notification_email', to: 'trainings#trainer_notification_email', as: 'trainer_notification_email'

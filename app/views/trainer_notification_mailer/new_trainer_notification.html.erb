@@ -60,6 +60,7 @@
     </div>
     <div class="mailer-container">
       <div class="mailer-text">
+        <br>
         <h2>Hello, <%= @user.firstname %></h2>
         <p>Voici le récapitulatif pour ton intervention dans le cadre de la formation <%= "#{@training.client_company.name} - #{@training.title}"%> :</p>
           <% @training.sessions.order(date: :asc).each do |session| %>

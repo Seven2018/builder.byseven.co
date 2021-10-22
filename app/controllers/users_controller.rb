@@ -88,7 +88,7 @@ class UsersController < ApplicationController
 
   def airtable_create_user
     user = OverviewUser.find(params[:record_id])
-    new_user = User.new(firstname: user['Firstname'], lastname: user['Lastname'], email: user['Email'], password: 'Seven2021')
+    new_user = User.new(firstname: user['Firstname'], lastname: user['Lastname'], email: user['Email'], password: 'Seven2021', picture: user['Photo'].first['url'])
     authorize new_user
     if user['Status'] == 'Seven'
       new_user.access_level = 'admin'

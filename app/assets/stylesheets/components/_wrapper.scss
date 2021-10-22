@@ -33,22 +33,11 @@ a {
 }
 
 .container-seven-large {
-  // margin-top: 3rem;
   background-color: #f7f7f7;
-  // margin-left:0rem;
-  // width: 100%;
   min-height: 100vh;
   padding: 0 1rem;
-  // position: relative;
-  // transition: all .25s ease-in-out;
-  // margin-bottom: 100px;
    @include from-large {
-  //   margin-top: 8rem;
    padding: 1.5rem 4rem;
-  //   margin-left: 6rem;
-  //   min-height: calc(100vh - 13rem);
-  //   max-width: 138rem;
-  //   width: calc(100vw - 6rem);
   }
 }
 
@@ -104,7 +93,7 @@ a {
 }
 
 #page-controls {
-  max-height: 8rem;
+  min-height: 8rem;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;

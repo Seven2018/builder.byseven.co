@@ -10,13 +10,14 @@
       </div>
     </div>
   </div>
+  <h3>Add a module</h3>
   <div class="add-module">
     <%= simple_form_for [@workshop.session.training, @workshop.session, @workshop, @workshop_module] do |f| %>
       <%= f.input :title %>
       <div class="text-box" style="margin: 20px 0px">
         <label class="string" style='margin: 1rem 0;'>Instructions</label>
-        <%# f.cktext_area :instructions %>
-        <%= f.trix_editor :instructions %>
+        <%= f.cktext_area :instructions %>
+        <%# f.trix_editor :instructions %>
       </div>
       <label class="string" style='margin: 1rem 0;'>Logistics</label>
       <%= f.input :logistics, label: false, input_html: { style: 'width:100%;' }, placeholder: '' %>
