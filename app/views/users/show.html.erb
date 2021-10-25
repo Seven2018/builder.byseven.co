@@ -1,6 +1,10 @@
 <div class="container-seven-large">
   <div id="page-controls">
-      <%= link_to users_path, class: 'btn return-arrow' do %><i class="fas fa-arrow-left"></i><% end %>
+      <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+        <%= link_to users_path, class: 'btn return-arrow' do %><i class="fas fa-arrow-left"></i><% end %>
+      <% else %>
+        <%= link_to trainings_path, class: 'btn return-arrow' do %><i class="fas fa-arrow-left"></i><% end %>
+      <% end %>
     <div class='page-control-buttons' style='display:flex;'>
       <% if current_user.access_level == 'super admin' || @user == current_user || (current_user.access_level == 'admin' && (@user.access_level == 'sevener' || @user.access_level == 'sevener+')) %>
         <a class="btn-icon-grey" data-toggle='modal' data-target='#editUser' data-toggle='tooltip' title='Edit User'><i class="fas fa-user-edit"></i></a>
@@ -31,13 +35,13 @@
           <div class="training-card-main">
             <%= link_to training_path(training), class: 'stretched-link' do %>
             <div class="training-card-infos">
-              <% sessions = training.sessions %>
+              <% sessions = training.sessions.order(date: :asc).pluck(:date) %>
               <div class='training-card-infos-elements'>
                 <% if sessions.count == 1 %>
-                  <%= " On #{sessions.first&.date&.strftime('%d %b, %Y')}" %>
+                  <%= " On #{sessions.first&.strftime('%d %b, %Y')}" %>
                 <% else %>
                   <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-                    <%= " #{sessions.order(date: :asc).first&.date&.strftime('%d %b, %Y')} to #{sessions.order(date: :asc).last&.date&.strftime('%d %b, %Y')}" %>
+                    <%= " #{sessions.first&.strftime('%d %b, %Y')} to #{sessions.last&.strftime('%d %b, %Y')}" %>
                   <% else %>
                     <% trainer_sessions = Session.joins(:session_trainers).where(training_id: training.id, session_trainers: {user_id: current_user.id}).order(date: :asc) %>
                     <%= " #{trainer_sessions.first&.date&.strftime('%d %b %Y')} to #{trainer_sessions.last&.date&.strftime('%d %b, %Y')}" %>

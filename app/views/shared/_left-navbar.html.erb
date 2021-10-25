@@ -49,7 +49,7 @@
   <% else %>
     <div class="left-navbar-middle">
       <% if user_signed_in? %>
-        <%= link_to trainings_path(page: 1), class: 'left-buttons' do %>
+        <%= link_to trainings_path, class: 'left-buttons' do %>
           <% if request.original_url&.split('/')[3]&.split('?')&.first == 'trainings' %>
             <div class="left-menu-list active">
               <i class="fas fa-tasks"></i> <div class="left-menu-title" data-toggle='tooltip' title='Trainings'><h4>Trainings</h4></div>

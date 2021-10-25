@@ -25,10 +25,6 @@ class FormPolicy < ApplicationPolicy
     check_access
   end
 
-  def destroy?
-    check_access
-  end
-
   private
 
   def check_access

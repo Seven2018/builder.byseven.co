@@ -139,7 +139,7 @@ class InvoiceItem < ApplicationRecord
 
   def self.account_invoice
     AccountInvoice.all.each{|x| x.destroy}
-    InvoiceItem.where('created_at > ?', Date::strptime('2020-01-01', '%Y-%m-%d')).each do |invoice|
+    InvoiceItem.where('created_at > ?', Date::strptime('2021-01-01', '%Y-%m-%d')).each do |invoice|
       if invoice.payment_date.present?
         acc_invoice = AccountInvoice.create('Numéro' => invoice.uuid, 'Destinataire' => invoice.client_company.name, 'Montant TTC' => invoice.total_amount.to_f, 'Date Paiement' => invoice.payment_date.strftime('%Y-%m-%d'))
         acc_invoice.save

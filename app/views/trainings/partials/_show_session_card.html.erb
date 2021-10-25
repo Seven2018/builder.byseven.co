@@ -1,0 +1,210 @@
+<div class="card-lg">
+  <div class="card-footer-lg">
+    <% if session.start_time && session.end_time %>
+      <div class="card-footer-lg__infos">
+        <div class='card-footer-lg__block'>
+          <% if session.date.present? %>
+            <p id='<%= "date-form-" + "#{session.id.to_s}" %>'> <%="#{session&.date&.to_s}"%> </p>
+          <% else %>
+            <p id='<%= "date-form-" + "#{session.id.to_s}" %>'> A dater </p>
+          <% end %>
+        </div>
+        <div class='card-footer-lg__block'>
+          <p id='<%= "time-form-" + "#{session.id.to_s}" %>'><%= " #{session.start_time.strftime("%k:%M")} to #{session.end_time.strftime("%k:%M")}" %></p>
+        </div>
+        <div class='card-footer-lg__block'>
+          <i class="fas fa-stopwatch"></i>
+          <p id='<%= "duration-form-" + "#{session.id.to_s}" %>'><%= session.duration %> h</p>
+        </div>
+        <div class='card-footer-lg__block'>
+          <i class="fas fa-users"></i>
+          <% attendees = '' %>
+          <% session.attendees.order(lastname: :asc).each do |attendee| %>
+            <% attendees += attendee.fullname + "\n" %>
+          <% end %>
+          <p id='<%= "attendee-form-" + "#{session.id.to_s}" %>' data-toggle='tooltip' title="<%= attendees %>"><%= session.attendees.count %>/<%= session.attendee_number %></p>
+        </div>
+        <div class='card-footer-lg__block'>
+          <% if session.session_type == 'Face-to-face' %>
+            <i class="fas fa-chalkboard-teacher"></i>
+            <p id='<%= "session_type-form-" + "#{session.id.to_s}"%>'>Face-to-face</p>
+          <% else %>
+            <i class="fas fa-laptop"></i>
+            <p id='<%= "session_type-form-" + "#{session.id.to_s}"%>'>Online</p>
+          <% end %>
+        </div>
+      </div>
+      <div class="card-footer-lg__form hidden">
+        <%= simple_form_for :session, url: training_update_ajax_session_path(training_id: session.training.id, id: session.id), method: :patch, remote: true, input_html: {multipart: true} do |f| %>
+          <div class='card-footer-lg__block'>
+            <%= f.input :date, as: :string, input_html: { class: 'datepicker', value: session.date, style: 'width: 10rem; text-align: center;' }, label: false %>
+          </div>
+          <div class='card-footer-lg__block'>
+            <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+              <%= f.input :start_time, label: 'Start time:', as: :time, minute_step: 15, input_html: { class: 'timepicker'}, default: session.start_time, label: false %>
+              <%= f.input :end_time, label: 'End time:', as: :time, minute_step: 15, input_html: { class: 'timepicker'}, default: session.end_time, label: false %>
+            </div>
+          </div>
+          <div class='card-footer-lg__block'>
+            <i class="fas fa-stopwatch"></i>
+            <%= f.input :duration, label: false, input_html: {min: 0, style: 'width: 4rem; text-align: center;', id: 'edit_duration', value: session.duration}, allow_blank: false %>
+          </div>
+          <div class='card-footer-lg__block'>
+            <i class="fas fa-users"></i>
+            <%= f.input :attendee_number, input_html: { min: 0, value: session.attendee_number, style: 'width: 4rem; text-align: center;' }, label: false %>
+          </div>
+          <div class='card-footer-lg__block'>
+            <div class='flex-column-between-left'>
+              <%= f.collection_radio_buttons :session_type, [['Face-to-face', 'Face-to-face'], ['Online', 'Online']], :first, :last, checked: [session.session_type, session.session_type] %>
+            </div>
+          </div>
+          <div class='card-footer-lg__block-absolute'>
+            <%= f.input :title, label: false, input_html: {value: session.title, style: 'width:100%;'} %>
+          </div>
+          <div class='card-footer-lg__block-button'>
+            <%= f.submit 'Save', class: 'btn-yellow' %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <div class="card-main-lg" ondblclick="doubleClick(this)">
+    <div class="card-session-header">
+      <h3 id='<%= "title-form-" + "#{session.id.to_s}" %>' data-toggle='tooltip' title='Modify Title'><%= session.title %></h3>
+      <% users = User.where(id: session.session_trainers.where(status: nil).map(&:user_id)).order(lastname: :asc) %>
+      <% user_names = users.map{|x| x.fullname}.join("\n") %>
+      <div style='display:flex;align-items:center;position: absolute;right: 0px;top: -62px;'>
+        <ul id="owner-session-index">
+          <% users.first(3).each do |user| %>
+            <li>
+              <% if user.picture.present? %>
+                <a class="ava2" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-trainer' data-placement="bottom" title='Trainer:  <%= "#{user.fullname}" %>'></a>
+              <% else %>
+                <a class="ava2" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-trainer' data-placement="bottom" title='Trainer:  <%= "#{user.fullname}" %>'></a>
+              <% end %>
+            </li>
+            <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog" role="document" style="border-radius: 2rem">
+                <%= render 'users/consult', user: user %>
+              </div>
+            </div>
+          <% end %>
+          <% if users.count > 3 %>
+            <div class="avatar-sm-add ava2" data-toggle='tooltip' title="<%= user_names %>">
+              <i class="fas fa-ellipsis-h"></i>
+            </div>
+          <% end %>
+          <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
+            <button class="avatar-sm-add ava2" data-toggle='modal' data-target='#addTrainer<%= session.id %>' data-toggle="tooltip" title="Add Trainer"><i class="fas fa-plus"></i></button>
+          <% else %>
+            <button class="avatar-sm-add ava2" data-toggle="tooltip" title="Disabled"><i class="fas fa-plus"></i></button>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+    <div class="mods-list">
+      <%= render_async show_session_content_path(session_id: session.id) %>
+      <% session_number = session.training.sessions.order(date: :asc).find_index(session) + 1 %>
+    </div>
+    <div class='sessions-footer'>
+      <div class="sessions-alert">
+        <% unavailable = [] %>
+        <% SessionTrainer.joins(:session).where(sessions: {date: session.date}, user_id: session.session_trainers.map(&:user_id)).group_by{|y| y.user_id}.each do |key, value| %>
+          <% if value.count > 1 %>
+            <% is_overlapping = value.sort_by{|x| x.session.start_time}.each_cons(2).any? do |x,y| %>
+              <% x.session.period.last > y.session.period.first %>
+            <% end %>
+            <% unavailable << User.find(key).fullname if is_overlapping %>
+          <% end %>
+        <% end %>
+        <% if unavailable.count > 0 %>
+          <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
+            <p class='error'>Sevener(s) non disponible(s) : <%= unavailable.sort.join(', ') %></p>
+          <% end %>
+        <% end %>
+      </div>
+      <div class='sessions-copy'>
+        <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
+          <div class='btn-icon-grey-delete' onclick='openSessionForm(this)'><i class="fas fa-pen"></i></div>
+          <%= link_to training_copy_form_session_path(session.training, session, page: params[:page]), data: { toggle: 'tooltip'}, title: 'Copy Session' do %>
+            <div class='btn-icon-grey-delete'><i class="fas fa-copy"></i></div>
+          <% end %>
+          <%= link_to remove_session_trainers_path(session_id: session.id, destroy: 'true'), data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
+            <div class='btn-icon-grey-delete'><i class="fas fa-trash-alt"></i></div>
+          <% end %>
+        <% end %>
+        <h4 class='card-session-number'><%= session_number %>/<%= session.training.sessions.count %> </h4>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- // MOBILE //  -->
+
+<div class="card-lg-mobile">
+  <div class="card-footer-lg-mobile">
+    <% if session.start_time && session.end_time %>
+      <div class="card-footer-lg__infos-mobile">
+        <div class="session-date-time">
+          <% if session.date.present? %>
+            <p id='<%= "date-form-" + "#{session.id.to_s}" %>'> <%="#{session&.date&.to_s}"%> </p>
+          <% else %>
+            <p id='<%= "date-form-" + "#{session.id.to_s}" %>'> A dater </p>
+          <% end %>
+            <p id='<%= "time-form-" + "#{session.id.to_s}" %>'><%= " #{session.start_time.strftime("%k:%M")} to #{session.end_time.strftime("%k:%M")}" %></p>
+        </div>
+        <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
+        <div class="sessions-menu" onclick="openContentMenu(this);"><i class="fas fa-ellipsis-v"></i></div>
+         <div class="content-dropdown hidden">
+          <%= link_to 'Copy Session', training_copy_form_session_path(session.training, session, page: params[:page]), data: { toggle: 'tooltip'}, title: 'Copy Session' %>
+          <a class='session-edit' data-toggle='modal' data-target='#editSession<%= session.id %>'>Edit Session</a>
+          <%= link_to 'Delete Session', remove_session_trainers_path(session_id: session.id, destroy: 'true'), data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' %>
+          </div>
+      <% end %>
+      </div>
+    <% end %>
+  </div>
+  <div class="card-main-lg-mobile" ondblclick="doubleClick(this)">
+    <div class="card-session-header-mobile">
+      <h3 id='<%= "title-form-" + "#{session.id.to_s}" %>'><%= session.title %></h3>
+    </div>
+    <div class="mods-list">
+      <%= render_async show_session_content_path(session_id: session.id) %>
+      <% session_number = session.training.sessions.order(date: :asc).find_index(session) + 1 %>
+    </div>
+    <div class='sessions-footer'>
+      <div style='display:flex;padding:10px;'>
+        <i class="fas fa-stopwatch" style='margin-right: 5px;'></i>
+        <p id='<%= "duration-form-" + "#{session.id.to_s}" %>'><%= session.duration %> h</p>
+      </div>
+      <div style='display:flex; padding:10px;' >
+      <div class='sessions-copy'>
+        <h4 class='card-session-number'><%= session_number %>/<%= session.training.sessions.count %> </h4>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- MODALS -->
+
+<div class="modal fade editSession" id="editSession<%= session.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document" style="border-radius: 2rem">
+    <%= render '/sessions/edit', session: session %>
+  </div>
+</div>
+
+<!-- <div class="modal fade" id="addTrainer<%= session.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog %>" role="document" style="border-radius: 2rem">
+    <% @session = session %>
+    <%# render '/session_trainers/new', session: @session, session_trainer: SessionTrainer.new, session_number: session_number %>
+  </div>
+</div> -->
+
+<div class="modal fade" id="addTrainer<%= session.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog %>" role="document" style="border-radius: 2rem">
+    <% @session = session %>
+    <%= render '/session_trainers/trainers_link', training: nil, session: @session, page: 'training' %>
+  </div>
+</div>

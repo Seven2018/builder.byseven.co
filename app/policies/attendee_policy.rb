@@ -5,12 +5,8 @@ class AttendeePolicy < ApplicationPolicy
     end
   end
 
-  def form?
-    true
-  end
-
   def create?
-    true
+    false
   end
 
   def show?

@@ -10,7 +10,8 @@
   <div>
     <div class='session-trainers'>
       <ul id='owner'>
-        <% session.users.each do |user| %>
+        <% users = session.session_trainers.where(status: nil).map(&:user_id) %>
+        <% User.where(id: users).order(lastname: :asc).each do |user| %>
           <li>
             <% if user.picture.present? %>
               <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-trainer ava-session' data-toggle='tooltip' title='<%= user.firstname %> <%= user.lastname %>'></a>

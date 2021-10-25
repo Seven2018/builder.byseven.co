@@ -4,9 +4,7 @@
       <i class="fas fa-arrow-left"></i>
     <% end %>
     <div class='flex-row-between-centered'>
-      <% if ['super admin', 'admin', 'training manager, sevener+'].include? current_user.access_level %>
-        <div class='show_library btn-icon-grey' data-toggle='tooltip' title='Add Workshop'><i class="fas fa-plus"></i></div>
-      <% else %>
+      <% if ['super admin', 'admin', 'training manager', 'sevener+'].include?(current_user.access_level) %>
         <%= link_to training_session_workshops_path(@session.training, @session), method: :post, remote: true do %>
           <div class='btn-icon-grey' data-toggle='tooltip' title='Add Workshop'><i class="fas fa-plus"></i></div>
         <% end %>
@@ -131,7 +129,45 @@
   <% end %>
 </div>
 
+<!-- Modals -->
+
+<div class="modal fade" id="editSession" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg" role="document" style="border-radius: 20px">
+    <%= render 'edit', session: @session %>
+  </div>
+</div>
+
+<div class="modal fade" id="copySession" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document" style="border-radius: 2rem">
+    <%= render 'sessions/copy', session: @session %>
+  </div>
+</div>
+
+<div class="modal fade" id="newUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document" style="border-radius: 20px">
+    <%= render 'session_trainers/trainers_link', training: nil, session: @session, page: 'session' %>
+  </div>
+</div>
+
+<div class="modal fade" id="addAttendees" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document" style="border-radius: 20px">
+    <%= render 'session_attendees/new', session: @session %>
+  </div>
+</div>
+
+<% @session.users.each do |user| %>
+  <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document" style="border-radius: 20px">
+      <%= render 'users/consult', user: user %>
+    </div>
+  </div>
+<% end %>
+</div>
+
+<!-- Scripts -->
+
 <script>
+
   formGuardian = false;
 
   function outsideClick(event, notelem) {
@@ -194,6 +230,59 @@
     }
   };
 
+  function selectTrainer(element, add) {
+    if (add == true) {
+      selected = element.closest('.users-select').querySelector('select').value
+      user_id = selected.split('|')[0]
+    }
+    form = element.closest('.modal-body').querySelector('form')
+    selected_storage = form.querySelector('#link_trainer_ids')
+    selected_array = []
+    pill_container = element.closest('.modal-body').querySelector('.users-list')
+    if (add == true && !selected_storage.value.includes(user_id)){
+      new_pill = document.createElement('div');
+      new_pill.classList.add('trainer-pill')
+      new_pill.id = 'user-' + user_id
+      new_pill.innerHTML = "<p>" + selected.split('|')[1] + "</p><i class='fas fa-times' onclick='selectTrainer(this, false);'></i>"
+      pill_container.appendChild(new_pill)
+    } else if (add == false) {
+      element.closest('.trainer-pill').remove();
+    }
+    pill_container.querySelectorAll('.trainer-pill').forEach((pill) =>{
+      if (pill.id != '') {
+        selected_array.push(pill.id.split('-')[1])
+      }
+    })
+    selected_storage.value = selected_array
+  }
+
+  function confirmTrainers(element) {
+    if (formGuardian == false) {
+      formGuardian = true
+      form = element.parentNode.querySelector('form')
+      confirm_button = form.querySelector('.hidden-submit')
+      modal = element.closest('.modal')
+      modal.querySelector('.btn-icon-close').click()
+      confirm_button.click()
+      document.querySelector('body').classList.add('wait');
+      setTimeout(function(){ formGuardian = false }, 100);
+    }
+  }
+
+  photos = document.querySelectorAll('.ava-session')
+  counter = 30;
+  photos.forEach(photo => {
+    photo.style.right = counter.toString() + 'px';
+    counter = counter + 30;
+  });
+
+  photos = document.querySelectorAll('.ava-session-mobile')
+  counter = -225;
+  photos.forEach(photo => {
+    photo.style.right = counter.toString() + 'px';
+    counter = counter + 30;
+  });
+
   var button_show = document.querySelectorAll('.show_library');
   var button_close = document.getElementById('close_library');
   var library = document.getElementById('library');
@@ -215,53 +304,3 @@
     library.style.height = '100vh';
   </script>
 <% end %>
-
-<div class="modal fade" id="editSession" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-lg" role="document" style="border-radius: 20px">
-    <%= render 'edit', session: @session %>
-  </div>
-</div>
-
-<div class="modal fade" id="copySession" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog" role="document" style="border-radius: 2rem">
-    <%= render 'sessions/copy', session: @session %>
-  </div>
-</div>
-
-<div class="modal fade" id="newUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-sm" role="document" style="border-radius: 20px">
-    <%= render 'session_trainers/new', session: @session, session_trainer: @session_trainer, session_number: @session.id, page: 'session' %>
-  </div>
-</div>
-
-<div class="modal fade" id="addAttendees" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog" role="document" style="border-radius: 20px">
-    <%= render 'session_attendees/new', session: @session %>
-  </div>
-</div>
-
-<% @session.users.each do |user| %>
-  <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" role="document" style="border-radius: 20px">
-      <%= render 'users/consult', user: user %>
-    </div>
-  </div>
-<% end %>
-</div>
-
-<script>
-  photos = document.querySelectorAll('.ava-session')
-  counter = 30;
-  photos.forEach(photo => {
-    photo.style.right = counter.toString() + 'px';
-    counter = counter + 30;
-  });
-
-  photos = document.querySelectorAll('.ava-session-mobile')
-  counter = -225;
-  photos.forEach(photo => {
-    photo.style.right = counter.toString() + 'px';
-    counter = counter + 30;
-  });
-
-</script>

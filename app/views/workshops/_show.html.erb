@@ -45,25 +45,29 @@
       <% end %>
     </div>
     <div class='module-card-controls'>
-      <a class="btn return-arrow" data-toggle='modal' data-target='#editWorkshop<%= workshop.id %>' data-toggle='tooltip' title='Edit'><i class="fas fa-pen"></i></a>
-      <%= link_to training_session_copy_form_workshop_path(workshop.session.training, workshop.session, workshop), class: 'btn return-arrow btn-copy', data: { toggle: 'tooltip' }, title: 'Copy' do %>
-        <i class="fas fa-copy"></i>
-      <% end %>
-      <%= link_to training_session_workshop_path(workshop.session.training, workshop.session, workshop), method: :delete, data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete', remote: true, class: 'btn return-arrow' do %>
-        <i class="fas fa-trash-alt"></i>
-      <% end %>
-      <% if workshop.position == 1 %>
-        <a class='btn return-arrow'><i class="fas fa-arrow-up" style='color:grey;cursor:default;'></i></a>
-      <% else %>
-        <%= link_to training_session_move_up_workshop_path(workshop.session.training, workshop.session, workshop), data: { toggle: 'tooltip' }, title: 'Move up', remote: true, class: 'btn return-arrow' do %>
-          <i class="fas fa-arrow-up"></i>
+      <% if ['super admin', 'admin', 'training manager', 'sevener+'].include?(current_user.access_level) %>
+        <a class="btn return-arrow" data-toggle='modal' data-target='#editWorkshop<%= workshop.id %>' data-toggle='tooltip' title='Edit'><i class="fas fa-pen"></i></a>
+        <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+          <%= link_to training_session_copy_form_workshop_path(workshop.session.training, workshop.session, workshop), class: 'btn return-arrow btn-copy', data: { toggle: 'tooltip' }, title: 'Copy' do %>
+            <i class="fas fa-copy"></i>
+          <% end %>
         <% end %>
-      <% end %>
-      <% if workshop.position ==  @session.workshops.count %>
-        <a class='btn return-arrow'><i class="fas fa-arrow-down" style='color:grey;cursor:default;'></i></a>
-      <% else %>
-        <%= link_to training_session_move_down_workshop_path(workshop.session.training, workshop.session, workshop), data: { toggle: 'tooltip' }, title: 'Move down', remote: true, class: 'btn return-arrow' do %>
-          <i class="fas fa-arrow-down"></i>
+        <%= link_to training_session_workshop_path(workshop.session.training, workshop.session, workshop), method: :delete, data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete', remote: true, class: 'btn return-arrow' do %>
+          <i class="fas fa-trash-alt"></i>
+        <% end %>
+        <% if workshop.position == 1 %>
+          <a class='btn return-arrow'><i class="fas fa-arrow-up" style='color:grey;cursor:default;'></i></a>
+        <% else %>
+          <%= link_to training_session_move_up_workshop_path(workshop.session.training, workshop.session, workshop), data: { toggle: 'tooltip' }, title: 'Move up', remote: true, class: 'btn return-arrow' do %>
+            <i class="fas fa-arrow-up"></i>
+          <% end %>
+        <% end %>
+        <% if workshop.position ==  @session.workshops.count %>
+          <a class='btn return-arrow'><i class="fas fa-arrow-down" style='color:grey;cursor:default;'></i></a>
+        <% else %>
+          <%= link_to training_session_move_down_workshop_path(workshop.session.training, workshop.session, workshop), data: { toggle: 'tooltip' }, title: 'Move down', remote: true, class: 'btn return-arrow' do %>
+            <i class="fas fa-arrow-down"></i>
+          <% end %>
         <% end %>
       <% end %>
     </div>

@@ -47,10 +47,10 @@
             </li>
             <li><%= link_to 'Import Attendees', import_attendees_form_path(training_id: @training.id) %></li>
             <li><%= link_to 'Attendees List', attendees_path(training_id: @training.id) %></li>
-            <li><%= link_to 'New invoice', new_invoiceitem_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
-            <li><%= link_to 'New invoice Airtable', new_airtable_invoiceitem_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
-            <li><%= link_to 'New invoice Airtable by Trainer', new_airtable_invoiceitem_by_trainer_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id), method: :post %></li>
-            <li><%= link_to 'Invoices List', invoice_items_path(training_id: @training.id, type: 'Invoice', page: 1) %></li>
+            <li><%= link_to 'New invoice', new_invoice_item_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
+            <li><%= link_to 'New invoice Airtable', new_airtable_invoice_item_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
+            <li><%= link_to 'New invoice Airtable by Trainer', new_airtable_invoice_item_by_trainer_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id), method: :post %></li>
+            <li><%= link_to 'Invoices List', invoice_items_path(training_id: @training.id, type: 'Invoice') %></li>
             <%# if @training.forms.empty? %>
               <!-- <li><a data-toggle='modal' type='button' data-target='#newForm' style='cursor:pointer;'>New form</a></li> -->
             <%# else %>
@@ -82,75 +82,7 @@
       <p><%="From #{@training.sessions.order(date: :asc).first&.date&.strftime('%d/%m/%y')} to #{@training.sessions.order(date: :asc).last&.date&.strftime('%d/%m/%y')}" %></p>
     </div>
     <div class='middle-info-user'>
-      <% @training.owners.each do |user| %>
-          <% if user.picture.present? %>
-            <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-owner ava' data-toggle='tooltip' data-placement="left" title='Owner: <%= "#{user.fullname}" %>'></a>
-          <% else %>
-            <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-owner ava' data-toggle='tooltip' data-placement="left" title='Owner  <%= "#{user.fullname}" %>'></a>
-          <% end %>
-        <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-          <div class="modal-dialog" role="document" style="border-radius: 2rem">
-            <%= render 'users/consult', user: user, training: @training %>
-          </div>
-        </div>
-      <% end %>
-<!--           <%# if (['super admin', 'admin', 'training manager'].include? current_user.access_level) %>
-            <li><button class='btn btn-add-user' data-toggle='modal' data-target='#newOwner' disabled>Owner</button></li>
-          <%# else %>
-            <li><button class='btn btn-add-user btn-add-user-disabled'>Owner</button></li>
-          <%# end %> -->
-
-      <% @training.writers.each do |user| %>
-          <% if user.picture.present? %>
-            <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-writer ava' data-toggle='tooltip' data-placement="bottom" title='Writer:  <%= "#{user.fullname}" %>'></a>
-          <% else %>
-            <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-writer ava' data-toggle='tooltip' data-placement="bottom" title='Writer:  <%= "#{user.fullname}" %>'></a>
-          <% end %>
-        <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-          <div class="modal-dialog" role="document" style="border-radius: 2rem">
-            <%= render 'users/consult', user: user, training: @training %>
-          </div>
-        </div>
-      <% end %>
-      <% @training.sidekicks.each do |user| %>
-          <% if user.picture.present? %>
-            <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-writer ava' data-toggle='tooltip' data-placement="bottom" title='Sidekick:  <%= "#{user.fullname}" %>'></a>
-          <% else %>
-            <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-writer ava' data-toggle='tooltip' data-placement="bottom" title='Sidekick:  <%= "#{user.fullname}" %>'></a>
-          <% end %>
-        <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-          <div class="modal-dialog" role="document" style="border-radius: 2rem">
-            <%= render 'users/consult', user: user, training: @training %>
-          </div>
-        </div>
-      <% end %>
-      <% trainer_array = [] %>
-      <% @training.sessions.each do |session| %>
-        <% session.users.each do |trainer| %>
-          <% trainer_array << trainer %>
-          <% unless trainer_array.count(trainer) > 1 %>
-              <% if trainer.picture.present? %>
-                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= trainer.id %>'><img src='<%= "#{trainer.picture}" %>' alt="" class='avatar-sm-trainer ava' data-toggle='tooltip' data-placement="bottom" title='Trainer:  <%= "#{trainer.fullname}" %>'></a>
-              <% else %>
-                <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= trainer.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-trainer ava' data-toggle='tooltip' data-placement="bottom" title='Trainer:  <%= "#{trainer.fullname}" %>'></a>
-              <% end %>
-          <% end %>
-        <% end %>
-      <% end %>
-        <% if (['super admin', 'admin', 'training manager'].include? current_user.access_level) %>
-          <% if trainer_array.uniq.count > 1 %>
-            <li><button class='avatar-sm-add ava' data-toggle='modal' data-target='#newTrainers'><i class="fas fa-plus" style='color:#888888; font-size:20px;' data-toggle='tooltip' title='Add Trainer' data-placement="bottom"></i></button></li>
-          <% else %>
-            <li><button class='avatar-sm-add ava' data-toggle='modal' data-target='#newTrainers'><i class="fas fa-plus" style='color:#888888; font-size:20px;' data-toggle='tooltip' title='Add Trainer' data-placement="bottom"></i></button></li>
-          <% end %>
-        <% else %>
-          <% if trainer_array.uniq.count > 1 %>
-            <li><button class='avatar-sm-add ava btn-add-user-disabled'><i class="fas fa-plus"></i></button></li>
-          <% else %>
-            <li><button class='avatar-sm-add ava btn-add-user-disabled'><i class="fas fa-plus"></i></button></li>
-          <% end %>
-        <% end %>
-      </div>
+      <%= render 'trainings/partials/show_training_users', training: @training %>
     </div>
     <div class="middle-info2">
       <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
@@ -173,24 +105,13 @@
     </div>
     <div class="training-info">
       <div class="sessions-cards">
-        <% @training.sessions.order(:date, :start_time).each do |session| %>
-          <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) || session.users.include?(current_user) %>
-            <div class='session-card-block' id="card-block-<%= session.id %>">
-              <%= render 'show_session_card', session: session %>
-            </div>
-          <% end %>
-        <% end %>
-      </div>
-      <div class="training-info-footer">
-        <%# if (['super admin', 'admin', 'training manager'].include? current_user.access_level) && (@training.mode == 'Company' || @training.mode.nil?) %>
-        <%# elsif (['super admin', 'admin', 'training manager'].include? current_user.access_level) && @training.mode == 'School'%>
-          <%# link_to 'Add a session', new_training_session_path(@training), class: 'btn btn-edit-yellow' %>
-        <%# end %>
+        <%= render 'trainings/partials/show_sessions', training: @training %>
       </div>
     </div>
   </div>
 </div>
-<!-- Modal -->
+
+<!-- Modals -->
 <div class="modal fade" id="trainingInfos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document" style="border-radius: 2rem">
     <%= render 'trainings/show_infos', training: @training %>
@@ -204,8 +125,8 @@
 </div>
 
 <div class="modal fade" id="newTrainers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-lg" role="document" style="border-radius: 2rem">
-    <%= render 'session_trainers/new_trainers', training: @training %>
+  <div class="modal-dialog" role="document" style="border-radius: 2rem">
+    <%= render 'session_trainers/trainers_link', training: @training %>
   </div>
 </div>
 
@@ -273,51 +194,68 @@
       dropdown.classList.toggle('hidden');
     };
 
+    // function openSessionForm(element) {
+    //   if (formGuardian == false) {
+    //     formGuardian = true;
+    //     if (document.querySelectorAll('.hidden-form.active').length == 0) {
+    //       form = element.parentNode.querySelector('.hidden-form');
+    //       element.classList.toggle('hidden');
+    //       form.classList.toggle('hidden');
+    //       if (form.querySelector('.form-control') != null){
+    //         initial_value = form.querySelector('.form-control').value;
+    //       }
+    //       if (form.querySelector('.datepicker') != null) {
+    //         flatpickr(".datepicker", {
+    //           disableMobile: true,
+    //           dateFormat: "d/m/Y",});
+    //       }
+    //       inputs = form.querySelectorAll('input:not([type="hidden"])')
+    //       selects = form.querySelectorAll('select')
+    //       if (selects.length > 0 || inputs[0].type == 'radio') {
+    //         window.addEventListener('click', function(e) {
+    //           if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
+    //             form.querySelector('.hidden-submit').click();
+    //             formGuardian = false;
+    //             this.removeEventListener('click', arguments.callee, false);
+    //           }
+    //         });
+    //       } else {
+    //         inputs[0].click()
+    //         inputs.forEach((input) => {
+    //           input.addEventListener('change', function(e) {
+    //             form.querySelector('.hidden-submit').click();
+    //             formGuardian = false;
+    //             this.removeEventListener('change', arguments.callee, false);
+    //           })
+    //         })
+    //         window.addEventListener('click', function(e) {
+    //           if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
+    //             form.querySelector('.hidden-submit').click();
+    //             formGuardian = false;
+    //             this.removeEventListener('click', arguments.callee, false);
+    //           }
+    //         });
+    //       }
+    //     }
+    //   }
+    // };
+
     function openSessionForm(element) {
       if (formGuardian == false) {
-        formGuardian = true;
-        if (document.querySelectorAll('.hidden-form.active').length == 0) {
-          form = element.parentNode.querySelector('.hidden-form');
-          element.classList.toggle('hidden');
-          form.classList.toggle('hidden');
-          if (form.querySelector('.form-control') != null){
-            initial_value = form.querySelector('.form-control').value;
-          }
-          if (form.querySelector('.datepicker') != null) {
-            flatpickr(".datepicker", {
-              disableMobile: true,
-              dateFormat: "d/m/Y",});
-          }
-          inputs = form.querySelectorAll('input:not([type="hidden"])')
-          selects = form.querySelectorAll('select')
-          if (selects.length > 0 || inputs[0].type == 'radio') {
-            window.addEventListener('click', function(e) {
-              if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
-                form.querySelector('.hidden-submit').click();
-                formGuardian = false;
-                this.removeEventListener('click', arguments.callee, false);
-              }
-            });
-          } else {
-            inputs[0].click()
-            inputs.forEach((input) => {
-              input.addEventListener('change', function(e) {
-                form.querySelector('.hidden-submit').click();
-                formGuardian = false;
-                this.removeEventListener('change', arguments.callee, false);
-              })
-            })
-            window.addEventListener('click', function(e) {
-              if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
-                form.querySelector('.hidden-submit').click();
-                formGuardian = false;
-                this.removeEventListener('click', arguments.callee, false);
-              }
-            });
-          }
-        }
+        formGuardian = true
+        card = element.closest('.card-lg')
+        card.querySelector('.card-footer-lg__infos').classList.add('hidden')
+        card.querySelector('.card-session-header').querySelector('h3').classList.add('hidden')
+        card.querySelector('.sessions-copy').classList.add('hidden')
+        card.querySelector('#owner-session-index').classList.add('hidden')
+        card.querySelector('.card-footer-lg__form').classList.remove('hidden')
+        card.querySelector('.card-main-lg').setAttribute('ondblclick','writeLED(1,1)')
+        flatpickr(".datepicker", {
+          disableMobile: true,
+          dateFormat: "d/m/Y",});
+        setTimeout(function(){ formGuardian = false }, 100);
       }
-    };
+    }
   </script>
 <% end %>
 
@@ -341,15 +279,12 @@
     dropdown_pdf = element.parentNode.parentNode.querySelector('.dropdown-pdf')
     dropdown_pdf.classList.remove('hidden')
 
-    // element.addEventListener('mouseout', function(e) {
-      element.addEventListener('mouseout', function(f) {
-        console.log("test")
-        dropdown_pdf.classList.add('hidden')
-        element.removeEventListener('mouseout', arguments.callee, false);
-        // element.removeEventListener('mouseout', arguments.callee, false);
-        return
-      })
-    // })
+    element.addEventListener('mouseout', function(f) {
+      console.log("test")
+      dropdown_pdf.classList.add('hidden')
+      element.removeEventListener('mouseout', arguments.callee, false);
+      return
+    })
 
     window.addEventListener('click', function(e) {
       if (outsideClick(e, dropdown_pdf)) {
@@ -357,6 +292,45 @@
         this.removeEventListener('click', arguments.callee, false);
       }
     });
+  }
+
+  function selectTrainer(element, add) {
+    if (add == true) {
+      selected = element.closest('.users-select').querySelector('select').value
+      user_id = selected.split('|')[0]
+    }
+    form = element.closest('.modal-body').querySelector('form')
+    selected_storage = form.querySelector('#link_trainer_ids')
+    selected_array = []
+    pill_container = element.closest('.modal-body').querySelector('.users-list')
+    if (add == true && !selected_storage.value.includes(user_id)){
+      new_pill = document.createElement('div');
+      new_pill.classList.add('trainer-pill')
+      new_pill.id = 'user-' + user_id
+      new_pill.innerHTML = "<p>" + selected.split('|')[1] + "</p><i class='fas fa-times' onclick='selectTrainer(this, false);'></i>"
+      pill_container.appendChild(new_pill)
+    } else if (add == false) {
+      element.closest('.trainer-pill').remove();
+    }
+    pill_container.querySelectorAll('.trainer-pill').forEach((pill) =>{
+      if (pill.id != '') {
+        selected_array.push(pill.id.split('-')[1])
+      }
+    })
+    selected_storage.value = selected_array
+  }
+
+  function confirmTrainers(element) {
+    if (formGuardian == false) {
+      formGuardian = true
+      form = element.parentNode.querySelector('form')
+      confirm_button = form.querySelector('.hidden-submit')
+      modal = element.closest('.modal')
+      modal.querySelector('.btn-icon-close').click()
+      confirm_button.click()
+      document.querySelector('body').classList.add('wait');
+      setTimeout(function(){ formGuardian = false }, 100);
+    }
   }
 
   buttons = document.querySelectorAll('.edit_button');

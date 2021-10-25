@@ -17,10 +17,6 @@ class ClientContactPolicy < ApplicationPolicy
     check_access_seven
   end
 
-  def edit?
-    check_access_seven
-  end
-
   def update?
     check_access_seven
   end

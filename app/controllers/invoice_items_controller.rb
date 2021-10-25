@@ -10,7 +10,7 @@ class AccessToken
 end
 
 class InvoiceItemsController < ApplicationController
-  before_action :set_invoice_item, only: [:show, :edit, :update, :copy, :copy_here, :transform_to_invoice, :edit_client, :credit, :marked_as_send, :marked_as_paid, :marked_as_cancelled, :destroy, :upload_sevener_invoice_to_drive]
+  before_action :set_invoice_item, only: [:show, :edit, :update, :copy, :transform_to_invoice, :edit_client, :credit, :marked_as_send, :marked_as_paid, :marked_as_cancelled, :destroy]
 
   # Indexes with a filter option (see below)
   def index
@@ -197,7 +197,7 @@ class InvoiceItemsController < ApplicationController
       new_invoice.update_price
       UpdateAirtableJob.perform_async(@training, false, new_invoice)
     end
-    redirect_to invoice_items_path(type: 'Invoice', training_id: @training.id, page: 1)
+    redirect_to invoice_items_path(type: 'Invoice', training_id: @training.id)
   end
 
   # Creates new InvoiceItems using data from Airtable DB for each attendee
@@ -339,8 +339,11 @@ class InvoiceItemsController < ApplicationController
     end
   end
 
-  def send_invoice_mail
-    raise
+  # Destroys an InvoiceItem
+  def destroy
+    authorize @invoice_item
+    @invoice_item.destroy
+    redirect_to client_company_path(@invoice_item.client_company)
   end
 
   # Marks an InvoiceItem as send
@@ -374,13 +377,6 @@ class InvoiceItemsController < ApplicationController
     redirect_back(fallback_location: invoice_item_path(@invoice_item))
   end
 
-  # Destroys an InvoiceItem
-  def destroy
-    authorize @invoice_item
-    @invoice_item.destroy
-    redirect_to client_company_path(@invoice_item.client_company)
-  end
-
   private
 
   # Filter for index method
@@ -395,17 +391,6 @@ class InvoiceItemsController < ApplicationController
       @invoice_items_total = InvoiceItem.where(type: params[:type]).order('id DESC')
       @invoice_items = @invoice_items_total.offset((n-1)*50).first(50)
     end
-  end
-
-  def client_options
-    {
-      client_id: Rails.application.credentials.google_client_id,
-      client_secret: Rails.application.credentials.google_client_secret,
-      authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
-      token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
-      scope: Google::Apis::DriveV3::AUTH_DRIVE,
-      redirect_uri: "#{request.base_url}/upload_to_drive"
-    }
   end
 
   def set_invoice_item

@@ -6,6 +6,21 @@ class ClientCompany < ApplicationRecord
   belongs_to :opco, class_name: "ClientCompany", optional: true
   validates :client_company_type, inclusion: { in: %w(Company School OPCO) }
 
+  # SEARCHING CLIENT_COMPANY BY name
+  include PgSearch::Model
+  pg_search_scope :search_by_name,
+    against: [ :name ],
+    using: {
+      tsearch: { prefix: true }
+    },
+    ignoring: :accents
+
+  def to_builder
+    Jbuilder.new do |client_company|
+      client_company.(self, :name, :id)
+    end
+  end
+
   def trainings_for_copy
     array = []
     self.client_contacts.each do |contact|

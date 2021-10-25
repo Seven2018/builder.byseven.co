@@ -1,15 +1,16 @@
 <div class="container-seven-large container-seven-large-centered">
   <div id='page-index'>
     <div id="page-controls">
-        <%= simple_form_for :search, url: contents_path, method: 'GET' do |f| %>
+        <%= simple_form_for :search, url: contents_path, method: :get do |f| %>
           <% if params[:search] %>
-            <%= f.input :title, placeholder: params[:search][:title], label: false %>
+            <%= f.text_field :title, placeholder: 'Search', label: false, data: {behavior: 'autocomplete'}, value: params[:search][:title] %>
             <%= link_to contents_path, class: 'search-close' do %>
               <i class="far fa-times-circle"></i>
             <% end %>
           <% else %>
-            <%= f.input :title, placeholder: 'Search Workshops', label: false %>
+            <%= f.text_field :title, placeholder: 'Search', label: false, data: {behavior: 'autocomplete'} %>
           <% end %>
+          <%= f.submit 'Search', class: 'btn-search' %>
         <% end %>
       <div id="page-buttons">
         <% if ['super admin', 'admin', 'training manager', 'sevener+'].include? current_user.access_level %>
@@ -145,7 +146,36 @@
 
 <%= javascript_pack_tag 'tree' %>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/jquery.easy-autocomplete.min.js"></script>
+
 <script>
+  form = document.querySelector('.search')
+  input = form.querySelector('input')
+  input.addEventListener('keypress', function(e) {
+    if (event.which == '13') {
+      event.preventDefault();
+    }
+  })
+
+  $input = $("[data-behavior='autocomplete']");
+
+  var options = {
+    listLocation: "contents",
+    getValue: 'title',
+    url: function(phrase) {
+      return "/contents_search.json?search=" + phrase
+    },
+    list: {
+      onChooseEvent: function() {
+      },
+      match: {
+        enabled: true
+      }
+    }
+  }
+
+  $input.easyAutocomplete(options);
+
   const allCarets = document.querySelectorAll('.caret');
   allCarets.forEach(element => {
     element.addEventListener('click', event => {

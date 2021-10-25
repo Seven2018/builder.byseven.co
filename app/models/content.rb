@@ -6,6 +6,21 @@ class Content < ApplicationRecord
   validates :title, presence: true, allow_blank: false
   before_save :default_values
 
+  # SEARCHING CONTENT BY title
+  include PgSearch::Model
+  pg_search_scope :search_by_title,
+    against: [ :title ],
+    using: {
+      tsearch: { prefix: true }
+    },
+    ignoring: :accents
+
+  def to_builder
+    Jbuilder.new do |content|
+      content.(self, :title, :id)
+    end
+  end
+
   private
 
   def default_values

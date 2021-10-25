@@ -1,6 +1,16 @@
+
+
 .modal-header {
   align-items: center !important;
   border-bottom: none !important;
+
+  h3 {
+    font-weight: bolder;
+  }
+}
+
+.modal-header-yellow {
+  background-color: #FFC447;
 }
 
 .mod-date {
@@ -13,6 +23,10 @@
 
 .modal-div {
   margin-bottom: 2rem;
+
+  span > input {
+    margin-right: 1rem;
+  }
 }
 
 .modal-title {
@@ -67,14 +81,31 @@
     font-size: 1.6rem !important;
   }
 }
+.modal-body-yellow {
+  padding-top: 2rem !important;
+}
 
 .modal-lg {
   z-index: 9500 !important;
 }
 
 .modal {
- overflow-y: auto !important;
- padding: 0 !important;
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .modal:before {
+    display: inline-block;
+    vertical-align: middle;
+    content: " ";
+    height: 100%;
+  }
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
 }
 
 .modal-open {
@@ -104,5 +135,66 @@
 
   .easy-autocomplete-container > ul {
     min-width: 15rem;
+  }
+}
+
+
+/////////////////
+// ADD SESSION //
+/////////////////
+
+
+
+////////////////////
+// SELECT TRAINER //
+////////////////////
+
+.users-select {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin: 2rem 0;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-right: 2rem;
+  }
+
+  select {
+    height: 2.885rem;
+  }
+}
+
+
+.users-list {
+  width: 100%;
+  background: #FDFDFD;
+  border-radius: .5rem;
+  margin-bottom: 2rem;
+
+  .trainer-pill {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 0.5px solid #E7E7E7;
+    border-bottom: none;
+
+    &:last-of-type {
+      border: 0.5px solid #E7E7E7;
+    }
+
+    p {
+      margin: 0;
+      padding: 1rem;
+    }
+
+    i {
+      margin: 0;
+      padding: 1rem;
+    }
   }
 }

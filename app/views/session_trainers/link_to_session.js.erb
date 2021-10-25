@@ -1,0 +1,40 @@
+if ('<%= @page %>' == 'training') {
+  document.querySelector('.middle-info-user').innerHTML = '<%= j render "trainings/partials/show_training_users", training: @session.training %>';
+  document.querySelector('#card-block-<%= @session.id %>').innerHTML = '<%= j render "trainings/partials/show_session_card", session: @session %>';
+
+  photos = document.querySelectorAll('.ava')
+  counter = 0;
+  photos.forEach(photo => {
+    photo.style.right = counter.toString() + 'px';
+    counter = counter + 30;
+  });
+
+  sessions = document.querySelectorAll('.card-lg')
+  sessions.forEach(card => {
+    photos1 = card.querySelectorAll('.ava2')
+    counter1 = 0;
+    photos1.forEach(pic => {
+      pic.style.right = counter1.toString() + 'px';
+      counter1 = counter1 + 30;
+    });
+  });
+} else if ('<%= @page %>' == 'session') {
+  document.querySelector('.session-info-container').innerHTML = '<%= j render "sessions/show_middle_info", session: @session %>';
+
+  photos = document.querySelectorAll('.ava-session')
+  counter = 30;
+  photos.forEach(photo => {
+    photo.style.right = counter.toString() + 'px';
+    counter = counter + 30;
+  });
+
+  photos = document.querySelectorAll('.ava-session-mobile')
+  counter = -225;
+  photos.forEach(photo => {
+    photo.style.right = counter.toString() + 'px';
+    counter = counter + 30;
+  });
+}
+
+
+document.querySelector('body').classList.remove('wait');

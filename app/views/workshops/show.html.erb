@@ -10,12 +10,12 @@
           <%= link_to new_training_session_workshop_workshop_module_path(@workshop.session.training, @workshop.session, @workshop) do %>
             <div class="btn-icon-grey" data-toggle='tooltip' title='Add Module'><i class="fas fa-plus"></i></div>
           <% end %>
-        <% end %>
-        <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
           <div class="btn-icon-grey" data-toggle='modal' data-target='#editMod' data-toggle='tooltip' title='Edit'><i class="fas fa-pen"></i></div>
           <%= link_to training_session_workshop_path(@workshop.session.training, @workshop.session, @workshop), class: "btn-icon-grey", method: :delete, data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
             <i class="fas fa-trash-alt"></i>
           <% end %>
+        <% end %>
+        <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
           <%= link_to training_session_copy_form_workshop_path(@workshop.session.training, @workshop.session, @workshop), class: 'btn-icon-grey', data: {toggle: 'tooltip'}, title: 'Copy Workshop' do %>
             <i class="fas fa-copy"></i>
           <% end %>

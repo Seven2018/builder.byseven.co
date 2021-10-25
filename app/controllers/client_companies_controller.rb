@@ -1,6 +1,5 @@
 class ClientCompaniesController < ApplicationController
 before_action :set_clientcompany, only: [:show, :edit, :update, :destroy]
-before_action :authenticate_user!, except: [:new_attendees, :create_attendees]
 
   # Index with "search" option
   def index
@@ -40,13 +39,9 @@ before_action :authenticate_user!, except: [:new_attendees, :create_attendees]
     redirect_to client_companies_path
   end
 
-  def new_attendees
+  def client_companies_search
     skip_authorization
-    @client_company = ClientCompany.find(params[:client_company_id])
-  end
-
-  def create_attendees
-    skip_authorization
+    @client_companies = ClientCompany.ransack(name_cont: params[:search]).result(distinct: true).limit(5)
   end
 
   private

@@ -9,19 +9,7 @@ class TrainingPolicy < ApplicationPolicy
     end
   end
 
-  def index_upcoming?
-    check_access
-  end
-
   def index_completed?
-    check_access
-  end
-
-  def index_week?
-    check_access
-  end
-
-  def index_month?
     check_access
   end
 
@@ -35,10 +23,6 @@ class TrainingPolicy < ApplicationPolicy
 
   def show_session_content?
     check_access
-  end
-
-  def edit?
-    check_access_seven
   end
 
   def update?

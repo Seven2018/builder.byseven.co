@@ -7,6 +7,11 @@ class ContentsController < ApplicationController
     @themes = Theme.all
   end
 
+  def contents_search
+    skip_authorization
+    @contents = Content.ransack(title_cont: params[:search]).result(distinct: true).limit(5)
+  end
+
   def show
     authorize @content
     @theory_content = TheoryContent.new

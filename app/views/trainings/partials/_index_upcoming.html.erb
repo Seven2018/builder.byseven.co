@@ -1,0 +1,54 @@
+<% @upcoming_trainings.each do |training| %>
+  <% if training.sessions.select(:date).where(date: nil).empty? || ['sevener+', 'sevener'].include?(current_user.access_level) %>
+      <div class="training-card" id="card-index" data-toggle='tooltip' title='<%= training.title %>'>
+        <div class="training-card-main">
+          <div class="training-card-infos">
+            <% sessions = training.sessions.order(date: :asc).pluck(:date) %>
+            <div class='training-card-infos-elements'>
+              <% if sessions.count == 1 %>
+                <%= " On #{sessions.first&.strftime('%d %b, %Y')}" %>
+              <% else %>
+                <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+                  <%= " #{sessions.first&.strftime('%d %b, %Y')} to #{sessions.last&.strftime('%d %b, %Y')}" %>
+                <% else %>
+                  <% trainer_sessions = Session.joins(:session_trainers).where(training_id: training.id, session_trainers: {user_id: current_user.id}).order(date: :asc).pluck(:date) %>
+                  <%= " #{trainer_sessions.first&.strftime('%d %b %Y')} to #{trainer_sessions.last&.strftime('%d %b, %Y')}" %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+          <%= link_to training_path(training), class: 'stretched-link' do %>
+          <div class="training-card-bottom">
+            <div class="training-client-titles">
+              <div class="training-titles">
+              <img src="<%= Training.includes(:client_contact).find(training.id).client_contact.client_company.logo %>" class='lazyload client-logo'>
+                <p><b><%= training.client_company.name %></b></p>
+                <% if training.title.length >= 100 %>
+                  <p><%= training.title.first(100) + '...' %></p>
+                <% else %>
+                  <p><%= training.title %></p>
+                <% end %>
+              </div>
+            </div>
+              <%= training.sessions.count.to_s + " " + "Sessions" %>
+              <% owners = training.owners %>
+              <% u = 1 %>
+              <% if owners.present? %>
+                <img class="lazyload avatar-sm-owner training-card-user training-card-user-<%= u %>" src="<%= training.owners.first.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+                <% u += 1 %>
+              <% end %>
+              <% sidekicks = training.sidekicks %>
+              <% if sidekicks.present? %>
+                <img class="lazyload avatar-sm-sidekick training-card-user training-card-user-<%= u %>" src="<%= sidekicks.first.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+                <% u += 1 %>
+              <% end %>
+              <% writers = training.writers%>
+              <% if writers.present? %>
+                <img class="lazyload avatar-sm-writer training-card-user training-card-user-<%= u %>" src="<%= writers.first.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+  <% end %>
+<% end %>

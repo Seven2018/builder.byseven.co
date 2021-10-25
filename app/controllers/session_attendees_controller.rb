@@ -1,5 +1,5 @@
 class SessionAttendeesController < ApplicationController
-  before_action :authenticate_user!, except: [:destroy, :create, :create_kea_partners, :destroy_kea_partners, :test]
+  before_action :authenticate_user!, except: [:destroy, :create]
 
   def link_attendees
     skip_authorization

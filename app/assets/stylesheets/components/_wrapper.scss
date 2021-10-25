@@ -14,6 +14,10 @@ body {
   padding: 0 !important;
 }
 
+body.wait *, body.wait {
+  cursor: wait !important;
+}
+
 a {
   color: black;
 
@@ -29,22 +33,11 @@ a {
 }
 
 .container-seven-large {
-  // margin-top: 3rem;
   background-color: #f7f7f7;
-  // margin-left:0rem;
-  // width: 100%;
   min-height: 100vh;
   padding: 0 1rem;
-  // position: relative;
-  // transition: all .25s ease-in-out;
-  // margin-bottom: 100px;
    @include from-large {
-  //   margin-top: 8rem;
    padding: 1.5rem 4rem;
-  //   margin-left: 6rem;
-  //   min-height: calc(100vh - 13rem);
-  //   max-width: 138rem;
-  //   width: calc(100vw - 6rem);
   }
 }
 
@@ -100,11 +93,25 @@ a {
 }
 
 #page-controls {
-  max-height: 8rem;
+  min-height: 8rem;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   padding: 2rem 0;
+
+  form {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    .easy-autocomplete {
+      margin-right: 1rem;
+    }
+
+    .btn-search {
+      height: 4rem;
+    }
+  }
 }
 
 #page-buttons {
@@ -130,9 +137,26 @@ a {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
 
+    ul {
+      padding: 0;
+    }
+
     li {
+      min-height: 3rem;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
       cursor: pointer;
-      margin-bottom: 1rem;
+      padding-left: 4rem;
+      transition: background-color .3s ease-in-out;
+
+      &:hover {
+        background-color: rgba(0,0,0,0.1);
+      }
+
+      .eac-item {
+        width: 100%;
+      }
     }
   }
 
@@ -143,7 +167,7 @@ a {
     height: 1.6rem;
     width: 1.6rem;
     position: absolute;
-    right: 1rem;
+    left: 27rem;
     top: 1.2rem;
   }
 }
@@ -170,6 +194,10 @@ a {
 .side-search {
   background-color: transparent !important;
 }
+
+// #paginate-container {
+//   display: none;
+// }
 
 
 .index-card-large {

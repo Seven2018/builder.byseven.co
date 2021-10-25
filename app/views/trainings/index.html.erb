@@ -1,33 +1,33 @@
 <div class="container-seven-large">
   <div id="page-controls">
-      <% if params[:user] %>
-        <%= simple_form_for :search, url: trainings_path, method: 'GET' do |f| %>
-          <% if params[:search].present? %>
-            <%= f.input :title, placeholder: 'Search Trainings', label: false, input_html: {value: params[:search][:title]} %>
-            <%= link_to trainings_path, class: 'search-close' do %>
-              <i class="far fa-times-circle"></i>
-            <% end %>
-          <% else %>
-            <%= f.input :title, placeholder: 'Search Trainings', label: false %>
+    <% if params[:user] %>
+      <%= simple_form_for :search, url: trainings_path, method: 'GET' do |f| %>
+        <% if params[:search].present? %>
+          <%= f.input :title, placeholder: 'Search Trainings', label: false, input_html: {value: params[:search][:title]} %>
+          <%= link_to trainings_path, class: 'search-close' do %>
+            <i class="far fa-times-circle"></i>
           <% end %>
-          <%= f.input :user, as: :hidden, input_html: { value: params[:user] } %>
-          <%= hidden_field_tag :page, 1 %>
+        <% else %>
+          <%= f.input :title, placeholder: 'Search Trainings', label: false %>
         <% end %>
-      <% else %>
-        <%= simple_form_for :search, url: trainings_path, method: 'GET' do |f| %>
-          <% if params[:search].present? %>
-            <%= f.input :title, placeholder: 'Search Trainings', label: false, input_html: {value: params[:search][:title]} %>
-          <% else %>
-            <%= f.input :title, placeholder: 'Search Trainings', label: false %>
-          <% end %>
-          <%= hidden_field_tag :page, 1 %>
-          <% if params[:search] %>
-            <%= link_to trainings_path, class: 'search-close' do %>
-              <i class="far fa-times-circle"></i>
-            <% end %>
+        <%= f.input :user, as: :hidden, input_html: { value: params[:user] } %>
+        <%= hidden_field_tag :page, 1 %>
+      <% end %>
+    <% else %>
+      <%= simple_form_for :search, url: trainings_path, method: 'GET' do |f| %>
+        <% if params[:search].present? %>
+          <%= f.input :title, placeholder: 'Search Trainings', label: false, input_html: {value: params[:search][:title]} %>
+        <% else %>
+          <%= f.input :title, placeholder: 'Search Trainings', label: false %>
+        <% end %>
+        <%= hidden_field_tag :page, 1 %>
+        <% if params[:search] %>
+          <%= link_to trainings_path, class: 'search-close' do %>
+            <i class="far fa-times-circle"></i>
           <% end %>
         <% end %>
       <% end %>
+    <% end %>
     <div id="page-buttons">
       <% if (['super admin', 'admin', 'training manager'].include? current_user.access_level) %>
         <%# link_to new_training_path do %>
@@ -50,7 +50,7 @@
       <% else %>
         <%= link_to 'All', trainings_path, class: 'avatar-sm centered-item avatar_filter_all' %>
       <% end %>
-      <% User.where.not(access_level: %w[sevener+ sevener]).each do |user| %>
+      <% User.where.not(access_level: %w[sevener+ sevener]).select(:id, :firstname, :lastname, :picture).each do |user| %>
         <% if (params[:user] == user.id&.to_s) || (params[:search] && params[:search][:user] == user.id&.to_s) %>
           <%= link_to trainings_path(user: user.id) do %>
             <% if user.picture.present? %>
@@ -81,22 +81,22 @@
       </div>
       <div class="trainings-row trainings-row-upcoming">
         <%# render_async index_upcoming_path(user: params[:user]) %>
-        <%= render 'trainings/index_upcoming' %>
+        <%= render 'trainings/partials/index_upcoming' %>
       </div>
       <div class="trainings-row trainings-row-completed hidden">
         <%= render_async index_completed_path(user: params[:user], search: params[:search]&.permit!)%>
       </div>
       <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
         <div class="trainings-row trainings-row-home hidden">
-          <%= render 'index_home', trainings: @trainings %>
+          <%= render 'trainings/partials/index_home', trainings: @trainings %>
         </div>
         <h3 class="training-update-text">To Schedule</h3>
         <div class="trainings-row">
-          <%= render 'index_to_date', trainings: @trainings %>
+          <%= render 'trainings/partials/index_to_date', trainings: @trainings %>
         </div>
         <h3 class="training-update-text">To Staff</h3>
         <div class="trainings-row">
-          <%= render 'index_to_staff', trainings: @trainings %>
+          <%= render 'trainings/partials/index_to_staff', trainings: @trainings %>
         </div>
       <% end %>
 
@@ -141,7 +141,6 @@
     }
   }
 
-
   sliders = document.querySelectorAll('.trainings-row');
   sliders.forEach((slider) => {
     isDown = false;
@@ -168,7 +167,6 @@
       const x = e.pageX - slider.offsetLeft;
       const walk = (x - startX) * 3; //scroll-fast
       slider.scrollLeft = scrollLeft - walk;
-      console.log(walk);
     });
   })
 </script>

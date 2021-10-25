@@ -6,7 +6,7 @@ class WorkshopPolicy < ApplicationPolicy
   end
 
   def create?
-    check_access_seven
+    check_access_sevener_plus
   end
 
   def show?
@@ -14,11 +14,11 @@ class WorkshopPolicy < ApplicationPolicy
   end
 
   def update?
-    check_access_seven
+    check_access_sevener_plus
   end
 
   def destroy?
-    check_access_seven
+    check_access_sevener_plus
   end
 
   def move?
@@ -26,11 +26,11 @@ class WorkshopPolicy < ApplicationPolicy
   end
 
   def move_up?
-    check_access_seven
+    check_access_sevener_plus
   end
 
   def move_down?
-    check_access_seven
+    check_access_sevener_plus
   end
 
   def save?
@@ -53,6 +53,10 @@ class WorkshopPolicy < ApplicationPolicy
 
   def check_access_seven
     ['super admin', 'admin', 'training manager'].include? user.access_level
+  end
+
+  def check_access_sevener_plus
+    ['super admin', 'admin', 'training manager', 'sevener+'].include? user.access_level
   end
 
   def check_access
