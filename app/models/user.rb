@@ -13,8 +13,11 @@ class User < ApplicationRecord
   validates :firstname, :lastname, :email, presence: true
   validates_uniqueness_of :email
   validates :access_level, inclusion: { in: ['sevener', 'sevener+', 'training manager', 'admin', 'super admin'] }
+
   require 'uri'
   require 'net/http'
+
+  acts_as_messageable
 
   # SEARCHING USERS BY firstname and lastname
   include PgSearch::Model
@@ -42,6 +45,11 @@ class User < ApplicationRecord
     Session.joins(:session_trainers).where(date: date.beginning_of_week..date.end_of_week, session_trainers: {user_id: self.id}).map(&:duration).sum
   end
 
+
+  ############
+  # Airtable #
+  ############
+
   def export_airtable_user
     existing_user = OverviewUser.all.select{|x| x['Builder_id'] == self.id || x['Email'] == self.email}&.first
     if existing_user.present?
@@ -60,11 +68,21 @@ class User < ApplicationRecord
     UpdateBizdevReportJob.perform_now
   end
 
+
+  ################
+  # Autocomplete #
+  ################
+
   def to_builder
     Jbuilder.new do |user|
       user.(self, :firstname, :id)
     end
   end
+
+
+  ############
+  # Omniauth #
+  ############
 
   def self.from_omniauth(access_token)
     data = access_token.info
@@ -79,4 +97,24 @@ class User < ApplicationRecord
     # end
     user
   end
+
+
+  #############
+  # Mailboxer #
+  #############
+
+  def name
+    self.fullname
+  end
+
+  def mailboxer_email(object)
+    #Check if an email should be sent for that object
+    #if true
+    return self.email
+    #if false
+    #return nil
+  end
+
+  ##########
+
 end

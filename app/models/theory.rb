@@ -13,9 +13,17 @@ class Theory < ApplicationRecord
     },
     ignoring: :accents
 
+
+  ################
+  # Autocomplete #
+  ################
+
   def to_builder
     Jbuilder.new do |theory|
       theory.(self, :name, :id)
     end
   end
+
+  ##########
+
 end

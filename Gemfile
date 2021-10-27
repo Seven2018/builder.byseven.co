@@ -57,12 +57,13 @@ gem 'trix-rails', require: 'trix'
 gem 'kaminari'
 gem 'where_exists'
 gem 'order_as_specified'
-gem 'bullet', group: 'development'
+gem 'mailboxer'
 
 gem 'dotenv-rails', groups: [:development, :test]
 
 group :development do
   gem 'web-console', '>= 3.3.0'
+  gem 'bullet'
 end
 
 group :development, :test do

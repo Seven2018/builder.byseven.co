@@ -17,7 +17,6 @@ class Training < ApplicationRecord
 
   extend OrderAsSpecified
 
-
   # SEARCHING TRANINGS BY TRANING.title AND CLIENT_COMPANY.name
   include PgSearch::Model
   pg_search_scope :search_by_title_and_company,
@@ -101,6 +100,11 @@ class Training < ApplicationRecord
   def hours
     self.sessions.map{|x| x.duration * x.session_trainers.count}.sum
   end
+
+
+  ############
+  # Airtable #
+  ############
 
   def export_airtable
     # begin
@@ -254,4 +258,7 @@ class Training < ApplicationRecord
   def self.export_numbers_activity_cumulation
     UpdateCumulationChartJob.perform_now
   end
+
+  ##########
+
 end

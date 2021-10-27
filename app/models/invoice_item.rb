@@ -7,6 +7,43 @@ class InvoiceItem < ApplicationRecord
   validates_uniqueness_of :uuid
   self.inheritance_column = :_type_disabled
 
+  def gross_revenue
+    self.total_amount - self.tax_amount
+  end
+
+  def products
+    self.invoice_lines.map(&:product)
+  end
+
+  # Updates InvoiceItem price and tax amount
+  def update_price
+    total = 0
+    tax = 0
+    self.invoice_lines.each do |line|
+      if !line.quantity.nil? && !line.net_amount.nil? && !line.tax_amount.nil?
+        total += line.quantity * line.net_amount * (1 + line.tax_amount/100)
+        tax += line.quantity * line.net_amount * (line.tax_amount/100)
+      end
+    end
+    self.update(total_amount: total, tax_amount: tax)
+    self.save
+  end
+
+  def self.account_invoice
+    AccountInvoice.all.each{|x| x.destroy}
+    InvoiceItem.where('created_at > ?', Date::strptime('2021-01-01', '%Y-%m-%d')).each do |invoice|
+      if invoice.payment_date.present?
+        acc_invoice = AccountInvoice.create('Numéro' => invoice.uuid, 'Destinataire' => invoice.client_company.name, 'Montant TTC' => invoice.total_amount.to_f, 'Date Paiement' => invoice.payment_date.strftime('%Y-%m-%d'))
+        acc_invoice.save
+      end
+    end
+  end
+
+
+  #######
+  # CSV #
+  #######
+
   def self.to_csv
     attributes = %w(Date Journal Compte_Général Compte_Auxiliaire Référence Libellé Débit Crédit)
     CSV.generate(headers: true) do |csv|
@@ -41,13 +78,10 @@ class InvoiceItem < ApplicationRecord
     end
   end
 
-  def gross_revenue
-    self.total_amount - self.tax_amount
-  end
 
-  def products
-    self.invoice_lines.map(&:product)
-  end
+  ############
+  # Airtable #
+  ############
 
   # Exports the data to Airtable DB
   def export_numbers_revenue
@@ -123,27 +157,6 @@ class InvoiceItem < ApplicationRecord
     # end
   end
 
-  # Updates InvoiceItem price and tax amount
-  def update_price
-    total = 0
-    tax = 0
-    self.invoice_lines.each do |line|
-      if !line.quantity.nil? && !line.net_amount.nil? && !line.tax_amount.nil?
-        total += line.quantity * line.net_amount * (1 + line.tax_amount/100)
-        tax += line.quantity * line.net_amount * (line.tax_amount/100)
-      end
-    end
-    self.update(total_amount: total, tax_amount: tax)
-    self.save
-  end
+  ##########
 
-  def self.account_invoice
-    AccountInvoice.all.each{|x| x.destroy}
-    InvoiceItem.where('created_at > ?', Date::strptime('2021-01-01', '%Y-%m-%d')).each do |invoice|
-      if invoice.payment_date.present?
-        acc_invoice = AccountInvoice.create('Numéro' => invoice.uuid, 'Destinataire' => invoice.client_company.name, 'Montant TTC' => invoice.total_amount.to_f, 'Date Paiement' => invoice.payment_date.strftime('%Y-%m-%d'))
-        acc_invoice.save
-      end
-    end
-  end
 end

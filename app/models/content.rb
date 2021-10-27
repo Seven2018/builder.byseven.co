@@ -15,11 +15,18 @@ class Content < ApplicationRecord
     },
     ignoring: :accents
 
+
+  ################
+  # Autocomplete #
+  ################
+
   def to_builder
     Jbuilder.new do |content|
       content.(self, :title, :id)
     end
   end
+
+  ##########
 
   private
 

@@ -15,12 +15,6 @@ class ClientCompany < ApplicationRecord
     },
     ignoring: :accents
 
-  def to_builder
-    Jbuilder.new do |client_company|
-      client_company.(self, :name, :id)
-    end
-  end
-
   def trainings_for_copy
     array = []
     self.client_contacts.each do |contact|
@@ -32,4 +26,18 @@ class ClientCompany < ApplicationRecord
     end
     array
   end
+
+
+  ################
+  # Autocomplete #
+  ################
+
+  def to_builder
+    Jbuilder.new do |client_company|
+      client_company.(self, :name, :id)
+    end
+  end
+
+  ##########
+
 end
