@@ -93,7 +93,6 @@ class InvoiceItem < ApplicationRecord
         invoice['Billed Expenses'] = nil
       end
       self.update_price
-      invoice['Former / Credit / New'] = 'Credit' if self.total_amount < 0
       invoice['VAT'] = self.tax_amount.to_f
       invoice['OPCO'] = self.client_company.name if self.client_company.client_company_type == 'OPCO'
       invoice['Training_id'] = self.training.id if training.present?
