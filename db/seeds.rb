@@ -93,6 +93,7 @@ User.create(firstname: "Mathilde", lastname: "Meurer", email: "mathilde.meurer@b
 User.create(firstname: "Sevener", lastname: "Lambda", email: "sevener@byseven.co", password: "tititoto", access_level: "sevener", linkedin: "", picture: "https://bloody-disgusting.com/wp-content/uploads/2017/05/Screen-Shot-2017-05-01-at-11.17.09-AM.jpg", description: "Sevener Lambda")
 User.create(firstname: "Marie", lastname: "Leleu", email: "marie.leleu@byseven.co", password: "Seven2021", access_level: "super admin")
 
+
 puts "Generating Client Companies..."
 ClientCompany.create(
  name: "Deliveroo",

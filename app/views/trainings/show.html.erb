@@ -11,12 +11,6 @@
     <% end %>
     <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>
       <div class="page-controls-buttons flex-row-between-centered">
-        <% if params[:change].present? %>
-        <div class="flex-column-between-centered">
-          <p class='calendar_message'>Calendar update required</p>
-          <p class='airtable_message'>Airtable update required</p>
-        </div>
-        <% end %>
         <%= link_to update_calendar_path(training_id: @training.id), class: "btn-icon-red", data: { toggle: 'tooltip'}, title: 'Update Calendar' do %>
           <i class="fas fa-calendar-check" style='font-size: 20px'></i>
         <% end %>
@@ -194,52 +188,6 @@
       dropdown.classList.toggle('hidden');
     };
 
-    // function openSessionForm(element) {
-    //   if (formGuardian == false) {
-    //     formGuardian = true;
-    //     if (document.querySelectorAll('.hidden-form.active').length == 0) {
-    //       form = element.parentNode.querySelector('.hidden-form');
-    //       element.classList.toggle('hidden');
-    //       form.classList.toggle('hidden');
-    //       if (form.querySelector('.form-control') != null){
-    //         initial_value = form.querySelector('.form-control').value;
-    //       }
-    //       if (form.querySelector('.datepicker') != null) {
-    //         flatpickr(".datepicker", {
-    //           disableMobile: true,
-    //           dateFormat: "d/m/Y",});
-    //       }
-    //       inputs = form.querySelectorAll('input:not([type="hidden"])')
-    //       selects = form.querySelectorAll('select')
-    //       if (selects.length > 0 || inputs[0].type == 'radio') {
-    //         window.addEventListener('click', function(e) {
-    //           if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
-    //             form.querySelector('.hidden-submit').click();
-    //             formGuardian = false;
-    //             this.removeEventListener('click', arguments.callee, false);
-    //           }
-    //         });
-    //       } else {
-    //         inputs[0].click()
-    //         inputs.forEach((input) => {
-    //           input.addEventListener('change', function(e) {
-    //             form.querySelector('.hidden-submit').click();
-    //             formGuardian = false;
-    //             this.removeEventListener('change', arguments.callee, false);
-    //           })
-    //         })
-    //         window.addEventListener('click', function(e) {
-    //           if (outsideClick(e, form.parentNode) && outsideClick(e, document.querySelectorAll('.flatpickr-calendar'))) {
-    //             form.querySelector('.hidden-submit').click();
-    //             formGuardian = false;
-    //             this.removeEventListener('click', arguments.callee, false);
-    //           }
-    //         });
-    //       }
-    //     }
-    //   }
-    // };
-
     function openSessionForm(element) {
       if (formGuardian == false) {
         formGuardian = true
@@ -303,7 +251,7 @@
     selected_storage = form.querySelector('#link_trainer_ids')
     selected_array = []
     pill_container = element.closest('.modal-body').querySelector('.users-list')
-    if (add == true && !selected_storage.value.includes(user_id)){
+    if (add == true && !selected_storage.value.split(',').includes(user_id)){
       new_pill = document.createElement('div');
       new_pill.classList.add('trainer-pill')
       new_pill.id = 'user-' + user_id

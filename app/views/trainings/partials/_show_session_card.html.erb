@@ -109,7 +109,7 @@
     <div class='sessions-footer'>
       <div class="sessions-alert">
         <% unavailable = [] %>
-        <% SessionTrainer.joins(:session).where(sessions: {date: session.date}, user_id: session.session_trainers.map(&:user_id)).group_by{|y| y.user_id}.each do |key, value| %>
+        <% SessionTrainer.joins(:session).where(sessions: {date: session.date}, user_id: session.session_trainers.map(&:user_id), status: nil).group_by{|y| y.user_id}.each do |key, value| %>
           <% if value.count > 1 %>
             <% is_overlapping = value.sort_by{|x| x.session.start_time}.each_cons(2).any? do |x,y| %>
               <% x.session.period.last > y.session.period.first %>
