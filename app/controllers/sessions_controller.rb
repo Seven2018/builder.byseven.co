@@ -24,6 +24,11 @@ class SessionsController < ApplicationController
     authorize @session
     @session_trainer = SessionTrainer.new
     # @comment = Comment.new
+    workshops = @session.workshops.order(position: :asc)
+    if workshops.map(&:position) != (1..@session.workshops.count).to_a
+      i = 1
+      workshops.each{|x| x.update position: i; i += 1}
+    end
     respond_to do |format|
       format.html
       format.pdf do

@@ -72,34 +72,33 @@
     </div>
   <% end %>
   <div class="trainings-title">
-      <div class="flex-row-start-centered">
-        <h3 class="training-update-text training-update-text-upcoming active" onclick="switchView(this)">Upcoming</h3>
-        <h3 class="training-update-text training-update-text-completed" onclick="switchView(this)">Completed</h3>
-        <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-          <h3 class="training-update-text training-update-text-home" onclick="switchView(this)">Home</h3>
-        <% end %>
-      </div>
-      <div class="trainings-row trainings-row-upcoming">
-        <%# render_async index_upcoming_path(user: params[:user]) %>
-        <%= render 'trainings/partials/index_upcoming' %>
-      </div>
-      <div class="trainings-row trainings-row-completed hidden">
-        <%= render_async index_completed_path(user: params[:user], search: params[:search]&.permit!)%>
-      </div>
+    <div class="flex-row-start-centered">
+      <h3 class="training-update-text training-update-text-upcoming active" onclick="switchView(this)">Upcoming</h3>
+      <h3 class="training-update-text training-update-text-completed" onclick="switchView(this)">Completed</h3>
       <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-        <div class="trainings-row trainings-row-home hidden">
-          <%= render 'trainings/partials/index_home', trainings: @trainings %>
-        </div>
-        <h3 class="training-update-text">To Schedule</h3>
-        <div class="trainings-row">
-          <%= render 'trainings/partials/index_to_date', trainings: @trainings %>
-        </div>
-        <h3 class="training-update-text">To Staff</h3>
-        <div class="trainings-row">
-          <%= render 'trainings/partials/index_to_staff', trainings: @trainings %>
-        </div>
+        <h3 class="training-update-text training-update-text-home" onclick="switchView(this)">Home</h3>
       <% end %>
-
+    </div>
+    <div class="trainings-row trainings-row-upcoming">
+      <%# render_async index_upcoming_path(user: params[:user]) %>
+      <%= render 'trainings/partials/index_upcoming' %>
+    </div>
+    <div class="trainings-row trainings-row-completed hidden">
+      <%= render_async index_completed_path(user: params[:user], search: params[:search]&.permit!)%>
+    </div>
+    <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+      <div class="trainings-row trainings-row-home hidden">
+        <%= render 'trainings/partials/index_home', trainings: @trainings %>
+      </div>
+      <h3 class="training-update-text">To Schedule</h3>
+      <div class="trainings-row">
+        <%= render 'trainings/partials/index_to_date', trainings: @trainings %>
+      </div>
+      <h3 class="training-update-text">To Staff</h3>
+      <div class="trainings-row">
+        <%= render 'trainings/partials/index_to_staff', trainings: @trainings %>
+      </div>
+    <% end %>
   </div>
 </div>
 

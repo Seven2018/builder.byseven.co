@@ -239,7 +239,7 @@
     selected_storage = form.querySelector('#link_trainer_ids')
     selected_array = []
     pill_container = element.closest('.modal-body').querySelector('.users-list')
-    if (add == true && !selected_storage.value.includes(user_id)){
+    if (add == true && !selected_storage.value.split(',').includes(user_id)){
       new_pill = document.createElement('div');
       new_pill.classList.add('trainer-pill')
       new_pill.id = 'user-' + user_id
