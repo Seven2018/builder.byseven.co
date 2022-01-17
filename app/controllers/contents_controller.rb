@@ -14,6 +14,11 @@ class ContentsController < ApplicationController
 
   def show
     authorize @content
+    content_modules = @content.content_modules.order(position: :asc)
+    if content_modules.map(&:position) != (1..content_modules.count).to_a
+      i = 1
+      content_modules.each{|x| x.update position: i; i += 1}
+    end
     @theory_content = TheoryContent.new
   end
 

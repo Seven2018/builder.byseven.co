@@ -3,6 +3,11 @@ class WorkshopsController < ApplicationController
 
   def show
     authorize @workshop
+    workshop_modules = @workshop.workshop_modules.order(position: :asc)
+    if workshop_modules.map(&:position) != (1..workshop_modules.count).to_a
+      i = 1
+      workshop_modules.each{|x| x.update position: i; i += 1}
+    end
     @theory_workshop = TheoryWorkshop.new
   end
 
