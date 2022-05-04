@@ -137,7 +137,6 @@ class TrainingsController < ApplicationController
 
   def edit
     authorize @training
-    @training.export_airtable
   end
 
   def update
