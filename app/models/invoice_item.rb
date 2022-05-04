@@ -75,7 +75,7 @@ class InvoiceItem < ApplicationRecord
         invoice['Unit Number'] = 0
       end
 
-      lines.present? ? invoice['Unit Price'] = (lines.map{|x| x&.net_amount}&.sum / lines&.length).to_f : invoice['Unit Price'] = 0
+      lines.present? ? invoice['Unit Price'] = (lines.map{|x| x.net_amount * x.quantity}.sum / lines.map(&:quantity).sum).to_f : invoice['Unit Price'] = 0
       invoice['Unit Number'] = lines.map{|x| x&.quantity}&.sum
       if self.products.include?(Product.find(3))
         lines = self.invoice_lines.select{|x| x.product_id == 3}
