@@ -159,6 +159,7 @@ class Training < ApplicationRecord
       end
       TrainingOwnership.where(training_id: self.id, user_type: 'Writer').where.not(user_id: writers&.map{|x| x.id}).destroy_all
       existing_card['Trainers'] = self.trainers.map{|x| OverviewUser.all.select{|y| y['Builder_id'] == x.id}.first.id}
+      existing_card['Start date'] = self.start_time.strftime('%Y-%m-%d') if self.start_time.present?
       existing_card['Due Date'] = self.end_time.strftime('%Y-%m-%d') if self.end_time.present?
       existing_card['Builder Sessions Datetime'] = details
       existing_card['Builder Update'] = Time.now.utc.iso8601(3)

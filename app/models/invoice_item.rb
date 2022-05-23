@@ -55,6 +55,7 @@ class InvoiceItem < ApplicationRecord
       return if self.type != 'Invoice'
       training = OverviewTraining.all.select{|x| x['Builder_id'] == self.training.id}&.first if self.training.present?
       invoice = OverviewNumbersRevenue.all.select{|x| x['Invoice_id'] == self.id}&.first
+
       unless invoice.present?
         if training.present?
           invoice = OverviewNumbersRevenue.create('Training' => [training&.id], 'Invoice SEVEN' => self.uuid, 'Issue Date' => Date.today.strftime('%Y-%m-%d'), 'Invoice_id' => self.id)
@@ -62,6 +63,7 @@ class InvoiceItem < ApplicationRecord
           invoice = OverviewNumbersRevenue.create('Invoice SEVEN' => self.uuid, 'Issue Date' => Date.today.strftime('%Y-%m-%d'), 'Invoice_id' => self.id)
         end
       end
+
       lines = []
       if self.products.include?(Product.find(1))
         lines = self.invoice_lines.select{|x| x.product_id == 1}
@@ -77,14 +79,19 @@ class InvoiceItem < ApplicationRecord
 
       lines.present? ? invoice['Unit Price'] = (lines.map{|x| x.net_amount * x.quantity}.sum / lines.map(&:quantity).sum).to_f : invoice['Unit Price'] = 0
       invoice['Unit Number'] = lines.map{|x| x&.quantity}&.sum
+
       if self.products.include?(Product.find(3))
         lines = self.invoice_lines.select{|x| x.product_id == 3}
         invoice['Preparation'] = lines.map{|x| x.net_amount * x.quantity}.sum.to_f
+      else
+        invoice['Preparation'] = nil
       end
+
       if self.products.include?(Product.find(8))
         lines = self.invoice_lines.select{|x| x.product_id == 8}
         invoice['Deposit'] = lines.map{|x| x.net_amount * x.quantity}.sum.to_f
       end
+
       expenses = self.products.compact.select{|x| [4,5,6].include?(x.id)}
       if expenses.present?
         lines = self.invoice_lines.select{|x| expenses.include?(x.product)}
@@ -92,6 +99,7 @@ class InvoiceItem < ApplicationRecord
       else
         invoice['Billed Expenses'] = nil
       end
+
       self.update_price
       invoice['VAT'] = self.tax_amount.to_f
       invoice['OPCO'] = self.client_company.name if self.client_company.client_company_type == 'OPCO'
