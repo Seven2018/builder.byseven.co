@@ -19,7 +19,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     authorize @user
     if @user.save
-      @user.export_airtable_user
+      @user.export_airtable_user if Rails.env.production?
       airtable_user_photo = OverviewUser.all(filter: "{Email} = '#{@user.email}'")&.first['Photo']
       @user.update(picture: airtable_user_photo&.first['url']) if airtable_user_photo.present?
       redirect_to user_path(@user)
@@ -47,7 +47,7 @@ class UsersController < ApplicationController
     authorize @user
     @user.update(user_params)
     if @user.save
-      @user.export_airtable_user
+      @user.export_airtable_user if Rails.env.production?
       redirect_to user_path(@user)
     else
       render "_edit"

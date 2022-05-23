@@ -66,7 +66,7 @@ class InvoiceItemsController < ApplicationController
     @invoice_item.update(invoiceitem_params)
     if @invoice_item.save
       unless params[:invoice_item][:skip_update].present?
-        @invoice_item.export_numbers_revenue
+        @invoice_item.export_numbers_revenue if Rails.env.production?
       end
       redirect_to invoice_item_path(@invoice_item)
     end

@@ -2,6 +2,8 @@ class UpdateAirtableJob < ApplicationJob
   include SuckerPunch::Job
 
   def perform(training, numbers_sevener = false, invoice_item = false)
+    return unless Rails.env.production?
+
     if numbers_sevener.present?
       training.trainers.each{|y| training.export_numbers_sevener(y)}
     end
