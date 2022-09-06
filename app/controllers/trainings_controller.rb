@@ -244,7 +244,7 @@ class TrainingsController < ApplicationController
     if mode == 'upcoming'
       trainings.where_exists(:sessions, 'date >= ?', Date.today).sort_by{|y| y.next_session}
     elsif mode == 'completed'
-      trainings.where_exists(:sessions).where_not_exists(:sessions, 'date >= ?', Date.today).where_not_exists(:sessions, date: nil).sort_by{|y| y.next_session}
+      trainings.where_exists(:sessions).where_not_exists(:sessions, 'date >= ?', Date.today).where_not_exists(:sessions, date: nil).sort_by{|y| y.next_session}.reverse
     elsif mode == 'all'
       # trainings.reject{|x| x.end_time.present?} + trainings.reject{|y| !y.end_time.present?}.sort_by{|z| z.end_time}.reverse
       trainings.sort_by{|x| x.end_time || Date.new(1970)}
