@@ -129,42 +129,87 @@
   <% end %>
 </div>
 
-<!-- Modals -->
 
-<div class="modal fade" id="editSession" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+<!------------>
+<!-- MODALS -->
+<!------------>
+
+<div id="editSession"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     data-backdrop="static"
+     data-keyboard="false">
+
   <div class="modal-dialog modal-lg" role="document" style="border-radius: 20px">
     <%= render 'edit', session: @session %>
   </div>
+
 </div>
 
-<div class="modal fade" id="copySession" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+<div id="copySession"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     data-backdrop="static"
+     data-keyboard="false">
+
   <div class="modal-dialog" role="document" style="border-radius: 2rem">
     <%= render 'sessions/copy', session: @session %>
   </div>
+
 </div>
 
-<div class="modal fade" id="newUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+<div id="newUser"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     data-backdrop="static"
+     data-keyboard="false">
+
   <div class="modal-dialog" role="document" style="border-radius: 20px">
-    <%= render 'session_trainers/trainers_link_to_session', training: nil, session: @session, page: 'session' %>
+    <%= render 'session_trainers/trainers_link_to_session', training: nil, 
+                                                            session: @session,
+                                                            page: 'session',
+                                                            controller_action: 'sessions_show' %>
   </div>
+
 </div>
 
-<div class="modal fade" id="addAttendees" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+<div id="addAttendees"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     data-backdrop="static"
+     data-keyboard="false">
+
   <div class="modal-dialog" role="document" style="border-radius: 20px">
     <%= render 'session_attendees/new', session: @session %>
   </div>
+
 </div>
 
 <% @session.users.each do |user| %>
-  <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+
+  <div id="consultUser<%= user.id %>"
+       class="modal fade"
+       tabindex="-1"
+       role="dialog"
+       data-backdrop="static"
+       data-keyboard="false">
+
     <div class="modal-dialog" role="document" style="border-radius: 20px">
       <%= render 'users/consult', user: user %>
     </div>
-  </div>
-<% end %>
-</div>
 
-<!-- Scripts -->
+  </div>
+
+<% end %>
+
+
+<!------------->
+<!-- SCRIPTS -->
+<!------------->
 
 <script>
 
