@@ -442,6 +442,10 @@ GEM
       unf_ext
     unf_ext (0.0.8)
     uniform_notifier (1.14.2)
+    view_component (2.71.0)
+      activesupport (>= 5.0.0, < 8.0)
+      concurrent-ruby (~> 1.0)
+      method_source (~> 1.0)
     warden (1.2.9)
       rack (>= 2.0.9)
     web-console (4.1.0)
@@ -462,7 +466,7 @@ GEM
       chronic (>= 0.6.3)
     where_exists (1.2.3)
       rails (>= 4.2, < 6.2)
-    wicked_pdf (1.4.0)
+    wicked_pdf (2.6.3)
       activesupport
     wkhtmltopdf-binary (0.12.6.5)
     wkhtmltopdf-heroku (2.12.5.0)
@@ -525,11 +529,12 @@ DEPENDENCIES
   trix-rails
   turbolinks (~> 5)
   uglifier
+  view_component
   web-console (>= 3.3.0)
   webpacker
   whenever
   where_exists
-  wicked_pdf (~> 1.1)
+  wicked_pdf (~> 2.6.3)
   wkhtmltopdf-binary
   wkhtmltopdf-heroku (= 2.12.5.0)
 
@@ -537,4 +542,4 @@ RUBY VERSION
    ruby 2.7.3p183
 
 BUNDLED WITH
-   2.2.27
+   2.3.9

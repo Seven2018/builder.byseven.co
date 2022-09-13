@@ -1,0 +1,65 @@
+.fs-0_8rem       { font-size: 0.9rem !important; }
+.fs-1rem         { font-size: 1rem !important; }
+.fs-1_1rem       { font-size: 1.1rem !important; }
+.fs-1_2rem       { font-size: 1.2rem !important; }
+.fs-sm-1_2rem    { @include from-medium { font-size: 1.2rem !important; }}
+.fs-1_4rem       { font-size: 1.4rem !important; }
+.fs-1_5rem       { font-size: 1.5rem !important; }
+.fs-1_6rem       { font-size: 1.6rem !important; }
+.fs-sm-1_6rem    { @include from-medium { font-size: 1.6rem !important; }}
+.fs-1_8rem       { font-size: 1.8rem !important; }
+.fs-2rem         { font-size: 2rem !important; }
+.fs-sm-2rem      { @include from-medium { font-size: 2rem !important; }}
+.fs-2_3rem       { font-size: 2.3rem !important; }
+.fs-2_4rem       { font-size: 2.4rem !important; }
+.fs-sm-2_4rem    { @include from-medium { font-size: 2.4rem !important; }}
+.fs-2_6rem       { font-size: 2.6rem !important; }
+.fs-2_8rem       { font-size: 2.8rem !important; }
+.fs-3rem         { font-size: 3rem !important; }
+.fs-3rem         { font-size: 3rem !important; }
+.fs-sm-3rem      { @include from-medium { font-size: 3rem !important; }}
+.fs-3_5rem       { font-size: 3.5rem !important; }
+.fs-4rem         { font-size: 4rem !important; }
+.fs-4_5rem       { font-size: 4.5rem !important; }
+.fs-5rem         { font-size: 5rem !important; }
+.fs-sm-5rem      { @include from-medium { font-size: 5rem !important; }}
+
+.fs-1rem-auto    { font-size: calc(3px + 0.390625vw) !important; }
+.fs-1_2rem-auto  { font-size: calc(5px + 0.390625vw) !important; }
+.fs-1_4rem-auto  { font-size: calc(7px + 0.390625vw) !important; }
+.fs-1_6rem-auto  { font-size: calc(9px + 0.390625vw) !important; }
+.fs-1_8rem-auto  { font-size: calc(11px + 0.390625vw) !important; }
+.fs-2rem-auto    { font-size: calc(13px + 0.390625vw) !important; }
+.fs-2_4rem-auto  { font-size: calc(17px + 0.390625vw) !important; }
+.fs-2_6rem-auto  { font-size: calc(19px + 0.390625vw) !important; }
+.fs-3rem-auto    { font-size: calc(23px + 0.390625vw) !important; }
+.fs-3_5rem-auto  { font-size: calc(28px + 0.390625vw) !important; }
+.fs-4rem-auto    { font-size: calc(33px + 0.390625vw) !important; }
+.fs-4_5rem-auto  { font-size: calc(38px + 0.390625vw) !important; }
+.fs-5rem-auto    { font-size: calc(43px + 0.390625vw) !important; }
+
+.font-weight-100 { font-weight: 100 !important; }
+.font-weight-200 { font-weight: 200 !important; }
+.font-weight-300 { font-weight: 300 !important; }
+.font-weight-400 { font-weight: 400 !important; }
+.font-weight-500 { font-weight: 500 !important; }
+.font-weight-600 { font-weight: 600 !important; }
+.font-weight-700 { font-weight: 700 !important; }
+.font-weight-800 { font-weight: 800 !important; }
+.font-weight-900 { font-weight: 900 !important; }
+
+.italic        { font-style: italic; }
+.uppercase     { text-transform: uppercase; }
+
+.text-center { text-align: center; }
+
+.text-nowrap { white-space: nowrap; }
+.text-preline { white-space: pre-line; }
+
+.line-height-1_5rem   { line-height: 1.5rem !important; }
+.line-height-1_7rem   { line-height: 1.7rem !important; }
+.line-height-2rem   { line-height: 2rem !important; }
+.line-height-2_5rem { line-height: 2.5rem !important; }
+
+.underline { text-decoration: underline; }
+.list-style-inside { list-style: inside !important; }

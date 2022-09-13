@@ -1,0 +1,8 @@
+<% elements.each do |element| %>
+
+  <div class="d-flex justify-content-start align-items-center cursor-pointer"
+       data-tools--select-autocomplete-target='resultElement'
+       data-action="click->tools--select-autocomplete#selectOption <%= @data_action_select %>"
+       data-value="<%= element.first %>"><%= element.last %></div>
+
+<% end %>

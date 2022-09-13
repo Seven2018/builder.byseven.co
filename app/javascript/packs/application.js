@@ -1,4 +1,5 @@
-import "bootstrap";
+import "bootstrap"
+import 'controllers'
 require("../plugins/flatpickr")
 
 try {

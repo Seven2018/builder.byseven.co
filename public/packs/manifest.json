@@ -1,34 +1,34 @@
 {
-  "application.js": "/packs/js/application-4f07491db1d9a622afc6.js",
-  "application.js.map": "/packs/js/application-4f07491db1d9a622afc6.js.map",
+  "application.js": "/packs/js/application-0752f27a43c9bfa1bae3.js",
+  "application.js.map": "/packs/js/application-0752f27a43c9bfa1bae3.js.map",
   "entrypoints": {
     "application": {
       "js": [
-        "/packs/js/application-4f07491db1d9a622afc6.js"
+        "/packs/js/application-0752f27a43c9bfa1bae3.js"
       ],
       "js.map": [
-        "/packs/js/application-4f07491db1d9a622afc6.js.map"
+        "/packs/js/application-0752f27a43c9bfa1bae3.js.map"
       ]
     },
     "switch_copy_button": {
       "js": [
-        "/packs/js/switch_copy_button-696148e25b054e0d5999.js"
+        "/packs/js/switch_copy_button-65820bebefa241630dc8.js"
       ],
       "js.map": [
-        "/packs/js/switch_copy_button-696148e25b054e0d5999.js.map"
+        "/packs/js/switch_copy_button-65820bebefa241630dc8.js.map"
       ]
     },
     "tree": {
       "js": [
-        "/packs/js/tree-f97c85ac0b80f07c8184.js"
+        "/packs/js/tree-20a177d77d8b06b4f9ba.js"
       ],
       "js.map": [
-        "/packs/js/tree-f97c85ac0b80f07c8184.js.map"
+        "/packs/js/tree-20a177d77d8b06b4f9ba.js.map"
       ]
     }
   },
-  "switch_copy_button.js": "/packs/js/switch_copy_button-696148e25b054e0d5999.js",
-  "switch_copy_button.js.map": "/packs/js/switch_copy_button-696148e25b054e0d5999.js.map",
-  "tree.js": "/packs/js/tree-f97c85ac0b80f07c8184.js",
-  "tree.js.map": "/packs/js/tree-f97c85ac0b80f07c8184.js.map"
+  "switch_copy_button.js": "/packs/js/switch_copy_button-65820bebefa241630dc8.js",
+  "switch_copy_button.js.map": "/packs/js/switch_copy_button-65820bebefa241630dc8.js.map",
+  "tree.js": "/packs/js/tree-20a177d77d8b06b4f9ba.js",
+  "tree.js.map": "/packs/js/tree-20a177d77d8b06b4f9ba.js.map"
 }
