@@ -1,0 +1,30 @@
+.border-none                       { border: none; }
+
+.border-transparent-0_5px          { border: .5px solid transparent !important; }
+.border-transparent-1px            { border: 1px solid transparent !important; }
+.border-transparent-2px            { border: 2px solid transparent !important; }
+
+.border-bld-white                  { border:        1px solid $bld-white !important; }
+.border-top-bld-white              { border-top:    1px solid $bld-white !important; }
+.border-right-bld-white            { border-right:  1px solid $bld-white !important; }
+.border-left-bld-white             { border-left:   1px solid $bld-white !important; }
+.border-bottom-bld-white           { border-bottom: 1px solid $bld-white !important; }
+
+.border-bld-yellow                 { border:        1px solid $bld-yellow !important; }
+.border-top-bld-yellow             { border-top:    1px solid $bld-yellow !important; }
+.border-right-bld-yellow           { border-right:  1px solid $bld-yellow !important; }
+.border-left-bld-yellow            { border-left:   1px solid $bld-yellow !important; }
+.border-bottom-bld-yellow          { border-bottom: 1px solid $bld-yellow !important; }
+
+.border-bld-yellow-2px             { border:        2px solid $bld-yellow !important; }
+.border-top-bld-yellow-2px         { border-top:    2px solid $bld-yellow !important; }
+.border-right-bld-yellow-2px       { border-right:  2px solid $bld-yellow !important; }
+.border-left-bld-yellow-2px        { border-left:   2px solid $bld-yellow !important; }
+.border-bottom-bld-yellow-2px      { border-bottom: 2px solid $bld-yellow !important; }
+
+
+///////////
+// FOCUS //
+///////////
+
+.vs-input-focus                { &:focus { background-color: $bld-white !important; box-shadow: 0 0 0 0.2rem rgba(22, 127, 251, 0.25) !important; } }

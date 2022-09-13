@@ -2,13 +2,19 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:edit, :update, :destroy]
 
   def index
-    index_function(policy_scope(User))
+    @users = policy_scope(User).active
+    if params[:search]
+      @users = @users.search_by_name("#{params[:search][:name]}")
+      @users = @users.sort_by{ |user| user.lastname } if @users.present?
+    else
+      @users = @users.order(lastname: :asc)
+    end
   end
 
-  def users_search
-    skip_authorization
-    @users = User.ransack(firstname_or_lastname_cont: params[:search]).result(distinct: true).limit(5)
-  end
+  # def users_search
+  #   skip_authorization
+  #   @users = User.ransack(firstname_or_lastname_cont: params[:search]).result(distinct: true).limit(5)
+  # end
 
   def new
     @user = User.new
@@ -84,7 +90,10 @@ class UsersController < ApplicationController
   #   redirect_to user_path(current_user)
   # end
 
-  # AIRTABLE
+
+  ##############
+  ## AIRTABLE ##
+  ##############
 
   def airtable_create_user
     user = OverviewUser.find(params[:record_id])
@@ -106,6 +115,20 @@ class UsersController < ApplicationController
     end
   end
 
+  #########################
+  ## SEARCH AUTOCOMPLETE ##
+  #########################
+
+  def users_search
+    skip_authorization
+
+    @users = User.all.active.order(lastname: :asc)
+
+    @users = @users.ransack(firstname_or_lastname_cont: params[:search]).result(distinct: true).map{|x| [x.id, x.fullname]}
+
+    render partial: 'shared/tools/select_autocomplete', locals: { elements: @users }
+  end
+
   private
 
   def set_user
@@ -114,15 +137,5 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:firstname, :lastname, :email, :password, :access_level, :picture, :linkedin, :description, :rating, :client_company_id)
-  end
-
-  def index_function(parameter)
-    if params[:search]
-      @users = parameter
-      @users = User.all.search_by_name("#{params[:search][:name]}")
-      @users = @users.sort_by{ |user| user.lastname } if @users.present?
-    else
-      @users = parameter.order(lastname: :asc)
-    end
   end
 end

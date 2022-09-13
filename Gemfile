@@ -20,11 +20,15 @@ gem 'simple_form'
 gem "nested_form"
 gem 'pg_search'
 gem 'pundit'
-gem 'wicked_pdf', '~> 1.1'
-gem 'wkhtmltopdf-binary'
-gem 'wkhtmltopdf-heroku', '2.12.5.0'
 gem 'ckeditor', git: 'https://github.com/galetahub/ckeditor'
 # gem 'google-api-client', require: 'google/apis/calendar_v3'
+
+# PDF
+gem 'wicked_pdf',  '~> 2.6.3'
+gem 'wkhtmltopdf-binary'
+gem 'wkhtmltopdf-heroku', '2.12.5.0'
+
+# IDENTIFICATION
 gem 'google-apis-calendar_v3'
 gem 'google-http-actionmailer'
 gem 'oauth2'
@@ -32,6 +36,8 @@ gem "omniauth-rails_csrf_protection"
 gem 'omniauth-google-oauth2'
 gem 'omniauth-linkedin-oauth2'
 gem "linkedin-v2"
+
+
 gem 'rest-client', '~> 2.1'
 gem 'uglifier'
 gem 'jquery-rails'
@@ -57,12 +63,11 @@ gem 'trix-rails', require: 'trix'
 gem 'kaminari'
 gem 'where_exists'
 gem 'order_as_specified'
-gem 'bullet', group: 'development'
-
-gem 'dotenv-rails', groups: [:development, :test]
+gem 'view_component'
 
 group :development do
   gem 'web-console', '>= 3.3.0'
+  gem 'bullet'
 end
 
 group :development, :test do
@@ -71,4 +76,5 @@ group :development, :test do
   gem 'listen', '~> 3.0.5'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'dotenv-rails'
 end

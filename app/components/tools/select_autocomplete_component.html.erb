@@ -1,0 +1,35 @@
+<div class="bld-select-container"
+     data-controller="tools--select tools--select-autocomplete"
+     data-path="<%= @path %>"
+     data-additional-params="<%= @additional_params %>">
+
+    <input id="autocomplete_input"
+           class="bld-select-display bld-dark-grey-important"
+           style="width:  <%= @width %>;"
+           type="text"
+           autocomplete="off"
+           value="<%= @default_value.last %>"
+           placeholder="<%= @placeholder %>"
+           data-action="click->tools--select#toggle tools--select:click:outside->tools--select#hide
+                        keyup->tools--select-autocomplete#search <%= @data_action_input %>"
+           data-tools--select-autocomplete-target='input'>
+
+
+  <div class="bld-select-menu hidden"
+       style="width: <%= @width %>; max-height: <%= @menu_max_height.presence %>"
+       data-tools--select-target="menu"
+       data-tools--select-autocomplete-target='menu'
+       data-element-action="<%= @data_action_select %>">
+
+  </div>
+
+  <% if @input_name.present? %>
+
+    <input type="hidden"
+           name="<%= @input_name %>"
+           value="<%= @default_value.first.to_s %>"
+           data-tools--select-autocomplete-target='hiddenInput'>
+
+  <% end %>
+
+</div>
