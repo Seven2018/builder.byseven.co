@@ -1,32 +1,54 @@
 // Define variables for your color scheme
+
+// For example:
+$red: #FD1015;
+$blue: #167FFB;
+$yellow: #FFC65A;
+$orange: #E67E22;
+$green: #1EDD88;
+$gray: #0E0000;
+$light-gray: #F4F4F4;
+
 $bld-white: #FFFFFF;
-$bld-becos-blue: #4BBEC5;
-$bld-dark-grey : #131313;
+$bld-light-grey: #C4C4C4;
+$bld-light-grey4: #F4F4F4;
+$bld-dark-grey: #333333;
 $bld-yellow: #FCC74C;
 
 
 .bld-white                     { color: $bld-white; }
-.bld-becos-blue                { color: $bld-becos-blue; }
+.bld-light-grey                { color: $bld-light-grey; }
+.bld-light-grey4               { color: $bld-light-grey4; }
 .bld-dark-grey                 { color: $bld-dark-grey; }
 .bld-yellow                    { color: $bld-yellow; }
 
 .bld-white-important           { color: $bld-white !important; }
+.bld-light-grey-important      { color: $bld-light-grey !important; }
+.bld-light-grey4-important     { color: $bld-light-grey4 !important; }
 .bld-dark-grey-important       { color: $bld-dark-grey !important; }
 .bld-yellow-important          { color: $bld-yellow !important; }
 
 .bld-white-hover               { &:hover { color: $bld-white !important; } }
+.bld-light-grey-hover          { &:hover { color: $bld-light-grey !important; } }
+.bld-light-grey4-hover         { &:hover { color: $bld-light-grey4 !important; } }
 .bld-dark-grey-hover           { &:hover { color: $bld-dark-grey !important; } }
 .bld-yellow-hover              { &:hover { color: $bld-yellow !important; } }
 
 .bld-bg-white                  { background-color: $bld-white; }
+.bld-bg-light-grey             { background-color: $bld-light-grey; }
+.bld-bg-light-grey4            { background-color: $bld-light-grey4; }
 .bld-bg-dark-grey              { background-color: $bld-dark-grey; }
 .bld-bg-yellow                 { background-color: $bld-yellow; }
 
 .bld-bg-white-important        { background-color: $bld-white !important; }
+.bld-bg-light-grey-important   { background-color: $bld-light-grey !important; }
+.bld-bg-light-grey4-important  { background-color: $bld-light-grey4 !important; }
 .bld-bg-dark-grey-important    { background-color: $bld-dark-grey !important; }
 .bld-bg-yellow-important       { background-color: $bld-yellow !important; }
 
 .bld-bg-white-hover            { &:hover { background-color: $bld-white !important; } }
+.bld-bg-light-grey-hover       { &:hover { background-color: $bld-light-grey !important; } }
+.bld-bg-light-grey4-hover      { &:hover { background-color: $bld-light-grey4 !important; } }
 .bld-bg-dark-grey-hover        { &:hover { background-color: $bld-dark-grey !important; } }
 .bld-bg-yellow-hover           { &:hover { background-color: $bld-yellow !important; } }
 

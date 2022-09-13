@@ -1,34 +1,54 @@
-<div class="container-seven-large">
+<div class="container-seven-large"
+     data-controller="trainings--show">
+
   <div id='page-controls'>
+
     <% if request.referer.present? && request.referer.include?('search%5Btitle%5D') %>
+
       <%= link_to request.referer.present? ? request.referer : default_path, class: 'btn return-arrow' do %>
         <i class="fas fa-arrow-left"></i>
       <% end %>
+
     <% else %>
+
       <%= link_to trainings_path, class: 'btn return-arrow' do %>
         <i class="fas fa-arrow-left"></i>
       <% end %>
+
     <% end %>
+
     <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>
+
       <div class="page-controls-buttons flex-row-between-centered">
+
         <%= link_to update_calendar_path(training_id: @training.id), class: "btn-icon-red", data: { toggle: 'tooltip'}, title: 'Update Calendar' do %>
           <i class="fas fa-calendar-check" style='font-size: 20px'></i>
         <% end %>
+
         <a class='btn-icon-grey' id='add-session-button' data-toggle='modal' data-target='#newSession' data-toggle="tooltip" title="Add Session"><i class="fas fa-plus"></i></a>
         <a class='btn-icon-grey' data-toggle='modal' data-target='#copyTraining' data-toggle="tooltip" title="Copy"><i class="fas fa-copy"></i></a>
+
         <div class="dropdown">
+
           <div class='btn-icon-grey dropdown-toggle' id="dropdownNotificationButton" data-toggle="dropdown"><i class="fas fa-envelope"></i></div>
+
           <ul class="dropdown-menu dropdown-menu-right navbar-wagon-dropdown-menu" aria-labelledby="dropdownNotificationButton">
             <li><%= link_to 'Send summary', trainer_notification_email_path(@training, status: 'new') %></li>
             <li><a data-toggle='modal' type='button' data-target='#updateNotificationSelect' style='cursor:pointer;'>Send updated summary</a></li>
           </ul>
+
         </div>
+
         <div class="dropdown dropdown-training">
+
           <div class='btn-icon-grey btn-icon dropdown-toggle' id="dropdownMenuButton" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></div>
+
           <ul class="dropdown-menu dropdown-menu-right navbar-wagon-dropdown-menu" aria-labelledby="dropdownMenuButton">
             <!-- <li><a data-toggle='modal' data-target='#addAttendees' data-toggle="tooltip" title="Add Participants">Add participants</a></li> -->
             <!-- <li><%# link_to 'Export PDF', training_path(@training, format: :pdf), target: :_blank %></li> -->
+
             <li onmouseover='exportSubMenu(this);'>
+
               <div>
                 <p>Export PDF</p>
                 <div class="dropdown-pdf hidden">
@@ -38,135 +58,264 @@
                   <% end %>
                 </div>
               </div>
+
             </li>
+
             <li><%= link_to 'Import Attendees', import_attendees_form_path(training_id: @training.id) %></li>
+
             <li><%= link_to 'Attendees List', attendees_path(training_id: @training.id) %></li>
+
             <li><%= link_to 'New invoice', new_invoice_item_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
+
             <li><%= link_to 'New invoice Airtable', new_airtable_invoice_item_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id, type: 'Invoice'), method: :post %></li>
+
             <li><%= link_to 'New invoice Airtable by Trainer', new_airtable_invoice_item_by_trainer_path(training_id: @training.id, client_company_id: @training.client_contact.client_company.id), method: :post %></li>
+
             <li><%= link_to 'Invoices List', invoice_items_path(training_id: @training.id, type: 'Invoice') %></li>
-            <%# if @training.forms.empty? %>
-              <!-- <li><a data-toggle='modal' type='button' data-target='#newForm' style='cursor:pointer;'>New form</a></li> -->
-            <%# else %>
-              <!-- <li><%# link_to 'Forms list', training_forms_path(@training) %></li> -->
-            <%# end %>
-            <!-- <li><a data-toggle='modal' data-target='#createCertificate' data-toggle="tooltip" title="Create certificate">Create certificate</a></li> -->
-            <!-- <li><%# link_to 'New Oblivion', new_training_oblivion_path(@training) %></li> -->
+
           </ul>
+
         </div>
+
       </div>
+
     <% else %>
+
       <div class="page-controls-buttons flex-row-between-centered">
+
         <%= link_to invoice_form_path(@training), class: 'btn btn-edit-green btn-icon', data: {toggle:'tooltip'}, title: 'Submit an invoice' do %>
           <i class="fas fa-file-invoice-dollar"></i>
         <% end %>
+
       </div>
+
     <% end %>
+
   </div>
+
   <div class="middle-info">
+
     <div class='middle-info-main'>
+
       <h3><strong><%= @training.client_contact.client_company.name %></strong></h3>
+
       <div class="flex-row-between-centered">
+
         <h3 style='margin-bottom:1rem;'><%= @training.title %></h3>
         <a data-toggle="modal" data-target="#trainingInfos" style="margin-bottom: .5rem;"><i class="fas fa-info-circle info" data-toggle='tooltip' title='More info on the training'></i></a>
         <%# if @airtable_training.present? %>
           <!-- <a data-toggle='modal' data-target='#consultObjectives' data-toggle="tooltip" title="See Objectives"><i class="fas fa-info-circle"></i></a> -->
         <%# end %>
+
       </div>
+
       <p><%="From #{@training.sessions.order(date: :asc).first&.date&.strftime('%d/%m/%y')} to #{@training.sessions.order(date: :asc).last&.date&.strftime('%d/%m/%y')}" %></p>
+
     </div>
+
     <div class='middle-info-user'>
       <%= render 'trainings/partials/show_training_users', training: @training %>
     </div>
+
     <div class="middle-info2">
+
       <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+
         <p id='survey-link'>Link to survey : <%= @training.satisfaction_survey %></p>
+
         <%= simple_form_for @training, html: { class: "hidden", id: 'survey-form' } do |f| %>
+
           <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+
             <%= f.input :satisfaction_survey, placeholder: 'Add a link to the survey', value: @training.satisfaction_survey, label: false, input_html: { style: 'width: 200px;'} %>
             <%= button_tag type: 'submit', class: 'btn btn-add-user', input_html: { style: 'height: 3.5rem' } do %>
               Update
             <% end %>
+
           </div>
+
         <% end %>
+
       <% else %>
+
         <p id='survey-link'>Link to survey : <%= @training.satisfaction_survey %></p>
+
       <% end %>
+
       <% next_sessions = @training.sessions.order(date: :asc).where('date >= ?', Date.today) %>
+
       <% if next_sessions.present? && next_sessions&.first&.description&.present? %>
         <a href="<%= next_sessions.first.description %>" target="_blank">Lien Google Meet</a>
       <% end %>
+
     </div>
+
     <div class="training-info">
+
       <div class="sessions-cards">
         <%= render 'trainings/partials/show_sessions', training: @training %>
       </div>
-    </div>
-  </div>
-</div>
 
-<!-- Modals -->
-<div class="modal fade" id="trainingInfos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog" role="document" style="border-radius: 2rem">
+    </div>
+
+  </div>
+
+<!------------>
+<!-- MODALS -->
+<!------------>
+
+<div id="trainingInfos"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     data-backdrop="static"
+     data-keyboard="false">
+
+  <div class="modal-dialog"
+       role="document"
+       style="border-radius: 2rem">
     <%= render 'trainings/show_infos', training: @training %>
   </div>
+
 </div>
 
-<div class="modal fade" id="copyTraining" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog" role="document" style="border-radius: 2rem">
+<div id="copyTraining"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     data-backdrop="static"
+     data-keyboard="false">
+
+  <div class="modal-dialog"
+       role="document"
+       style="border-radius: 2rem">
     <%= render 'copy', training: @training %>
   </div>
+
 </div>
 
-<div class="modal fade" id="newTrainers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog" role="document" style="border-radius: 2rem">
-    <%= render 'session_trainers/trainers_link', training: @training %>
+<div id="newTrainers"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     data-backdrop="static"
+     data-keyboard="false">
+
+  <div class="modal-dialog"
+       role="document"
+       style="border-radius: 2rem">
+    <%= render 'session_trainers/trainers_link_to_training', training: @training, controller_action: 'trainings_show' %>
   </div>
+
 </div>
 
-<div class="modal fade" id="newForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-sm" role="document" style="border-radius: 2rem">
+<div id="newForm"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     data-backdrop="static"
+     data-keyboard="false">
+
+  <div class="modal-dialog modal-sm"
+       role="document"
+       style="border-radius: 2rem">
     <%= render 'forms/new', form: @form %>
   </div>
+
 </div>
 
-<div class="modal fade" id="updateNotificationSelect" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-sm" role="document" style="border-radius: 2rem">
+<div id="updateNotificationSelect"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     data-backdrop="static"
+     data-keyboard="false">
+
+  <div class="modal-dialog modal-sm"
+       role="document"
+       style="border-radius: 2rem">
     <%= render 'session_trainers/notification_select', training: @training %>
   </div>
+
 </div>
 
-<div class="modal fade" id="newSession" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-lg" role="document" style="border-radius: 2rem">
+<div id="newSession"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     data-backdrop="static"
+     data-keyboard="false">
+
+  <div class="modal-dialog modal-lg"
+       role="document"
+       style="border-radius: 2rem">
     <%= render '/sessions/new' %>
   </div>
+
 </div>
 
-<div class="modal fade" id="addAttendees" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-lg" role="document" style="border-radius: 20px">
+<div id="addAttendees"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     data-backdrop="static"
+     data-keyboard="false">
+
+  <div class="modal-dialog modal-lg"
+       role="document"
+       style="border-radius: 20px">
     <%= render 'session_attendees/new_all', training: @training %>
   </div>
+
 </div>
 
 <% if @airtable_training.present? %>
-  <div class="modal fade" id="consultObjectives" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg" role="document" style="border-radius: 20px">
+
+  <div id="consultObjectives"
+       class="modal fade"
+       tabindex="-1"
+       role="dialog"
+       data-backdrop="static"
+       data-keyboard="false">
+
+    <div class="modal-dialog modal-lg"
+         role="document"
+         style="border-radius: 20px">
       <%= render 'show_objectives', training: @training %>
     </div>
+
   </div>
+
 <% end %>
 
 <% @training.sessions.each do |session| %>
+
   <% session.users.each do |trainer| %>
-    <div class="modal fade" id="consultUser<%= trainer.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-      <div class="modal-dialog" role="document" style="border-radius: 2rem">
+
+    <div id="consultUser<%= trainer.id %>"
+         class="modal fade"
+         tabindex="-1"
+         role="dialog"
+         data-backdrop="static"
+         data-keyboard="false">
+
+      <div class="modal-dialog"
+           role="document"
+           style="border-radius: 2rem">
         <%= render 'users/consult', user: trainer, training: @training %>
       </div>
+
     </div>
+
   <% end %>
+
 <% end %>
+</div>
+
+
 
 <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+
   <script>
     formGuardian = false;
 
@@ -205,6 +354,7 @@
       }
     }
   </script>
+
 <% end %>
 
 <script>
@@ -240,45 +390,6 @@
         this.removeEventListener('click', arguments.callee, false);
       }
     });
-  }
-
-  function selectTrainer(element, add) {
-    if (add == true) {
-      selected = element.closest('.users-select').querySelector('select').value
-      user_id = selected.split('|')[0]
-    }
-    form = element.closest('.modal-body').querySelector('form')
-    selected_storage = form.querySelector('#link_trainer_ids')
-    selected_array = []
-    pill_container = element.closest('.modal-body').querySelector('.users-list')
-    if (add == true && !selected_storage.value.split(',').includes(user_id)){
-      new_pill = document.createElement('div');
-      new_pill.classList.add('trainer-pill')
-      new_pill.id = 'user-' + user_id
-      new_pill.innerHTML = "<p>" + selected.split('|')[1] + "</p><i class='fas fa-times' onclick='selectTrainer(this, false);'></i>"
-      pill_container.appendChild(new_pill)
-    } else if (add == false) {
-      element.closest('.trainer-pill').remove();
-    }
-    pill_container.querySelectorAll('.trainer-pill').forEach((pill) =>{
-      if (pill.id != '') {
-        selected_array.push(pill.id.split('-')[1])
-      }
-    })
-    selected_storage.value = selected_array
-  }
-
-  function confirmTrainers(element) {
-    if (formGuardian == false) {
-      formGuardian = true
-      form = element.parentNode.querySelector('form')
-      confirm_button = form.querySelector('.hidden-submit')
-      modal = element.closest('.modal')
-      modal.querySelector('.btn-icon-close').click()
-      confirm_button.click()
-      document.querySelector('body').classList.add('wait');
-      setTimeout(function(){ formGuardian = false }, 100);
-    }
   }
 
   buttons = document.querySelectorAll('.edit_button');

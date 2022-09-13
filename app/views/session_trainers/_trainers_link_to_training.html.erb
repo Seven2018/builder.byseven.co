@@ -1,0 +1,80 @@
+<div class="modal-content"
+     data-controller="trainings--show">
+
+  <div class="modal-header modal-header-yellow">
+
+    <div id="modal-title" style="display:flex;justify-content:center;text-align:center;">
+
+      <h3 class="modal-title" id="myModalLabel">Edit Trainers (Whole Training)</h3>
+      
+    </div>
+
+    <button type="button" class="btn btn-icon-close" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+
+  </div>
+
+  <div class="modal-body" id="modalNewBookinBody" style='display:flex;flex-direction:column;align-items:center;'>
+
+    <div class="my-2rem">
+
+        <label for="trainers-select"
+               class="mb-1rem">Add a trainer:</label>
+
+        <div class="d-flex align-items-center">
+
+          <%= render(Tools::SelectAutocompleteComponent.new(path: users_search_path,
+                                                                  additional_params: '',
+                                                                  width: '100%',
+                                                                  menu_max_height: '22rem',
+                                                                  placeholder: 'Select a trainer',
+                                                                  input_name: "trainers",
+                                                                  data_action_input: '',
+                                                                  data_action_select: 'click->trainings--show#selectTrainer')) %>
+
+
+          <button id="add-button"
+                  class="bld-btn-white-dark-grey"
+                  data-trainer-id=""
+                  data-trainer-fullname
+                  data-action="click->trainings--show#addTrainer">Add</button>
+
+        </div>
+
+
+    </div>
+
+    <div class="users-list">
+
+      <div class="trainer-pill trainer-pill-template hidden">
+        <p></p>
+        <i class="fas fa-times"></i>
+      </div>
+
+      <% users = User.joins(:session_trainers).where(session_trainers: {session_id: training.sessions.map(&:id), status: nil}).order(lastname: :asc).uniq %>
+
+      <div class="users-list-details">
+
+        <%= render 'session_trainers/trainers_details', users: users %>
+        
+      </div>
+
+    </div>
+
+    <div>
+
+      <%= simple_form_for :link, url: trainers_link_to_training_path, method: :get, remote: true do |f| %>
+        <%= f.hidden_field :training_id, value: training.id %>
+        <%= f.hidden_field :trainer_ids, value: users.map(&:id).join(',') %>
+        <%= f.submit '', class: 'hidden-submit hidden' %>
+      <% end %>
+
+      <button class='bld-btn-yellow'
+              data-action="click->trainings--show#confirmTrainers">
+        Confirm
+      </button>
+
+    </div>
+
+  </div>
+</div>
+

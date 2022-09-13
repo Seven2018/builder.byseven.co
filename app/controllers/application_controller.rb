@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :authenticate_user!
+  before_action :controller_action
   # before_action :set_time_zone, if: :user_signed_in?
   include Pundit
 
@@ -14,6 +15,10 @@ class ApplicationController < ActionController::Base
   #   flash[:alert] = "You are not authorized to perform this action."
   #   redirect_to(root_path)
   # end
+
+  def controller_action
+    @controller_action = [controller_name, action_name].join('_').to_sym
+  end
 
   protected
 

@@ -1,30 +1,50 @@
 <% training.sessions.order(:date, :start_time).each do |session| %>
+
   <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) || session.users.include?(current_user) %>
+
     <div class='session-card-block' id="card-block-<%= session.id %>">
       <%= render 'trainings/partials/show_session_card', session: session %>
     </div>
+
   <% end %>
+
 <% end %>
+
 <a data-toggle='modal' data-target='#newSession' data-toggle="tooltip" title="Add Session">
+
   <div class='session-card-block'>
+
     <div class="card-lg-empty">
+
       <div>
         <i class="fas fa-plus-circle"></i>
         <p>Add a Session</p>
       </div>
+
     </div>
+
   </div>
+
 </a>
 
-<!-- // MOBILE //  -->
+
+<!------------>
+<!-- MOBILE -->
+<!------------>
 
 <div class="card-lg-mobile card-lg-mobile-empty">
+
   <div class="card-main-lg-mobile" ondblclick="doubleClick(this)">
+
     <div class="card-session-header-mobile">
+
       <div>
         <i class="fas fa-plus-circle"></i>
         <p>Add a Session</p>
       </div>
+
     </div>
+
   </div>
+
 </div>

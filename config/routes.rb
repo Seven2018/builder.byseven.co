@@ -152,7 +152,6 @@ Rails.application.routes.draw do
 
   # USERS
   resources :users
-  # get 'users_search', to: 'users#users_search', as: 'users_search'
   get :users_search, controller: :users
   get :airtable_create_user, controller: :users
 

@@ -387,8 +387,8 @@ a.disabled-link { pointer-events: none; }
 }
 
 @include from-large {
-  .from-large__width-auto:     { width: auto; }
 
+  .from-large__width-auto      { width: auto; }
   .from-large__min-width-10vw  { min-width: 10vw; }
   .from-large__min-width-20vw  { min-width: 20vw; }
   .from-large__min-width-40vw  { min-width: 40vw; }

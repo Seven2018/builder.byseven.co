@@ -1,0 +1,10 @@
+<% users.each do |user| %>
+
+<div id='user-<%= user.id %>'
+     class="trainer-pill cursor-pointer">
+  <p><%= user.fullname %></p>
+  <i class="fas fa-times"
+     data-action="click->trainings--show#removeTrainer"></i>
+</div>
+
+<% end %>

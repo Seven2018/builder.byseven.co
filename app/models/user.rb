@@ -13,6 +13,10 @@ class User < ApplicationRecord
   validates :firstname, :lastname, :email, presence: true
   validates_uniqueness_of :email
   validates :access_level, inclusion: { in: ['sevener', 'sevener+', 'training manager', 'admin', 'super admin'] }
+
+  scope :active, -> {         where(status: :active) }
+  scope :inactive, -> {       where(status: :inactive) }
+
   require 'uri'
   require 'net/http'
 
@@ -24,6 +28,16 @@ class User < ApplicationRecord
       tsearch: { prefix: true }
     },
     ignoring: :accents
+
+  enum status: {
+    inactive: 0,
+    active: 1
+  }
+
+
+  #############
+  ## METHODS ##
+  #############
 
   def fullname
     "#{lastname.upcase} #{firstname.capitalize}"
@@ -43,7 +57,9 @@ class User < ApplicationRecord
   end
 
   def export_airtable_user
+
     existing_user = OverviewUser.all.select{|x| x['Builder_id'] == self.id || x['Email'] == self.email}&.first
+
     if existing_user.present?
       existing_user['Firstname'] = self.firstname
       existing_user['Lastname'] = self.lastname
@@ -52,8 +68,11 @@ class User < ApplicationRecord
     else
       existing_user = OverviewUser.create('Firstname' => self.firstname, 'Lastname' => self.lastname, 'Email' => self.email, 'Builder_id' => self.id)
     end
+
     ['sevener+', 'sevener'].include?(self.access_level) ? existing_user['Status'] = "Sevener" : existing_user['Status'] = "SEVEN"
+
     existing_user.save
+
   end
 
   def self.report
@@ -61,12 +80,15 @@ class User < ApplicationRecord
   end
 
   def to_builder
+
     Jbuilder.new do |user|
       user.(self, :firstname, :id)
     end
+
   end
 
   def self.from_omniauth(access_token)
+
     data = access_token.info
     user = User.where(email: data['email']).first
 
@@ -78,5 +100,6 @@ class User < ApplicationRecord
     #     )
     # end
     user
+
   end
 end
