@@ -160,7 +160,9 @@ class SessionTrainersController < ApplicationController
         session_trainer.update(status: 'to_delete')
       end
     end
+
     UpdateAirtableJob.perform_async(@session.training, true)
+
     respond_to do |format|
       format.js
     end

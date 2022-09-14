@@ -51,16 +51,11 @@
 
       <% users = User.joins(:session_trainers).where(session_trainers: {session_id: session.id, status: nil}).order(lastname: :asc) %>
 
-      <% users.each do |user| %>
+      <div class="users-list-details">
 
-        <div id='user-<%= user.id %>'
-             class="trainer-pill cursor-pointer">
-          <p><%= user.fullname %></p>
-          <i class="fas fa-times"
-             data-action="click->trainings--show#removeTrainer"></i>
-        </div>
+        <%= render 'session_trainers/trainers_details', users: users %>
 
-      <% end %>
+      </div>
 
     </div>
 

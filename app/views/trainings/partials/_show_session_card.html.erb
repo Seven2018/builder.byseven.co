@@ -71,9 +71,8 @@
           <div class='card-footer-lg__block'>
 
             <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
-
-              <%= f.input :start_time, label: 'Start time:', as: :time, minute_step: 15, input_html: { class: 'timepicker'}, default: session.start_time, label: false %>
-              <%= f.input :end_time, label: 'End time:', as: :time, minute_step: 15, input_html: { class: 'timepicker'}, default: session.end_time, label: false %>
+              <%= f.input :start_time, as: :time, minute_step: 15, label: false, default: session.start_time || Time.parse('09:00') %>
+              <%= f.input :end_time, as: :time, minute_step: 15, label: false, default: session.end_time || Time.parse('17:00') %>
 
             </div>
 
