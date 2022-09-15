@@ -1,24 +1,27 @@
 class TrainerNotificationMailer < ApplicationMailer
-  default from: Rails.application.credentials.gmail_username
+  default from: CompanyInfo.no_reply
 
   def new_trainer_notification(training, user)
     @training = training
     @sessions = training.sessions.select{|x| x.users.include?(user)}
     @user = user
-    mail(to: "#{user.email}, #{training.owners.first.email}, #{training.sidekicks.first.email if training.sidekicks.present?}", subject: "#{@training.client_company.name} - #{@training.title} : Récapitulatif intervention")
+
+    mail(to: "#{@user.email}, #{@training.owners.first.email if @training.owners.present?}, #{@training.sidekicks.first.email if @training.sidekicks.present?}", subject: "#{@training.client_company.name} - #{@training.title} : Récapitulatif intervention")
   end
 
   def edit_trainer_notification(training, user)
     @training = training
     @sessions = training.sessions.select{|x| x.users.include?(user)}
     @user = user
-    mail(to: "#{user.email}, #{training.owners.first.email}, #{training.sidekicks.first.email if training.sidekicks.present?}", subject: "#{@training.client_company.name} - #{@training.title} : Récapitulatif intervention (Mise à jour du #{Date.today.strftime('%d/%m/%Y')})")
+
+    mail(to: "#{@user.email}, #{@training.owners.first.email if @training.owners.present?}, #{@training.sidekicks.first.email if @training.sidekicks.present?}", subject: "#{@training.client_company.name} - #{@training.title} : Récapitulatif intervention (Mise à jour du #{Date.today.strftime('%d/%m/%Y')})")
   end
 
   def trainer_session_reminder(session, user)
     @training = session.training
     @session = session
     @user = user
-    mail(to: "#{user.email}, #{session.training.owners.first.email}, #{training.sidekicks.first.email if training.sidekicks.present?}", subject: "SEVEN : #{session.training.title} - Session du #{session.date.strftime('%d/%m/%Y')}")
+
+    mail(to: "#{@user.email}, #{@training.owners.first.email if @training.owners.present?}, #{@training.sidekicks.first.email if @training.sidekicks.present?}", subject: "SEVEN : #{@training.title} - Session du #{@session.date.strftime('%d/%m/%Y')}")
   end
 end
