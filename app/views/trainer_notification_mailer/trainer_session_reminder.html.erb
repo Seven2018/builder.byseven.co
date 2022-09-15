@@ -50,34 +50,59 @@
       }
     </style>
   </head>
+
   <body>
+
     <div class="mailer-banner">
+
       <div class="mailer-banner-row">
+
         <div>
           <img src="https://seven-builder.herokuapp.com/assets/SEVENLOGO_SQUARE2-a44cb6d1cbb9826cadb919090ba706b19dea5ac9b8e2962a030523b034994ae1.png" alt="" height='50px' style="vertical-align:middle">
         </div>
+
       </div>
+
     </div>
+
     <div class="mailer-container">
+
       <div class="mailer-text">
+
         <h2>Hello <%= @user.firstname %>,</h2>
+
         <p>Pour rappel, ton intervention dans le cadre de la formation <%= "#{@training.client_company.name} - #{@training.title}"%> approche.</p>
+
         <p>Tu trouveras tous les informations ci-dessous :</p>
+
         <p style='margin: 5px 0;'>- <%= @session.title %> : <strong><%= @session.date.strftime('%d/%m/%Y') %></strong> de <%= @session.start_time.strftime('%Hh%M') %> à <%= @session.end_time.strftime('%Hh%M') %></p>
+
         <div style='padding-left: 20px;'>
+
           <% if @session.description.present? %>
+
             <% @session.description.split("\r\n").each do |line| %>
               <p style='margin: 5px 0;'><%= line %></p>
             <% end %>
+
           <% end %>
+
         </div>
+
         <br>
         <p><a href="https://seven-builder.herokuapp.com/trainings/<%= @training.id %>">Lien Builder</a></p>
         <br>
-        <p>Pour toute question, merci de contacter <%= @training.owners.first.firstname %> (<%= @training.owners.first.email %>)</p>
-        <br>
+
+        <% if @training.owners.present? %>
+          <p>Pour toute question, merci de contacter <%= @training.owners.first.firstname %> (<%= @training.owners.first.email %>)</p>
+          <br>
+        <% end %>
+
         <p>Bonne journée à toi !</p>
+
       </div>
+
     </div>
+
   </body>
 </html>

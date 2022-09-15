@@ -37,6 +37,8 @@ gem 'omniauth-google-oauth2'
 gem 'omniauth-linkedin-oauth2'
 gem "linkedin-v2"
 
+# MAIL
+gem 'postmark-rails'
 
 gem 'rest-client', '~> 2.1'
 gem 'uglifier'

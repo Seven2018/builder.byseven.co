@@ -87,7 +87,6 @@ Rails.application.routes.draw do
 
   # SESSION TRAINERS
   get :redirect, controller: :session_trainers
-  get :callback, controller: :session_trainers
   get :calendars, controller: :session_trainers
   get :link_to_session, controller: :session_trainers, as: :trainers_link_to_session
   get :link_to_training, controller: :session_trainers, as: :trainers_link_to_training
