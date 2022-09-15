@@ -35,3 +35,13 @@ photos.forEach(photo => {
   photo.style.right = counter.toString() + 'px';
   counter = counter + 30;
 });
+
+document.querySelectorAll('.timepicker_24').forEach((element) => {
+  flatpickr(element, {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i",
+    time_24hr: true,
+    defaultDate: element.dataset.defaultTime
+  })
+})

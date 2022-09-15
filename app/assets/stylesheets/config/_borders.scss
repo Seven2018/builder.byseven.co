@@ -24,6 +24,17 @@
 
 
 ///////////
+// HOVER //
+///////////
+
+.border-bottom-bld-black-1px-hover {
+	&:hover {
+		border-bottom: 1px solid black;
+	}
+}
+
+
+///////////
 // FOCUS //
 ///////////
 

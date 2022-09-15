@@ -97,7 +97,7 @@ class UsersController < ApplicationController
 
     authorize builder_user
 
-    builder_user = builder_user ? builder_user&.update(user_params) : User.new(user_params)
+    builder_user.present? ? builder_user&.update(user_params) : builder_user = User.new(user_params)
 
     if user['Status'] == 'Seven'
       builder_user.access_level = 'admin'
