@@ -21,7 +21,12 @@
         </div>
 
         <div class='card-footer-lg__block'>
-          <p id='<%= "time-form-" + "#{session.id.to_s}" %>'><%= " #{session.start_time.strftime("%k:%M")} to #{session.end_time.strftime("%k:%M")}" %></p>
+          <div id='<%= "time-form-" + "#{session.id.to_s}" %>'
+               class="d-flex justify-content-center">
+            <p class="px-0_5rem"><%= session.start_time.strftime("%k:%M") %></p>
+            <p>to</p>
+            <p class="px-0_5rem"><%= session.end_time.strftime("%k:%M") %></p>
+          </div>
         </div>
 
         <div class='card-footer-lg__block'>
@@ -70,10 +75,34 @@
 
           <div class='card-footer-lg__block'>
 
-            <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+            <div class="d-flex justify-content-between align-items-center height-100">
+              <%= text_field_tag(
+                          "session[start_time]",
+                          session.start_time,
+                          as: :string,
+                          type: :time,
+                          label: false,
+                          class: 'border-none bld-bg-transparent text-center timepicker_24 px-0_5rem border-bottom-bld-black-1px-hover',
+                          data: {
+                            default_time: (session.start_time.strftime('%H:%M') || '09:00')
+                          },
+                          style: 'width: 54px; border-bottom: 1px solid rgba(0,0,0,0.42);',
+                          ) %>
 
-              <%= f.input :start_time, label: 'Start time:', as: :time, minute_step: 15, input_html: { class: 'timepicker'}, default: session.start_time, label: false %>
-              <%= f.input :end_time, label: 'End time:', as: :time, minute_step: 15, input_html: { class: 'timepicker'}, default: session.end_time, label: false %>
+              <p>to</p>
+
+              <%= text_field_tag(
+                          "session[end_time]",
+                          session.end_time,
+                          as: :string,
+                          type: :time,
+                          label: false,
+                          class: 'border-none bld-bg-transparent text-center timepicker_24 px-0_5rem border-bottom-bld-black-1px-hover',
+                          data: {
+                            default_time: (session.end_time.strftime('%H:%M') || '17:00')
+                          },
+                          style: 'width: 54px; border-bottom: 1px solid rgba(0,0,0,0.42);',
+                          ) %>
 
             </div>
 

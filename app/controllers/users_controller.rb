@@ -11,11 +11,6 @@ class UsersController < ApplicationController
     end
   end
 
-  # def users_search
-  #   skip_authorization
-  #   @users = User.ransack(firstname_or_lastname_cont: params[:search]).result(distinct: true).limit(5)
-  # end
-
   def new
     @user = User.new
     authorize @user
@@ -97,18 +92,24 @@ class UsersController < ApplicationController
 
   def airtable_create_user
     user = OverviewUser.find(params[:record_id])
-    new_user = User.new(firstname: user['Firstname'], lastname: user['Lastname'], email: user['Email'], password: 'Seven2021', picture: user['Photo'].first['url'])
-    authorize new_user
+    user_params = {firstname: user['Firstname'], lastname: user['Lastname'], email: user['Email'], password: 'Seven2021', picture: user['Photo'].first['url']}
+    builder_user = User.find_by(id: user['Builder_id'])
+
+    authorize builder_user
+
+    builder_user.present? ? builder_user&.update(user_params) : builder_user = User.new(user_params)
+
     if user['Status'] == 'Seven'
-      new_user.access_level = 'admin'
+      builder_user.access_level = 'admin'
     else
-      new_user.access_level = 'sevener'
+      builder_user.access_level = 'sevener'
     end
-    if new_user.save
-      user['Builder_id'] = new_user.id
+
+    if builder_user.save
+      user['Builder_id'] = builder_user.id
       user['Builder Account'] = true
       user.save
-      redirect_to user_path(new_user)
+      redirect_to user_path(builder_user)
     else
       redirect_to users_path
       flash[:alert] = 'An problem has occured. Please contact your administrator.'

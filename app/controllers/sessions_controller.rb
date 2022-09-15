@@ -53,10 +53,12 @@ class SessionsController < ApplicationController
 
   def update
     authorize @session
+
     prev_date = @session.date
     prev_start = @session.start_time
     prev_end = @session.end_time
     @session.update(session_params)
+
     if @session.save && (params[:session][:date].present?)
       UpdateAirtableJob.perform_async(@session.training, true)
       params[:session][:session_page].present? ? (redirect_to training_path(@session.training, page: params[:session][:session_page], change: true)) : (redirect_to training_path(@session.training, change: true))
@@ -65,11 +67,14 @@ class SessionsController < ApplicationController
 
   def update_ajax
     authorize @session
+
     training = @session.training
     @session.update(session_params)
     @redirect_from = params[:redirect_from]
     if @session.save
+
       UpdateAirtableJob.perform_async(@session.training, true)
+
       respond_to do |format|
         format.html {redirect_to training_path(training)}
         format.js
@@ -94,7 +99,7 @@ class SessionsController < ApplicationController
     authorize @session
     new_sessions = []
     if params[:button] == 'copy'
-      training = Training.find(params[:copy][:training_id])
+      training = Training.find_by(id: params[:copy][:training_id]) || @session.training
       for i in 1..params[:copy][:amount].to_i
         new_session = Session.new(@session.attributes.except("id", "created_at", "updated_at", "training_id", "address", "room"))
         training.sessions.empty? ? (new_session&.date = Date.today) : (new_session&.date = @session&.date)

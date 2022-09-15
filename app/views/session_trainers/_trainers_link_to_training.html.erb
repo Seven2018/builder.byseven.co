@@ -50,7 +50,7 @@
         <i class="fas fa-times"></i>
       </div>
 
-      <% users = User.joins(:session_trainers).where(session_trainers: {session_id: training.sessions.map(&:id), status: nil}).order(lastname: :asc).uniq %>
+      <% users = User.joins(:session_trainers).where(session_trainers: {session_id: training.sessions.map(&:id), status: nil}).order(lastname: :asc).distinct %>
 
       <div class="users-list-details">
 

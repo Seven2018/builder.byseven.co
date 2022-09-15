@@ -6,11 +6,19 @@ export default class extends Controller {
   }
 
   connect() {
-    // console.log('test')
+    const timepicker24s = document.querySelectorAll('.timepicker_24')
+    timepicker24s.forEach((element) => {
+      flatpickr(element, {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        time_24hr: true,
+        defaultDate: element.dataset.defaultTime
+      })
+    })
   }
 
   selectTrainer(event) {
-    console.log('selected')
     const element = event.currentTarget
     const add_button = element.closest('.modal').querySelector('#add-button')
     const trainer_id = element.dataset.value
@@ -23,7 +31,7 @@ export default class extends Controller {
     const element = event.currentTarget
     const trainer_id = element.dataset.trainerId
     const trainer_fullname = element.dataset.trainerFullname
-    const pill_container = element.closest('.modal-body').querySelector('.users-list')
+    const pill_container = element.closest('.modal-body').querySelector('.users-list-details')
 
     const new_pill = document.createElement('div')
 
@@ -37,7 +45,7 @@ export default class extends Controller {
 
   removeTrainer(event) {
     const element = event.currentTarget
-    const pill_container = element.closest('.modal-body').querySelector('.users-list')
+    const pill_container = element.closest('.modal-body').querySelector('.users-list-details')
 
     element.closest('.trainer-pill').remove()
 

@@ -9,12 +9,18 @@ flatpickr(".datepicker", {
 })
 
 // flatpickr(".timepicker", {
-//   disableMobile: true,
 //   enableTime: true,
 //   noCalendar: true,
-//   allowInput: true,
 //   dateFormat: "H:i",
-//   time_24hr: true,
-//   minuteIncrement: 15,
-// });
+// })
 
+// const timepicker24s = document.querySelectorAll('.timepicker_24')
+// timepicker24s.forEach((element) => {
+//   flatpickr(element, {
+//     enableTime: true,
+//     noCalendar: true,
+//     dateFormat: "H:i",
+//     time_24hr: true,
+//     defaultDate: element.dataset.defaultTime
+//   })
+// })

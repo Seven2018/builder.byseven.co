@@ -37,5 +37,5 @@ if ('<%= @page %>' == 'training') {
   });
 }
 
-document.querySelector('#newTrainers').querySelector('.users-list-details').innerHTML = '<%= j render "session_trainers/trainers_details", users: User.joins(:session_trainers).where(session_trainers: {session_id: @session.training.sessions.map(&:id), status: nil}).order(lastname: :asc).uniq %>';
+document.querySelector('#newTrainers').querySelector('.users-list-details').innerHTML = '<%= j render "session_trainers/trainers_details", users: User.joins(:session_trainers).where(session_trainers: {session_id: @session.training.sessions.map(&:id), status: nil}).order(lastname: :asc).distinct %>';
 document.querySelector('body').classList.remove('wait');
