@@ -240,8 +240,8 @@ class TrainingsController < ApplicationController
     if params[:search] == ""
       @trainings = Training.all.includes(:client_company).order('client_companies.name asc', title: :asc)
     else
-      @trainings = Training.all.includes(:client_company).ransack(title_or_client_company_name_cont: params[:search])
-      @trainings.sorts = ['client_companies.name asc', 'training.title asc']
+      @trainings = Training.all.ransack(title_or_client_company_name_cont: params[:search])
+      @trainings.sorts = ['client_company.name asc', 'title asc']
       @trainings = @trainings.result(distinct: true)
     end
 
