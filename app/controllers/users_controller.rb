@@ -95,7 +95,12 @@ class UsersController < ApplicationController
     user_params = {firstname: user['Firstname'], lastname: user['Lastname'], email: user['Email'], password: 'Seven2021', picture: user['Photo'].first['url']}
     builder_user = User.find_by(id: user['Builder_id'])
 
-    authorize builder_user
+    if builder_user.present?
+      authorize builder_user
+    else
+      skip_authorization
+      return
+    end
 
     builder_user.present? ? builder_user&.update(user_params) : builder_user = User.new(user_params)
 
@@ -129,6 +134,8 @@ class UsersController < ApplicationController
 
     render partial: 'shared/tools/select_autocomplete', locals: { elements: @users }
   end
+
+  #########################
 
   private
 

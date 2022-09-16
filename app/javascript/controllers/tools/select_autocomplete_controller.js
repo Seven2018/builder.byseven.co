@@ -25,7 +25,7 @@ export default class extends Controller {
 
   search(event = null, selected_value_absent = true) {
     if (event && event.type == 'keyup' && this.selected && [8,46].includes(event.keyCode)) {
-      event.preventDefault
+      event.preventDefault()
       this.inputTarget.value = ''
       this.hiddenInputTarget.value = ''
       this.selected = false
@@ -59,15 +59,9 @@ export default class extends Controller {
   }
 
   selectOption(e) {
-    const selected_input = this.inputTarget
     const selected_option = e.currentTarget
 
-    this.hiddenInputTarget.value = selected_option.getAttribute('data-value')
-    selected_input.value = selected_option.innerText
-
-    this.selected = true
-    this.search(null, false)
-    this.hide()
+    this.storeSelectedOption(selected_option)
   }
 
   //////////
@@ -75,6 +69,22 @@ export default class extends Controller {
   //////////
 
   clickOutside(event) {
+    this.hide()
+  }
+
+
+  /////////////
+  // PRIVATE //
+  /////////////
+
+  storeSelectedOption(selected_option) {
+    const selected_input = this.inputTarget
+
+    this.hiddenInputTarget.value = selected_option.getAttribute('data-value')
+    selected_input.value = selected_option.innerText
+
+    this.selected = true
+    this.search(null, false)
     this.hide()
   }
 }

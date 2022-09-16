@@ -230,6 +230,22 @@ class TrainingsController < ApplicationController
     flash[:notice] = 'Import successful'
   end
 
+  #########################
+  ## SEARCH AUTOCOMPLETE ##
+  #########################
+
+  def trainings_search
+    skip_authorization
+
+    @trainings = Training.all.order(title: :asc)
+
+    @trainings = @trainings.ransack(title_cont: params[:search]).result(distinct: true).map{|x| [x.id, (x.client_company.name + ' - ' + x.title + ' - id: ' + x.id.to_s)]}
+
+    render partial: 'shared/tools/select_autocomplete', locals: { elements: @trainings }
+  end
+
+  #########################
+
   private
 
   def set_training

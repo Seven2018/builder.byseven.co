@@ -95,11 +95,17 @@ class SessionsController < ApplicationController
     authorize @session
   end
 
+  def copy_form
+    authorize @session
+  end
+
   def copy
     authorize @session
     new_sessions = []
+
     if params[:button] == 'copy'
-      training = Training.find_by(id: params[:copy][:training_id]) || @session.training
+      training = Training.find_by(id: params[:copy][:target_training_id]) || @session.training
+
       for i in 1..params[:copy][:amount].to_i
         new_session = Session.new(@session.attributes.except("id", "created_at", "updated_at", "training_id", "address", "room"))
         training.sessions.empty? ? (new_session&.date = Date.today) : (new_session&.date = @session&.date)
@@ -112,6 +118,7 @@ class SessionsController < ApplicationController
       end
     else
       training = Training.find(params[:training_id])
+
       for i in 1..params[:copy][:amount].to_i
         new_session = Session.new(@session.attributes.except("id", "created_at", "updated_at"))
         new_session&.date = @session&.date
@@ -119,16 +126,23 @@ class SessionsController < ApplicationController
         new_sessions << new_session
       end
     end
+
     new_sessions.each do |new_session|
+
       @session.workshops.order(position: :asc).each do |workshop|
+
         new_workshop = Workshop.create(workshop.attributes.except("id", "created_at", "updated_at", "session_id"))
         new_workshop.update(session_id: new_session.id)
+
         workshop.workshop_modules.order(position: :asc).each do |mod|
           new_mod = WorkshopModule.create(mod.attributes.except("id", "created_at", "updated_at", "workshop_id", "user_id"))
           new_mod.update(workshop_id: new_workshop.id)
         end
+
       end
+
     end
+
     redirect_to training_path(training)
   end
 
@@ -144,10 +158,6 @@ class SessionsController < ApplicationController
         new_mod.update(workshop_id: new_workshop.id, position: mod.position)
       end
     end
-  end
-
-  def copy_form
-    authorize @session
   end
 
   def presence_sheet

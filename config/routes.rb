@@ -138,6 +138,7 @@ Rails.application.routes.draw do
     end
     get :create_oblivion, controller: :oblivions
   end
+  get :trainings_search, controller: :trainings
   get 'trainings_completed', to: 'trainings#index_completed', as: 'index_completed'
   get 'trainings_upcoming', to: 'trainings#index_upcoming', as: 'index_upcoming'
   get 'trainings/:id/copy', to: 'trainings#copy', as: 'copy_training'
