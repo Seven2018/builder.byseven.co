@@ -237,9 +237,15 @@ class TrainingsController < ApplicationController
   def trainings_search
     skip_authorization
 
-    @trainings = Training.all.order(title: :asc)
+    if params[:search] == ""
+      @trainings = Training.all.includes(:client_company).order('client_companies.name asc', title: :asc)
+    else
+      @trainings = Training.all.includes(:client_company).ransack(title_or_client_company_name_cont: params[:search])
+      @trainings.sorts = ['client_companies.name asc', 'training.title asc']
+      @trainings = @trainings.result(distinct: true)
+    end
 
-    @trainings = @trainings.ransack(title_cont: params[:search]).result(distinct: true).map{|x| [x.id, (x.client_company.name + ' - ' + x.title + ' - id: ' + x.id.to_s)]}
+    @trainings = @trainings.map{|x| [x.id, (x.client_company.name + ' - ' + x.title + ' - id: ' + x.id.to_s)]}
 
     render partial: 'shared/tools/select_autocomplete', locals: { elements: @trainings }
   end
