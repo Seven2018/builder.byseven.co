@@ -95,12 +95,7 @@ class UsersController < ApplicationController
     user_params = {firstname: user['Firstname'], lastname: user['Lastname'], email: user['Email'], password: 'Seven2021', picture: user['Photo'].first['url']}
     builder_user = User.find_by(id: user['Builder_id'])
 
-    if builder_user.present?
-      authorize builder_user
-    else
-      skip_authorization
-      return
-    end
+    skip_authorization
 
     builder_user.present? ? builder_user&.update(user_params) : builder_user = User.new(user_params)
 

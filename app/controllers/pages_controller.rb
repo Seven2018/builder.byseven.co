@@ -13,7 +13,7 @@ class PagesController < ApplicationController
   def contact_form
     unless params[:email_2].present? || params[:email].empty?
       contact = IncomingContact.create('Name' => params[:name], 'Email' => params[:email], 'Tel' => params[:tel], 'Message' => params[:message], 'Training' => params[:training], 'Date' => DateTime.now.strftime('%Y-%m-%d'))
-      IncomingContactMailer.with(user: User.find(2)).new_incoming_contact(contact, User.find(2)).deliver
+      IncomingContactMailer.new_incoming_contact(contact, User.where(id: [1, 3])).deliver
     else
       IncomingSpam.create('Name' => params[:name], 'Email' => params[:email], 'Message' => params[:message])
     end
