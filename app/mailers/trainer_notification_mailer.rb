@@ -6,7 +6,7 @@ class TrainerNotificationMailer < ApplicationMailer
     @sessions = training.sessions.select{|x| x.users.include?(user)}
     @user = user
 
-    mail(to: "#{@user.email}, #{@training.owners.first.email if @training.owners.present?}, #{@training.sidekicks.first.email if @training.sidekicks.present?}", subject: "#{@training.client_company.name} - #{@training.title} : Récapitulatif intervention")
+    mail(to: "#{@user.email}", subject: "#{@training.client_company.name} - #{@training.title} : Récapitulatif intervention")
   end
 
   def edit_trainer_notification(training, user)
@@ -14,7 +14,7 @@ class TrainerNotificationMailer < ApplicationMailer
     @sessions = training.sessions.select{|x| x.users.include?(user)}
     @user = user
 
-    mail(to: "#{@user.email}, #{@training.owners.first.email if @training.owners.present?}, #{@training.sidekicks.first.email if @training.sidekicks.present?}", subject: "#{@training.client_company.name} - #{@training.title} : Récapitulatif intervention (Mise à jour du #{Date.today.strftime('%d/%m/%Y')})")
+    mail(to: "#{@user.email}", subject: "#{@training.client_company.name} - #{@training.title} : Récapitulatif intervention (Mise à jour du #{Date.today.strftime('%d/%m/%Y')})")
   end
 
   def trainer_session_reminder(session, user)
@@ -22,6 +22,6 @@ class TrainerNotificationMailer < ApplicationMailer
     @session = session
     @user = user
 
-    mail(to: "#{@user.email}, #{@training.owners.first.email if @training.owners.present?}, #{@training.sidekicks.first.email if @training.sidekicks.present?}", subject: "SEVEN : #{@training.title} - Session du #{@session.date.strftime('%d/%m/%Y')}")
+    mail(to: "#{@user.email}", subject: "SEVEN : #{@training.title} - Session du #{@session.date.strftime('%d/%m/%Y')}")
   end
 end

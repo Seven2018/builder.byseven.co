@@ -293,7 +293,7 @@ class SessionTrainersController < ApplicationController
     return if session_trainer.nil?
 
     # If the session previously had a lunch break but does not any longer, remove the second event
-    if events_count == 1 && calendar_uuid.split(' - ').count == 2
+    if events_count == 1 && calendar_uuid&.split(' - ')&.count == 2
       service.delete_event(google_calendar, calendar_uuid.split(' - ')[1])
     end
 
