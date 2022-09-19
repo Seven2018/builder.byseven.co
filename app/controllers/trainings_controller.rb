@@ -230,6 +230,28 @@ class TrainingsController < ApplicationController
     flash[:notice] = 'Import successful'
   end
 
+  #########################
+  ## SEARCH AUTOCOMPLETE ##
+  #########################
+
+  def trainings_search
+    skip_authorization
+
+    if params[:search] == ""
+      @trainings = Training.all.includes(:client_company).order('client_companies.name asc', title: :asc)
+    else
+      @trainings = Training.all.ransack(title_or_client_company_name_cont: params[:search])
+      @trainings.sorts = ['client_company.name asc', 'title asc']
+      @trainings = @trainings.result(distinct: true)
+    end
+
+    @trainings = @trainings.map{|x| [x.id, (x.client_company.name + ' - ' + x.title + ' - id: ' + x.id.to_s)]}
+
+    render partial: 'shared/tools/select_autocomplete', locals: { elements: @trainings }
+  end
+
+  #########################
+
   private
 
   def set_training

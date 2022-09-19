@@ -279,6 +279,8 @@ class SessionTrainersController < ApplicationController
 
   def create_calendar_event(service, hash, user_id, session_id, event, event_idx, events_count, user_type = 'seven')
     session_trainer = SessionTrainer.find_by(user_id: user_id, session_id: session_id)
+    return if session_trainer.nil?
+
     google_calendar = user_type == 'seven' ? hash[user_id.to_i] : hash['other']
     calendar_uuid = session_trainer.calendar_uuid
 
@@ -290,10 +292,9 @@ class SessionTrainersController < ApplicationController
       event.id = SecureRandom.hex(32)
     end
 
-    return if session_trainer.nil?
 
     # If the session previously had a lunch break but does not any longer, remove the second event
-    if events_count == 1 && calendar_uuid.split(' - ').count == 2
+    if events_count == 1 && calendar_uuid&.split(' - ')&.count == 2
       service.delete_event(google_calendar, calendar_uuid.split(' - ')[1])
     end
 

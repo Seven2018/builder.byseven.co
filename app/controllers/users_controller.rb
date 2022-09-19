@@ -93,9 +93,8 @@ class UsersController < ApplicationController
   def airtable_create_user
     user = OverviewUser.find(params[:record_id])
     user_params = {firstname: user['Firstname'], lastname: user['Lastname'], email: user['Email'], password: 'Seven2021', picture: user['Photo'].first['url']}
-    builder_user = User.find_by(id: user['Builder_id'])
-
-    authorize builder_user
+    builder_user = user['Builder_id'].present? ? User.find_by(id: user['Builder_id']) : User.find_by(email: user['Email'])
+    skip_authorization
 
     builder_user.present? ? builder_user&.update(user_params) : builder_user = User.new(user_params)
 
@@ -129,6 +128,8 @@ class UsersController < ApplicationController
 
     render partial: 'shared/tools/select_autocomplete', locals: { elements: @users }
   end
+
+  #########################
 
   private
 
