@@ -451,21 +451,29 @@
 }
 
 .btn-icon-red {
+  height: 4rem;
+  width: 4rem;
+  background-color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 20px;
   color: #E64259;
   border-radius: 5px;
+  cursor: pointer !important;
+
   i {
     color: #E64259;
     font-size: 20px;
   }
-  height: 4rem;
-  width: 4rem;
-  background-color: transparent;
+
   &:hover {
     background-color: #e2e2e2;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed !important;
   }
 }
 

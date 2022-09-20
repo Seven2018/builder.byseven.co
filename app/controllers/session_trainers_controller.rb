@@ -174,29 +174,16 @@ class SessionTrainersController < ApplicationController
   def link_to_session
     session_trainer = SessionTrainer.new
     authorize session_trainer
-    @page = params[:link][:page]
-    @session = Session.find(params[:link][:session_id])
-    user_ids = params[:link][:trainer_ids].split(',')
 
-    # Select all selected Users and create a SessionTrainer
-    user_ids.each do |user_id|
-      if SessionTrainer.where(user_id: user_id, session_id: @session.id).empty?
-        SessionTrainer.create(user_id: user_id, session_id: @session.id)
-      elsif existing = SessionTrainer.find_by(user_id: user_id, session_id: @session.id, status: 'to_delete')
-        existing.update(status: nil)
-      end
-    end
+    @page = params.dig(:link, :page)
+    @session = Session.find(params.dig(:link, :session_id))
+    user_id = params.dig(:link, :trainer_id)
 
-    # Select all not selected Users and get rid of their SessionTrainer (destroy if calendar_uuid is nil, mark for deletion otherwise)
-    SessionTrainer.where(session_id: @session.id).where.not(user_id: user_ids).each do |session_trainer|
-      if session_trainer.calendar_uuid.nil?
-        session_trainer.destroy
-      else
-        session_trainer.update(status: 'to_delete')
-      end
-    end
+    add_or_remove(@session.id, user_id)
 
     UpdateAirtableJob.perform_async(@session.training, true)
+
+    @trainers = User.joins(:session_trainers).where(session_trainers: {session_id: @session.id, status: nil}).order(lastname: :asc)
 
     respond_to do |format|
       format.js
@@ -207,28 +194,18 @@ class SessionTrainersController < ApplicationController
   def link_to_training
     session_trainer = SessionTrainer.new
     authorize session_trainer
-    @training = Training.find(params[:link][:training_id])
-    user_ids = params[:link][:trainer_ids].split(',')
 
-    # Select all Users whose checkbox is checked and create a SessionTrainer
-    user_ids.each do |user_id|
-      @training.sessions.each do |session|
-        unless SessionTrainer.find_by(user_id: user_id, session_id: session.id).present?
-          SessionTrainer.create(user_id: user_id, session_id: session.id)
-        end
-      end
-    end
+    @training = Training.find(params.dig(:link, :training_id))
+    user_id = params.dig(:link, :trainer_id)
 
-    # Select all not selected Users and get rid of their SessionTrainer (destroy if calendar_uuid is nil, mark for deletion otherwise)
-    SessionTrainer.where(session_id: @training.sessions.ids).where.not(user_id: user_ids).each do |session_trainer|
-      if session_trainer.calendar_uuid.nil?
-        session_trainer.destroy
-      else
-        session_trainer.update(status: 'to_delete')
-      end
+    @training.sessions.each do |session|
+      add_or_remove(session.id, user_id)
     end
 
     UpdateAirtableJob.perform_async(@training, true)
+
+    @trainers = User.joins(:session_trainers).where(session_trainers: {session_id: @training.sessions.map(&:id), status: nil}).order(lastname: :asc).distinct
+
     respond_to do |format|
       format.js
     end
@@ -262,9 +239,9 @@ class SessionTrainersController < ApplicationController
 
   private
 
-  ############################
-  ## GOOGLE::APIS::CALENDAR ##
-  ############################
+  ##########################
+  # GOOGLE::APIS::CALENDAR #
+  ##########################
 
   def client_options
     {
@@ -331,7 +308,32 @@ class SessionTrainersController < ApplicationController
     end
   end
 
-  ############################
+
+  #################################
+  # ADD OR REMOVE SESSION_TRAINER #
+  #################################
+
+  def add_or_remove(session_id, user_id)
+    existing = SessionTrainer.find_by(user_id: user_id, session_id: session_id)
+
+    # Remove Session Trainers for selected user (destroy if calendar_uuid is nil, mark for deletion otherwise)
+    if params.dig(:link, :mode) == 'delete'
+
+      existing&.calendar_uuid&.nil? ? existing&.destroy : existing&.update(status: 'to_delete')
+
+    # Create a SessionTrainer for selected user
+    else
+
+      if existing.nil?
+        SessionTrainer.create(user_id: user_id, session_id: session_id)
+      elsif existing.status == 'to_delete'
+        existing.update(status: nil)
+      end
+
+    end
+  end
+
+  #################################
 
   def session_trainer_params
     params.require(:session_trainer).permit(:type, :unit_price)

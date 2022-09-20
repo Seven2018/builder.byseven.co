@@ -1,4 +1,5 @@
-<div class="modal-content">
+<div class="modal-content"
+     data-controller="<%= page %>s--<%= page %>s-show">
 
   <div class="modal-header modal-header-yellow">
 
@@ -12,69 +13,94 @@
 
   </div>
 
-  <div class="modal-body" id="modalNewBookinBody" style='display:flex;flex-direction:column;align-items:center;'>
+  <div class="modal-body d-flex flex-column align-items-center min-width-40rem pos-rel">
 
-    <div class="my-2rem">
+    <div class="modal-controls">
 
-        <label for="trainers-select"
-               class="mb-1rem">Add a trainer:</label>
+      <div class="my-2rem">
 
-        <div class="d-flex align-items-center">
+          <label for="trainers-select"
+                 class="mb-1rem">Add a trainer:</label>
 
-          <%= render(Tools::SelectAutocompleteComponent.new(path: users_search_path,
-                                                                  additional_params: '',
-                                                                  width: '100%',
-                                                                  menu_max_height: '22rem',
-                                                                  placeholder: 'Select a trainer',
-                                                                  input_name: "trainers",
-                                                                  data_action_input: '',
-                                                                  data_action_select: 'click->trainings--show#selectTrainer')) %>
+          <div class="d-flex align-items-center">
+
+            <%= render(Tools::SelectAutocompleteComponent.new(path: users_search_path,
+                                                                    additional_params: '',
+                                                                    width: '100%',
+                                                                    menu_max_height: '22rem',
+                                                                    placeholder: 'Select a trainer',
+                                                                    input_name: "trainers",
+                                                                    data_action_input: '',
+                                                                    data_action_select: "click->#{page}s--#{page}s-show#selectTrainer")) %>
 
 
-          <button id="add-button"
-                  class="bld-btn-white-dark-grey"
-                  data-trainer-id=""
-                  data-trainer-fullname
-                  data-action="click->trainings--show#addTrainer">Add</button>
+            <button id="add-button"
+                    class="bld-btn-white-dark-grey"
+                    data-trainer-id=""
+                    data-action="click-><%= page %>s--<%= page %>s-show#addTrainer">Add</button>
+
+          </div>
+
+      </div>
+
+      <div class="users-list">
+
+        <div class="trainer-pill trainer-pill-template hidden">
+          <p></p>
+          <i class="fas fa-times"></i>
+        </div>
+
+        <% users = User.joins(:session_trainers).where(session_trainers: {session_id: session.id, status: nil}).order(lastname: :asc) %>
+
+        <div class="users-list-details">
+
+          <%= render 'session_trainers/trainers_details', users: users,
+                                                          mode: 'session',
+                                                          instance_id: session.id,
+                                                          page: page %>
 
         </div>
 
-
-    </div>
-
-    <div class="users-list">
-
-      <div class="trainer-pill trainer-pill-template hidden">
-        <p></p>
-        <i class="fas fa-times"></i>
       </div>
 
-      <% users = User.joins(:session_trainers).where(session_trainers: {session_id: session.id, status: nil}).order(lastname: :asc) %>
+      <div>
 
-      <div class="users-list-details">
-
-        <%= render 'session_trainers/trainers_details', users: users %>
+        <%= simple_form_for :link, url: trainers_link_to_session_path, method: :get, remote: true do |f| %>
+          <%= f.hidden_field :session_id, value: session.id %>
+          <%= f.hidden_field :trainer_id %>
+          <%= f.hidden_field :page, value: page %>
+          <%= f.submit '', class: 'hidden-submit hidden' %>
+        <% end %>
 
       </div>
 
-    </div>
+      <div class="modal-message d-none flex-column justify-content-center align-items-center bld-bg-white pos-abs z-index-100
+                  p-2rem"
+           style="top: 0; bottom: 0; left: 0; right: 0;">
 
-    <div>
+        <p class="text-center">Are you sure you want to remove <span></span> from this session ?</p>
 
-      <%= simple_form_for :link, url: trainers_link_to_session_path, method: :get, remote: true do |f| %>
-        <%= f.hidden_field :session_id, value: session.id %>
-        <%= f.hidden_field :trainer_ids, value: users.map(&:id).join(',') %>
-        <%= f.hidden_field :page, value: page %>
-        <%= f.submit '', class: 'hidden-submit hidden' %>
-      <% end %>
+        <div class="width-100 d-flex justify-content-center align-items-center">
 
-      <button class='bld-btn-yellow'
-              data-action="click-><%= controller_action == 'trainings_show' ? 'trainings' : 'sessions' %>--show#confirmTrainers">
-        Confirm
-      </button>
+          <button class="border-bld-dark-grey min-width-15rem rounded-2px p-1rem mx-2rem cursor-pointer"
+                  data-action="<%= page %>s--<%= page %>s-show#cancelRemove">
+            No
+          </button>
+
+          <button class="confirm_remove min-width-15rem rounded-2px bld-bg-light-red bld-red border-bld-red py-1rem
+                         mx-2rem cursor-pointer"
+                  data-user-id=""
+                  data-action="<%= page %>s--<%= page %>s-show#confirmRemoveTrainer">
+            Yes, remove
+          </button>
+
+        </div>
+
+      </div>
 
     </div>
 
   </div>
+
 </div>
 

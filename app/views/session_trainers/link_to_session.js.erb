@@ -2,6 +2,7 @@ if ('<%= @page %>' == 'training') {
   document.querySelector('.middle-info-user').innerHTML = '<%= j render "trainings/partials/show_training_users", training: @session.training %>';
   document.querySelector('#card-block-<%= @session.id %>').innerHTML = '<%= j render "trainings/partials/show_session_card", session: @session %>';
   document.querySelector('#card-block-<%= @session.id %>').querySelector('.mods-list').innerHTML = '<%= j render "trainings/show_session_content", session: @session %>';
+  document.querySelector('#addTrainer<%= @session.id %>').querySelector('.users-list-details').innerHTML = '<%= j render "session_trainers/trainers_details", users: @trainers, mode: "session", instance_id: @session.id, page: @page %>';
 
   photos = document.querySelectorAll('.ava')
   counter = 0;
@@ -21,6 +22,7 @@ if ('<%= @page %>' == 'training') {
   });
 } else if ('<%= @page %>' == 'session') {
   document.querySelector('.session-info-container').innerHTML = '<%= j render "sessions/show_middle_info", session: @session %>';
+  document.querySelector('.users-list-details').innerHTML = '<%= j render "session_trainers/trainers_details", users: @trainers, mode: "session", instance_id: @session.id, page: @page %>';
 
   photos = document.querySelectorAll('.ava-session')
   counter = 30;
@@ -37,5 +39,8 @@ if ('<%= @page %>' == 'training') {
   });
 }
 
-document.querySelector('#newTrainers').querySelector('.users-list-details').innerHTML = '<%= j render "session_trainers/trainers_details", users: User.joins(:session_trainers).where(session_trainers: {session_id: @session.training.sessions.map(&:id), status: nil}).order(lastname: :asc).distinct %>';
+if (document.querySelector('#newTrainers') != undefined) {
+  document.querySelector('#newTrainers').querySelector('.users-list-details').innerHTML = '<%= j render "session_trainers/trainers_details", users: User.joins(:session_trainers).where(session_trainers: {session_id: @session.training.sessions.map(&:id), status: nil}).order(lastname: :asc).distinct, mode: "training", instance_id: @session.training.id, page: "training" %>';
+}
+
 document.querySelector('body').classList.remove('wait');

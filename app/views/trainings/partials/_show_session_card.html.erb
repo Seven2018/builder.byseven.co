@@ -1,4 +1,23 @@
-<div class="card-lg">
+<% unavailable = [] %>
+
+<% SessionTrainer.joins(:session).where(sessions: {date: session.date}, user_id: session.session_trainers.map(&:user_id), status: nil).group_by{|y| y.user_id}.each do |key, value| %>
+
+  <% if value.count > 1 %>
+
+    <% is_overlapping = value.sort_by{|x| x.session.start_time}.each_cons(2).any? do |x,y| %>
+      <% x.session.period.last > y.session.period.first %>
+    <% end %>
+
+    <% unavailable << User.find(key).fullname if is_overlapping %>
+
+  <% end %>
+
+<% end %>
+
+<% timing_error = session.workshops.map(&:duration).sum / 60 > (session.end_time - session.start_time) / 3600 %>
+
+
+<div class="card-lg <%= 'border-bld-negative-red-2px' if timing_error %>">
 
   <div class="card-footer-lg">
 
@@ -212,26 +231,18 @@
 
       <div class="sessions-alert">
 
-        <% unavailable = [] %>
+        <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
 
-        <% SessionTrainer.joins(:session).where(sessions: {date: session.date}, user_id: session.session_trainers.map(&:user_id), status: nil).group_by{|y| y.user_id}.each do |key, value| %>
+          <% if timing_error %>
 
-          <% if value.count > 1 %>
-
-            <% is_overlapping = value.sort_by{|x| x.session.start_time}.each_cons(2).any? do |x,y| %>
-              <% x.session.period.last > y.session.period.first %>
-            <% end %>
-
-            <% unavailable << User.find(key).fullname if is_overlapping %>
+            <p class='timing_error error'>La durée de la session ne correspond pas aux horaires choisis</p>
 
           <% end %>
 
-        <% end %>
+          <% if unavailable.count > 0 %>
 
-        <% if unavailable.count > 0 %>
-
-          <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
             <p class='error'>Sevener(s) non disponible(s) : <%= unavailable.sort.join(', ') %></p>
+
           <% end %>
 
         <% end %>
@@ -344,43 +355,6 @@
       </div>
 
     </div>
-
-  </div>
-
-</div>
-
-
-<!-- MODALS -->
-
-<div id="editSession<%= session.id %>"
-     class="modal fade editSession"
-     tabindex="-1"
-     role="dialog"
-     data-backdrop="static"
-     data-keyboard="false">
-
-  <div class="modal-dialog" role="document" style="border-radius: 2rem">
-    <%= render '/sessions/edit', session: session %>
-  </div>
-
-</div>
-
-<div id="addTrainer<%= session.id %>"
-     class="modal fade"
-     tabindex="-1"
-     role="dialog"
-     data-backdrop="static"
-     data-keyboard="false">
-
-  <div class="modal-dialog %>"
-       role="document"
-       style="border-radius: 2rem">
-
-    <% @session = session %>
-    <%= render '/session_trainers/trainers_link_to_session', training: nil,
-                                                  session: @session,
-                                                  page: 'training',
-                                                  controller_action: 'trainings_show' %>
 
   </div>
 
