@@ -42,7 +42,35 @@ export default class extends Controller {
     this.resetSelectTrainer(element)
   }
 
-  removeTrainer() {
+  removeTrainer(event) {
+    const element = event.currentTarget
+    const fullname = element.parentNode.querySelector('p').innerText
+    const modal = element.closest('.modal')
+    const message = modal.querySelector('.modal-message')
+    const confirm = message.querySelector('.confirm_remove')
+
+    message.querySelector('span').innerText = fullname
+    message.classList.toggle('d-none')
+    message.classList.toggle('d-flex')
+    confirm.dataset.userId = element.parentNode.id.split('-')[1]
+  }
+
+  cancelRemove(event) {
+    const element = event.currentTarget
+    const modal = element.closest('.modal')
+    const message = modal.querySelector('.modal-message')
+
+    message.classList.toggle('d-none')
+    message.classList.toggle('d-flex')
+  }
+
+  confirmRemoveTrainer(event) {
+    const element = event.currentTarget
+    const modal = element.closest('.modal')
+    const user_id = element.dataset.userId
+    const link = modal.querySelector(`.remove_link-${user_id}`)
+
+    link.click()
     document.querySelector('body').classList.add('wait')
   }
 
