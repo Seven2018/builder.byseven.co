@@ -21,14 +21,21 @@ gem "nested_form"
 gem 'pg_search'
 gem 'pundit'
 gem 'ckeditor', git: 'https://github.com/galetahub/ckeditor'
-# gem 'google-api-client', require: 'google/apis/calendar_v3'
 
-# PDF
+
+#######
+# PDF #
+#######
+
 gem 'wicked_pdf',  '~> 2.6.3'
 gem 'wkhtmltopdf-binary'
 gem 'wkhtmltopdf-heroku', '2.12.5.0'
 
-# IDENTIFICATION
+
+##################
+# IDENTIFICATION #
+##################
+
 gem 'google-apis-calendar_v3'
 gem 'google-http-actionmailer'
 gem 'oauth2'
@@ -37,8 +44,22 @@ gem 'omniauth-google-oauth2'
 gem 'omniauth-linkedin-oauth2'
 gem "linkedin-v2"
 
-# MAIL
+
+########
+# MAIL #
+########
+
 gem 'postmark-rails'
+
+
+##########
+# SENTRY #
+##########
+
+gem "sentry-ruby"
+gem "sentry-rails"
+
+##########
 
 gem 'rest-client', '~> 2.1'
 gem 'uglifier'
@@ -47,7 +68,6 @@ gem 'acts_as_list'
 gem "acts_as_tree"
 gem "simple_calendar", "~> 2.0"
 gem 'google_drive'
-# gem 'datagrid'
 gem 'render_async'
 gem 'image_processing'
 gem 'invisible_captcha'
