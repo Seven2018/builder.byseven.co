@@ -6,6 +6,42 @@
       <%= render 'trainings/partials/show_session_card', session: session %>
     </div>
 
+    <!-- MODALS -->
+
+    <div id="editSession<%= session.id %>"
+         class="modal fade editSession"
+         tabindex="-1"
+         role="dialog"
+         data-backdrop="static"
+         data-keyboard="false">
+
+      <div class="modal-dialog" role="document" style="border-radius: 2rem">
+        <%= render '/sessions/edit', session: session %>
+      </div>
+
+    </div>
+
+    <div id="addTrainer<%= session.id %>"
+         class="modal fade"
+         tabindex="-1"
+         role="dialog"
+         data-backdrop="static"
+         data-keyboard="false">
+
+      <div class="modal-dialog %>"
+           role="document"
+           style="border-radius: 2rem">
+
+        <% @session = session %>
+        <%= render '/session_trainers/trainers_link_to_session', training: nil,
+                                                      session: @session,
+                                                      page: 'training',
+                                                      controller_action: 'trainings_show' %>
+
+      </div>
+
+    </div>
+
   <% end %>
 
 <% end %>

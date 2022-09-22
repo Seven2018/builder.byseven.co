@@ -1,5 +1,6 @@
-<div class="container-seven-large"
-     data-controller="trainings--show">
+<div id="trainings_show_container"
+     class="container-seven-large"
+     data-controller="trainings--trainings-show">
 
   <div id='page-controls'>
 
@@ -21,7 +22,14 @@
 
       <div class="page-controls-buttons flex-row-between-centered">
 
-        <%= link_to update_calendar_path(training_id: @training.id), class: "btn-icon-red", data: { toggle: 'tooltip'}, title: 'Update Calendar' do %>
+        <%= link_to update_calendar_path(training_id: @training.id),
+                                         class: "btn-icon-red",
+                                         data: {
+                                          trainings__trainings_show_target: 'calendarButton',
+                                          link: update_calendar_path(training_id: @training.id),
+                                          toggle: 'tooltip'
+                                         },
+                                         title: 'Update Calendar' do %>
           <i class="fas fa-calendar-check" style='font-size: 20px'></i>
         <% end %>
 
@@ -204,7 +212,8 @@
   <div class="modal-dialog"
        role="document"
        style="border-radius: 2rem">
-    <%= render 'session_trainers/trainers_link_to_training', training: @training, controller_action: 'trainings_show' %>
+    <%= render 'session_trainers/trainers_link_to_training', training: @training,
+                                                             page: 'training' %>
   </div>
 
 </div>

@@ -1,11 +1,50 @@
 <% users.each do |user| %>
 
-
    <div id='user-<%= user.id %>'
         class="trainer-pill cursor-pointer">
-     <p><%= user.fullname %></p>
-     <i class="fas fa-times"
-        data-action="click->trainings--show#removeTrainer"></i>
+
+      <p><%= user.fullname %></p>
+
+      <% if mode == 'training' %>
+
+         <%= link_to '', trainers_link_to_training_path(
+                     link: {
+                        training_id: instance_id,
+                        trainer_id: user.id,
+                        mode: 'delete',
+                        page: page
+                     }),
+                     class: "remove_link-#{user.id} d-none",
+                     data: {
+                        action: "click->#{page}s--#{page}s-show#removeTrainer"
+                     },
+                     remote: true %>
+
+         <div data-action="click-><%= page %>s--<%= page %>s-show#removeTrainer">
+            <i class="fas fa-times"></i>
+         </div>
+
+      <% else %>
+
+         <%= link_to '', trainers_link_to_session_path(
+                     link: {
+                        session_id: instance_id,
+                        trainer_id: user.id,
+                        mode: 'delete',
+                        page: page
+                     }),
+                     class: "remove_link-#{user.id} d-none",
+                     data: {
+                        action: "click->#{page}s--#{page}s-show#removeTrainer"
+                     },
+                     remote: true %>
+
+         <div data-action="click-><%= page %>s--<%= page %>s-show#removeTrainer">
+            <i class="fas fa-times"></i>
+         </div>
+
+      <% end %>
+
    </div>
 
 <% end %>

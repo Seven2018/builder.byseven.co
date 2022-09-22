@@ -1,4 +1,6 @@
-<div class="container-seven-large">
+<div class="container-seven-large"
+     data-controller="sessions--sessions-show">
+
   <div id='page-controls'>
     <%= link_to training_path(@session.training), class: 'btn return-arrow' do %>
       <i class="fas fa-arrow-left"></i>
@@ -127,6 +129,7 @@
       </div>
     </div>
   <% end %>
+
 </div>
 
 
@@ -170,8 +173,7 @@
   <div class="modal-dialog" role="document" style="border-radius: 20px">
     <%= render 'session_trainers/trainers_link_to_session', training: nil, 
                                                             session: @session,
-                                                            page: 'session',
-                                                            controller_action: 'sessions_show' %>
+                                                            page: 'session' %>
   </div>
 
 </div>
