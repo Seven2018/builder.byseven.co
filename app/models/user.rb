@@ -1,8 +1,10 @@
 class User < ApplicationRecord
+  include Users::Access
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :recoverable, :rememberable, :validatable
   devise :omniauthable, omniauth_providers: [:google_oauth2]
+
   has_many :training_ownerships, dependent: :destroy
   has_many :trainings, through: :training_ownerships
   has_many :session_trainers, dependent: :destroy
@@ -46,6 +48,10 @@ class User < ApplicationRecord
   def initials
     user = OverviewUser.all(filter: "{Builder_id} = '#{self.id}'").first
     user['Tag']
+  end
+
+  def super_admin?
+    self.access_level == 'super admin'
   end
 
   def hours(training)

@@ -1,0 +1,81 @@
+<% access_levels = User::ACCESS_LEVEL_LABELS.values %>
+
+<div id="stimulus-change-page-controller"
+     class="container"
+     data-controller="change-page">
+
+  <div id="searchbar"
+       class="bld__searchbar mt-5rem"
+       data-controller="remember-search">
+
+    <i class="fas fa-search searchbar-icon"></i>
+
+    <%= simple_form_for :search, url: impersonations_path,
+                                 method: :get,
+                                 remote: true,
+                                 data: {
+                                   remember_search_key_value: 'bookletOrganisationSearches',
+                                 } do |f| %>
+
+      <%= f.input :name, placeholder: 'Search',
+                         input_html: {
+                           autocomplete: 'off',
+                           data: {
+                             remember_search_target: :search,
+                             action: 'keyup->remember-search#storeSearch'
+                           }
+                         },
+                         label: false,
+                         required: false %>
+
+
+
+      <%= render(Tools::SelectComponent.new(width: '100%',
+                                                        menu_height: 'fit-content',
+                                                        title: 'Access level',
+                                                        input_name: 'search[access_level_int]',
+                                                        collection: ['All'] + access_levels,
+                                                        data_action: '')) %>
+
+      <%= f.hidden_field :page, value: '1', data: { change_page_target: :pageInput } %>
+
+      <%=
+          f.submit(
+            'Search',
+            class: 'btn-search',
+            onclick: "document.querySelector('body').classList.add('wait');",
+            data: {
+              remember_search_target: :submit,
+              change_page_target: :submit,
+              search_form: :submit
+            }
+          )
+        %>
+
+      <button type='submit' class="btn-search btn-search--mobile">
+        <i class="fas fa-search"></i>
+      </button>
+
+    <% end %>
+
+    <button class='btn-reset bkt-dark-grey'
+            data-action="click->remember-search#resetAllFilter">
+      Reset
+    </button>
+
+  </div>
+
+  <p id="impersonation_users_count"
+     class="fs-2_4rem font-weight-600 bkt-dark-grey mb-2rem">Results: <%= @total_users %></p>
+
+  <div id="impersonation_users_list">
+
+    <%= render 'impersonations/index/users_list', users: @users %>
+
+  </div>
+
+  <div class="paginate-container paginate-container-dark-grey">
+    <%= render 'shared/paginate/paginate', instances: @users, any_more: @any_more %>
+  </div>
+
+</div>

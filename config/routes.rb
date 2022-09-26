@@ -1,16 +1,27 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
 
-  # ACTIONS
+  ###########
+  # ACTIONS #
+  ###########
+
   resources :actions
 
-  # AIRTABLE
+
+  ############
+  # AIRTABLE #
+  ############
+
   get :airtable_import_users, controller: :pages
   get :import_airtable, controller: :pages
   get :account_invoice, controller: :pages
   get 'trainings/:id/export_airtable', to: 'pages#export_airtable', as: 'export_airtable'
 
-  # ATTENDEES
+
+  #############
+  # ATTENDEES #
+  #############
+
   resources :attendees, only: [:index, :show, :new, :create]
   get :import_attendees_form, controller: :attendees
   post :import_attendees, controller: :attendees
@@ -18,11 +29,19 @@ Rails.application.routes.draw do
   get 'training/:training_id/session/:id/attendees/export.csv', to: 'attendees#export', as: 'export_attendees'
   # post 'attendees/import', to: 'attendees#import', as: 'import_attendees'
 
-  # ATTENDEES INTERESTS
+
+  ######################
+  # ATTENDEE_INTERESTS #
+  ######################
+
   post 'new_attendee_interest', to: 'attendee_interests#create', as: 'new_attendee_interest'
   delete 'delete_attendee_interest', to: 'attendee_interests#destroy', as: 'destroy_attendee_interest'
 
-  # CLIENT COMPANIES
+
+  ####################
+  # CLIENT_COMPANIES #
+  ####################
+
   resources :client_companies, path: '/companies' do
     resources :client_contacts, path: '/contacts'
     get :new_attendees, controller: :client_companies
@@ -30,7 +49,11 @@ Rails.application.routes.draw do
   end
   get :client_companies_search, controller: :client_companies
 
-  # CONTENTS
+
+  ############
+  # CONTENTS #
+  ############
+
   resources :contents, only: [:index, :show, :new, :create, :update, :destroy] do
     resources :content_modules, only: [:show, :new, :create, :edit, :update, :destroy]
       get 'content_module/:id/move_up', to: 'content_modules#move_up', as: 'move_up_content_module'
@@ -40,10 +63,18 @@ Rails.application.routes.draw do
   end
   get :contents_search, controller: :contents
 
-  # FORMS
+
+  #########
+  # FORMS #
+  #########
+
   resources :session_forms, only: [:create, :destroy]
 
-  # INVOICE ITEMS
+
+  #################
+  # INVOICE_ITEMS #
+  #################
+
   resources :invoice_items, only: [:index, :show, :edit, :update, :destroy]
   get :report, controller: :invoice_items
   post :new_invoice_item, controller: :invoice_items
@@ -60,7 +91,11 @@ Rails.application.routes.draw do
   get 'invoice_items/:id/marked_as_paid', to: 'invoice_items#marked_as_paid', as: 'marked_as_paid_invoice_item'
   get 'invoice_items/:id/marked_as_cancelled', to: 'invoice_items#marked_as_cancelled', as: 'marked_as_cancelled_invoice_item'
 
-  # INVOICE LINES
+
+  #################
+  # INVOICE_LINES #
+  #################
+
   resources :invoice_lines, only: [:create, :edit, :update, :destroy]
   get 'invoice_line/:id/move_up', to: 'invoice_lines#move_up', as: 'move_up_invoice_line'
   get 'invoice_line/:id/move_down', to: 'invoice_lines#move_down', as: 'move_down_invoice_line'
@@ -72,20 +107,32 @@ Rails.application.routes.draw do
   #   get '/users/auth/linkedin/callback', to: 'users/omniauth_callbacks#linkedin', as: 'linkedin_auth'
   # end
 
-  # PAGES
+
+  #########
+  # PAGES #
+  #########
+
   root to: 'pages#home'
   get :contact_form, controller: :pages
   get :contact_form_becos, controller: :pages
   get :billing, controller: :pages
   get :export_numbers_activity_cumulation, controller: :pages
 
-  # SESSION ATTENDEES
+
+  #####################
+  # SESSION_ATTENDEES #
+  #####################
+
   post 'session/:id/session_attendees/link_attendees', to: 'session_attendees#link_attendees', as: 'link_attendees'
   post 'training/:id/session_attendees/link_attendees', to: 'session_attendees#link_attendees_to_training', as: 'link_attendees_to_training'
   post 'training/:id/import_for_training', to: 'session_attendees#import_for_training', as: 'import_for_training'
   post 'training/:id/attendee_create_all', to: 'session_attendees#create_all', as: 'attendee_create_all'
 
-  # SESSION TRAINERS
+
+  ####################
+  # SESSION_TRAINERS #
+  ####################
+
   get :redirect, controller: :session_trainers
   get :calendars, controller: :session_trainers
   get :link_to_session, controller: :session_trainers, as: :trainers_link_to_session
@@ -93,11 +140,19 @@ Rails.application.routes.draw do
   get :remove_session_trainers, controller: :session_trainers
   get :remove_training_trainers, controller: :session_trainers
 
-  # THEORIES
+
+  ############
+  # THEORIES #
+  ############
+
   resources :theories
   get :theories_search, controller: :theories
 
-  # TRAININGS
+
+  #############
+  # TRAININGS #
+  #############
+
   resources :trainings do
     get 'sessions_viewer/:id', to: 'sessions#viewer', as: 'session_viewer'
     get 'sessions/:id/copy', to: 'sessions#copy', as: 'copy_session'
@@ -150,11 +205,24 @@ Rails.application.routes.draw do
   get 'show_session_content', to: 'trainings#show_session_content', as: 'show_session_content'
   # get 'trainings/:id/import_attendees', to: 'trainings#import_attendees', as: 'import_attendees_training'
 
-  # USERS
+
+  #########
+  # USERS #
+  #########
+
   resources :users
   get :users_search, controller: :users
   get :airtable_create_user, controller: :users
 
-  # OBLIVION_CONTENTS
+  resources :impersonations, only: [:index] do
+    post :impersonate, on: :member
+    post :stop_impersonating, on: :collection
+  end
+
+
+  #####################
+  # OBLIVION_CONTENTS #
+  #####################
+
   resources :oblivion_contents
 end

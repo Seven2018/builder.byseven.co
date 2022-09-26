@@ -1,0 +1,47 @@
+<% string_collection = @collection.first.class == (String || Integer || Float) %>
+
+<div class="bld-select-container <%= @klasses %>"
+     data-controller="tools--select"
+     data-place-holder="<%= @title %>">
+
+  <div class="bld-select-display"
+       style="min-width:  <%= @width %>;"
+       data-action="click->tools--select#toggle tools--select:click:outside->tools--select#hide">
+
+    <div class="d-flex justify-content-start align-items-center
+                <%= 'bld-dark-grey' unless (!@selected_text.present? && @title.present?) %>"
+         data-tools--select-target="display">
+      <%= @selected_text.presence || @title %>
+    </div>
+
+  </div>
+
+  <div class="bld-select-menu width-fit-content hidden"
+       style="min-width: <%= @width %>; height: <%= @menu_height.presence %>; max-height: <%= @menu_max_height.presence %>"
+       data-tools--select-target="menu">
+
+    <% @collection.each do |element| %>
+
+      <% if string_collection %>
+        <div class="cursor-pointer"
+             data-action="click->tools--select#selectOption <%= @data_action %>"
+             data-value="<%= element %>"><%= element %></div>
+      <% else %>
+        <div class="cursor-pointer"
+             data-action="click->tools--select#selectOption <%= @data_action %>"
+             data-value="<%= element.id %>"><%= element.name %></div>
+      <% end %>
+
+    <% end %>
+
+  </div>
+
+  <% if @input_name.present? %>
+  <%# raise if @input_name == 'multi_templates_category' %>
+    <input type="hidden"
+           name="<%= @input_name %>"
+           value="<%= @selected_value %>"
+           data-action="">
+
+  <% end %>
+</div>

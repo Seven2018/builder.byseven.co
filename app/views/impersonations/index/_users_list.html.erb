@@ -1,0 +1,19 @@
+<ul class='mt-4'>
+
+  <% users.each do |user| %>
+    <% next if user == true_user %>
+    <li>
+      <%= link_to "#{user.fullname} #{user.email}",
+        impersonate_impersonation_path(user),
+        method: :post,
+        class: 'text-orange'
+      %>
+      - créé le
+      <%= user.created_at.strftime('%F') %>
+      <span class="text-secondary">
+        <%= user.access_level %>
+      </span>
+    </li>
+  <% end %>
+
+</ul>

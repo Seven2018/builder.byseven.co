@@ -305,6 +305,8 @@ GEM
     postmark-rails (0.22.1)
       actionmailer (>= 3.0.0)
       postmark (>= 1.21.3, < 2.0)
+    pretender (0.4.0)
+      actionpack (>= 5.2)
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -520,6 +522,7 @@ DEPENDENCIES
   pg (~> 0.21)
   pg_search
   postmark-rails
+  pretender
   pry-byebug
   pry-rails
   puma

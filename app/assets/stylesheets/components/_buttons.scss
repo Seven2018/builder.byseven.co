@@ -75,6 +75,56 @@
 }
 
 
+//////////
+// MISC //
+//////////
+
+.bld-btn-back {
+  p, svg {
+    font-size: 1.8rem;
+    color: #939393;
+  }
+
+  svg {
+    margin-right: 1rem;
+  }
+}
+
+.btn-search {
+  display: none;
+  height: 5rem;
+  width: 12rem;
+  padding: 0 1rem;
+  margin-right: 1rem;
+  border-radius: .5rem;
+  font-size: 1.6rem;
+  font-weight: 500;
+  text-align: center;
+  background-color: $bld-light-grey !important;
+  transition: border .25s ease-in-out;
+
+  @include from-medium {
+    display: block;
+  }
+
+  &:hover {
+    border: 1px solid $bld-dark-grey !important;
+  }
+}
+
+.btn-reset {
+  height: 5rem;
+  font-size: 1.6rem;
+  padding: 0 1rem;
+  border-radius: .5rem;
+
+  &:hover {
+    background-color: $bld-light-grey4;
+  }
+
+}
+
+
 //////////////
 // TO CLEAN //
 //////////////
