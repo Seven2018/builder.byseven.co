@@ -18,7 +18,7 @@
 
     <% end %>
 
-    <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>
+    <% if ['super_admin', 'admin', 'training manager'].include? current_user.access_level %>
 
       <div class="page-controls-buttons flex-row-between-centered">
 
@@ -127,7 +127,7 @@
 
     <div class="middle-info2">
 
-      <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+      <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
 
         <p id='survey-link'>Link to survey : <%= @training.satisfaction_survey %></p>
 
@@ -323,7 +323,7 @@
 
 
 
-<% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+<% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
 
   <script>
     formGuardian = false;

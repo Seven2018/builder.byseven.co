@@ -11,7 +11,7 @@
         <p>Seven</p>
         <% checked = [] %>
         <% training.trainers.each {|x| checked << x.id } %>
-        <%= f.input_field :user_ids, as: :check_boxes, collection: User.where(access_level: ['super admin', 'admin', 'training manager']).order('firstname ASC').map{|x|["#{x.firstname.capitalize} #{x.lastname.upcase}", x.id]}, checked: checked %>
+        <%= f.input_field :user_ids, as: :check_boxes, collection: User.where(access_level: ['super_admin', 'admin', 'training manager']).order('firstname ASC').map{|x|["#{x.firstname.capitalize} #{x.lastname.upcase}", x.id]}, checked: checked %>
         <p style='margin-top: 1rem;'>Seveners</p>
         <%= f.input_field :user_ids, as: :check_boxes, collection: User.where(access_level: ['sevener+', 'sevener']).order('firstname ASC').map{|x|["#{x.firstname.capitalize} #{x.lastname.upcase}", x.id]}, checked: checked %>
       </div>

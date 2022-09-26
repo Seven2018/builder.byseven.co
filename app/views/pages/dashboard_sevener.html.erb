@@ -2,7 +2,7 @@
   <div id="page-controls">
     <h1>Seveners</h1>
     <div id="page-buttons">
-      <% if (['super admin', 'admin', 'training manager'].include? current_user.access_level) %>
+      <% if (['super_admin', 'admin', 'training manager'].include? current_user.access_level) %>
         <a data-toggle='modal' type='button' data-target='#filterSevener' class="btn btn-edit-yellow">
           Filter
         </a>

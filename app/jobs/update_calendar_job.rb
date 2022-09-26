@@ -4,7 +4,7 @@ class UpdateCalendarJob < ApplicationJob
   def perform(session_ids, command, service, client_options)
     # Calendars ids
     calendars_ids = {'other' => 'vum1670hi88jgei65u5uedb988@group.calendar.google.com'}
-    User.where(access_level: ['super admin','admin']).each{|x| calendars_ids[x.id] = x.email}
+    User.where(access_level: ['super_admin','admin']).each{|x| calendars_ids[x.id] = x.email}
     # Lists the users and the ids of the events to be deleted
     SessionTrainer.where(session_id: session_ids).each do |session_trainer|
       begin
@@ -64,7 +64,7 @@ class UpdateCalendarJob < ApplicationJob
         end
         events.each do |event|
           begin
-            if User.where(access_level: ['super admin', 'admin']).map{|x| x.id.to_s}.include?(ind)
+            if User.where(access_level: ['super_admin', 'admin']).map{|x| x.id.to_s}.include?(ind)
               create_calendar_id(ind, session.id, event, service, calendars_ids)
             else
               sevener = User.find(ind)
@@ -95,7 +95,7 @@ class UpdateCalendarJob < ApplicationJob
   def delete_calendar_id(session_trainer, service)
     begin
       calendar_uuids = session_trainer.calendar_uuid.split(' - ')
-      if ['super admin', 'admin'].include?(session_trainer.user.access_level)
+      if ['super_admin', 'admin'].include?(session_trainer.user.access_level)
         calendar_uuids.each do |calendar_uuid|
           service.delete_event(session_trainer.user.email, calendar_uuid)
         end

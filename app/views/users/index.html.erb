@@ -1,112 +1,81 @@
-<div class="container-seven-large container-seven-large-centered">
-  <div id='page-index'>
-    <div id="page-controls">
-        <%= simple_form_for :search, url: users_path, method: :get do |f| %>
-          <% if params[:search] %>
-            <%= f.text_field :name, placeholder: 'Search', label: false, data: {behavior: 'autocomplete'}, value: params[:search][:name] %>
-            <%= link_to users_path, class: 'search-close' do %>
-              <i class="far fa-times-circle"></i>
-            <% end %>
-          <% else %>
-            <%= f.text_field :name, placeholder: 'Search for Users', label: false, data: {behavior: 'autocomplete'} %>
-          <% end %>
-          <%= f.submit 'Search', class: 'btn-search' %>
-        <% end %>
-      <div id="page-buttons">
-        <% if ['super admin', 'admin', 'HR'].include? current_user.access_level %>
-          <%= link_to new_user_path do %>
-            <div class="btn-edit-yellow-mobile">New User</div>
-            <div class="btn-icon-grey-mobile"><i class="fas fa-plus"></i></div>
-          <% end %>
-        <% end %>
-      </div>
-    </div>
-    <ul class="client-contact-list">
-      <% if params[:search].present? %>
-        <h3>Search</h3>
-        <% @users.each do |user| %>
-          <li>
-            <%= link_to user_path(user) do %>
-              <div class="index-card-large index-card-small">
-                <img class='client-company-logo-index' src='<%= "#{user.picture}" %>' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
-                <div class="client-company-type-address">
-                  <p><%= "#{user.lastname.upcase} #{user.firstname}" %></p>
-                  <div>
-                    <p><%= user.email %></p>
-                    <p><%= user.access_level.capitalize %></p>
-                  </div>
-                </div>
-              </div>
-            <% end %>
-          </li>
-        <% end %>
-      <% else %>
-        <h3>Seven</h3>
-        <% @users.where(access_level: ['super admin', 'admin', 'training manager']).each do |user| %>
-          <li>
-            <%= link_to user_path(user) do %>
-              <div class="index-card-large index-card-small">
-                <img class='client-company-logo-index' src='<%= "#{user.picture}" %>' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
-                <div class="client-company-type-address">
-                  <p><%= "#{user.lastname.upcase} #{user.firstname.capitalize}" %></p>
-                  <div>
-                    <p><%= user.email %></p>
-                    <p><%= user.access_level.capitalize %></p>
-                  </div>
-                </div>
-              </div>
-            <% end %>
-          </li>
-        <% end %>
-        <h3 style='margin-top: 3rem;'>Seveners</h3>
-        <% @users.where(access_level: ['sevener+', 'sevener']).each do |user| %>
-          <li>
-            <%= link_to user_path(user) do %>
-              <div class="index-card-large index-card-small">
-                <img class='client-company-logo-index' src='<%= "#{user.picture}" %>' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
-                <div class="client-company-type-address">
-                  <p><%= "#{user.lastname.upcase} #{user.firstname.capitalize}" %></p>
-                  <div>
-                    <p><%= user.email %></p>
-                    <p><%= user.access_level.capitalize %></p>
-                  </div>
-                </div>
-              </div>
-            <% end %>
-          </li>
-        <% end %>
+<div id="stimulus-paginate-controller"
+     class="container"
+     data-controller="tools--paginate">
+
+  <div id="searchbar"
+       class="bld__searchbar justify-content-between mt-5rem"
+       data-controller="tools--remember-search">
+
+    <div class="d-flex align-items-center">
+      
+      <i class="fas fa-search searchbar-icon"></i>
+
+      <%= simple_form_for :search, url: users_path,
+                                   method: :get,
+                                   remote: true,
+                                   data: {
+                                     tools__remember_search_key_value: 'builderImpersonationSearches',
+                                   } do |f| %>
+
+        <%= f.input :name, placeholder: 'Search',
+                           input_html: {
+                             autocomplete: 'off',
+                             data: {
+                               tools__remember_search_target: :search,
+                               action: 'keyup->tools--remember-search#storeSearch'
+                             }
+                           },
+                           label: false,
+                           required: false %>
+
+
+        <%= f.hidden_field :page, value: '1', data: { tools__paginate_target: :pageInput } %>
+
+        <%=
+            f.submit(
+              'Search',
+              class: 'btn-search',
+              onclick: "document.querySelector('body').classList.add('wait');",
+              data: {
+                tools__remember_search_target: :submit,
+                tools__paginate_target: :submit,
+                search_form: :submit
+              }
+            )
+          %>
+
+        <button type='submit' class="btn-search btn-search--mobile">
+          <i class="fas fa-search"></i>
+        </button>
+
       <% end %>
-    </ul>
+
+      <button class='btn-reset bkt-dark-grey'
+              data-action="click->tools--remember-search#resetAllFilter">
+        Reset
+      </button>
+
+    </div>
+
+    <% if ['super_admin', 'admin', 'HR'].include? current_user.access_level %>
+
+      <%= link_to 'Add User', new_user_path, class: 'bld-btn-yellow' %>
+
+    <% end %>
+
   </div>
+
+  <p id="impersonation_users_count"
+     class="fs-2_4rem font-weight-600 bkt-dark-grey mb-2rem">Results: <%= @total_users %></p>
+
+  <div id="impersonation_users_list">
+
+    <%= render 'users/index/index_users_list', users: @users %>
+
+  </div>
+
+  <div class="paginate-container paginate-container-dark-grey">
+    <%= render 'shared/paginate/paginate', instances: @users, any_more: @any_more %>
+  </div>
+
 </div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/jquery.easy-autocomplete.min.js"></script>
-
-<script>
-  form = document.querySelector('.search')
-  input = form.querySelector('input')
-  input.addEventListener('keypress', function(e) {
-    if (event.which == '13') {
-      event.preventDefault();
-    }
-  })
-
-  $input = $("[data-behavior='autocomplete']");
-
-  var options = {
-    listLocation: "users",
-    getValue: 'name',
-    url: function(phrase) {
-      return "/users_search.json?search=" + phrase
-    },
-    list: {
-      onChooseEvent: function() {
-      },
-      match: {
-        enabled: true
-      }
-    }
-  }
-
-  $input.easyAutocomplete(options);
-</script>

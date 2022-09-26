@@ -2,7 +2,7 @@
   <div id='page-controls'>
     <%= link_to theories_path, class: 'btn return-arrow' do %><i class="fas fa-arrow-left" data-toggle='tooltip' title='Back'></i><% end %>
     <div class="show-control-links">
-      <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>
+      <% if ['super_admin', 'admin', 'training manager'].include? current_user.access_level %>
         <%= link_to edit_theory_path, data: { toggle: 'tooltip' }, title: 'Edit Theory', class: 'btn-icon-grey' do %>
           <i class="fas fa-pen"></i>
         <% end %>

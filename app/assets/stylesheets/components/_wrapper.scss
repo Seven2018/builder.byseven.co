@@ -1,31 +1,43 @@
 html {
-//   display: flex;
-//   justify-content: center;
-//   overflow: -moz-scrollbars-vertical;
-//   overflow-y: scroll !important;
-   font-size: 62.5%;
+  height: 100%;
+  overflow-y: scroll !important;
+  font-size: 62.5%;
 }
 
 body {
-  display: flex;
-  justify-content: center;
-  position: relative;
-  margin: 0 !important;
+  margin: 0 auto;
+  // min-height: 100%;
   padding: 0 !important;
+  background-color: #fff;
 }
 
-body.wait *, body.wait {
-  cursor: wait !important;
+body.wait *, body.wait
+{
+    cursor: wait !important;
 }
 
-a {
-  color: black;
+#builder-container {
+  width: 100vw;
+  height: calc(100vh - 5rem);
+  min-height: calc(100vh - 5rem);
+  overflow-y: auto;
+  background-color: #fff;
+  position: relative;
 
-  &:hover {
-    text-decoration: none;
-    color: black;
+  @include from-medium {
+    width: auto;
+    margin: 0;
   }
 }
+
+.container {
+  margin-bottom: 5rem;
+}
+
+
+//////////////
+// TO CLEAN //
+//////////////
 
 .wrapper {
   width: 100%;
@@ -34,7 +46,7 @@ a {
 
 .container-seven-large {
   background-color: #f7f7f7;
-  min-height: 100vh;
+
   padding: 0 1rem;
    @include from-large {
    padding: 1.5rem 4rem;

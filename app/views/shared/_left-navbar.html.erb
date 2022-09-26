@@ -60,7 +60,7 @@
             </div>
           <% end %>
         <% end %>
-        <% if ['super admin', 'admin', 'training manager', 'sevener+'].include? current_user.access_level %>
+        <% if ['super_admin', 'admin', 'training manager', 'sevener+'].include? current_user.access_level %>
           <%= link_to contents_path, class: 'left-buttons' do %>
             <% if request.original_url&.split('/')[3]&.split('?')&.first == 'contents' %>
               <div class="left-menu-list active">
@@ -73,7 +73,7 @@
             <% end %>
           <% end %>
         <% end %>
-        <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>
+        <% if ['super_admin', 'admin', 'training manager'].include? current_user.access_level %>
           <%= link_to theories_path, class: 'left-buttons' do %>
             <% if request.original_url&.split('/')[3]&.split('?')&.first == 'theories' %>
               <div class="left-menu-list active">
@@ -108,7 +108,7 @@
             <% end %>
           <% end %>
         <% end %>
-        <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>
+        <% if ['super_admin', 'admin', 'training manager'].include? current_user.access_level %>
           <%= link_to actions_path, class: 'left-buttons' do %>
             <% if request.original_url&.split('/')[3]&.split('?')&.first == 'actions' %>
               <div class="left-menu-list active">

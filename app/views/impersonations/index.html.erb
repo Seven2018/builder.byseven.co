@@ -1,12 +1,12 @@
 <% access_levels = User::ACCESS_LEVEL_LABELS.values %>
 
-<div id="stimulus-change-page-controller"
+<div id="stimulus-paginate-controller"
      class="container"
-     data-controller="change-page">
+     data-controller="tools--paginate">
 
   <div id="searchbar"
        class="bld__searchbar mt-5rem"
-       data-controller="remember-search">
+       data-controller="tools--remember-search">
 
     <i class="fas fa-search searchbar-icon"></i>
 
@@ -14,15 +14,15 @@
                                  method: :get,
                                  remote: true,
                                  data: {
-                                   remember_search_key_value: 'bookletOrganisationSearches',
+                                   tools__remember_search_key_value: 'builderImpersonationSearches',
                                  } do |f| %>
 
       <%= f.input :name, placeholder: 'Search',
                          input_html: {
                            autocomplete: 'off',
                            data: {
-                             remember_search_target: :search,
-                             action: 'keyup->remember-search#storeSearch'
+                             tools__remember_search_target: :search,
+                             action: 'keyup->tools--remember-search#storeSearch'
                            }
                          },
                          label: false,
@@ -33,11 +33,11 @@
       <%= render(Tools::SelectComponent.new(width: '100%',
                                                         menu_height: 'fit-content',
                                                         title: 'Access level',
-                                                        input_name: 'search[access_level_int]',
+                                                        input_name: 'search[access_level]',
                                                         collection: ['All'] + access_levels,
                                                         data_action: '')) %>
 
-      <%= f.hidden_field :page, value: '1', data: { change_page_target: :pageInput } %>
+      <%= f.hidden_field :page, value: '1', data: { tools__paginate_target: :pageInput } %>
 
       <%=
           f.submit(
@@ -45,8 +45,8 @@
             class: 'btn-search',
             onclick: "document.querySelector('body').classList.add('wait');",
             data: {
-              remember_search_target: :submit,
-              change_page_target: :submit,
+              tools__remember_search_target: :submit,
+              tools__paginate_target: :submit,
               search_form: :submit
             }
           )
@@ -59,7 +59,7 @@
     <% end %>
 
     <button class='btn-reset bkt-dark-grey'
-            data-action="click->remember-search#resetAllFilter">
+            data-action="click->tools--remember-search#resetAllFilter">
       Reset
     </button>
 

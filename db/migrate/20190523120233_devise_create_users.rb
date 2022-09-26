@@ -37,7 +37,7 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.2]
       t.string :firstname, null: false, default: ""
       t.string :lastname, null: false, default: ""
       t.boolean :english_fluent
-      t.string :access_level, null: false, inclusion: { in: ['admin', 'super admin', 'sevener', 'training manager'] }, default: "sevener"
+      t.string :access_level, null: false, inclusion: { in: ['admin', 'super_admin', 'sevener', 'training manager'] }, default: "sevener"
       t.string :picture
       t.string :phone_number
       t.string :address

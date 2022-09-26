@@ -9,7 +9,7 @@
             <% if sessions.count == 1 %>
               <%= "  On #{sessions.first&.date&.strftime('%d %b, %Y')}" %>
             <% else %>
-              <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+              <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
                 <%= " #{sessions.order(date: :asc).first&.date&.strftime('%d %b, %Y')} to #{sessions.order(date: :asc).last&.date&.strftime('%d %b, %Y')}" %>
               <% else %>
                 <% trainer_sessions = Session.joins(:session_trainers).where(training_id: training.id, session_trainers: {user_id: current_user.id}).order(date: :asc) %>

@@ -14,7 +14,7 @@ class User < ApplicationRecord
   belongs_to :client_company, optional: true
   validates :firstname, :lastname, :email, presence: true
   validates_uniqueness_of :email
-  validates :access_level, inclusion: { in: ['sevener', 'sevener+', 'training manager', 'admin', 'super admin'] }
+  validates :access_level, inclusion: { in: ['sevener', 'sevener+', 'training manager', 'admin', 'super_admin'] }
 
   scope :active, -> {         where(status: :active) }
   scope :inactive, -> {       where(status: :inactive) }
@@ -24,18 +24,20 @@ class User < ApplicationRecord
 
   # SEARCHING USERS BY firstname and lastname
   include PgSearch::Model
-  pg_search_scope :search_by_name,
-    against: [ :firstname, :lastname ],
+  pg_search_scope :search_users,
+    against: [ :firstname, :lastname, :email ],
     using: {
       tsearch: { prefix: true }
     },
     ignoring: :accents
+
 
   enum status: {
     inactive: 0,
     active: 1
   }
 
+  paginates_per 25
 
   #############
   ## METHODS ##
@@ -51,7 +53,7 @@ class User < ApplicationRecord
   end
 
   def super_admin?
-    self.access_level == 'super admin'
+    self.access_level == 'super_admin'
   end
 
   def hours(training)

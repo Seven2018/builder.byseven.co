@@ -324,6 +324,7 @@ class InvoiceItemsController < ApplicationController
     authorize @invoice_item
     credit = InvoiceItem.new(@invoice_item.attributes.except("id", "created_at", "updated_at"))
     credit.uuid = "FA#{Date.today.strftime('%Y')}" + (InvoiceItem.where(type: 'Invoice').last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')
+
     if credit.save
       @invoice_item.invoice_lines.each do |line|
         new_invoice_line = InvoiceLine.create(line.attributes.except("id", "created_at", "updated_at", "invoice_item_id"))
@@ -349,7 +350,7 @@ class InvoiceItemsController < ApplicationController
   # Marks an InvoiceItem as send
   def marked_as_send
     authorize @invoice_item
-    @invoice_item.update(sending_date: params[:edit_sending][:sending_date], status: 'Send')
+    @invoice_item.update(sending_date: params[:edit_sending][:sending_date], status: 'Sent')
     UpdateAirtableJob.perform_async(@invoice_item.training, false, @invoice_item)
     redirect_back(fallback_location: invoice_item_path(@invoice_item))
   end

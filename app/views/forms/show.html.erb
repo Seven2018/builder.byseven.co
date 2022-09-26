@@ -1,6 +1,6 @@
 <% if params[:auth_token] == @training.client_company.auth_token || params[:auth_token] == ClientCompany.find_by(name: 'SEVEN').auth_token || (params[:search].present? && params[:search][:auth_token]) %>
   <div class="container-seven-large-form">
-    <% if user_signed_in? && (['super admin', 'admin', 'training manager'].include? current_user.access_level) %>
+    <% if user_signed_in? && (['super_admin', 'admin', 'training manager'].include? current_user.access_level) %>
       <div id='page-controls-form'>
         <%= link_to training_forms_path(@training), class: 'btn return-arrow' do %><i class="fas fa-arrow-left"></i><% end %>
         <a class="btn btn-edit-yellow btn-icon" data-toggle='modal' type='button' data-target='#editForm'><i class="fas fa-pen"></i></a>
@@ -48,12 +48,12 @@
                 </div>
                 <div class='session-teaser'><%= session.teaser.html_safe %></div>
                 <div class="session-form-control flex-column-between-left">
-                  <% unless user_signed_in? && ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+                  <% unless user_signed_in? && ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
                     <h4>Date(s) disponible(s)</h4>
                   <% end %>
                   <% @form.sessions.where(title: session.title).each do |session_date| %>
                     <div class="flex-row-between-centered" style='width: 100%;height:56px;'>
-                      <% if user_signed_in? && ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+                      <% if user_signed_in? && ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
                         <p><%= session_date.date %> - Réservations : <%= session_date.attendees.count %> / <%= session_date.attendee_number %></p>
                       <% elsif (session_date.attendees.count >= session_date.attendee_number) && ((user_signed_in? && session_date.attendees.where(email: current_user.email).empty?) || (status && session_date.attendees.where(email: params[:search][:email]).empty?)) %>
                           <p><%= session&.date&.strftime('%d/%m/%y') %> de <%= session.start_time.strftime('%H:%M') %> à <%= session.end_time.strftime('%H:%M') %></p><p>Plus de place disponible</p>
@@ -78,7 +78,7 @@
       </div>
     <% end %>
     <div id="form-import">
-      <% if user_signed_in? && (['super admin', 'admin', 'training manager'].include? current_user.access_level) %>
+      <% if user_signed_in? && (['super_admin', 'admin', 'training manager'].include? current_user.access_level) %>
         <%= form_tag import_attendees_path, multipart: true do %>
           <%= file_field_tag :file %>
           <%= submit_tag 'Import CSV' %>

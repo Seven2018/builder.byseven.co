@@ -26,11 +26,16 @@ class InvoiceLinesController < ApplicationController
   end
 
   def update
+    invoice = @invoiceline.invoice_item
     authorize @invoiceline
+
     @invoiceline.update(invoiceline_params)
     @invoiceline.invoice_item.update_price
+
+    invoice.update(status: 'Credit') if invoice.total_amount < 0
+
     UpdateAirtableJob.perform_async(@invoiceline.invoice_item.training, false, @invoiceline.invoice_item) if @invoiceline.invoice_item.training.present?
-    redirect_to invoice_item_path(@invoiceline.invoice_item) if @invoiceline.save
+    redirect_to invoice_item_path(@invoiceline.invoice_item)
   end
 
   def destroy

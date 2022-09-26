@@ -7,7 +7,7 @@
       <div>
         <img src='<%= @client_company.logo %>' alt="" class='client-company-logo-show'>
         <div class="page-controls-buttons">
-          <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>
+          <% if ['super_admin', 'admin', 'training manager'].include? current_user.access_level %>
             <a class="btn-icon-grey" data-toggle='modal' data-target='#editClientCompany' title='Edit'><i class="fas fa-pen"></i></a>
             <%= link_to new_estimate_path(client_company_id: @client_company.id), method: :post, class: 'btn-icon-grey', data: {toggle: 'tooltip'}, title: 'New Estimate' do %>
               <i class="fas fa-file-invoice-dollar"></i>
@@ -32,7 +32,7 @@
     <div id="client-contact-controls">
       <h2>Contacts List</h2>
       <div id="client-company-buttons">
-        <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>
+        <% if ['super_admin', 'admin', 'training manager'].include? current_user.access_level %>
           <%= link_to new_client_company_client_contact_path(@client_company) do %>
             <div class="btn-icon-grey-mobile" data-toggle='tooltip' title='Add Client'><i class="fas fa-plus"></i></div>
           <% end %>

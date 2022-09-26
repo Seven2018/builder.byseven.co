@@ -48,6 +48,6 @@ class InvoicePolicy < ApplicationPolicy
   private
 
   def check_access_seven
-    ['super admin', 'admin', 'training manager'].include? user.access_level
+    ['super_admin', 'admin', 'training manager'].include? user.access_level
   end
 end

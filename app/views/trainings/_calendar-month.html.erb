@@ -3,7 +3,7 @@
   <% trainings.each do |training| %>
     <% if training.sessions.where(date: date).first %>
       <% session = training.sessions.where(date: date).first %>
-      <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) || session.users.include?(current_user) %>
+      <% if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level) || session.users.include?(current_user) %>
         <div style="display: flex; justify-content: center;">
           <%= link_to training_session_path(session.training, session) do %>
             <div class="card-sm" id="card-index">

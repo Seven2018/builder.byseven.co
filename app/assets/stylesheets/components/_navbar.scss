@@ -8,10 +8,7 @@
   z-index: 100;
   padding: 0.5rem .5rem;
   box-shadow: 0px 10px 23px -13px rgba(0,0,0,0.13);
-  h4 {
-    font-size: 1.4rem;
-    font-weight: 600;
-  }
+
   @include from-large {
     padding: 0rem 4rem !important;
     display: flex;
@@ -20,87 +17,59 @@
   }
 }
 
-.user-top-nav {
-  margin-left: 2rem;
-}
+#navbar-builder-links {
 
-.user-info-dropdown {
-  border-bottom: 1px solid lightgrey;
-}
-
-.navbar .navbar-collapse {
-  flex-grow: 0;
-}
-
-.navbar .navbar-brand img {
-  width: 40px;
-}
-
-.navbar-controls {
-  height: 100%;
-  margin-right: 30px;
-  display: inherit;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.navbar-controls-left {
-  width: 22rem;
-}
-
-.navbar-notification-indicator {
-  position: absolute;
-  top: -0.7rem;
-  right: 0;
-
-  i {
-    color: red;
-    font-size: 1rem;
-  }
-}
-
-.navbar-icon {
-  color: #8C8B8A;
-
-  i {
-    font-size: 20px !important;
-    margin-right: 0px;
+  a {
+    position: relative;
+    display: block;
+    text-decoration: none;
+    box-sizing: content-box;
+    font-size: 1.6rem;;
+    color: black;
+    padding: 4px 0;
+    transition: 0.5s;
   }
 
-  .fa-envelope {
-    padding: 5px;
+  a.isactive::after {
+    height: 4px;
+    position: absolute;
+    content: "";
+    width: 100%;
+    top: calc(100% - 4px);
+    left: 0;
+    background: #FFC447;
   }
 
-  .fa-bell {
-    padding: 5px 6.25px;
+  a:not(.isactive)::after {
+    height: 4px;
+    position: absolute;
+    content: "";
+    width: 100%;
+    top: calc(100% - 4px);
+    left: 0;
+    background: #FFC447;
+    transition: transform 0.5s;
+    transform: scaleX(0);
+    transform-origin: right;
   }
 
-  &:hover {
-    color: #cccccc;
+  a:hover {
 
-    i {
-      border: 1px solid white;
+    p {
+      color: $bld-yellow !important;
     }
   }
-  @include from-medium {
-    i {
-      margin-right: 20px;
-    }
+
+  a:not(.isactive):hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
   }
 }
 
 
-.nav-link {
-  height: auto;
-}
-
-.notification-show, .notification-show-undead {
-  min-width: 10rem;
-}
-
-.notification-show-link {
-  margin-left: 1rem;
-}
+//////////////
+// TO CLEAN //
+//////////////
 
 .navbar-user-card {
   div {
@@ -111,6 +80,7 @@
     margin: 0;
   }
 }
+
 .userhidden {
   border-top-right-radius: 0px !important;
   border-bottom-right-radius: 0px !important;
@@ -132,116 +102,6 @@
   &:hover {
     background-color: rgba(242,100,25,0.24);
   }
-}
-
-.dropdown-menu-new {
-  left: 27px;
-}
-
-.dropdown-menu-notification {
-  border: none !important;
-}
-
-#navbar-search {
-  margin-left: 0;
-  display: flex;
-  align-items: center;
-  position: relative;
-
-  div {
-    margin: 0;
-  }
-
-  form {
-    width: 15rem;
-  }
-
-  input {
-    border-radius: 1rem;
-    background-color: #f3f3f3;
-  }
-
-  .search-close {
-    position: absolute;
-    top: 5px;
-    right: 10px;
-  }
-  @include from-large {
-    margin-right: 3rem;
-    form {
-      width: 25rem;
-    }
-  }
-
-  #navbar-search-clear {
-    position: absolute;
-    right: .5rem;
-    top: .3rem;
-    height: 2.4rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-
-    p {
-      font-size: 1.2rem;
-      color: #FFC447;
-    }
-  }
-}
-
-.top-left-nav {
-  margin-top: 15px;
-  font-family: 'Montserrat';
-  ul {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: flex-start;
-    list-style-type: none;
-    padding-left: 0;
-    margin-bottom: 0 !important;
-  }
-
-  li {
-    padding-right: 80px;
-  }
-
-  ul li a {
-    position: relative;
-    display: block;
-    text-decoration: none;
-    font-size: 1.6rem;;
-    color: black;
-    padding: 4px 0;
-    transition: 0.5s;
-  }
-  ul li a::after {
-    height: 4px;
-    position: absolute;
-    content: "";
-    width: 100%;
-    top: 100%;
-    left: 0;
-    background: #FFC447;
-    transition: transform 0.5s;
-    transform: scaleX(0);
-    transform-origin: right;
-  }
-  ul li a:hover {
-    color:  #FFC447;
-  }
-  ul li a:hover::after {
-    transform: scaleX(1);
-    transform-origin: left;
-  }
-}
-
-.isactive {
-  border-bottom: 5px solid #FFC447;
-}
-
-.isnormal {
-  border-bottom: 1px solid transparent;
 }
 
 .dropdown-toggle::after {
@@ -294,15 +154,3 @@
   width: 60%;
   text-align: left;
 }
-
-.dropdown-form {
-
-  &:focus, &:active, &:hover {
-    background-color: white;
-  }
-}
-
-.dropdown-menu-filter {
-  // transform: translate3d(33px, 1px, 0px) !important;
-}
-

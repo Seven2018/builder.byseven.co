@@ -11,7 +11,7 @@
             <% end %>
           <% end %>
         <% end %>
-        <% if ['super admin', 'admin', 'HR'].include? current_user.access_level %>
+        <% if ['super_admin', 'admin', 'HR'].include? current_user.access_level %>
           <%= link_to new_user_path do %>
             <button class="btn btn-edit-yellow">New User</button>
           <% end %>

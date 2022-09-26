@@ -9,11 +9,14 @@
 
   .pagination {
 
+    background-color: transparent;
+
     .page-item {
       margin: 0;
     }
 
     .page-link {
+      font-size: 1.6rem;
       font-weight: 500;
       border: none;
 

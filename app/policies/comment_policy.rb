@@ -16,6 +16,6 @@ class CommentPolicy < ApplicationPolicy
   private
 
   def check_access
-    ['super admin', 'admin', 'training manager', 'sevener+', 'sevener'].include? user.access_level
+    ['super_admin', 'admin', 'training manager', 'sevener+', 'sevener'].include? user.access_level
   end
 end

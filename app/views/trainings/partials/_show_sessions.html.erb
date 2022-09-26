@@ -1,6 +1,6 @@
 <% training.sessions.order(:date, :start_time).each do |session| %>
 
-  <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) || session.users.include?(current_user) %>
+  <% if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level) || session.users.include?(current_user) %>
 
     <div class='session-card-block' id="card-block-<%= session.id %>">
       <%= render 'trainings/partials/show_session_card', session: session %>

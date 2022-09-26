@@ -1,10 +1,10 @@
 <% if true_user && current_user != true_user %>
 
-  <div class='position-fixed top-1 left-1 z-1001'>
+  <div class='position-fixed z-1001'
+       style="top: 6rem; left: 4rem;">
 
     <span class="text-orange">
-      Vous (<%= true_user.firstname %>) êtes loggué en tant que
-      <%= "#{current_user.fullname} (access_level #{current_user.access_level_int} - company #{current_user.company.name})" %>
+      <%= "#{current_user.fullname} (access_level #{current_user.access_level})" %>
     </span>
 
     <%= link_to "stop impersonating",
@@ -20,7 +20,8 @@
 <% if current_user&.super_admin? && current_user == true_user %>
 
   <div class='position-fixed z-1001'
-       style="top: 1.25rem; left: 10rem;">
-    <%= link_to 'impersonate', impersonations_path %>
+       style="top: 6rem; left: 4rem;">
+    <%= link_to 'Impersonate', impersonations_path %>
   </div>
+
 <% end %>

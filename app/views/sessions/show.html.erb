@@ -6,12 +6,12 @@
       <i class="fas fa-arrow-left"></i>
     <% end %>
     <div class='flex-row-between-centered'>
-      <% if ['super admin', 'admin', 'training manager', 'sevener+'].include?(current_user.access_level) %>
+      <% if ['super_admin', 'admin', 'training manager', 'sevener+'].include?(current_user.access_level) %>
         <%= link_to training_session_workshops_path(@session.training, @session), method: :post, remote: true do %>
           <div class='btn-icon-grey' data-toggle='tooltip' title='Add Workshop'><i class="fas fa-plus"></i></div>
         <% end %>
       <% end %>
-      <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+      <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
         <a class='btn-icon-grey' data-toggle='modal' data-target='#editSession' data-toggle="tooltip" title="Edit"><i class="fas fa-pen"></i></a>
         <%= link_to remove_session_trainers_path(session_id: @session.id, destroy: 'true'), class: "btn-icon-grey", data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
           <i class="fas fa-trash-alt"></i>
@@ -20,7 +20,7 @@
           <i class="fas fa-copy"></i>
         <% end %>
       <% end %>
-      <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+      <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
         <div class='show_library btn-icon-grey' data-toggle="tooltip" title="Library"><i class="fas fa-book"></i></div>
       <% end %>
       <div class="dropdown">
@@ -28,7 +28,7 @@
         <ul class="dropdown-menu dropdown-menu-right navbar-wagon-dropdown-menu" aria-labelledby="dropdownMenuButton">
           <li><%= link_to 'View mode', training_session_viewer_path(@session.training, @session) %></li>
           <li><%= link_to 'Export PDF', training_session_path(@session.training, @session, format: :pdf), target: :_blank %></li>
-          <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+          <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
             <li><%= link_to 'Import Attendees', import_attendees_form_path(session_id: @session.id) %></li>
             <li><%= link_to 'Presence Sheet', training_session_presence_sheet_path(@session.training, @session, format: :pdf), target: :_blank %></li>
           <% end %>
@@ -42,7 +42,7 @@
   <div id="mods" style="min-height: 50vh;">
     <%= render 'workshops/index', session: @session %>
   </div>
-  <% if (['super admin', 'admin', 'training manager'].include? current_user.access_level) %>
+  <% if (['super_admin', 'admin', 'training manager'].include? current_user.access_level) %>
     <div id='library' class="nav-side-menu-container">
       <div class="nav-side-menu">
         <a id="close_library" class='centered-item'><i class="fas fa-times"></i></a>

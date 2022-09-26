@@ -20,7 +20,7 @@
             <% end %>
           </li>
         <% end %>
-        <% if ['super admin', 'admin', 'project manager', 'HR'].include?(current_user.access_level) %>
+        <% if ['super_admin', 'admin', 'project manager', 'HR'].include?(current_user.access_level) %>
           <li><button class='avatar-sm-add ava-session ' data-toggle='modal' data-target='#newUser'><i class="fas fa-plus" style='color:#888888; font-size:20px;' data-toggle='tooltip' title='Add Trainer' data-placement="bottom"></i></button></li>
         <% else %>
           <li><button class='avatar-sm-add ava-session btn-add-user-disabled'><i class="fas fa-plus" style='color:#888888; font-size:20px;' data-toggle='tooltip' title='Add Trainer' data-placement="bottom"></i></button></li>

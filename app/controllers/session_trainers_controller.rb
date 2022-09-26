@@ -69,7 +69,7 @@ class SessionTrainersController < ApplicationController
 
       # Calendars ids
       calendars_ids = {'other' => 'vum1670hi88jgei65u5uedb988@group.calendar.google.com'}
-      User.where(access_level: ['super admin','admin']).each{|x| calendars_ids[x.id] = x.email}
+      User.where(access_level: ['super_admin','admin']).each{|x| calendars_ids[x.id] = x.email}
 
       # Lists the users and the ids of the events to be deleted
       SessionTrainer.where(session_id: session_ids).each do |session_trainer|
@@ -150,7 +150,7 @@ class SessionTrainersController < ApplicationController
             count = events.count
 
             # Events to create in Seven Team Calendars
-            if User.where(access_level: ['super admin', 'admin']).map{|x| x.id.to_s}.include?(ind)
+            if User.where(access_level: ['super_admin', 'admin']).map{|x| x.id.to_s}.include?(ind)
               create_calendar_event(service, calendars_ids, ind, session.id, event, event_idx, count)
 
             # Events to create in the Sevener Calendar
@@ -294,7 +294,7 @@ class SessionTrainersController < ApplicationController
 
       calendar_uuids = session_trainer.calendar_uuid.split(' - ')
 
-      if ['super admin', 'admin'].include?(session_trainer.user.access_level)
+      if ['super_admin', 'admin'].include?(session_trainer.user.access_level)
         calendar_uuids.each do |calendar_uuid|
           service.delete_event(session_trainer.user.email, calendar_uuid)
         end

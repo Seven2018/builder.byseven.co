@@ -3,11 +3,23 @@ class UsersController < ApplicationController
 
   def index
     @users = policy_scope(User).active
-    if params[:search]
-      @users = @users.search_by_name("#{params[:search][:name]}")
-      @users = @users.sort_by{ |user| user.lastname } if @users.present?
-    else
-      @users = @users.order(lastname: :asc)
+
+    search_name = params.dig(:search, :name)
+    search_access_level = params.dig(:search, :access_level)&.downcase&.gsub(' ', '_')
+    page_index = (params.dig(:search, :page).presence || 1).to_i
+
+    @users = @users.search_users(search_name) if search_name.present?
+    @users = @users.where(access_level: search_access_level) if search_access_level.present?
+
+    @total_users = @users.count
+
+    @users = @users.order(lastname: :asc).page(page_index)
+
+    @any_more = @users.count * page_index < @total_users
+
+    respond_to do |format|
+      format.html
+      format.js
     end
   end
 
@@ -30,7 +42,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    if ['super admin', 'admin', 'training manager'].include?(current_user.access_level)
+    if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level)
       @user = User.find(params[:id])
     elsif current_user.access_level == 'HR'
       @user = User.where(client_company_id: current_user.client_company_id).find(params[:id])

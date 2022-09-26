@@ -9,11 +9,11 @@ class ImpersonationsController < ApplicationController
     @users = User.where(user_params)
 
     search_name = params.dig(:search, :name)
-    search_access_level_int = params.dig(:search, :access_level_int)&.downcase&.gsub(' ', '_')&.to_sym
+    search_access_level = params.dig(:search, :access_level)&.downcase&.gsub(' ', '_')
     page_index = (params.dig(:search, :page).presence || 1).to_i
 
     @users = @users.search_users(search_name) if search_name.present?
-    @users = @users.where(access_level_int: search_access_level_int) if search_access_level_int.present?
+    @users = @users.where(access_level: search_access_level) if search_access_level.present?
 
     @total_users = @users.count
 

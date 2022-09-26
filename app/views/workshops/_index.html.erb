@@ -17,7 +17,7 @@
   <% end %>
   <% if @session.workshops.empty? %>
     <div class="empty-mod">
-      <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>
+      <% if ['super_admin', 'admin', 'training manager'].include? current_user.access_level %>
         <br>
         <p> <%= "Ajouter du contenu" %> </p>
       <% else %>

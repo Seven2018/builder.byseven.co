@@ -27,7 +27,7 @@
     <% else %>
       <div style='position:relative;'>
         <div class="invoice-desc-line-controls">
-          <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+          <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
             <% if line.position == 1 %>
               <a><i class="fas fa-caret-up" style='color:grey;cursor:default;'></i></a>
             <% else %>
@@ -61,7 +61,7 @@
           <div class="invoice-line-comments">
             <%= link_to 'Ajouter un commentaire', edit_invoice_line_path(line) %>
           </div>
-        <% elsif ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+        <% elsif ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
           <div class="invoice-line-comments">
             <%= link_to line.comments.html_safe, edit_invoice_line_path(line) %>
           </div>
