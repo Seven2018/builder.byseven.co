@@ -599,22 +599,24 @@ $timeline: #115173;
 }
 
 #items, #items-viewer {
-    margin-bottom: 2rem;
-    padding-right: 0;
+  margin-bottom: 2rem;
+  padding-right: 0;
 
-    .card-mods {
+  .card-mods {
     display: flex;
     margin: 0;
     padding: 0;
     border: none;
-    width: auto;
+    width: 100%;
     height: auto;
     padding: 0;
+
     &:hover {
       transition: all 0.8s ease;
       transform: scale(1.0);
       opacity: 1;
     }
+
     @include from-medium {
       padding: 0 3rem;
     }

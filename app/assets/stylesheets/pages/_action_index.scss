@@ -45,12 +45,18 @@
 }
 
 .action-checkboxes {
+
   fieldset {
     margin: 10px 0px !important;
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
   }
+
+  label {
+    margin: 0 2rem 0 0;
+  }
+
   .form-check-label {
     font-size: 15px !important;
     width: 300px;
