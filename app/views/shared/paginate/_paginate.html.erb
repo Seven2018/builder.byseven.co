@@ -1,0 +1,21 @@
+<% if params.dig(:search, :page).present? && params.dig(:search, :page).to_i > 1 %>
+
+  <div class="paginate__previous-button paginate__button-dark-grey"
+       data-action='click->tools--paginate#previous'>
+    <span class="iconify" data-icon="fontisto:angle-left"></span>
+    <p>Previous</p>
+  </div>
+
+<% end %>
+
+<%= paginate instances, left: 3, right: 1 %>
+
+<% if instances.count == 25 && any_more %>
+
+  <div class="paginate__next-button paginate__button-dark-grey"
+       data-action='click->tools--paginate#next'>
+    <p>Next</p>
+    <span class="iconify" data-icon="fontisto:angle-right"></span>
+  </div>
+
+<% end %>

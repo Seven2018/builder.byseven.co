@@ -1,0 +1,27 @@
+<% if true_user && current_user != true_user %>
+
+  <div class='position-fixed z-1001'
+       style="top: 6rem; left: 4rem;">
+
+    <span class="text-orange">
+      <%= "#{current_user.fullname} (access_level #{current_user.access_level})" %>
+    </span>
+
+    <%= link_to "stop impersonating",
+      stop_impersonating_impersonations_path,
+      method: :post,
+      class: 'text-danger'
+    %>
+
+  </div>
+
+<% end %>
+
+<% if current_user&.super_admin? && current_user == true_user %>
+
+  <div class='position-fixed z-1001'
+       style="top: 6rem; left: 4rem;">
+    <%= link_to 'Impersonate', impersonations_path %>
+  </div>
+
+<% end %>

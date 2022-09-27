@@ -4,7 +4,7 @@
 <% unless @workshop.workshop_modules.present? %>
   <div class="no-workshop">
     <h5>Sorry, there are no modules for this workshop.</h5>
-    <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+    <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
       <h5>Create a module  <%= link_to new_training_session_workshop_workshop_module_path(@workshop.session.training, @workshop.session, @workshop)do %> <u>here.</u><% end %>
     <% end %>
   </h5>
@@ -30,22 +30,22 @@
               <a data-toggle='modal' data-target='#consultUser<%= mod.user.id %>'><img src='<%= "#{mod.user.picture}" %>' alt="" class='avatar-sm avatar-workshop-module-card'></a>
             <% end %>
             <p><%= mod.duration %> min</p>
-            <% if ['super admin', 'admin', 'training manager', 'sevener+'].include?(current_user.access_level) %>
+            <% if ['super_admin', 'admin', 'training manager', 'sevener+'].include?(current_user.access_level) %>
               <%= link_to edit_training_session_workshop_workshop_module_path(mod.workshop.session.training, mod.workshop.session, mod.workshop, mod), data: { toggle: 'tooltip' }, title: 'Edit', class: 'btn return-arrow' do %>
                 <i class="fas fa-pen"></i>
               <% end %>
             <% end %>
-            <% if ['super admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+            <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
               <%= link_to training_session_workshop_copy_form_workshop_module_path(mod.workshop.session.training, mod.workshop.session, mod.workshop, mod), class: 'btn return-arrow', data: { toggle: 'tooltip' }, title: 'Copy' do %>
                 <i class="fas fa-copy"></i>
               <% end %>
             <% end %>
-            <% if ['super admin', 'admin', 'training manager', 'sevener+'].include?(current_user.access_level) %>
+            <% if ['super_admin', 'admin', 'training manager', 'sevener+'].include?(current_user.access_level) %>
               <%= link_to training_session_workshop_workshop_module_path(mod.workshop.session.training, mod.workshop.session, mod.workshop, mod), method: :delete, data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete', class: 'btn return-arrow' do %>
                 <i class="fas fa-trash-alt"></i>
               <% end %>
             <% end %>
-            <% if ['super admin', 'admin', 'training manager', 'sevener+'].include?(current_user.access_level) %>
+            <% if ['super_admin', 'admin', 'training manager', 'sevener+'].include?(current_user.access_level) %>
               <% if mod.position == 1 %>
                 <a class='btn return-arrow'><i class="fas fa-arrow-up" style='color:grey;cursor:default;'></i></a>
               <% else %>

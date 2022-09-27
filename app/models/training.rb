@@ -107,6 +107,7 @@ class Training < ApplicationRecord
       existing_card = OverviewTraining.all.select{|x| x['Builder_id'] == self.id}&.first
       details = "Détail des sessions (date, horaires, intervenants):\n\n"
       seven_invoices = "Factures SEVEN :\n"
+
       OverviewNumbersRevenue.all.select{|x| x['Training_id'] == self.id}.sort_by{|x| x['Invoice_id']}.each do |invoice|
         builder_invoice = InvoiceItem.find(invoice['Invoice_id'])
         if ['Training', 'Home', 'Deposit (Home)'].include?(invoice['Type'])
@@ -117,7 +118,9 @@ class Training < ApplicationRecord
           end
         end
       end
-      existing_card['Status'] = "11. Terminée" if (self.invoice_items.present? && self.invoice_items.where(status: 'Pending').count == 0 && self.invoice_items.where(status: 'Paid').count > 0)
+
+      existing_card['Status'] = "11. Terminée" if (self.invoice_items.present? && self.invoice_items.where(status: ['Pending', 'Sent']).count == 0 && self.invoice_items.where(status: 'Paid').count > 0)
+
       self.sessions.each do |session|
         if session.date.present?
           details += "- #{session.date.strftime('%d/%m/%Y')} de #{session.start_time.strftime('%Hh%M')} à #{session.end_time.strftime('%Hh%M')}"
@@ -141,6 +144,7 @@ class Training < ApplicationRecord
 
       self.update(title: existing_card['Title'])
       owners = existing_card['Owner']&.map{|owner| User.find(OverviewUser.find(owner)['Builder_id'])}
+
       if owners.present?
         owners.each do |owner|
           unless TrainingOwnership.where(training_id: self.id, user_id: owner.id, user_type: 'Owner').present?
@@ -148,8 +152,10 @@ class Training < ApplicationRecord
           end
         end
       end
+
       TrainingOwnership.where(training_id: self.id, user_type: 'Owner').where.not(user_id: owners&.map{|x| x.id}).destroy_all
       writers = existing_card['Writers']&.map{|writer| User.find(OverviewUser.find(writer)['Builder_id'])}
+
       if writers.present?
         writers.each do |writer|
           unless TrainingOwnership.where(training_id: self.id, user_id: writer.id, user_type: 'Writer').present?
@@ -157,6 +163,7 @@ class Training < ApplicationRecord
           end
         end
       end
+
       TrainingOwnership.where(training_id: self.id, user_type: 'Writer').where.not(user_id: writers&.map{|x| x.id}).destroy_all
       existing_card['Trainers'] = self.trainers.map{|x| OverviewUser.all.select{|y| y['Builder_id'] == x.id}.first.id}
       existing_card['Start date'] = self.start_time.strftime('%Y-%m-%d') if self.start_time.present?
@@ -166,6 +173,7 @@ class Training < ApplicationRecord
 
       seveners_to_pay = ""
       seveners = true if self.trainers.map{|x|x.access_level}.to_set.intersect?(['sevener+', 'sevener'].to_set)
+
       if seveners
         self.trainers.select{|x|['sevener+', 'sevener'].include?(x.access_level)}.each do |user|
           numbers_card = OverviewNumbersSevener.all.select{|x| x['User_id'] == user.id && x['Training_id'] == self.id}&.first
@@ -187,6 +195,7 @@ class Training < ApplicationRecord
       else
         seveners_to_pay += "[x] Aucun\n"
       end
+
       existing_card['Seveners to pay'] = seveners_to_pay unless seveners_to_pay == ''
       existing_card['SEVEN Invoice(s)'] = seven_invoices
       existing_card.save

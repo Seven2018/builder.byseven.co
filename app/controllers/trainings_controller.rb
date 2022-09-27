@@ -6,7 +6,7 @@ class TrainingsController < ApplicationController
     trainings = policy_scope(Training)
     trainings = trainings
     # If user in team SEVEN
-    if ['super admin', 'admin', 'project manager'].include?(current_user.access_level)
+    if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level)
       # Search trainings
       if params[:search].present?
         # Search trainings involving selected user
@@ -47,7 +47,7 @@ class TrainingsController < ApplicationController
 
   def index_completed
     # If user in team SEVEN
-    if ['super admin', 'admin', 'project manager'].include?(current_user.access_level)
+    if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level)
       # Search trainings
       if params[:search].present?
         # Search trainings involving selected user

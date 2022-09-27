@@ -1,140 +1,188 @@
 <div class="navbar-builder navbar-expand-sm navbar-light">
   <% if user_signed_in? %>
-  <%= link_to trainings_path do %>
-    <%= image_tag('SEVENLOGO_SQUARE4.png', width:'45px', height:'30px', style:'margin-right:3rem;') %>
-  <% end %>
-  <div class="top-left-nav">
-    <ul>
-      <li>
+
+    <%= link_to trainings_path do %>
+      <%= image_tag('SEVENLOGO_SQUARE4.png', width:'45px', height:'30px', style:'margin-right:3rem;') %>
+    <% end %>
+
+    <div id="navbar-builder-links"
+         class="d-flex justify-content-between align-items-center height-5rem">
+
         <% if params[:controller] == 'trainings' || params[:controller] == 'sessions' || params[:controller] == 'workshops' || params[:controller] == 'workshop_modules'%>
-          <%= link_to trainings_path, class: 'left-buttons' do %>
-            <div class="left-menu-title" style='color: #FFC447;'><h4>Trainings</h4></div>
+
+          <%= link_to trainings_path, class: 'left-buttons d-flex align-items-center height-5rem mx-2rem p-0 isactive' do %>
+            <p class="fs-1_4rem font-weight-600 smooth-transition bld-yellow">Trainings</p>
           <% end %>
-            <div class="isactive"></div>
+
         <% else %>
-          <%= link_to trainings_path, class: 'left-buttons' do %>
-            <div class="left-menu-title"><h4>Trainings</h4></div>
+
+          <%= link_to trainings_path, class: 'left-buttons d-flex align-items-center height-5rem mx-2rem p-0' do %>
+            <p class="fs-1_4rem font-weight-600 smooth-transition bld-dark-grey">Trainings</p>
           <% end %>
+
         <% end %>
-      </li>
-      <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>
-        <li>
+
+        <% if ['super_admin', 'admin', 'training manager'].include? current_user.access_level %>
+
           <% if params[:action] == 'contents' || params[:controller] == 'contents' %>
-            <%= link_to contents_path, class: 'left-buttons' do %>
-              <div class="left-menu-title " style='color: #FFC447;'><h4>Workshops</h4></div>
+
+            <%= link_to contents_path, class: 'left-buttons d-flex align-items-center height-5rem mx-2rem p-0 isactive' do %>
+              <p class="fs-1_4rem font-weight-600 smooth-transition bld-yellow">Workshops</p>
             <% end %>
-              <div class="isactive"></div>
+
           <% else %>
-            <%= link_to contents_path, class: 'left-buttons' do %>
-              <div class="left-menu-title"><h4>Workshops</h4></div>
+
+            <%= link_to contents_path, class: 'left-buttons d-flex align-items-center height-5rem mx-2rem p-0' do %>
+              <p class="fs-1_4rem font-weight-600 smooth-transition bld-dark-grey">Workshops</p>
             <% end %>
+
           <% end %>
-        </li>
-      <% end %>
-      <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>
-        <li>
-          <% if params[:controller] == 'theories' || params[:action] == 'theories' %>
-            <%= link_to theories_path, class: 'left-buttons' do %>
-              <div class="left-menu-title " style='color: #FFC447;'><h4>Theories</h4></div>
-            <% end %>
-              <div class="isactive"></div>
-          <% else %>
-            <%= link_to theories_path, class: 'left-buttons' do %>
-              <div class="left-menu-title"><h4>Theories</h4></div>
-            <% end %>
-          <% end %>
-        </li>
-        <li>
-          <% if params[:action] == 'users' || params[:controller] == 'users' %>
-            <%= link_to users_path, class: 'left-buttons' do %>
-              <div class="left-menu-title " style='color: #FFC447;'><h4>Users</h4></div>
-            <% end %>
-              <div class="isactive"></div>
-          <% else %>
-            <%= link_to users_path, class: 'left-buttons' do %>
-              <div class="left-menu-title"><h4>Users</h4></div>
-            <% end %>
-          <% end %>
-        </li>
-        <li>
-          <% if params[:action] == 'companies' || params[:controller] == 'companies' %>
-            <%= link_to client_companies_path, class: 'left-buttons' do %>
-              <div class="left-menu-title " style='color: #FFC447;'><h4>Clients</h4></div>
-            <% end %>
-              <div class="isactive"></div>
-          <% else %>
-            <%= link_to client_companies_path, class: 'left-buttons' do %>
-              <div class="left-menu-title"><h4>Clients</h4></div>
-            <% end %>
-          <% end %>
-        </li>
-        <li>
-           <% if params[:action] == 'actions' || params[:controller] == 'actions' %>
-            <%= link_to actions_path, class: 'left-buttons' do %>
-              <div class="left-menu-title " style='color: #FFC447;'><h4>Actions</h4></div>
-            <% end %>
-              <div class="isactive"></div>
-          <% else %>
-            <%= link_to actions_path, class: 'left-buttons' do %>
-              <div class="left-menu-title"><h4>Actions</h4></div>
-            <% end %>
-          <% end %>
-        </li>
-        <li>
-          <% if params[:action] == 'report' || params[:controller] == 'report'  %>
-            <%= link_to report_path, class: 'left-buttons' do %>
-              <div class="left-menu-title " style='color: #FFC447;'><h4>Reports</h4></div>
-            <% end %>
-              <div class="isactive"></div>
-          <% else %>
-            <%= link_to report_path, class: 'left-buttons' do %>
-              <div class="left-menu-title"><h4>Reports</h4></div>
-            <% end %>
-          <% end %>
-        </li>
-      <% end %>
-        <% if ['sevener+', 'sevener'].include? current_user.access_level %>
-          <li>
-             <% if params[:action] == 'billing' %>
-              <%= link_to billing_path(user_id: current_user), class: 'left-buttons' do %>
-                <div class="left-menu-title " style='color: #FFC447;'><h4>Billing</h4></div>
-              <% end %>
-                <div class="isactive"></div>
-            <% else %>
-              <%= link_to billing_path(user_id: current_user), class: 'left-buttons' do %>
-                <div class="left-menu-title"><h4>Billing</h4></div>
-              <% end %>
-            <% end %>
-          </li>
+
         <% end %>
-      <% end %>
-    </ul>
-  </div>
-  <div class="navbar-controls-right flex-row-between-centered">
-    <div class="user-top-nav">
-      <div class="dropdown show">
-        <a class="navbar-user-card  dropdown-toggle flex-row-between-centered" href="#" role="button" id="dropdownMenuLogout" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <img src="<%= current_user.picture %>" alt="<%= current_user.fullname %>" class='avatar-sm' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right" id='dropdown-user-menu' aria-labelledby="dropdownMenuLogout">
-          <div class="dropdown-card">
-            <div class="user-info-dropdown">
-              <p><%= current_user.fullname%></p>
-              <h6><%= current_user.email%></h6>
-            </div>
-          </div>
-          <div class="dropdown-card">
-            <%= link_to user_path(current_user) do %>
-                  <h6>Profile</h6>
+
+        <% if ['super_admin', 'admin', 'training manager'].include? current_user.access_level %>
+
+          <% if params[:controller] == 'theories' || params[:action] == 'theories' %>
+
+            <%= link_to theories_path, class: 'left-buttons d-flex align-items-center height-5rem mx-2rem p-0 isactive' do %>
+              <p class="fs-1_4rem font-weight-600 smooth-transition bld-yellow">Theories</p>
             <% end %>
-          </div>
-          <div class="dropdown-card flex-row-between-centered">
-            <%= link_to destroy_user_session_path, method: :delete do %>
-              <h6>Log out</h6>
+
+          <% else %>
+
+            <%= link_to theories_path, class: 'left-buttons d-flex align-items-center height-5rem mx-2rem p-0' do %>
+              <p class="fs-1_4rem font-weight-600 smooth-transition bld-dark-grey">Theories</p>
             <% end %>
-          </div>
-        </div>
-      </div>
+
+          <% end %>
+
+          <% if params[:action] == 'users' || params[:controller] == 'users' %>
+
+            <%= link_to users_path, class: 'left-buttons d-flex align-items-center height-5rem mx-2rem p-0 isactive' do %>
+              <p class="fs-1_4rem font-weight-600 smooth-transition bld-yellow">Users</p>
+            <% end %>
+
+          <% else %>
+
+            <%= link_to users_path, class: 'left-buttons d-flex align-items-center height-5rem mx-2rem p-0' do %>
+              <p class="fs-1_4rem font-weight-600 smooth-transition bld-dark-grey">Users</p>
+            <% end %>
+
+          <% end %>
+
+          <% if params[:action] == 'companies' || params[:controller] == 'companies' %>
+
+            <%= link_to client_companies_path, class: 'left-buttons d-flex align-items-center height-5rem mx-2rem p-0 isactive' do %>
+              <p class="fs-1_4rem font-weight-600 smooth-transition bld-yellow">Clients</p>
+            <% end %>
+
+          <% else %>
+
+            <%= link_to client_companies_path, class: 'left-buttons d-flex align-items-center height-5rem mx-2rem p-0' do %>
+              <p class="fs-1_4rem font-weight-600 smooth-transition bld-dark-grey">Clients</p>
+            <% end %>
+
+          <% end %>
+
+           <% if params[:action] == 'actions' || params[:controller] == 'actions' %>
+
+            <%= link_to actions_path, class: 'left-buttons d-flex align-items-center height-5rem mx-2rem p-0 isactive' do %>
+              <p class="fs-1_4rem font-weight-600 smooth-transition bld-yellow">Actions</p>
+            <% end %>
+
+          <% else %>
+
+            <%= link_to actions_path, class: 'left-buttons d-flex align-items-center height-5rem mx-2rem p-0' do %>
+              <p class="fs-1_4rem font-weight-600 smooth-transition bld-dark-grey">Actions</p>
+            <% end %>
+
+          <% end %>
+
+          <% if params[:action] == 'report' || params[:controller] == 'report'  %>
+
+            <%= link_to report_path, class: 'left-buttons d-flex align-items-center height-5rem mx-2rem p-0 isactive' do %>
+              <p class="fs-1_4rem font-weight-600 smooth-transition bld-yellow">Reports</p>
+            <% end %>
+
+          <% else %>
+
+            <%= link_to report_path, class: 'left-buttons d-flex align-items-center height-5rem mx-2rem p-0' do %>
+              <p class="fs-1_4rem font-weight-600 smooth-transition bld-dark-grey">Reports</p>
+            <% end %>
+
+          <% end %>
+
+        <% end %>
+
+        <% if ['sevener+', 'sevener'].include? current_user.access_level %>
+
+          <% if params[:action] == 'billing' %>
+
+            <%= link_to billing_path(user_id: current_user), class: 'left-buttons d-flex align-items-center height-5rem mx-2rem p-0 isactive' do %>
+              <p class="fs-1_4rem font-weight-600 smooth-transition bld-yellow">Billing</p>
+            <% end %>
+
+          <% else %>
+
+            <%= link_to billing_path(user_id: current_user), class: 'left-buttons d-flex align-items-center height-5rem mx-2rem p-0' do %>
+              <p class="fs-1_4rem font-weight-600 smooth-transition bld-dark-grey">Billing</p>
+            <% end %>
+
+          <% end %>
+
+        <% end %>
+
     </div>
+
+  <% end %>
+
+  <div class="d-flex justify-content-between align-items-center">
+
+    <div class="dropdown show">
+
+      <a id="dropdownMenuLogout" 
+         class="navbar-user-card dropdown-toggle flex-row-between-centered"
+         href="#"
+         role="button"
+         data-toggle="dropdown"
+         aria-haspopup="true"
+         aria-expanded="false">
+
+        <img src="<%= current_user.picture %>" alt="<%= current_user.fullname %>" class='avatar' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+
+      </a>
+
+      <div id='dropdown-user-menu'
+           class="dropdown-menu dropdown-menu-right"
+           aria-labelledby="dropdownMenuLogout">
+
+        <div class="dropdown-card">
+
+          <div class="border-bottom-bld-light-grey">
+
+            <p><%= current_user.fullname%></p>
+            <h6><%= current_user.email%></h6>
+
+          </div>
+
+        </div>
+
+        <div class="dropdown-card">
+          <%= link_to user_path(current_user) do %>
+                <h6>Profile</h6>
+          <% end %>
+        </div>
+
+        <div class="dropdown-card flex-row-between-centered">
+          <%= link_to destroy_user_session_path, method: :delete do %>
+            <h6>Log out</h6>
+          <% end %>
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
+
 </div>

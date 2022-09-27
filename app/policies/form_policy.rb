@@ -1,7 +1,7 @@
 class FormPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      if ['super admin', 'admin', 'training manager'].include? user.access_level
+      if ['super_admin', 'admin', 'training manager'].include? user.access_level
         scope.all
       else
         raise Pundit::NotAuthorizedError, 'not allowed to view this action'
@@ -28,6 +28,6 @@ class FormPolicy < ApplicationPolicy
   private
 
   def check_access
-    ['super admin', 'admin', 'training manager'].include? user.access_level
+    ['super_admin', 'admin', 'training manager'].include? user.access_level
   end
 end

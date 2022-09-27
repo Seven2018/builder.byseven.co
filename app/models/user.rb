@@ -1,8 +1,10 @@
 class User < ApplicationRecord
+  include Users::Access
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :recoverable, :rememberable, :validatable
   devise :omniauthable, omniauth_providers: [:google_oauth2]
+
   has_many :training_ownerships, dependent: :destroy
   has_many :trainings, through: :training_ownerships
   has_many :session_trainers, dependent: :destroy
@@ -12,7 +14,7 @@ class User < ApplicationRecord
   belongs_to :client_company, optional: true
   validates :firstname, :lastname, :email, presence: true
   validates_uniqueness_of :email
-  validates :access_level, inclusion: { in: ['sevener', 'sevener+', 'training manager', 'admin', 'super admin'] }
+  validates :access_level, inclusion: { in: ['sevener', 'sevener+', 'training manager', 'admin', 'super_admin'] }
 
   scope :active, -> {         where(status: :active) }
   scope :inactive, -> {       where(status: :inactive) }
@@ -22,18 +24,20 @@ class User < ApplicationRecord
 
   # SEARCHING USERS BY firstname and lastname
   include PgSearch::Model
-  pg_search_scope :search_by_name,
-    against: [ :firstname, :lastname ],
+  pg_search_scope :search_users,
+    against: [ :firstname, :lastname, :email ],
     using: {
       tsearch: { prefix: true }
     },
     ignoring: :accents
+
 
   enum status: {
     inactive: 0,
     active: 1
   }
 
+  paginates_per 25
 
   #############
   ## METHODS ##
@@ -46,6 +50,10 @@ class User < ApplicationRecord
   def initials
     user = OverviewUser.all(filter: "{Builder_id} = '#{self.id}'").first
     user['Tag']
+  end
+
+  def super_admin?
+    self.access_level == 'super_admin'
   end
 
   def hours(training)

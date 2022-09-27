@@ -13,7 +13,7 @@
           <%= f.submit 'Search', class: 'btn-search' %>
         <% end %>
       <div id="page-buttons">
-        <% if ['super admin', 'admin', 'training manager'].include? current_user.access_level %>
+        <% if ['super_admin', 'admin', 'training manager'].include? current_user.access_level %>
           <%= link_to new_theory_path do %>
             <div class="btn-edit-yellow-mobile">New Theory</div>
             <div class="btn-icon-grey-mobile"><i class="fas fa-plus"></i></div>

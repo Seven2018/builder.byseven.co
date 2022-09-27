@@ -1,0 +1,24 @@
+<% users.each do |user| %>
+
+  <%= link_to user_path(user) do %>
+
+    <div class="index-card-large index-card-small">
+
+      <img class='client-company-logo-index' src='<%= "#{user.picture}" %>' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+
+      <div class="client-company-type-address">
+
+        <p><%= "#{user.lastname.upcase} #{user.firstname.capitalize}" %></p>
+
+        <div>
+          <p><%= user.email %></p>
+          <p><%= user.access_level.capitalize %></p>
+        </div>
+
+      </div>
+
+    </div>
+
+  <% end %>
+
+<% end %>

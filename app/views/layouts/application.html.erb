@@ -1,56 +1,69 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script>
-      var host = "learn.byseven.co";
-      if ((host == window.location.host) && (window.location.protocol != "https:"))
-          window.location.protocol = "https";
-    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Builder by SEVEN</title>
     <!-- <script src="/assets/jquery.js" type="text/javascript"></script> -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed&display=swap" rel="stylesheet">
-    <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
-<!--     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+    <script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
+    <script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
     <script src="https://cdn.ckeditor.com/4.4.5.1/full-all/ckeditor.js"></script>
+
     <%= favicon_link_tag asset_path('favicon.ico') %>
     <%= csrf_meta_tags %>
     <%= action_cable_meta_tag %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= stylesheet_pack_tag 'application' %>
+    <%= javascript_include_tag 'application' %>
+    <%= javascript_pack_tag 'application' %>
+
     <script>
       host = "seven-builder.herokuapp.com"
       if ((host == window.location.host) && (window.location.protocol != "https:")) {
         window.location.protocol = "https"
       }
     </script>
+
   </head>
-    <body>
-     <div class='<%= "wrapper" unless params[:controller] == "pages" && params[:action] == "home" %>'>
-        <% if params[:controller] == "pages" && params[:action] == "home" %>
-        <% elsif params[:controller] == 'attendees' && params[:action] == !'index'%>
-        <% elsif params[:controller] == 'forms' && params[:action] == 'show' %>
-        <% elsif params[:action] == 'export' %>
-        <% elsif !user_signed_in? %>
-        <% else %>
-          <%= render 'shared/navbar' %>
-          <%# render 'shared/left-navbar' %>
-          <%= render 'shared/left-navbar-mobile' %>
-        <% end %>
-        <%= render 'shared/flashes' %>
+
+  <body>
+
+   <div class='<%= "wrapper" unless params[:controller] == "pages" && params[:action] == "home" %>'>
+      <% if params[:controller] == "pages" && params[:action] == "home" %>
+      <% elsif params[:controller] == 'attendees' && params[:action] == !'index'%>
+      <% elsif params[:controller] == 'forms' && params[:action] == 'show' %>
+      <% elsif params[:action] == 'export' %>
+      <% elsif !user_signed_in? %>
+      <% else %>
+        <%= render 'shared/navbar' %>
+        <%# render 'shared/left-navbar' %>
+        <%= render 'shared/left-navbar-mobile' %>
+      <% end %>
+      <%= render 'shared/flashes' %>
+
+      <div id="builder-container"
+           class="overflow-x-hidden pos-rel">
+
         <%= yield %>
-        <%= javascript_include_tag 'application' %>
-        <%= javascript_pack_tag 'application' %>
+
+        <%= render 'shared/impersonations' %>
       </div>
-      <%= content_for :render_async %>
-    </body>
+    </div>
+
+    <%= content_for :render_async %>
+
+    <div id="bld-blockDiv"
+         class="d-none"
+         onclick='return false'>
+    </div>
+
+  </body>
 </html>
 
 <!-- Modal -->

@@ -98,7 +98,6 @@
               <%= text_field_tag(
                           "session[start_time]",
                           session.start_time,
-                          as: :string,
                           type: :time,
                           label: false,
                           class: 'border-none bld-bg-transparent text-center timepicker_24 px-0_5rem border-bottom-bld-black-1px-hover',
@@ -113,7 +112,6 @@
               <%= text_field_tag(
                           "session[end_time]",
                           session.end_time,
-                          as: :string,
                           type: :time,
                           label: false,
                           class: 'border-none bld-bg-transparent text-center timepicker_24 px-0_5rem border-bottom-bld-black-1px-hover',
@@ -206,7 +204,7 @@
 
           <% end %>
 
-          <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
+          <% if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level) %>
 
             <button class="avatar-sm-add ava2" data-toggle='modal' data-target='#addTrainer<%= session.id %>' data-toggle="tooltip" title="Add Trainer"><i class="fas fa-plus"></i></button>
 
@@ -231,7 +229,7 @@
 
       <div class="sessions-alert">
 
-        <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
+        <% if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level) %>
 
           <% if timing_error %>
 
@@ -251,7 +249,7 @@
 
       <div class='sessions-copy'>
 
-        <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
+        <% if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level) %>
 
           <div class='btn-icon-grey-delete' onclick='openSessionForm(this)'><i class="fas fa-pen"></i></div>
 
@@ -304,7 +302,7 @@
 
         </div>
 
-        <% if ['super admin', 'admin', 'project manager'].include?(current_user.access_level) %>
+        <% if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level) %>
 
           <div class="sessions-menu" onclick="openContentMenu(this);"><i class="fas fa-ellipsis-v"></i></div>
 

@@ -1,0 +1,150 @@
+<% @invoice_items.each do |item| %>
+
+  <div class="invoice-card">
+
+    <div class='item-id invoice-card-link'>
+      <p><%= item.uuid %></p>
+      <p><%= InvoiceItem.includes(:client_company).find(item.id).client_company.name %></p>
+    </div>
+
+    <div class="item-id invoice-card-link">
+
+      <p>Sending date</p>
+
+      <% if item.sending_date.present? %>
+        <p><%= item.sending_date&.strftime('%d/%m/%y') %></p>
+      <% end %>
+
+    </div>
+
+    <div class="item-id invoice-card-link">
+
+      <p>Payment date</p>
+
+      <% if item.payment_date.present? %>
+        <p><%= item.payment_date&.strftime('%d/%m/%y') %></p>
+      <% end %>
+
+    </div>
+
+    <div class="item-id invoice-card-link">
+      <p><%= number_with_precision(item.total_amount, precision: 2) %>€</p>
+    </div>
+
+    <div class="invoice-list-controls">
+
+      <%= link_to invoice_item_path(item), class: 'btn btn-icon',
+                                           data: {
+                                            toggle: 'tooltip'
+                                           },
+                                           title: 'Edit' do %>
+        <i class="fas fa-pencil-alt bld-dark-grey"></i>
+      <% end %>
+
+      <%= link_to invoice_item_path(item, format: :pdf), target: :_blank,
+                                                         class: 'btn btn-icon',
+                                                         data: {
+                                                           toggle: 'tooltip'
+                                                         },
+                                                         title: 'View' do %>
+        <i class="fas fa-eye bld-dark-grey"></i>
+      <% end %>
+
+      <% if params[:type] == 'Invoice' %>
+
+        <a class='btn btn-icon' 
+           data-toggle='modal tooltip'
+           type='button'
+           data-target='#editSending<%= item.id %>'
+           title='Send'>
+          <i class="fas fa-paper-plane bld-dark-grey"></i>
+        </a>
+
+        <a class='btn btn-icon'
+           data-toggle='modal tooltip'
+           type='button'
+           data-target='#editPayment<%= item.id %>'
+           title='Paid'>
+          <i class="fas fa-euro-sign bld-dark-grey"></i>
+        </a>
+
+        <%= link_to marked_as_cancelled_invoice_item_path(item), class: 'btn btn-icon',
+                                                                 data: {
+                                                                  toggle: 'tooltip'
+                                                                 },
+                                                                 title: 'Cancel' do %>
+          <i class="fas fa-skull-crossbones bld-dark-grey"></i>
+        <% end %>
+
+      <% else %>
+
+        <%= link_to transform_to_invoice_path(item), class: 'btn btn-icon',
+                                                     data: {
+                                                      toggle: 'tooltip'
+                                                     },
+                                                     title: 'Transform to invoice' do %>
+            <i class="fas fa-file-invoice-dollar"></i>
+        <% end %>
+
+      <% end %>
+
+    </div>
+
+    <div class='item-status'>
+
+      <% if item.status == 'Credit' %>
+
+        <i class="fas fa-exclamation-triangle"></i>
+
+      <% elsif item.status == 'Cancelled' %>
+
+        <i class="far fa-times-circle"></i>
+
+      <% elsif item.payment_date.present? %>
+
+        <i class="far fa-check-circle"></i>
+
+      <% else %>
+
+        <i class="fas fa-ellipsis-h"></i>
+
+      <% end %>
+
+    </div>
+
+  </div>
+
+
+  <!------------>
+  <!-- MODALS -->
+  <!------------>
+
+  <div id="editSending<%= item.id %>"
+       class="modal fade"
+       tabindex="-1"
+       role="dialog"
+       data-backdrop="static"
+       data-keyboard="false">
+
+    <div class="modal-dialog" role="document" style="border-radius: 2rem">
+      <%= render 'invoice_items/edit_sending', item: item %>
+    </div>
+
+  </div>
+
+  <div id="editPayment<%= item.id %>"
+       class="modal fade"
+       tabindex="-1"
+       role="dialog"
+       data-backdrop="static"
+       data-keyboard="false">
+
+    <div class="modal-dialog" role="document" style="border-radius: 2rem">
+      <%= render 'invoice_items/edit_payment', item: item %>
+    </div>
+
+  </div>
+
+  <!------------>
+
+<% end %>

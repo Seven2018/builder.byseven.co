@@ -98,7 +98,7 @@ GEM
     bindex (0.8.1)
     bootsnap (1.9.1)
       msgpack (~> 1.0)
-    bootstrap (4.3.1)
+    bootstrap (4.4.1)
       autoprefixer-rails (>= 9.1.0)
       popper_js (>= 1.14.3, < 2)
       sassc-rails (>= 2.0.0)
@@ -299,12 +299,14 @@ GEM
     pg_search (2.3.5)
       activerecord (>= 5.2)
       activesupport (>= 5.2)
-    popper_js (1.16.0)
+    popper_js (1.16.1)
     postmark (1.22.1)
       json
     postmark-rails (0.22.1)
       actionmailer (>= 3.0.0)
       postmark (>= 1.21.3, < 2.0)
+    pretender (0.4.0)
+      actionpack (>= 5.2)
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -493,7 +495,7 @@ DEPENDENCIES
   airrecord
   autoprefixer-rails
   bootsnap
-  bootstrap (= 4.3.1)
+  bootstrap (~> 4.4.1)
   bullet
   ckeditor!
   devise!
@@ -520,6 +522,7 @@ DEPENDENCIES
   pg (~> 0.21)
   pg_search
   postmark-rails
+  pretender
   pry-byebug
   pry-rails
   puma

@@ -43,6 +43,7 @@ gem "omniauth-rails_csrf_protection"
 gem 'omniauth-google-oauth2'
 gem 'omniauth-linkedin-oauth2'
 gem "linkedin-v2"
+gem 'pretender'
 
 
 ########
@@ -71,7 +72,7 @@ gem 'google_drive'
 gem 'render_async'
 gem 'image_processing'
 gem 'invisible_captcha'
-gem 'bootstrap',     '4.3.1'
+gem 'bootstrap',  '~> 4.4.1'
 gem 'sprockets-rails', :require => 'sprockets/railtie'
 gem 'material-sass', git: 'https://github.com/bricechapuis/material-sass'
 gem 'exception_handler', '~> 0.8.0.0'

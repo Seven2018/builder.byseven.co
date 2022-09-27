@@ -45,7 +45,7 @@
     <% end %>
   <% end %>
 <% end %>
-<% if (['super admin', 'admin', 'training manager'].include? current_user.access_level) %>
+<% if (['super_admin', 'admin', 'training manager'].include? current_user.access_level) %>
   <% if trainer_array.uniq.count > 1 %>
     <li><button class='avatar-sm-add ava' data-toggle='modal' data-target='#newTrainers'><i class="fas fa-plus" style='color:#888888; font-size:20px;' data-toggle='tooltip' title='Add Trainer' data-placement="bottom"></i></button></li>
   <% else %>

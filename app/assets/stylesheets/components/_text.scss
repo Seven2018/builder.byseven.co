@@ -1,37 +1,113 @@
-h1, h2, h3, h4, h4, h6, p, a, ul, ol, li, span, div {
+// RESET
+
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  // font-size: 100%;
+  // font: inherit;
+  vertical-align: baseline;
   font-family: 'Montserrat';
 }
 
-h2, h3 {
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+// RESET END
+
+h1 {
+  font-size: 2.4rem;
+  font-weight: bolder;
+
+  @include from-large {
+    font-size: 3.2rem;
+  }
+}
+
+h2 {
+  font-size: 2rem;
+
   @include from-large {
     font-size: 2.4rem !important;
   }
 }
 
-h4 {
-  font-size: 1.5rem;
-    @include from-large {
+h3 {
+  font-size: 1.6rem;
+
+  @include from-large {
     font-size: 2rem;
-    }
+  }
 }
 
-h5 {
+h4 {
   @include from-large {
-    font-size: 1.6rem !important;
+    font-size: 2rem !important;
   }
 }
 
 h6 {
-  font-size: 1.2rem !important;
-}
-
-label {
-  font-size: 1.4rem !important;
-}
-
-div, p, i {
-  margin: 0;
   font-size: 1.6rem;
+}
+
+p, i, span, li {
+  font-size: 1rem;
+
+  @include from-medium {
+    font-size: 1.6rem;
+  }
+}
+
+li {
+  margin-bottom: 1rem;
 }
 
 a {
@@ -44,12 +120,15 @@ a {
     text-decoration: none;
     color: black;
   }
+
+  &.disabled {
+    // pointer-events: none !important;
+    cursor: not-allowed;
+  }
 }
 
 button {
-    @include from-large {
-    font-size: 1.6rem;
-  }
+  font-size: 1.6rem;
 }
 
 *:focus {
@@ -60,91 +139,51 @@ ul {
   list-style-type: none;
 }
 
+label {
+  margin-bottom: 1rem;
+}
+
 input, select {
   font-size: 1.6rem !important;
 }
 
-.search-bar {
-
-  input {
-    height: 4rem !important;
-  }
+input[type='checkbox']:checked + label {
+  color: black;
 }
 
-input[type='checkbox']:checked + label {
-  color: black !important;
+select {
+
+  &::after {
+    content: "";
+    justify-self: end;
+    width: 0.8em;
+    height: 0.5em;
+    background-color: var(--select-arrow);
+    clip-path: polygon(100% 0%, 0 0%, 50% 100%);
+  }
 }
 
 textarea {
   font-size: 1.6rem !important;
 }
 
-trix-toolbar {
-  font-size: 1.4rem;
+input::placeholder, textarea::placeholder {
+  color: #C4C4C4 !important;
 }
 
-trix-editor {
-  // border: 1px solid #bbb;
-  // border-radius: 3px !important;
-  // padding: 0.4em 0.6em !important;
-  // outline: none !important;
-  height: 30rem !important;
-  overflow: scroll !important;
-  font-family: "Montserrat" !important;
-  font-size: 15px !important;
-  padding: 10px !important;
-
-  ul {
-    list-style-type: disc;
-  }
-
-  &:hover {
-    border-color: black;
-  }
-
-  &:focus {
-    border-color: #FFC65A;
-  }
+input:focus::placeholder, textarea:focus::placeholder {
+  color: transparent;
+  opacity: 0;
 }
 
-/* styles for '...' */
-.block-with-text {
-  width: 18rem;
-  /* hide text if it more than N lines  */
-  overflow: hidden;
-  /* for set '...' in absolute position */
-  position: relative;
-  /* use this value to count block height */
-  line-height: 1.2em;
-  /* max-height = line-height (1.2) * lines max number (3) */
-  max-height: 4em;
-  /* fix problem when last visible word doesn't adjoin right side  */
-  // text-align: justify;
-  /* place for '...' */
-  margin-right: -1em;
+strong {
+  font-weight: bolder !important;
 }
-// /* create the ... */
-// .block-with-text:before {
-//   /* points in the end */
-//   content: '...';
-//   /* absolute position */
-//   position: absolute;
-//   /* set position to right bottom corner of block */
-//   right: 0;
-//   bottom: -1px;
-// }
-// /* hide ... if we have text, which is less than or equal to max lines */
-// .block-with-text:after {
-//   /* points in the end */
-//   content: '';
-//   /* absolute position */
-//   position: absolute;
-//   /* set position to right bottom corner of text */
-//   right: 0;
-//   /* set width and height */
-//   width: 1em;
-//   height: 1em;
-//   margin-top: 0.2em;
-//   /* bg color = bg color under block */
-//   background: white;
-// }
+
+em {
+  font-style: italic !important;
+}
+
+.bolder {
+  font-weight: bolder;
+}
