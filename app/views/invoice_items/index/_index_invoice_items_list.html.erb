@@ -1,29 +1,29 @@
 <% @invoice_items.each do |item| %>
 
-  <div class="invoice-card">
+  <div class="invoice-card d-flex align-items-center">
 
     <div class='item-id invoice-card-link'>
-      <p><%= item.uuid %></p>
+      <p class="fs-1_6rem mb-0_5rem"><%= item.uuid %></p>
       <p><%= InvoiceItem.includes(:client_company).find(item.id).client_company.name %></p>
     </div>
 
     <div class="item-id invoice-card-link">
 
-      <p>Sending date</p>
+      <p class="fs-1_6rem mb-0_5rem">Sending date</p>
 
-      <% if item.sending_date.present? %>
-        <p><%= item.sending_date&.strftime('%d/%m/%y') %></p>
-      <% end %>
+      <p class="fs-1_6rem" style="height: 1.8rem;">
+        <%= item.sending_date&.strftime('%d/%m/%y').presence || ' ' %>
+      </p>
 
     </div>
 
     <div class="item-id invoice-card-link">
 
-      <p>Payment date</p>
+      <p class="fs-1_6rem mb-0_5rem">Payment date</p>
 
-      <% if item.payment_date.present? %>
-        <p><%= item.payment_date&.strftime('%d/%m/%y') %></p>
-      <% end %>
+      <p class="fs-1_6rem" style="height: 1.8rem;">
+        <%= item.payment_date&.strftime('%d/%m/%y').presence || '' %>
+      </p>
 
     </div>
 
@@ -53,7 +53,7 @@
       <% if params[:type] == 'Invoice' %>
 
         <a class='btn btn-icon' 
-           data-toggle='modal tooltip'
+           data-toggle='modal'
            type='button'
            data-target='#editSending<%= item.id %>'
            title='Send'>
@@ -61,7 +61,7 @@
         </a>
 
         <a class='btn btn-icon'
-           data-toggle='modal tooltip'
+           data-toggle='modal'
            type='button'
            data-target='#editPayment<%= item.id %>'
            title='Paid'>

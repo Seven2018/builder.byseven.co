@@ -5,7 +5,7 @@
 .fs-sm-1_2rem    { @include from-medium { font-size: 1.2rem !important; }}
 .fs-1_4rem       { font-size: 1.4rem !important; }
 .fs-1_5rem       { font-size: 1.5rem !important; }
-.fs-1_6rem       { font-size: 1.6rem !important; }
+.fs-1_6rem       { font-size: 1.6rem !important; line-height: 1.8rem; }
 .fs-sm-1_6rem    { @include from-medium { font-size: 1.6rem !important; }}
 .fs-1_8rem       { font-size: 1.8rem !important; }
 .fs-2rem         { font-size: 2rem !important; }
