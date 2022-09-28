@@ -4,7 +4,7 @@
 
     <div class='item-id invoice-card-link'>
       <p class="fs-1_6rem mb-0_5rem"><%= item.uuid %></p>
-      <p><%= InvoiceItem.includes(:client_company).find(item.id).client_company.name %></p>
+      <p class="fs-1_6rem"><%= InvoiceItem.includes(:client_company).find(item.id).client_company.name %></p>
     </div>
 
     <div class="item-id invoice-card-link">
@@ -28,7 +28,7 @@
     </div>
 
     <div class="item-id invoice-card-link">
-      <p><%= number_with_precision(item.total_amount, precision: 2) %>€</p>
+      <p class="fs-1_6rem"><%= number_with_precision(item.total_amount, precision: 2) %>€</p>
     </div>
 
     <div class="invoice-list-controls">
@@ -148,3 +148,10 @@
   <!------------>
 
 <% end %>
+
+<script>
+  flatpickr(".datepicker", {
+    disableMobile: true,
+    dateFormat: "d/m/Y",
+  })
+</script>
