@@ -1,4 +1,4 @@
-<% Training.where(training_type: 'Home').order(title: :asc).each do |training| %>
+<% trainings.each do |training| %>
 
   <div class="training-card" id="card-index" data-toggle='tooltip' title='<%= training.title %>'>
 
@@ -25,14 +25,14 @@
 
               </div>
 
-              <img src="<%= Training.includes(:client_contact).find(training.id).client_contact.client_company.logo %>"
+              <img src="<%= training.client_contact.client_company.logo %>"
                    class='lazyload client-logo width-5rem min-width-5rem height-5rem ml-0_5rem'>
 
             </div>
 
           </div>
 
-          <%= training.sessions.count.to_s + " " + "Sessions" %>
+          <%= training.sessions.count.to_s + " Sessions" %>
           <% owners = training.owners %>
           <% u = 1 %>
 

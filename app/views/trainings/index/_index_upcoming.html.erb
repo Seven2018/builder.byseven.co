@@ -1,6 +1,12 @@
 <% @upcoming_trainings.each do |training| %>
 
-  <% if training.sessions.select(:date).where(date: nil).empty? || ['sevener+', 'sevener'].include?(current_user.access_level) %>
+  <% sessions = ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) ? 
+                training.sessions : training.sessions.where_exists(:session_trainers, user_id: current_user.id) %>
+  <% sessions = sessions.order(date: :asc).pluck(:date) %>
+  <% first_session = sessions.first %>
+  <% last_session = sessions.last %>
+
+  <%# if training.sessions.select(:date).where(date: nil).empty? || ['sevener+', 'sevener'].include?(current_user.access_level) %>
 
       <div class="training-card" id="card-index" data-toggle='tooltip' title='<%= training.title %>'>
 
@@ -8,26 +14,15 @@
 
           <div class="training-card-infos">
 
-            <% sessions = training.sessions.order(date: :asc).pluck(:date) %>
-
             <div class='training-card-infos-elements'>
 
               <% if sessions.count == 1 %>
 
-                <%= " On #{sessions.first&.strftime('%d %b, %Y')}" %>
+                <p><%= " On #{first_session&.strftime('%d %b, %Y')}" %></p>
 
               <% else %>
 
-                <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-
-                  <%= " #{sessions.first&.strftime('%d %b, %Y')} to #{sessions.last&.strftime('%d %b, %Y')}" %>
-
-                <% else %>
-
-                  <% trainer_sessions = Session.joins(:session_trainers).where(training_id: training.id, session_trainers: {user_id: current_user.id}).order(date: :asc).pluck(:date) %>
-                  <%= " #{trainer_sessions.first&.strftime('%d %b %Y')} to #{trainer_sessions.last&.strftime('%d %b, %Y')}" %>
-
-                <% end %>
+                <p><span class="font-weight-600"><%= first_session&.strftime('%d %b, %Y') %></span> - <span class="font-weight-600"><%= last_session&.strftime('%d %b, %Y') %></span></p>
 
               <% end %>
 
@@ -54,15 +49,17 @@
 
                   </div>
 
-                  <img src="<%= Training.includes(:client_contact).find(training.id).client_contact.client_company.logo %>"
-                   class='lazyload client-logo width-5rem min-width-5rem height-5rem ml-0_5rem'>
+                  <img src="<%= training.client_contact.client_company.logo %>"
+                       class='lazyload client-logo width-5rem min-width-5rem height-5rem ml-0_5rem'>
 
                 </div>
 
               </div>
 
-              <%= training.sessions.count.to_s + " " + "Sessions" %>
+              <%= sessions.count.to_s + " Sessions" %>
               <% owners = training.owners %>
+              <% sidekicks = training.sidekicks %>
+              <% writers = training.writers%>
               <% u = 1 %>
 
               <% if owners.present? %>
@@ -72,16 +69,12 @@
 
               <% end %>
 
-              <% sidekicks = training.sidekicks %>
-
               <% if sidekicks.present? %>
 
                 <img class="lazyload avatar-sm-sidekick training-card-user training-card-user-<%= u %>" src="<%= sidekicks.first.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
                 <% u += 1 %>
 
               <% end %>
-
-              <% writers = training.writers%>
 
               <% if writers.present? %>
 
@@ -97,6 +90,6 @@
 
       </div>
 
-  <% end %>
+  <%# end %>
 
 <% end %>
