@@ -5,7 +5,7 @@ class AddAirtableIdToTraining < ActiveRecord::Migration[6.0]
     Training.all.each do |training|
       airtable_training = OverviewTraining.all(filter: "{Builder_id} = '#{training.id}'")&.first
 
-      if airtable_training.present?
+      if airtable_training.present? && !training.airtable_id.present?
         training.update airtable_id: airtable_training.id
       end
     end
