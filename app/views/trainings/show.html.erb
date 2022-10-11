@@ -278,9 +278,9 @@
 
 </div>
 
-<% if @airtable_training.present? %>
+<%# if @airtable_training.id.present? %>
 
-  <div id="consultObjectives"
+<!--   <div id="consultObjectives"
        class="modal fade"
        tabindex="-1"
        role="dialog"
@@ -290,12 +290,12 @@
     <div class="modal-dialog modal-lg"
          role="document"
          style="border-radius: 20px">
-      <%= render 'show_objectives', training: @training %>
+      <%# render 'show_objectives', training: @training, airtable_training: @airtable_training %>
     </div>
 
-  </div>
+  </div> -->
 
-<% end %>
+<%# end %>
 
 <% @training.sessions.each do |session| %>
 
