@@ -241,7 +241,7 @@ class Training < ApplicationRecord
 
   def export_numbers_sevener(user)
     # begin
-      cards = OverviewNumbersSevener.all(filter: "{Reference SEVEN} = '#{self.refid}'")
+      cards = OverviewNumbersSevener.all(filter: "{Training_id} = '#{self.id}'")
 
       cards.each do |trainer|
         unless self.trainers.map{|x| x.id}.include?(OverviewUser.find(trainer['Sevener'].join)['Builder_id'])
@@ -251,9 +251,7 @@ class Training < ApplicationRecord
 
       if ['sevener', 'sevener+'].include?(user.access_level)
         sevener = OverviewUser.all(filter: "{Builder_id} = '#{user.id}'")&.first
-        # card = OverviewNumbersSevener.all.select{|x| x['Reference SEVEN'] == [self.refid] && x['Sevener'] == [sevener.id]}&.first
-        card = OverviewNumbersSevener.all(filter: "{Reference SEVEN} = '#{[self.refid]}'" && "{Sevener} = '#{[sevener.id]}'").first
-        # invoices = OverviewInvoiceSevener.all.select{|x| x['Training Reference'] == [self.refid] && x['Sevener'] == [sevener.id]}
+        card = OverviewNumbersSevener.all(filter: "{Training_id} = '#{self.id}'").select{|x| x['Sevener'] == [sevener.id]}&.first
         invoices = OverviewInvoiceSevener.all(filter: "{Training Reference} = '#{[self.refid]}'" && "{Sevener} = '#{[sevener.id]}'")
         dates = ''
 

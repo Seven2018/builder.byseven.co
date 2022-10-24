@@ -7,11 +7,13 @@ class UpdateAirtableJob < ApplicationJob
     if numbers_sevener.present?
       training.trainers.each{|y| training.export_numbers_sevener(y)}
     end
+
     if invoice_item.present?
       invoice_item.export_numbers_revenue if invoice_item.type = 'Invoice'
     else
       training.export_numbers_activity
     end
+
     training.export_airtable
   end
 end
