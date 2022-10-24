@@ -166,55 +166,67 @@
       <% users = User.where(id: session.session_trainers.where(status: nil).map(&:user_id)).order(lastname: :asc) %>
       <% user_names = users.map{|x| x.fullname}.join("\n") %>
 
-      <div style='display:flex;align-items:center;position: absolute;right: 0px;top: -62px;'>
+      <div class="d-flex align-items-center pos-abs"
+           style='right: 0px; top: -62px;'>
 
-        <ul id="owner-session-index">
+        <div id="owner-session-index"
+             class="d-flex flex-row-reverse align-items-center mr-2rem">
 
           <% users.first(3).each do |user| %>
 
-            <li>
+            <% if user.picture.present? %>
 
-              <% if user.picture.present? %>
+              <a class="mr--1rem"
+                 data-toggle='modal'
+                 data-target='#consultUser<%= user.id %>'>
 
-                <a class="ava2" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-trainer' data-placement="bottom" title='Trainer:  <%= "#{user.fullname}" %>'></a>
+                <img src='<%= "#{user.picture}" %>'
+                     class='avatar-sm-trainer'
+                     title='Trainer:  <%= "#{user.fullname}" %>'>
 
-              <% else %>
-                <a class="a
-                va2" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-trainer' data-placement="bottom" title='Trainer:  <%= "#{user.fullname}" %>'></a>
+              </a>
 
-              <% end %>
+            <% else %>
 
-            </li>
+              <a class="mr--1rem"
+                 data-toggle='modal'
+                 data-target='#consultUser<%= user.id %>'>
 
-            <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                 <img src='<%= asset_path('empty-avatar.png', type: :image) %>'
+                      class='avatar-sm-trainer'
+                      title='Trainer:  <%= "#{user.fullname}" %>'>
 
-              <div class="modal-dialog" role="document" style="border-radius: 2rem">
-                <%= render 'users/consult', user: user %>
-              </div>
+              </a>
 
-            </div>
+            <% end %>
 
           <% end %>
 
           <% if users.count > 3 %>
 
-            <div class="avatar-sm-add ava2" data-toggle='tooltip' title="<%= user_names %>">
+            <div class="avatar-sm-add mr--1rem"
+                 title="<%= user_names %>">
+
               <i class="fas fa-ellipsis-h"></i>
+
             </div>
 
           <% end %>
 
           <% if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level) %>
 
-            <button class="avatar-sm-add ava2" data-toggle='modal' data-target='#addTrainer<%= session.id %>' data-toggle="tooltip" title="Add Trainer"><i class="fas fa-plus"></i></button>
+            <button class="avatar-sm-add mr--1rem"
+                    data-toggle='modal'
+                    data-target='#addTrainer<%= session.id %>'
+                    title="Add Trainer">
 
-          <% else %>
+              <i class="fas fa-plus"></i>
 
-            <button class="avatar-sm-add ava2" data-toggle="tooltip" title="Disabled"><i class="fas fa-plus"></i></button>
+            </button>
 
           <% end %>
 
-        </ul>
+        </div>
 
       </div>
 
@@ -304,7 +316,11 @@
 
         <% if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level) %>
 
-          <div class="sessions-menu" onclick="openContentMenu(this);"><i class="fas fa-ellipsis-v"></i></div>
+          <div class="sessions-menu cursor-pointer" onclick="openContentMenu(this);">
+
+            <i class="fas fa-ellipsis-v"></i>
+
+          </div>
 
           <div class="content-dropdown hidden">
 

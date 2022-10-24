@@ -1,0 +1,183 @@
+<div id='library' class="nav-side-menu-container">
+
+  <div class="nav-side-menu">
+
+    <div class="d-flex justify-content-center align-items-center pos-rel height-10rem">
+
+      <p class="fs-1_8rem font-weight-700">Workshops</p>
+
+      <a class='centered-item pos-abs height-2_5rem width-2_5rem bld-bg-light-grey2-hover'
+         style="top: 3.75rem; right: 0;"
+         data-action="click->sessions--sessions-show#hideLibrary">
+
+        <i class="fas fa-times"></i>
+
+      </a>
+      
+    </div>
+
+
+    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+
+    <div class="menu-list">
+
+      <% status = !params[:search].nil? %>
+
+      <%= simple_form_for :search, url: training_session_path(@session.training, @session), html: { class: 'sidebar-search' }, method: 'GET' do |f| %>
+
+        <%= f.input :title, placeholder: 'Search', label: false %>
+
+        <% if params[:search] %>
+
+          <%= link_to training_session_path(@session.training, @session, end_search: true), class: 'sidebar-search-close' do %>
+            <i class="fas fa-times-circle"></i>
+          <% end %>
+
+        <% end %>
+
+      <% end %>
+
+      <div class="d-flex flex-column align-items-start">
+        
+        <%= link_to training_session_workshops_path(@session.training, @session), method: :post,
+                                                                                  class: "px-2_5rem py-1rem",
+                                                                                  remote: true do %>
+          Vide - à personnaliser
+        <% end %>
+
+        <% pause = Content.where(title: 'Pause') %>
+        <% pausedej = Content.where(title: 'Pause Déjeuner') %>
+
+        <%= link_to training_session_workshops_path(@session.training, @session, content_id: pause.first.id),
+                                                                                 method: :post,
+                                                                                 class: "px-2_5rem py-1rem",
+                                                                                 remote: true do %>
+          Pause
+        <% end %>
+
+        <%= link_to training_session_workshops_path(@session.training, @session, content_id: pausedej.first.id),
+                                                                                 method: :post,
+                                                                                 class: "px-2_5rem py-1rem",
+                                                                                 remote: true do %>
+          Pause Déjeuner
+        <% end %>
+
+      </div>
+
+
+      <% if status %>
+
+        <ul id='myUL'>
+
+          <% (Content.where("lower(title) LIKE :query", query:"%#{params[:search][:title].downcase}%") + Content.joins(:content_modules).where("lower(content_modules.title) LIKE :query", query:"%#{params[:search][:title].downcase}%") + Content.joins(:theories).where("lower(theories.description) LIKE :query", query:"%#{params[:search][:title].downcase}%") + Content.joins(:theories).where("lower(theories.name) LIKE :query", query:"%#{params[:search][:title].downcase}%")).uniq.each do |content| %>
+
+            <%= link_to training_session_workshops_path(@session.training, @session, content_id: content.id), method: :post, remote: true do %>
+              <li class='myUL-li-theme-sidebar'>+ <%= content.title %></li>
+            <% end %>
+
+          <% end %>
+
+        </ul>
+
+      <% else %>
+
+        <ul id='myUL' class='myUL-sidebar'>
+
+          <% Theme.includes(:children, :parent).walk_tree do |theme, level| %>
+
+            <% if theme.children.empty? && theme.level == 0 && !['Ice breaker', 'Présentation', 'Conclusion'].include?(theme.name) %>
+
+              <li>
+
+                <span class="caret sidebar-caret"><%= theme.name %></span>
+
+                <ul class="nested">
+
+                  <% Theme.includes(:contents).find(theme.id).contents.order(title: :asc).each do |content| %>
+
+                    <%= link_to training_session_workshops_path(@session.training, @session, content_id: content.id), method: :post, remote: true do %>
+                      <li>+ <%= content.title %></li>
+                    <% end %>
+
+                  <% end %>
+
+                </ul>
+
+              </li>
+
+            <% elsif theme.level == 0 && theme.children != [] %>
+
+              <li>
+
+                <span class="caret sidebar-caret"><%= theme.name %></span>
+
+                <ul class="nested">
+
+                  <% theme.children.each do |subtheme| %>
+
+                    <li>
+                      <span class="caret"><%= subtheme.name %></span>
+
+                      <ul class="nested">
+
+                        <% subtheme.contents.each do |content| %>
+
+                          <%= link_to training_session_workshops_path(@session.training, @session, content_id: content.id), method: :post, remote: true do %>
+
+                            <li>+ <%= content.title %></li>
+                          <% end %>
+
+                        <% end %>
+
+                      </ul>
+
+                    </li>
+
+                  <% end %>
+
+                </ul>
+
+              </li>
+
+            <% end %>
+
+          <% end %>
+
+        </ul>
+
+        <ul id='myUL' class='myUL-sidebar'>
+
+          <% Theme.all.each do |theme| %>
+
+            <% if ['Ice breaker', 'Présentation', 'Conclusion'].include?(theme.name) %>
+
+              <li>
+                <span class="caret sidebar-caret"><%= theme.name %></span>
+
+                <ul class="nested">
+
+                  <% Theme.includes(:contents).find(theme.id).contents.order(title: :asc).each do |content| %>
+
+                    <%= link_to training_session_workshops_path(@session.training, @session, content_id: content.id), method: :post, remote: true do %>
+                      <li>+ <%= content.title %></li>
+                    <% end %>
+
+                  <% end %>
+
+                </ul>
+
+              </li>
+
+            <% end %>
+
+          <% end %>
+
+        </ul>
+
+      <% end %>
+
+    </div>
+
+  </div>
+
+</div>

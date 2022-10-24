@@ -30,19 +30,50 @@
                                           toggle: 'tooltip'
                                          },
                                          title: 'Update Calendar' do %>
-          <i class="fas fa-calendar-check" style='font-size: 20px'></i>
+
+          <i class="fas fa-calendar-check fs-2rem"></i>
+
         <% end %>
 
-        <a class='btn-icon-grey' id='add-session-button' data-toggle='modal' data-target='#newSession' data-toggle="tooltip" title="Add Session"><i class="fas fa-plus"></i></a>
-        <a class='btn-icon-grey' data-toggle='modal' data-target='#copyTraining' data-toggle="tooltip" title="Copy"><i class="fas fa-copy"></i></a>
+        <a id='add-session-button'
+           class='btn-icon-grey'
+           data-toggle='modal'
+           data-target='#newSession'
+           title="Add Session">
+
+          <i class="fas fa-plus"></i>
+
+        </a>
+
+        <a class='btn-icon-grey'
+           data-toggle='modal'
+           data-target='#copyTraining'
+           title="Copy">
+
+          <i class="fas fa-copy"></i>
+
+        </a>
 
         <div class="dropdown">
 
-          <div class='btn-icon-grey dropdown-toggle' id="dropdownNotificationButton" data-toggle="dropdown"><i class="fas fa-envelope"></i></div>
+          <div id="dropdownNotificationButton"
+               class='btn-icon-grey dropdown-toggle'
+               data-toggle="dropdown">
+
+            <i class="fas fa-envelope"></i>
+
+          </div>
 
           <ul class="dropdown-menu dropdown-menu-right navbar-wagon-dropdown-menu" aria-labelledby="dropdownNotificationButton">
+
             <li><%= link_to 'Send summary', trainer_notification_email_path(@training, status: 'new') %></li>
-            <li><a data-toggle='modal' type='button' data-target='#updateNotificationSelect' style='cursor:pointer;'>Send updated summary</a></li>
+
+            <li>
+              <a class="cursor-pointer"
+                 data-toggle='modal'
+                 data-target='#updateNotificationSelect'>Send updated summary</a>
+            </li>
+
           </ul>
 
         </div>
@@ -117,56 +148,61 @@
 
       </div>
 
-      <p><%="From #{@training.sessions.order(date: :asc).first&.date&.strftime('%d/%m/%y')} to #{@training.sessions.order(date: :asc).last&.date&.strftime('%d/%m/%y')}" %></p>
+      <p class="mb-1rem">
+        <%="From #{@training.sessions.order(date: :asc).first&.date&.strftime('%d/%m/%y')} to #{@training.sessions.order(date: :asc).last&.date&.strftime('%d/%m/%y')}" %>
+      </p>
 
     </div>
 
-    <div class='middle-info-user'>
+    <div class='middle-info-user d-flex flex-row-reverse align-items-center mr-1rem'>
       <%= render 'trainings/partials/show_training_users', training: @training %>
     </div>
 
-    <div class="middle-info2">
+  </div>
 
-      <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+  <div class="middle-info2">
 
-        <p id='survey-link'>Link to survey : <%= @training.satisfaction_survey %></p>
+    <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
 
-        <%= simple_form_for @training, html: { class: "hidden", id: 'survey-form' } do |f| %>
+      <p id='survey-link'>Link to survey : <%= @training.satisfaction_survey %></p>
 
-          <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+      <%= simple_form_for @training, html: { class: "hidden", id: 'survey-form' } do |f| %>
 
-            <%= f.input :satisfaction_survey, placeholder: 'Add a link to the survey', value: @training.satisfaction_survey, label: false, input_html: { style: 'width: 200px;'} %>
-            <%= button_tag type: 'submit', class: 'btn btn-add-user', input_html: { style: 'height: 3.5rem' } do %>
-              Update
-            <% end %>
+        <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
 
-          </div>
+          <%= f.input :satisfaction_survey, placeholder: 'Add a link to the survey', value: @training.satisfaction_survey, label: false, input_html: { style: 'width: 200px;'} %>
+          <%= button_tag type: 'submit', class: 'btn btn-add-user', input_html: { style: 'height: 3.5rem' } do %>
+            Update
+          <% end %>
 
-        <% end %>
-
-      <% else %>
-
-        <p id='survey-link'>Link to survey : <%= @training.satisfaction_survey %></p>
+        </div>
 
       <% end %>
 
-      <% next_sessions = @training.sessions.order(date: :asc).where('date >= ?', Date.today) %>
+    <% else %>
 
-      <% if next_sessions.present? && next_sessions&.first&.description&.present? %>
-        <a href="<%= next_sessions.first.description %>" target="_blank">Lien Google Meet</a>
-      <% end %>
+      <p id='survey-link'>Link to survey : <%= @training.satisfaction_survey %></p>
 
-    </div>
+    <% end %>
 
-    <div class="training-info">
+    <% next_sessions = @training.sessions.order(date: :asc).where('date >= ?', Date.today) %>
 
-      <div class="sessions-cards">
-        <%= render 'trainings/partials/show_sessions', training: @training %>
-      </div>
+    <% if next_sessions.present? && next_sessions&.first&.description&.present? %>
+      <a href="<%= next_sessions.first.description %>" target="_blank">Lien Google Meet</a>
+    <% end %>
 
+  </div>
+
+
+  <div class="training-info">
+
+    <div class="sessions-cards">
+      <%= render 'trainings/partials/show_sessions', training: @training %>
     </div>
 
   </div>
+
+</div>
 
 <!------------>
 <!-- MODALS -->
@@ -297,31 +333,6 @@
 
 <%# end %>
 
-<% @training.sessions.each do |session| %>
-
-  <% session.users.each do |trainer| %>
-
-    <div id="consultUser<%= trainer.id %>"
-         class="modal fade"
-         tabindex="-1"
-         role="dialog"
-         data-backdrop="static"
-         data-keyboard="false">
-
-      <div class="modal-dialog"
-           role="document"
-           style="border-radius: 2rem">
-        <%= render 'users/consult', user: trainer, training: @training %>
-      </div>
-
-    </div>
-
-  <% end %>
-
-<% end %>
-</div>
-
-
 
 <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
 
@@ -428,23 +439,6 @@
           edit_duration.value = edit_end_time_hour_value - edit_start_time_hour_value + (edit_end_time_min_value / 60) - (edit_start_time_min_value / 60);
         });
       });
-    });
-  });
-
-  photos = document.querySelectorAll('.ava')
-  counter = 0;
-  photos.forEach(photo => {
-    photo.style.right = counter.toString() + 'px';
-    counter = counter + 30;
-  });
-
-  sessions = document.querySelectorAll('.card-lg')
-  sessions.forEach(card => {
-    photos1 = card.querySelectorAll('.ava2')
-    counter1 = 0;
-    photos1.forEach(pic => {
-      pic.style.right = counter1.toString() + 'px';
-      counter1 = counter1 + 30;
     });
   });
 
