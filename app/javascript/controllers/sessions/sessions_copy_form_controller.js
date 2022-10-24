@@ -11,11 +11,20 @@ export default class extends Controller {
     const button_copy_here = document.querySelector('.copy-here-button');
 
     if (input.value != "") {
-        button_copy.classList.remove('hidden');
-        button_copy_here.classList.add('hidden');
-      } else if (input.value == "") {
-        button_copy.classList.add('hidden');
-        button_copy_here.classList.remove('hidden');
-      }
+      button_copy.classList.remove('hidden');
+      button_copy_here.classList.add('hidden');
+    } else if (input.value == "") {
+      button_copy.classList.add('hidden');
+      button_copy_here.classList.remove('hidden');
+    }
+  }
+
+  ///////////
+  // TOOLS //
+  ///////////
+
+  blockEvents() {
+    document.getElementById('bld-blockDiv').classList.toggle('d-none')
+    document.querySelector('body').classList.toggle('wait')
   }
 }

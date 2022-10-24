@@ -51,11 +51,19 @@
 
       <div class='modal-control'>
 
-        <%= button_tag type: 'submit', value: 'copy', class: 'btn btn-edit-green btn-icon btn-submit copy-button hidden', data: { toggle: 'tooltip' }, title: 'Copy' do %>
+        <%= button_tag type: 'submit',
+                       value: 'copy',
+                       class: 'btn btn-edit-green btn-icon btn-submit copy-button hidden',
+                       data: { action: 'click->sessions--sessions-copy-form#blockEvents' },
+                       title: 'Copy' do %>
           <i class="fas fa-copy"></i>
         <% end %>
 
-        <%= button_tag type: 'submit', value: 'copy_here', class: 'btn btn-edit-green btn-icon btn-submit copy-here-button', data: { toggle: 'tooltip' }, title: 'Copy here' do %>
+        <%= button_tag type: 'submit',
+                       value: 'copy_here',
+                       class: 'btn btn-edit-green btn-icon btn-submit copy-here-button',
+                       data: { action: 'click->sessions--sessions-copy-form#blockEvents' },
+                       title: 'Copy here' do %>
           <i class="fas fa-angle-double-down"></i>
         <% end %>
 

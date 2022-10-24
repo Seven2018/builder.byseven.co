@@ -48,6 +48,7 @@ module BuilderBysevenCo
     #     }
     #   }
     # }
+    config.session_store :cookie_store, key: '_app_session', expire_after: 7.days
 
     config.action_mailer.default_url_options = { host: ENV['APP_DOMAIN'] }
     config.action_mailer.delivery_method = :postmark
