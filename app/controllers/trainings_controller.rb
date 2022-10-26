@@ -4,25 +4,22 @@ class TrainingsController < ApplicationController
   def index
     # Index for trainings / Homepage (trainings/index)
     trainings = policy_scope(Training)
-    trainings = trainings
 
     # If user in team SEVEN
     if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level)
       # Search trainings
       if params[:search].present?
-        # Search trainings involving selected user
-        if params[:search][:user].present?
-          @user = User.find(params[:search][:user])
-          trainings = ((Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(training_ownerships: {user_id: params[:search][:user]}).or(Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:search][:user]})).where("unaccent(lower(trainings.title)) LIKE ?", "%#{I18n.transliterate(params[:search][:title].downcase)}%")) + (Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(training_ownerships: {user_id: params[:search][:user]}).or(Training.joins(:training_ownerships).joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:search][:user]})).joins(client_contact: :client_company).where("lower(client_companies.name) LIKE ?", "%#{params[:search][:title].downcase}%"))).flatten(1).uniq
-          trainings = Training.where(id: trainings)
-        else
-          trainings = Training.search_by_title_and_company("#{params[:search][:title]}")
-        end
-      # All trainings involving selected user
-      elsif params[:user].present?
-        @user = User.find(params[:user])
-        trainings = Training.where_exists(:training_ownerships, user_id: @user.id).or(Training.where_exists(:session_trainers, user_id: @user.id))
+        trainings = Training.search_by_title_and_company("#{params[:search][:title]}")
       end
+
+      # Search trainings involving selected user
+      if params[:user].present? || params.dig(:search, :user).present?
+
+        user_id = params[:user].presence || params.dig(:search, :user)
+
+        trainings = trainings.where_exists(:training_ownerships, user_id: user_id).or(trainings.where_exists(:session_trainers, user_id: user_id))
+      end
+
     # If user is Sevener
     else
       # Search trainings involving current user (Sevener)

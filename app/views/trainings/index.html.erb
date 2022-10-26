@@ -1,53 +1,28 @@
-<div class="container-seven-large">
+<div class="container-seven-large"
+     data-controller="trainings--trainings-index">
 
   <div id="page-controls">
 
-    <% if params[:user] %>
+    <%= simple_form_for :search, url: trainings_path, html: {  autocomplete: 'off' }, method: 'GET' do |f| %>
 
-      <%= simple_form_for :search, url: trainings_path, method: 'GET' do |f| %>
+        <%= f.input :title,
+                    placeholder: 'Search Trainings',
+                    label: false,
+                    input_html: {
+                      value: params.dig(:search, :title).presence
+                    } %>
 
-        <% if params[:search].present? %>
+      <% if params[:search].present? %>
 
-          <%= f.input :title, placeholder: 'Search Trainings', label: false, input_html: {value: params[:search][:title]} %>
-
-          <%= link_to trainings_path, class: 'search-close' do %>
-            <i class="far fa-times-circle"></i>
-          <% end %>
-
-        <% else %>
-
-          <%= f.input :title, placeholder: 'Search Trainings', label: false %>
-
+        <%= link_to trainings_path, class: 'search-close' do %>
+          <i class="far fa-times-circle"></i>
         <% end %>
-
-        <%= f.input :user, as: :hidden, input_html: { value: params[:user] } %>
-        <%= hidden_field_tag :page, 1 %>
 
       <% end %>
 
-    <% else %>
+      <% if params[:user].present? %>
 
-      <%= simple_form_for :search, url: trainings_path, method: 'GET' do |f| %>
-
-        <% if params[:search].present? %>
-
-          <%= f.input :title, placeholder: 'Search Trainings', label: false, input_html: {value: params[:search][:title]} %>
-
-        <% else %>
-
-          <%= f.input :title, placeholder: 'Search Trainings', label: false %>
-
-        <% end %>
-
-        <%= hidden_field_tag :page, 1 %>
-
-        <% if params[:search] %>
-
-          <%= link_to trainings_path, class: 'search-close' do %>
-            <i class="far fa-times-circle"></i>
-          <% end %>
-
-        <% end %>
+        <%= f.input :user, as: :hidden, input_html: { value: params[:user] } %>
 
       <% end %>
 
