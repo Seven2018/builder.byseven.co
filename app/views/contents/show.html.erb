@@ -1,45 +1,79 @@
 <div class="container-seven-large">
+
   <div id='page-controls'>
-    <%= link_to contents_path, class: 'btn return-arrow' do %><i class="fas fa-arrow-left" data-toggle='tooltip' title='Back'></i><% end %>
-      <div class="page-controls-buttons">
-        <%= link_to new_content_content_module_path(@content) do %>
-          <div class="btn-edit-yellow-mobile">New Module</div>
-          <div class="btn-icon-grey-mobile"><i class="fas fa-plus"></i></div>
-        <% end %>
-        <a class="btn-icon-grey" data-toggle='modal' data-target='#editContent' title='Edit'><i class="fas fa-pen"></i></a>
-        <%= link_to content_path(@content), class: "btn-icon-grey", method: :delete, data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
-          <i class="fas fa-trash-alt"></i>
-        <% end %>
-      </div>
+
+    <%= link_to contents_path, class: 'btn return-arrow' do %>
+      <i class="fas fa-arrow-left" data-toggle='tooltip' title='Back'></i>
+    <% end %>
+
+    <div class="page-controls-buttons">
+
+      <%= link_to new_content_content_module_path(@content) do %>
+        <div class="btn-edit-yellow-mobile">New Module</div>
+        <div class="btn-icon-grey-mobile"><i class="fas fa-plus"></i></div>
+      <% end %>
+
+      <a class="btn-icon-grey" data-toggle='modal' data-target='#editContent' title='Edit'><i class="fas fa-pen"></i></a>
+
+      <%= link_to content_path(@content), class: "btn-icon-grey", method: :delete, data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
+        <i class="fas fa-trash-alt"></i>
+      <% end %>
+
     </div>
-    <!-- <a class="edit-fafa" data-toggle='modal' data-target='#viewImage'><img src="<%= @content.description %>" alt="" style='height:15rem;'></a> -->
-    <div class="workshop-title">
-       <div class="workshop-title-details">
-        <h4><%= @content.title %> - <i class="fas fa-stopwatch fa-1x"></i> <%= @content.duration %> min</h4>
-        <% if @content.theme %>
-          <p><%= @content.theme.name %></p>
-        <% end %>
-      </div>
+
+  </div>
+
+  <div class="workshop-title">
+
+     <div class="workshop-title-details">
+
+      <h4 class="font-weight-700 mb-0_5rem"><%= @content.title %> - <i class="fas fa-stopwatch fa-1x"></i> <%= @content.duration %> min</h4>
+
+      <% if @content.theme %>
+        <p><%= @content.theme.name %></p>
+      <% end %>
+
     </div>
+
+  </div>
+
   <div class="show-control-links">
+
     <div class="theory-buttons">
       <%= render 'contents/content_theories', content: @content %>
     </div>
+
   </div>
+
   <div id="content-mods">
     <%= render 'content_modules/index', content: @content %>
   </div>
+
 </div>
 
 
-<div class="modal fade" id="editContent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<!------------>
+<!-- MODALS -->
+<!------------>
+
+<div id="editContent"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog">
+
   <div class="modal-dialog" role="document" style="border-radius: 2rem">
     <%= render 'edit', mod: @content %>
   </div>
+
 </div>
 
-<div class="modal fade" id="newTheoryContent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div id="newTheoryContent"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog">
+
   <div class="modal-dialog modal-lg" role="document" style="border-radius: 2rem">
     <%= render 'theory_contents/manage_linked_theories' %>
   </div>
+
 </div>

@@ -1,18 +1,26 @@
 <div class="modal-content">
-  <div style='display:flex; justify-content: flex-end;'>
+
+  <div class="d-flex justify-content-end m-0">
     <button type="button" class="btn btn-icon-close" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
   </div>
-  <div class="modal-body">
-    <div style='margin-bottom: 1rem; text-align: left !important;'>
-      <div style='display:flex; justify-content: center;'><img src='<%= user.picture %>' alt="" class='avatar-large' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'></div>
-      <p style='font-weight: 800'><strong><%=  user.firstname %> <%=  user.lastname %></strong></p>
-      <p>Email: <%= user.email %></p>
-      <p>Phone: <%= user.phone_number %></p>
-      <p>Access Level: <%= user.access_level.capitalize %></p>
-      <p>Description: <%= user.description %></p>
-      <p>Rating: <%= user.rating %></p>
-      <p>LinkedIn: <%= link_to user.linkedin do %><i class="fab fa-linkedin-in"></i><% end %></p>
+
+  <div class="modal-body m-0">
+
+    <div class="d-flex justify-content-center mb-2rem">
+      <img src='<%= user.picture %>'
+           class='avatar-large'
+           onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
     </div>
+
+    <p class="font-weight-700 mb-1rem"><strong><%=  user.firstname %> <%=  user.lastname %></strong></p>
+    <p>Email: <%= user.email %></p>
+    <p>Phone: <%= user.phone_number %></p>
+    <p>Access Level: <%= user.access_level.capitalize %></p>
+    <p>Description: <%= user.description %></p>
+    <p>Rating: <%= user.rating %></p>
+    <p>LinkedIn: <%= link_to user.linkedin do %><i class="fab fa-linkedin-in"></i><% end %></p>
+
   </div>
+
 </div>
 

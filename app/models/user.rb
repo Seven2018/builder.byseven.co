@@ -56,6 +56,10 @@ class User < ApplicationRecord
     self.access_level == 'super_admin'
   end
 
+  def is_email_valid?
+      (self.email =~ /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$/).present?
+  end
+
   def hours(training)
     Session.joins(:session_trainers).where(session_trainers: {session_id: training.sessions.ids, user_id: self.id}).map(&:duration).sum
   end

@@ -31,16 +31,12 @@ class InvoiceItemsController < ApplicationController
   # Shows an InvoiceItem in html or pdf version
   def show
     authorize @invoice_item
-    if @invoice_item.invoice_lines.where(description: 'Nom').present?
-      uuid = @invoice_item.uuid + ' - ' + @invoice_item.invoice_lines.where(description: 'Nom').first.comments.split('>')[1].split('<')[0]
-    else
-      uuid = @invoice_item.uuid
-    end
+
     respond_to do |format|
       format.html
       format.pdf do
         render(
-          pdf: "#{uuid}",
+          pdf: "#{@invoice_item.uuid}",
           layout: 'pdf.html.erb',
           margin: { bottom: 45, top: 62 },
           header: { margin: { top: 0, bottom: 0 }, html: { template: 'invoice_items/header.pdf.erb' } },

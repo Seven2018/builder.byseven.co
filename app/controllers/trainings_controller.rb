@@ -5,6 +5,7 @@ class TrainingsController < ApplicationController
     # Index for trainings / Homepage (trainings/index)
     trainings = policy_scope(Training)
     trainings = trainings
+
     # If user in team SEVEN
     if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level)
       # Search trainings
@@ -20,9 +21,7 @@ class TrainingsController < ApplicationController
       # All trainings involving selected user
       elsif params[:user].present?
         @user = User.find(params[:user])
-        trainings = (Training.joins(:training_ownerships).where(training_ownerships: {user_id: params[:user]}).pluck(:id) + Training.joins(sessions: :session_trainers).where(session_trainers: {user_id: params[:user]}).pluck(:id)).uniq
-        # trainings = Training.search_by_title_and_company("#{@user.fullname}")
-        trainings = Training.where(id: trainings)
+        trainings = Training.where_exists(:training_ownerships, user_id: @user.id).or(Training.where_exists(:session_trainers, user_id: @user.id))
       end
     # If user is Sevener
     else
@@ -36,9 +35,20 @@ class TrainingsController < ApplicationController
         trainings = Training.where(id: trainings.map{|x| x.id})
       end
     end
+
     @upcoming_trainings = trainings_ordered(trainings, 'upcoming')
-    all_ids = trainings_ordered(trainings, 'all').map{|x| x.id}
-    @trainings = trainings.where(id: all_ids).order_as_specified(id: all_ids)
+
+    all_ids = trainings_ordered(trainings, 'all').map(&:id)
+    trainings = trainings.where(id: all_ids).order_as_specified(id: all_ids)
+
+    @trainings_to_date = trainings.where(training_type: ['Training', nil])
+    @trainings_to_date = @trainings_to_date.where_exists(:sessions, date: nil).or(@trainings_to_date.where_not_exists(:sessions))
+
+    trainings_to_staff_ids = Session.where('date >= ?', Date.today).where_not_exists(:session_trainers).map(&:training_id)
+    @trainings_to_staff = Training.where(id: trainings_to_staff_ids)
+
+    @trainings_home = Training.where(training_type: 'Home').order(title: :asc)
+
     respond_to do |format|
       format.html {}
       format.js
@@ -102,9 +112,11 @@ class TrainingsController < ApplicationController
 
   def show
     authorize @training
-    @airtable_training = OverviewTraining.all(filter: "{Builder_id} = '#{@training.id}'").first
+
+    @airtable_training = OverviewTraining.find(@training.airtable_id)
     @session = Session.new
     @sessions = Session.where(id: params[:training][:sessions].reject{|x| x.empty?}) if params[:format] == 'pdf'
+
     if params[:task] == 'update_airtable'
       UpdateAirtableJob.perform_async(@training, true)
       #@training.trainers.each{|y| @training.export_numbers_sevener(y)}
@@ -112,20 +124,20 @@ class TrainingsController < ApplicationController
       #@training.export_numbers_activity
     else
       respond_to do |format|
-      format.html
-      format.pdf do
-        render(
-          pdf: "#{@training.client_company.name} - #{@training.title}",
-          layout: 'pdf.html.erb',
-          template: 'trainings/show',
-          show_as_html: params.key?('debug'),
-          page_size: 'A4',
-          encoding: 'utf8',
-          dpi: 300,
-          zoom: 1,
-        )
+        format.html
+        format.pdf do
+          render(
+            pdf: "#{@training.client_company.name} - #{@training.title}",
+            layout: 'pdf.html.erb',
+            template: 'trainings/show',
+            show_as_html: params.key?('debug'),
+            page_size: 'A4',
+            encoding: 'utf8',
+            dpi: 300,
+            zoom: 1,
+          )
+        end
       end
-    end
     end
   end
 

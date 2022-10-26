@@ -1,61 +1,133 @@
 <% training.owners.each do |user| %>
-  <% if user.picture.present? %>
-    <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-owner ava' data-toggle='tooltip' data-placement="left" title='Owner: <%= "#{user.fullname}" %>'></a>
-  <% else %>
-    <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-owner ava' data-toggle='tooltip' data-placement="left" title='Owner  <%= "#{user.fullname}" %>'></a>
-  <% end %>
-  <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" role="document" style="border-radius: 2rem">
-      <%= render 'users/consult', user: user, training: training %>
-    </div>
-  </div>
-<% end %>
-<% training.writers.each do |user| %>
-  <% if user.picture.present? %>
-    <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-writer ava' data-toggle='tooltip' data-placement="bottom" title='Writer:  <%= "#{user.fullname}" %>'></a>
-  <% else %>
-    <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-writer ava' data-toggle='tooltip' data-placement="bottom" title='Writer:  <%= "#{user.fullname}" %>'></a>
-  <% end %>
-  <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" role="document" style="border-radius: 2rem">
-      <%= render 'users/consult', user: user, training: training %>
-    </div>
-  </div>
-<% end %>
-<% training.sidekicks.each do |user| %>
-  <% if user.picture.present? %>
-    <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= "#{user.picture}" %>' alt="" class='avatar-sm-writer ava' data-toggle='tooltip' data-placement="bottom" title='Sidekick:  <%= "#{user.fullname}" %>'></a>
-  <% else %>
-    <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= user.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-writer ava' data-toggle='tooltip' data-placement="bottom" title='Sidekick:  <%= "#{user.fullname}" %>'></a>
-  <% end %>
-  <div class="modal fade" id="consultUser<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" role="document" style="border-radius: 2rem">
-      <%= render 'users/consult', user: user, training: training %>
-    </div>
-  </div>
-<% end %>
-<% trainer_array = [] %>
-<% User.joins(:session_trainers).where(session_trainers: {session_id: training.sessions.map(&:id), status: nil}).order(lastname: :asc).uniq.each do |trainer| %>
-  <% trainer_array << trainer %>
-  <% unless trainer_array.count(trainer) > 1 %>
-    <% if trainer.picture.present? %>
-      <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= trainer.id %>'><img src='<%= "#{trainer.picture}" %>' alt="" class='avatar-sm-trainer ava' data-toggle='tooltip' data-placement="bottom" title='Trainer:  <%= "#{trainer.fullname}" %>'></a>
+
+  <a class="mr--1rem"
+     data-toggle='modal'
+     data-target='#consultUser<%= user.id %>'>
+
+    <% if user.picture.present? %>
+
+      <img src='<%= "#{user.picture}" %>'
+           class='avatar-sm-owner'
+           title='Owner: <%= "#{user.fullname}" %>'>
+
     <% else %>
-      <a class="edit-fafa" data-toggle='modal' data-target='#consultUser<%= trainer.id %>'><img src='<%= asset_path('empty-avatar.png', type: :image) %>' alt="" class='avatar-sm-trainer ava' data-toggle='tooltip' data-placement="bottom" title='Trainer:  <%= "#{trainer.fullname}" %>'></a>
+
+      <img src='<%= asset_path('empty-avatar.png', type: :image) %>'
+           class='avatar-sm-owner'
+           title='Owner  <%= "#{user.fullname}" %>'>
+
     <% end %>
-  <% end %>
+
+  </a>
+
 <% end %>
+
+<% training.writers.each do |user| %>
+
+  <a class="mr--1rem"
+     data-toggle='modal'
+     data-target='#consultUser<%= user.id %>'>
+
+    <% if user.picture.present? %>
+
+      <img src='<%= "#{user.picture}" %>'
+           class='avatar-sm-writer'
+           title='Owner: <%= "#{user.fullname}" %>'>
+
+    <% else %>
+
+      <img src='<%= asset_path('empty-avatar.png', type: :image) %>'
+           class='avatar-sm-writer'
+           title='Owner  <%= "#{user.fullname}" %>'>
+
+    <% end %>
+
+  </a>
+
+<% end %>
+
+<% training.sidekicks.each do |user| %>
+
+  <a class="mr--1rem"
+     data-toggle='modal'
+     data-target='#consultUser<%= user.id %>'>
+
+    <% if user.picture.present? %>
+
+      <img src='<%= "#{user.picture}" %>'
+           class='avatar-sm-writer'
+           title='Owner: <%= "#{user.fullname}" %>'>
+
+    <% else %>
+
+      <img src='<%= asset_path('empty-avatar.png', type: :image) %>'
+           class='avatar-sm-writer'
+           title='Owner  <%= "#{user.fullname}" %>'>
+
+    <% end %>
+
+  </a>
+
+<% end %>
+
+<% trainer_array = [] %>
+
+<% User.joins(:session_trainers).where(session_trainers: {session_id: training.sessions.map(&:id), status: nil}).order(lastname: :asc).uniq.each do |trainer| %>
+
+  <% trainer_array << trainer %>
+
+  <% unless trainer_array.count(trainer) > 1 %>
+
+    <a class="mr--1rem"
+       data-toggle='modal'
+       data-target='#consultUser<%= trainer.id %>'>
+
+      <% if trainer.picture.present? %>
+
+        <img src='<%= "#{trainer.picture}" %>'
+             class='avatar-sm-trainer'
+             title='Trainer:  <%= "#{trainer.fullname}" %>'>
+
+      <% else %>
+
+        <img src='<%= asset_path('empty-avatar.png', type: :image) %>'
+             class='avatar-sm-trainer'
+             title='Trainer:  <%= "#{trainer.fullname}" %>'>
+
+      <% end %>
+
+    </a>
+
+  <% end %>
+
+<% end %>
+
 <% if (['super_admin', 'admin', 'training manager'].include? current_user.access_level) %>
-  <% if trainer_array.uniq.count > 1 %>
-    <li><button class='avatar-sm-add ava' data-toggle='modal' data-target='#newTrainers'><i class="fas fa-plus" style='color:#888888; font-size:20px;' data-toggle='tooltip' title='Add Trainer' data-placement="bottom"></i></button></li>
-  <% else %>
-    <li><button class='avatar-sm-add ava' data-toggle='modal' data-target='#newTrainers'><i class="fas fa-plus" style='color:#888888; font-size:20px;' data-toggle='tooltip' title='Add Trainer' data-placement="bottom"></i></button></li>
-  <% end %>
-<% else %>
-  <% if trainer_array.uniq.count > 1 %>
-    <li><button class='avatar-sm-add ava btn-add-user-disabled'><i class="fas fa-plus"></i></button></li>
-  <% else %>
-    <li><button class='avatar-sm-add ava btn-add-user-disabled'><i class="fas fa-plus"></i></button></li>
-  <% end %>
+
+  <button class='avatar-sm-add mr--1rem'
+          data-toggle='modal'
+          data-target='#newTrainers'>
+
+    <i class="fas fa-plus fs-2rem bld-light-grey2"
+       title='Add Trainer'></i>
+
+  </button>
+
 <% end %>
-</div>
+
+<% (training.users + training.trainers).uniq.each do |user| %>
+
+  <div id="consultUser<%= user.id %>"
+       class="modal fade"
+       tabindex="-1"
+       role="dialog"
+       data-backdrop="static"
+       data-keyboard="false">
+
+    <div class="modal-dialog">
+      <%= render 'users/consult', user: user, training: training %>
+    </div>
+
+  </div>
+
+<% end %>

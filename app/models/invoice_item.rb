@@ -53,8 +53,10 @@ class InvoiceItem < ApplicationRecord
   def export_numbers_revenue
     # begin
       return if self.type != 'Invoice'
-      training = OverviewTraining.all.select{|x| x['Builder_id'] == self.training.id}&.first if self.training.present?
-      invoice = OverviewNumbersRevenue.all.select{|x| x['Invoice_id'] == self.id}&.first
+      # training = OverviewTraining.all.select{|x| x['Builder_id'] == self.training.id}&.first if self.training.present?
+      training = OverviewTraining.all(filter: "{Builder_id} = '#{self.training_id}'")&.first if self.training.present?
+      # invoice = OverviewNumbersRevenue.all.select{|x| x['Invoice_id'] == self.id}&.first
+      invoice = OverviewNumbersRevenue.all(filter: "{Invoice_id} = '#{self.id}'")&.first
 
       unless invoice.present?
         if training.present?

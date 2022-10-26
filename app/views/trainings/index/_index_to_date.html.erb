@@ -1,6 +1,4 @@
-<% trainings_to_date = @trainings.where(training_type: ['Training', nil]).where_exists(:sessions, date: nil) + @trainings.where(training_type: ['Training', nil]).where_not_exists(:sessions)%>
-
-<% trainings_to_date.each do |training| %>
+<% trainings.each do |training| %>
 
   <div class="training-card" id="card-index" data-toggle='tooltip' title='<%= training.title %>'>
 
@@ -39,7 +37,7 @@
 
               </div>
 
-              <img src="<%= Training.includes(:client_contact).find(training.id).client_contact.client_company.logo %>"
+              <img src="<%= training.client_contact.client_company.logo %>"
                    class='lazyload client-logo width-5rem min-width-5rem height-5rem ml-0_5rem'>
 
             </div>

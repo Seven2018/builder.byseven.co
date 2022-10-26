@@ -11,6 +11,7 @@
 
 .session-trainers {
   display:none;
+
   @include from-large {
     display: inherit;
   }
@@ -19,7 +20,8 @@
 .session-trainers-mobile {
   position: relative;
   margin-bottom: 50px;
-    display: inherit;
+  display: inherit;
+
   @include from-large {
   display:none;
   }

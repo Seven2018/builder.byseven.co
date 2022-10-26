@@ -1,4 +1,6 @@
-<div class="container-seven-large">
+<div class="container-new-form">
+  <p class="fs-2rem font-weight-700 mb-2rem"><%= @invoiceline.description %></p>
+
   <%= simple_form_for @invoiceline do |f| %>
     <%= f.label :comments %>
     <%= f.cktext_area :comments %>

@@ -2,132 +2,83 @@
      data-controller="sessions--sessions-show">
 
   <div id='page-controls'>
+
     <%= link_to training_path(@session.training), class: 'btn return-arrow' do %>
       <i class="fas fa-arrow-left"></i>
     <% end %>
+
     <div class='flex-row-between-centered'>
+
       <% if ['super_admin', 'admin', 'training manager', 'sevener+'].include?(current_user.access_level) %>
+
         <%= link_to training_session_workshops_path(@session.training, @session), method: :post, remote: true do %>
           <div class='btn-icon-grey' data-toggle='tooltip' title='Add Workshop'><i class="fas fa-plus"></i></div>
         <% end %>
+
       <% end %>
+
       <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-        <a class='btn-icon-grey' data-toggle='modal' data-target='#editSession' data-toggle="tooltip" title="Edit"><i class="fas fa-pen"></i></a>
+
+        <a class='btn-icon-grey' data-toggle='modal' data-target='#editSession' data-toggle="tooltip" title="Edit">
+          <i class="fas fa-pen"></i>
+        </a>
+
         <%= link_to remove_session_trainers_path(session_id: @session.id, destroy: 'true'), class: "btn-icon-grey", data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
           <i class="fas fa-trash-alt"></i>
         <% end %>
+
         <%= link_to training_copy_form_session_path(@session.training, @session), class: 'btn-icon-grey', data: {toggle: 'tooltip'}, title: 'Copy Session' do %>
           <i class="fas fa-copy"></i>
         <% end %>
+
       <% end %>
+
       <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-        <div class='show_library btn-icon-grey' data-toggle="tooltip" title="Library"><i class="fas fa-book"></i></div>
+
+        <div class='show_library btn-icon-grey' 
+             title="Library"
+             data-action="click->sessions--sessions-show#showLibrary">
+          <i class="fas fa-book"></i>
+        </div>
+
       <% end %>
+
       <div class="dropdown">
+
         <div class='btn-icon-grey dropdown-toggle' id="dropdownMenuButton" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></div>
+
         <ul class="dropdown-menu dropdown-menu-right navbar-wagon-dropdown-menu" aria-labelledby="dropdownMenuButton">
+
           <li><%= link_to 'View mode', training_session_viewer_path(@session.training, @session) %></li>
           <li><%= link_to 'Export PDF', training_session_path(@session.training, @session, format: :pdf), target: :_blank %></li>
+
           <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+
             <li><%= link_to 'Import Attendees', import_attendees_form_path(session_id: @session.id) %></li>
             <li><%= link_to 'Presence Sheet', training_session_presence_sheet_path(@session.training, @session, format: :pdf), target: :_blank %></li>
+
           <% end %>
+
         </ul>
+
       </div>
+
     </div>
+
   </div>
+
   <div class="session-info-container">
     <%= render "sessions/show_middle_info", session: @session %>
   </div>
+
   <div id="mods" style="min-height: 50vh;">
     <%= render 'workshops/index', session: @session %>
   </div>
+
   <% if (['super_admin', 'admin', 'training manager'].include? current_user.access_level) %>
-    <div id='library' class="nav-side-menu-container">
-      <div class="nav-side-menu">
-        <a id="close_library" class='centered-item'><i class="fas fa-times"></i></a>
-        <div class="brand">Workshops</div>
-        <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
-        <div class="menu-list">
-          <% status = !params[:search].nil? %>
-          <%= simple_form_for :search, url: training_session_path(@session.training, @session), html: { class: 'sidebar-search' }, method: 'GET' do |f| %>
-            <%= f.input :title, placeholder: 'Search', label: false %>
-            <% if params[:search] %>
-              <%= link_to training_session_path(@session.training, @session, end_search: true), class: 'sidebar-search-close' do %>
-                <i class="fas fa-times-circle"></i>
-              <% end %>
-            <% end %>
-          <% end %>
-            <%= link_to training_session_workshops_path(@session.training, @session), method: :post, remote: true do %>
-                <li>Vide - à personnaliser</li>
-              <% end %>
-              <% pause = Content.where(title: 'Pause') %>
-              <% pausedej = Content.where(title: 'Pause Déjeuner') %>
-              <%= link_to training_session_workshops_path(@session.training, @session, content_id: pause.first.id), method: :post, remote: true do %>
-                <li>Pause</li>
-              <% end %>
-              <%= link_to training_session_workshops_path(@session.training, @session, content_id: pausedej.first.id), method: :post, remote: true do %>
-                <li>Pause Déjeuner</li>
-              <% end %>
-            </ul>
-          <% if status %>
-            <ul id='myUL'>
-              <% (Content.where("lower(title) LIKE :query", query:"%#{params[:search][:title].downcase}%") + Content.joins(:content_modules).where("lower(content_modules.title) LIKE :query", query:"%#{params[:search][:title].downcase}%") + Content.joins(:theories).where("lower(theories.description) LIKE :query", query:"%#{params[:search][:title].downcase}%") + Content.joins(:theories).where("lower(theories.name) LIKE :query", query:"%#{params[:search][:title].downcase}%")).uniq.each do |content| %>
-                <%= link_to training_session_workshops_path(@session.training, @session, content_id: content.id), method: :post, remote: true do %>
-                  <li class='myUL-li-theme-sidebar'>+ <%= content.title %></li>
-                <% end %>
-              <% end %>
-            </ul>
-          <% else %>
-            <ul id='myUL' class='myUL-sidebar'>
-              <% Theme.includes(:children, :parent).walk_tree do |theme, level| %>
-                <% if theme.children.empty? && theme.level == 0 && !['Ice breaker', 'Présentation', 'Conclusion'].include?(theme.name) %>
-                  <li><span class="caret sidebar-caret"><%= theme.name %></span>
-                    <ul class="nested">
-                      <% Theme.includes(:contents).find(theme.id).contents.order(title: :asc).each do |content| %>
-                        <%= link_to training_session_workshops_path(@session.training, @session, content_id: content.id), method: :post, remote: true do %>
-                          <li>+ <%= content.title %></li>
-                        <% end %>
-                      <% end %>
-                    </ul>
-                  </li>
-                <% elsif theme.level == 0 && theme.children != [] %>
-                  <li><span class="caret sidebar-caret"><%= theme.name %></span>
-                    <ul class="nested">
-                      <% theme.children.each do |subtheme| %>
-                        <li><span class="caret"><%= subtheme.name %></span>
-                          <ul class="nested">
-                            <% subtheme.contents.each do |content| %>
-                              <%= link_to training_session_workshops_path(@session.training, @session, content_id: content.id), method: :post, remote: true do %>
-                                <li>+ <%= content.title %></li>
-                              <% end %>
-                            <% end %>
-                          </ul>
-                        </li>
-                      <% end %>
-                    </ul>
-                  </li>
-                <% end %>
-              <% end %>
-            <ul id='myUL' class='myUL-sidebar'>
-              <% Theme.all.each do |theme| %>
-                <% if ['Ice breaker', 'Présentation', 'Conclusion'].include?(theme.name) %>
-                  <li><span class="caret sidebar-caret"><%= theme.name %></span>
-                    <ul class="nested">
-                      <% Theme.includes(:contents).find(theme.id).contents.order(title: :asc).each do |content| %>
-                        <%= link_to training_session_workshops_path(@session.training, @session, content_id: content.id), method: :post, remote: true do %>
-                          <li>+ <%= content.title %></li>
-                        <% end %>
-                      <% end %>
-                    </ul>
-                  </li>
-                <% end %>
-              <% end %>
-            </ul>
-          <% end %>
-        </div>
-      </div>
-    </div>
+
+    <%= render 'sessions/show/show_library' %>
+
   <% end %>
 
 </div>
@@ -146,19 +97,6 @@
 
   <div class="modal-dialog modal-lg" role="document" style="border-radius: 20px">
     <%= render 'edit', session: @session %>
-  </div>
-
-</div>
-
-<div id="copySession"
-     class="modal fade"
-     tabindex="-1"
-     role="dialog"
-     data-backdrop="static"
-     data-keyboard="false">
-
-  <div class="modal-dialog" role="document" style="border-radius: 2rem">
-    <%= render 'sessions/copy', session: @session %>
   </div>
 
 </div>
@@ -277,70 +215,6 @@
     }
   };
 
-  function selectTrainer(element, add) {
-    if (add == true) {
-      selected = element.closest('.users-select').querySelector('select').value
-      user_id = selected.split('|')[0]
-    }
-    form = element.closest('.modal-body').querySelector('form')
-    selected_storage = form.querySelector('#link_trainer_ids')
-    selected_array = []
-    pill_container = element.closest('.modal-body').querySelector('.users-list')
-    if (add == true && !selected_storage.value.split(',').includes(user_id)){
-      new_pill = document.createElement('div');
-      new_pill.classList.add('trainer-pill')
-      new_pill.id = 'user-' + user_id
-      new_pill.innerHTML = "<p>" + selected.split('|')[1] + "</p><i class='fas fa-times' onclick='selectTrainer(this, false);'></i>"
-      pill_container.appendChild(new_pill)
-    } else if (add == false) {
-      element.closest('.trainer-pill').remove();
-    }
-    pill_container.querySelectorAll('.trainer-pill').forEach((pill) =>{
-      if (pill.id != '') {
-        selected_array.push(pill.id.split('-')[1])
-      }
-    })
-    selected_storage.value = selected_array
-  }
-
-  function confirmTrainers(element) {
-    if (formGuardian == false) {
-      formGuardian = true
-      form = element.parentNode.querySelector('form')
-      confirm_button = form.querySelector('.hidden-submit')
-      modal = element.closest('.modal')
-      modal.querySelector('.btn-icon-close').click()
-      confirm_button.click()
-      document.querySelector('body').classList.add('wait');
-      setTimeout(function(){ formGuardian = false }, 100);
-    }
-  }
-
-  photos = document.querySelectorAll('.ava-session')
-  counter = 30;
-  photos.forEach(photo => {
-    photo.style.right = counter.toString() + 'px';
-    counter = counter + 30;
-  });
-
-  photos = document.querySelectorAll('.ava-session-mobile')
-  counter = -225;
-  photos.forEach(photo => {
-    photo.style.right = counter.toString() + 'px';
-    counter = counter + 30;
-  });
-
-  var button_show = document.querySelectorAll('.show_library');
-  var button_close = document.getElementById('close_library');
-  var library = document.getElementById('library');
-  button_show.forEach(function(item) {
-    item.addEventListener('click', (event) => {
-      library.style.height = '100%';
-    })
-  })
-  button_close.addEventListener('click', (event) => {
-    library.style.height = '0px';
-  })
 </script>
 
 <%= javascript_pack_tag 'tree' %>

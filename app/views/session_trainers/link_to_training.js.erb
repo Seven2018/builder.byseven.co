@@ -1,23 +1,6 @@
 document.querySelector('.middle-info-user').innerHTML = '<%= j render "trainings/partials/show_training_users", training: @training %>';
 document.querySelector('.sessions-cards').innerHTML = '<%= j render "trainings/partials/show_sessions", training: @training %>';
 
-photos = document.querySelectorAll('.ava')
-counter = 0;
-photos.forEach(photo => {
-  photo.style.right = counter.toString() + 'px';
-  counter = counter + 30;
-});
-
-sessions = document.querySelectorAll('.card-lg')
-sessions.forEach(card => {
-  photos1 = card.querySelectorAll('.ava2')
-  counter1 = 0;
-  photos1.forEach(pic => {
-    pic.style.right = counter1.toString() + 'px';
-    counter1 = counter1 + 30;
-  });
-});
-
 document.querySelector('#newTrainers').querySelector('.users-list-details').innerHTML = '<%= j render "session_trainers/trainers_details", users: @trainers, mode: "training", instance_id: @training.id, page: "training" %>';
 
 document.querySelector('body').classList.remove('wait');

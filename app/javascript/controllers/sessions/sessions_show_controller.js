@@ -76,6 +76,23 @@ export default class extends Controller {
 
 
   /////////////
+  // LIBRARY //
+  /////////////
+
+  showLibrary(open) {
+    const library = document.getElementById('library');
+
+    library.style.height = '100%';
+  }
+
+  hideLibrary(open) {
+    const library = document.getElementById('library');
+
+    library.style.height = '0px';
+  }
+
+
+  /////////////
   // PRIVATE //
   /////////////
 

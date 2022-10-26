@@ -162,19 +162,19 @@
     <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
 
       <div class="trainings-row trainings-row-home hidden">
-        <%= render 'trainings/index/index_home', trainings: @trainings %>
+        <%= render 'trainings/index/index_home', trainings: @trainings_home %>
       </div>
 
       <h3 class="training-update-text">To Schedule</h3>
 
       <div class="trainings-row">
-        <%= render 'trainings/index/index_to_date', trainings: @trainings %>
+        <%= render 'trainings/index/index_to_date', trainings: @trainings_to_date %>
       </div>
 
       <h3 class="training-update-text">To Staff</h3>
 
       <div class="trainings-row">
-        <%= render 'trainings/index/index_to_staff', trainings: @trainings %>
+        <%= render 'trainings/index/index_to_staff', trainings: @trainings_to_staff %>
       </div>
 
     <% end %>

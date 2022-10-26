@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_24_153333) do
+ActiveRecord::Schema.define(version: 2022_10_03_124101) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -349,6 +349,7 @@ ActiveRecord::Schema.define(version: 2021_06_24_153333) do
     t.float "unit_price"
     t.boolean "vat"
     t.string "infos"
+    t.string "airtable_id", default: ""
     t.index ["client_contact_id"], name: "index_trainings_on_client_contact_id"
   end
 
@@ -374,6 +375,10 @@ ActiveRecord::Schema.define(version: 2021_06_24_153333) do
     t.boolean "vat"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "client_company_id"
+    t.string "employee_id"
+    t.integer "status", default: 1
+    t.index ["client_company_id"], name: "index_users_on_client_company_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -444,6 +449,7 @@ ActiveRecord::Schema.define(version: 2021_06_24_153333) do
   add_foreign_key "training_ownerships", "trainings"
   add_foreign_key "training_ownerships", "users"
   add_foreign_key "trainings", "client_contacts"
+  add_foreign_key "users", "client_companies"
   add_foreign_key "workshop_modules", "users"
   add_foreign_key "workshop_modules", "workshops"
   add_foreign_key "workshops", "sessions"

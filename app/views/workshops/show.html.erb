@@ -1,63 +1,109 @@
 <div class="container-seven-large">
+
   <div id='page-controls'>
+
     <div class="workshop-title">
+
       <%= link_to training_session_path(@workshop.session.training, @workshop.session, anchor: @workshop.id), class: 'btn return-arrow' do %>
         <i class="fas fa-arrow-left"></i>
       <% end %>
+
     </div>
-      <div class="page-controls-buttons flex-row-between-centered">
-        <% if ['super_admin', 'admin', 'training manager', 'sevener+'].include?(current_user.access_level) %>
-          <%= link_to new_training_session_workshop_workshop_module_path(@workshop.session.training, @workshop.session, @workshop) do %>
-            <div class="btn-icon-grey" data-toggle='tooltip' title='Add Module'><i class="fas fa-plus"></i></div>
-          <% end %>
-          <div class="btn-icon-grey" data-toggle='modal' data-target='#editMod' data-toggle='tooltip' title='Edit'><i class="fas fa-pen"></i></div>
-          <%= link_to training_session_workshop_path(@workshop.session.training, @workshop.session, @workshop), class: "btn-icon-grey", method: :delete, data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
-            <i class="fas fa-trash-alt"></i>
-          <% end %>
+
+    <div class="page-controls-buttons flex-row-between-centered">
+
+      <% if ['super_admin', 'admin', 'training manager', 'sevener+'].include?(current_user.access_level) %>
+
+        <%= link_to new_training_session_workshop_workshop_module_path(@workshop.session.training, @workshop.session, @workshop) do %>
+          <div class="btn-icon-grey" data-toggle='tooltip' title='Add Module'><i class="fas fa-plus"></i></div>
         <% end %>
-        <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-          <%= link_to training_session_copy_form_workshop_path(@workshop.session.training, @workshop.session, @workshop), class: 'btn-icon-grey', data: {toggle: 'tooltip'}, title: 'Copy Workshop' do %>
-            <i class="fas fa-copy"></i>
-          <% end %>
-          <% unless @workshop.title.split(' ').first == 'Pause' %>
-            <%= link_to training_session_save_workshop_path(@workshop.session.training, @workshop.session), data: { toggle: 'tooltip', confirm: 'Do you want to save this workshop in the Database ?' }, title: 'Save to DB', class: 'btn-icon-grey' do %>
-              <i class="fas fa-cloud-upload-alt"></i>
-            <% end %>
-          <% end %>
+
+        <div class="btn-icon-grey" data-toggle='modal' data-target='#editMod' data-toggle='tooltip' title='Edit'><i class="fas fa-pen"></i></div>
+
+        <%= link_to training_session_workshop_path(@workshop.session.training, @workshop.session, @workshop), class: "btn-icon-grey", method: :delete, data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
+          <i class="fas fa-trash-alt"></i>
         <% end %>
-      </div>
+
+      <% end %>
+
+      <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+
+        <%= link_to training_session_copy_form_workshop_path(@workshop.session.training, @workshop.session, @workshop), class: 'btn-icon-grey', data: {toggle: 'tooltip'}, title: 'Copy Workshop' do %>
+          <i class="fas fa-copy"></i>
+        <% end %>
+
+        <% unless @workshop.title.split(' ').first == 'Pause' %>
+
+          <%= link_to training_session_save_workshop_path(@workshop.session.training, @workshop.session), data: { toggle: 'tooltip', confirm: 'Do you want to save this workshop in the Database ?' }, title: 'Save to DB', class: 'btn-icon-grey' do %>
+            <i class="fas fa-cloud-upload-alt"></i>
+          <% end %>
+
+        <% end %>
+
+      <% end %>
+
+    </div>
+
   </div>
+
   <div class="workshop-title-details">
-    <h4><%= @workshop.title %> - <i class="fas fa-stopwatch fa-1x"></i> <%= @workshop.duration %> min</h4>
+
+    <h4 class="font-weight-700 mb-0_5rem"><%= @workshop.title %> - <i class="fas fa-stopwatch fa-1x"></i> <%= @workshop.duration %> min</h4>
+
     <% if @workshop.theme %>
       <p><%= @workshop.theme.name %></p>
     <% end %>
+
   </div>
+
   <div class= "show-control-links">
+
     <div class="theory-buttons">
       <%= render 'workshops/workshop_theories', workshop: @workshop %>
     </div>
+
   </div>
+
   <div id="content-mods">
     <%= render 'workshop_modules/index', mod: @workshop %>
   </div>
+
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="editMod" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+
+<!------------>
+<!-- MODALS -->
+<!------------>
+
+<div id="editMod"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog">
+
   <div class="modal-dialog" role="document" style="border-radius: 2rem">
     <%= render 'edit', workshop: @workshop %>
   </div>
+
 </div>
 
-<div class="modal fade" id="viewImage" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div id="viewImage"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog">
+
   <div class="modal-dialog" role="document" style="border-radius: 2rem">
     <img src="<%= @workshop.description %>" alt="">
   </div>
+
 </div>
 
-<div class="modal fade" id="newTheoryWorkshop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div id="newTheoryWorkshop"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog">
+
   <div class="modal-dialog" role="document" style="border-radius: 2rem">
     <%= render 'theory_workshops/manage_linked_theories' %>
   </div>
+
 </div>
