@@ -18,6 +18,5 @@ export default class extends Controller {
       })(this.identifier)
       ] = this
 
-    console.log('coucou')
   }
 }

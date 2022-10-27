@@ -7,22 +7,22 @@ class ImportAirtableJob < ApplicationJob
     ## USERS ##
     ###########
 
-    OverviewUser.all.each do |airtable_user|
+    # OverviewUser.all.each do |airtable_user|
 
-      unless airtable_user['Builder_id'].present?
-        new_user = User.new(firstname: airtable_user['Firstname'], lastname: airtable_user['Lastname'], email: airtable_user['Email'], access_level: 'sevener', password: 'tititoto')
-        new_user.save
-      end
+    #   unless airtable_user['Builder_id'].present?
+    #     new_user = User.new(firstname: airtable_user['Firstname'], lastname: airtable_user['Lastname'], email: airtable_user['Email'], access_level: 'sevener', password: 'tititoto')
+    #     new_user.save
+    #   end
 
-      user = User.find_by(id: airtable_user['Builder_id'])
+    #   user = User.find_by(id: airtable_user['Builder_id'])
 
-      if user&.active? && airtable_user['On / Off'] == 'Off'
-        user.update status: :inactive
-      elsif user&.inactive? && airtable_user['On / Off'] == 'On'
-        user.update status: :active
-      end
+    #   if user&.active? && airtable_user['On / Off'] == 'Off'
+    #     user.update status: :inactive
+    #   elsif user&.inactive? && airtable_user['On / Off'] == 'On'
+    #     user.update status: :active
+    #   end
 
-    end
+    # end
 
 
     ###############
@@ -60,11 +60,10 @@ class ImportAirtableJob < ApplicationJob
         training.update(infos: infos)
 
       elsif card['Partner Contact ⭐️'].present?
-
         owners = OverviewUser.all.select{|x| if card['Owner'].present?; card['Owner'].include?(x.id); end}
         sidekicks = OverviewUser.all.select{|x| if card['Sidekick'].present?; card['Sidekick'].include?(x.id); end}
         writers = OverviewUser.all.select{|x| if card['Writers'].present?; card['Writers'].include?(x.id); end}
-        contact = OverviewContact.find(card['Partner Contact'].join)
+        contact = OverviewContact.find(card['Partner Contact ⭐️'].join)
         company = OverviewClient.find(contact['Company/School'].join)
 
         unless contact['Builder_id'].present?
