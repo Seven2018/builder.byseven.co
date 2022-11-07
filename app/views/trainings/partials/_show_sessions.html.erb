@@ -1,4 +1,4 @@
-<% training.sessions.order(:date, :start_time).each do |session| %>
+<% training.sessions.order(date: :asc, start_time: :asc, title: :asc).each do |session| %>
 
   <% if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level) || session.users.include?(current_user) %>
 

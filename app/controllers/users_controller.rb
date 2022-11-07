@@ -104,7 +104,7 @@ class UsersController < ApplicationController
 
   def airtable_create_user
     user = OverviewUser.find(params[:record_id])
-    user_params = {firstname: user['Firstname'], lastname: user['Lastname'], email: user['Email'], password: 'Seven2021', picture: user['Photo'].first['url']}
+    user_params = {firstname: user['Firstname']&.capitalize, lastname: user['Lastname']&.upcase, email: user['Email']&.downcase, password: 'Seven2021', picture: user['Photo'].first['url']}
     builder_user = user['Builder_id'].present? ? User.find_by(id: user['Builder_id']) : User.find_by(email: user['Email'])
     skip_authorization
 
@@ -114,6 +114,12 @@ class UsersController < ApplicationController
       builder_user.access_level = 'admin'
     else
       builder_user.access_level = 'sevener'
+    end
+
+    if user['On / Off'] == 'Off'
+      builder_user.status = :inactive
+    else
+      builder_user.status = :active
     end
 
     if builder_user.save

@@ -61,7 +61,11 @@ class TrainingsController < ApplicationController
   def show
     authorize @training
 
-    @airtable_training = OverviewTraining.find(@training.airtable_id)
+    begin
+      @airtable_training = OverviewTraining.find(@training.airtable_id) if @training.airtable_id.present?
+    rescue
+    end
+
     @session = Session.new
     @sessions = Session.where(id: params[:training][:sessions].reject{|x| x.empty?}) if params[:format] == 'pdf'
 
