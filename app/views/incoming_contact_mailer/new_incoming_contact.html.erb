@@ -63,22 +63,18 @@
     </div>
     <div class="mailer-container">
       <div class="mailer-text">
-        <h2>Hello !</h2>
-        <br>
         <p>Nous avons reçu une nouvelle demande entrante via learn.byseven.co</p>
-        <p>Voici les informations collectées :</p>
         <br>
         <ul>
           <% if @contact['Nom'].present? %>
-            <li><%= @contact['Nom'] %></li>
+            <li>Nom : <%= @contact['Nom'] %></li>
           <% else %>
-            <li><%= "#{@contact['Firstname']} #{@contact['Lastname']}" %></li>
+            <li>Nom : <%= "#{@contact['Firstname']} #{@contact['Lastname']}" %></li>
           <% end %>
-          <li><%= @contact['Email'] %></li>
-          <li><%= @contact['Message'] %></li>
+          <li>Email de contact : <%= @contact['Email'] %></li>
+          <li>Message : <%= @contact['Message'] %></li>
         </ul>
         <br>
-        <p>Bonne journée</p>
       </div>
     </div>
   </body>
