@@ -63,6 +63,7 @@ class InvoiceItemsController < ApplicationController
     if @invoice_item.save
       unless params[:invoice_item][:skip_update].present?
         @invoice_item.export_numbers_revenue
+      end
       redirect_to invoice_item_path(@invoice_item)
     end
   end
