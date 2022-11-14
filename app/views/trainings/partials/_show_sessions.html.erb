@@ -39,6 +39,7 @@
         <% @session = session %>
         <%= render '/session_trainers/trainers_link_to_session', training: nil,
                                                       session: @session,
+                                                      session_number: session_number,
                                                       page: 'training',
                                                       controller_action: 'trainings_show' %>
 

@@ -177,6 +177,7 @@ class SessionTrainersController < ApplicationController
 
     @page = params.dig(:link, :page)
     @session = Session.find(params.dig(:link, :session_id))
+    @session_number = params.dig(:link, :session_number)
     user_id = params.dig(:link, :trainer_id)
 
     add_or_remove(@session.id, user_id)
