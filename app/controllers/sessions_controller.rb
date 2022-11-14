@@ -73,6 +73,7 @@ class SessionsController < ApplicationController
 
     @session.update(session_params)
     @redirect_from = params[:redirect_from]
+
     if @session.save
 
       UpdateAirtableJob.perform_async(@session.training, true)

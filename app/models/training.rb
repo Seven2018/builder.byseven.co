@@ -399,7 +399,6 @@ class Training < ApplicationRecord
       sevener = OverviewUser.all(filter: "{Builder_id} = '#{user.id}'")&.first
       card = OverviewNumbersSevener.all(filter: "{Training_id} = '#{self.id}'").select{|x| x['Sevener'] == [sevener.id]}&.first
       invoices = OverviewInvoiceSevener.all(filter: "{Training_id} = '#{self.id}'").select{|x| x['Sevener'] == [sevener.id]}
-      binding.pry
       dates = ''
 
       unless card.present?
