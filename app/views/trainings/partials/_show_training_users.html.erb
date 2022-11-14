@@ -8,37 +8,13 @@
 
       <img src='<%= "#{user.picture}" %>'
            class='avatar-sm-owner'
-           title='Owner: <%= "#{user.fullname}" %>'>
+           title='Creator : <%= "#{user.fullname}" %>'>
 
     <% else %>
 
       <img src='<%= asset_path('empty-avatar.png', type: :image) %>'
            class='avatar-sm-owner'
-           title='Owner  <%= "#{user.fullname}" %>'>
-
-    <% end %>
-
-  </a>
-
-<% end %>
-
-<% training.writers.each do |user| %>
-
-  <a class="mr--1rem"
-     data-toggle='modal'
-     data-target='#consultUser<%= user.id %>'>
-
-    <% if user.picture.present? %>
-
-      <img src='<%= "#{user.picture}" %>'
-           class='avatar-sm-writer'
-           title='Owner: <%= "#{user.fullname}" %>'>
-
-    <% else %>
-
-      <img src='<%= asset_path('empty-avatar.png', type: :image) %>'
-           class='avatar-sm-writer'
-           title='Owner  <%= "#{user.fullname}" %>'>
+           title='Creator : <%= "#{user.fullname}" %>'>
 
     <% end %>
 
@@ -56,13 +32,37 @@
 
       <img src='<%= "#{user.picture}" %>'
            class='avatar-sm-writer'
-           title='Owner: <%= "#{user.fullname}" %>'>
+           title='Operator : <%= "#{user.fullname}" %>'>
 
     <% else %>
 
       <img src='<%= asset_path('empty-avatar.png', type: :image) %>'
            class='avatar-sm-writer'
-           title='Owner  <%= "#{user.fullname}" %>'>
+           title='Operator : <%= "#{user.fullname}" %>'>
+
+    <% end %>
+
+  </a>
+
+<% end %>
+
+<% training.writers.each do |user| %>
+
+  <a class="mr--1rem"
+     data-toggle='modal'
+     data-target='#consultUser<%= user.id %>'>
+
+    <% if user.picture.present? %>
+
+      <img src='<%= "#{user.picture}" %>'
+           class='avatar-sm-writer'
+           title='Knower/Briefer : <%= "#{user.fullname}" %>'>
+
+    <% else %>
+
+      <img src='<%= asset_path('empty-avatar.png', type: :image) %>'
+           class='avatar-sm-writer'
+           title='Knower/Briefer : <%= "#{user.fullname}" %>'>
 
     <% end %>
 

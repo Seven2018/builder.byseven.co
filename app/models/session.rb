@@ -15,6 +15,17 @@ class Session < ApplicationRecord
   accepts_nested_attributes_for :session_trainers
   default_scope { order(:date, :start_time) }
 
+  include PgSearch::Model
+  pg_search_scope :search_by_title_and_training,
+    against: [ :title ],
+    associated_against: {
+      training: :title,
+    },
+    using: {
+      tsearch: { prefix: true }
+    },
+    ignoring: :accents
+
   def title_date
     "#{self.title} - #{self.date&.strftime('%d/%m/%y')}"
   end

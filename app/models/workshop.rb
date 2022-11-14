@@ -8,6 +8,17 @@ class Workshop < ApplicationRecord
   acts_as_list scope: :session
   before_save :default_values
 
+  include PgSearch::Model
+  pg_search_scope :search_by_title_and_content,
+    against: [ :title ],
+    associated_against: {
+      workshop_modules: [:title, :instructions],
+    },
+    using: {
+      tsearch: { prefix: true }
+    },
+    ignoring: :accents
+
   private
 
   def default_values

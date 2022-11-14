@@ -12,7 +12,10 @@ export default class extends Controller {
     this.selected = true
 
     useClickOutside(this)
-    this.search(null, this.hiddenInputTarget.value == '')
+
+    if (this.element.dataset.initialSearch == 'true') {
+      this.search(null, this.hiddenInputTarget.value == '')
+    }
   }
 
   toggle () {

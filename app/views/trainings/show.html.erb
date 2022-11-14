@@ -86,16 +86,21 @@
             <!-- <li><a data-toggle='modal' data-target='#addAttendees' data-toggle="tooltip" title="Add Participants">Add participants</a></li> -->
             <!-- <li><%# link_to 'Export PDF', training_path(@training, format: :pdf), target: :_blank %></li> -->
 
-            <li onmouseover='exportSubMenu(this);'>
+            <li data-action="mouseover->trainings--trainings-show#openExportSubMenu trainings--trainings-show:click:outside->trainings--trainings-show#closeExportSubMenu">
 
               <div>
+
                 <p>Export PDF</p>
+
                 <div class="dropdown-pdf hidden">
+
                   <%= simple_form_for :training, url: training_path(@training, format: :pdf), html: { target: "_blank" }, method: :get do |f| %>
                     <%= f.input :sessions, collection: @training.sessions, as: :check_boxes %>
                     <%= f.submit 'Export', class: ' btn btn-edit-green' %>
                   <% end %>
+
                 </div>
+
               </div>
 
             </li>
@@ -138,13 +143,17 @@
 
       <h3><strong><%= @training.client_contact.client_company.name %></strong></h3>
 
-      <div class="flex-row-between-centered">
+      <div class="d-flex justify-content-between align-items-center">
 
-        <h3 style='margin-bottom:1rem;'><%= @training.title %></h3>
-        <a data-toggle="modal" data-target="#trainingInfos" style="margin-bottom: .5rem;"><i class="fas fa-info-circle info" data-toggle='tooltip' title='More info on the training'></i></a>
-        <%# if @airtable_training.present? %>
-          <!-- <a data-toggle='modal' data-target='#consultObjectives' data-toggle="tooltip" title="See Objectives"><i class="fas fa-info-circle"></i></a> -->
-        <%# end %>
+        <h3 class="mb-1rem">
+          <%= @training.title %>
+        </h3>
+
+        <a class="d-none-changeable from-medium__d-flex mb-0_5rem"
+           data-toggle="modal"
+           data-target="#trainingInfos">
+          <i class="fas fa-info-circle info" data-toggle='tooltip' title='More info on the training'></i>
+        </a>
 
       </div>
 
@@ -332,114 +341,3 @@
   </div> -->
 
 <%# end %>
-
-
-<% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-
-  <script>
-    formGuardian = false;
-
-    function outsideClick(event, notelem) {
-      notelem = $(notelem); // jquerize (optional)
-      // check outside click for multiple elements
-      var clickedOut = true, i, len = notelem.length;
-      for (i = 0;i < len;i++)  {
-          if (event.target == notelem[i] || notelem[i].contains(event.target)) {
-              clickedOut = false;
-          }
-      }
-      if (clickedOut) return true;
-      else return false;
-    }
-
-    function openContentMenu(element) {
-      dropdown = element.parentNode.querySelector('.content-dropdown');
-      dropdown.classList.toggle('hidden');
-    };
-
-    function openSessionForm(element) {
-      if (formGuardian == false) {
-        formGuardian = true
-        card = element.closest('.card-lg')
-        card.querySelector('.card-footer-lg__infos').classList.add('hidden')
-        card.querySelector('.card-session-header').querySelector('h3').classList.add('hidden')
-        card.querySelector('.sessions-copy').classList.add('hidden')
-        card.querySelector('#owner-session-index').classList.add('hidden')
-        card.querySelector('.card-footer-lg__form').classList.remove('hidden')
-        card.querySelector('.card-main-lg').setAttribute('ondblclick','writeLED(1,1)')
-        flatpickr(".datepicker", {
-          disableMobile: true,
-          dateFormat: "d/m/Y",});
-        setTimeout(function(){ formGuardian = false }, 100);
-      }
-    }
-  </script>
-
-<% end %>
-
-<script>
-  function extractValue(element1) {
-    return parseInt(element1.options[element1.selectedIndex].value, 10);
-  }
-
-  function doubleClick(element) {
-    if (window.location.href.split('?').length > 1) {
-      trainingpage = window.location.href.split('?')[0] + '/sessions/'
-    } else {
-      trainingpage = window.location.href + '/sessions/'
-    }
-    sessionid = element.closest('.session-card-block').id.split('card-block-')[1]
-    link = trainingpage + sessionid
-    window.location.href = link
-  };
-
-  function exportSubMenu(element) {
-    dropdown_pdf = element.parentNode.parentNode.querySelector('.dropdown-pdf')
-    dropdown_pdf.classList.remove('hidden')
-
-    element.addEventListener('mouseout', function(f) {
-      console.log("test")
-      dropdown_pdf.classList.add('hidden')
-      element.removeEventListener('mouseout', arguments.callee, false);
-      return
-    })
-
-    window.addEventListener('click', function(e) {
-      if (outsideClick(e, dropdown_pdf)) {
-        dropdown_pdf.classList.add('hidden')
-        this.removeEventListener('click', arguments.callee, false);
-      }
-    });
-  }
-
-  buttons = document.querySelectorAll('.edit_button');
-  buttons.forEach(function(button) {
-    button.addEventListener('click', (click) => {
-      card = button.parentElement.parentElement.querySelector('.editSession');
-
-      edit_duration = card.querySelector('#edit_duration');
-      edit_start_time_hour = card.querySelectorAll('.edit_start_time').item(0);
-      edit_start_time_min = card.querySelectorAll('.edit_start_time').item(1);
-      edit_end_time_hour = card.querySelectorAll('.edit_end_time').item(0);
-      edit_end_time_min = card.querySelectorAll('.edit_end_time').item(1);
-      edit_start_time_hour_value = extractValue(edit_start_time_hour);
-      edit_start_time_min_value = extractValue(edit_start_time_min);
-      edit_end_time_hour_value = extractValue(edit_end_time_hour);
-      edit_end_time_min_value = extractValue(edit_end_time_min);
-      [edit_start_time_hour, edit_start_time_min, edit_end_time_hour, edit_end_time_min].forEach(function(element2) {
-        element2.addEventListener('change', (event) => {
-          edit_start_time_hour = card.querySelectorAll('.edit_start_time').item(0);
-          edit_start_time_min = card.querySelectorAll('.edit_start_time').item(1);
-          edit_end_time_hour = card.querySelectorAll('.edit_end_time').item(0);
-          edit_end_time_min = card.querySelectorAll('.edit_end_time').item(1);
-          edit_start_time_hour_value = extractValue(edit_start_time_hour);
-          edit_start_time_min_value = extractValue(edit_start_time_min);
-          edit_end_time_hour_value = extractValue(edit_end_time_hour);
-          edit_end_time_min_value = extractValue(edit_end_time_min);
-          edit_duration.value = edit_end_time_hour_value - edit_start_time_hour_value + (edit_end_time_min_value / 60) - (edit_start_time_min_value / 60);
-        });
-      });
-    });
-  });
-
-</script>

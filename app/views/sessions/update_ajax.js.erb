@@ -1,7 +1,7 @@
 if ("<%= @redirect_from %>" == 'session') {
   document.querySelector('.session-info-container').innerHTML = '<%= j (render("sessions/show_middle_info", session: @session)) %>';
 } else {
-  document.querySelector('#card-block-<%= @session.id %>').innerHTML = '<%= j (render("trainings/partials/show_session_card", session: @session)) %>';
+  document.querySelector('#card-block-<%= @session.id %>').innerHTML = '<%= j (render("trainings/partials/show_session_card", session: @session, session_number: @session_number)) %>';
   document.querySelector('#card-block-<%= @session.id %>').querySelector('.mods-list').innerHTML = '<%= j (render("trainings/show_session_content", session: @session)) %>';
 }
 
@@ -36,14 +36,4 @@ photos.forEach(photo => {
   counter = counter + 30;
 });
 
-document.querySelectorAll('.timepicker_24').forEach((element) => {
-  flatpickr(element, {
-    enableTime: true,
-    noCalendar: true,
-    dateFormat: "H:i",
-    time_24hr: true,
-    defaultDate: element.dataset.defaultTime
-  })
-})
-
-document.getElementById('trainings_show_container').trainingsShow.enableCalendarUpdate()
+document.getElementById('trainings_show_container').trainingsShow.setup()

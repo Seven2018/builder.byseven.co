@@ -44,9 +44,15 @@ class PagesController < ApplicationController
 
   def import_airtable
     skip_authorization
-    ImportAirtableJob.perform_async
-    redirect_to trainings_path
-    flash[:notice] = 'Import en cours, veuillez patienter quelques instants.'
+
+    if params[:training_id].present?
+      ImportAirtableJob.perform_async(params[:training_id])
+    else
+      ImportAirtableJob.perform_async
+
+      redirect_to trainings_path
+      flash[:notice] = 'Import en cours, veuillez patienter quelques instants.'
+    end
   end
 
   def account_invoice

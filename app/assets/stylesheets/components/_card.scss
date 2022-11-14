@@ -431,7 +431,6 @@ $timeline: #115173;
 }
 
 .sessions-menu {
-  margin-left: 15px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -464,7 +463,7 @@ $timeline: #115173;
 
 .card-footer-lg-mobile {
   height: 5rem;
-  padding: 2rem .5rem 2rem 1rem;
+  padding: 2rem 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -509,11 +508,6 @@ $timeline: #115173;
   }
 
 }
-
-.session-date-time {
-  width: 90%;
-}
-
 
 .card-session-header {
   display: flex;

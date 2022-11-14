@@ -27,33 +27,28 @@
 
         <div class='card-footer-lg__block'>
 
-          <% if session.date.present? %>
-
-            <p id='<%= "date-form-" + "#{session.id.to_s}" %>'> <%="#{session&.date&.to_s}"%> </p>
-
-          <% else %>
-
-            <p id='<%= "date-form-" + "#{session.id.to_s}" %>'> A dater </p>
-
-          <% end %>
+          <p id='<%= "date-form-" + "#{session.id.to_s}" %>'
+             class="width-10rem text-center">
+            <%="#{session&.date&.to_s.presence || 'A dater'}"%>
+          </p>
 
         </div>
 
         <div class='card-footer-lg__block'>
           <div id='<%= "time-form-" + "#{session.id.to_s}" %>'
                class="d-flex justify-content-center">
-            <p class="px-0_5rem"><%= session.start_time.strftime("%k:%M") %></p>
+            <p class="width-6rem px-0_5rem text-center"><%= session.start_time.strftime("%k:%M") %></p>
             <p>to</p>
-            <p class="px-0_5rem"><%= session.end_time.strftime("%k:%M") %></p>
+            <p class="width-6rem px-0_5rem text-center"><%= session.end_time.strftime("%k:%M") %></p>
           </div>
         </div>
 
-        <div class='card-footer-lg__block'>
+        <div class='card-footer-lg__block width-7rem'>
           <i class="fas fa-stopwatch"></i>
           <p id='<%= "duration-form-" + "#{session.id.to_s}" %>'><%= session.duration %> h</p>
         </div>
 
-        <div class='card-footer-lg__block'>
+        <div class='card-footer-lg__block width-8rem'>
 
           <i class="fas fa-users"></i>
 
@@ -66,7 +61,7 @@
 
         </div>
 
-        <div class='card-footer-lg__block'>
+        <div class='card-footer-lg__block width-15rem'>
 
           <% if session.session_type == 'Face-to-face' %>
 
@@ -104,7 +99,7 @@
                           data: {
                             default_time: (session.start_time.strftime('%H:%M') || '09:00')
                           },
-                          style: 'width: 54px; border-bottom: 1px solid rgba(0,0,0,0.42);',
+                          style: 'width: 60px; border-bottom: 1px solid rgba(0,0,0,0.42);',
                           ) %>
 
               <p>to</p>
@@ -118,26 +113,34 @@
                           data: {
                             default_time: (session.end_time.strftime('%H:%M') || '17:00')
                           },
-                          style: 'width: 54px; border-bottom: 1px solid rgba(0,0,0,0.42);',
+                          style: 'width: 60px; border-bottom: 1px solid rgba(0,0,0,0.42);',
                           ) %>
 
             </div>
 
           </div>
 
-          <div class='card-footer-lg__block'>
+          <div class='card-footer-lg__block width-7rem'>
             <i class="fas fa-stopwatch"></i>
             <%= f.input :duration, label: false, input_html: {min: 0, style: 'width: 4rem; text-align: center;', id: 'edit_duration', value: session.duration}, allow_blank: false %>
+            <p>h</p>
           </div>
 
-          <div class='card-footer-lg__block'>
+          <div class='card-footer-lg__block width-8rem'>
             <i class="fas fa-users"></i>
             <%= f.input :attendee_number, input_html: { min: 0, value: session.attendee_number, style: 'width: 4rem; text-align: center;' }, label: false %>
           </div>
 
-          <div class='card-footer-lg__block'>
+          <div class='card-footer-lg__block width-15rem'>
             <div class='flex-column-between-left'>
-              <%= f.collection_radio_buttons :session_type, [['Face-to-face', 'Face-to-face'], ['Online', 'Online']], :first, :last, checked: [session.session_type, session.session_type] %>
+
+              <%= render(Tools::SelectComponent.new(width: '100%',
+                                                        menu_height: 'fit-content',
+                                                        title: 'Session type',
+                                                        input_name: 'session[session_type]',
+                                                        collection: ['Face-to-face', 'Online'],
+                                                        selected_text: session.session_type,
+                                                        data_action: '')) %>
             </div>
           </div>
 
@@ -146,6 +149,8 @@
           </div>
 
           <div class='card-footer-lg__block-button'>
+            <%= f.hidden_field :session_number, value: session_number %>
+
             <%= f.submit 'Save', class: 'bld-btn-yellow' %>
           </div>
 
@@ -157,7 +162,9 @@
 
   </div>
 
-  <div class="card-main-lg" ondblclick="doubleClick(this)">
+  <div class="card-main-lg pos-rel">
+
+    <%= link_to '', training_session_path(session.training, session), class: 'stretched-link' %>
 
     <div class="card-session-header">
 
@@ -234,50 +241,66 @@
 
     <div class="mods-list">
       <%= render_async show_session_content_path(session_id: session.id) %>
-      <% session_number = session.training.sessions.order(date: :asc).find_index(session) + 1 %>
     </div>
 
-    <div class='sessions-footer'>
+  </div>
 
-      <div class="sessions-alert">
+  <div class='sessions-footer'>
 
-        <% if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level) %>
+    <div class="sessions-alert">
 
-          <% if timing_error %>
+      <% if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level) %>
 
-            <p class='timing_error error'>La durée de la session ne correspond pas aux horaires choisis</p>
+        <% if timing_error %>
 
-          <% end %>
-
-          <% if unavailable.count > 0 %>
-
-            <p class='error'>Sevener(s) non disponible(s) : <%= unavailable.sort.join(', ') %></p>
-
-          <% end %>
+          <p class='timing_error error'>La durée de la session ne correspond pas aux horaires choisis</p>
 
         <% end %>
 
-      </div>
+        <% if unavailable.count > 0 %>
 
-      <div class='sessions-copy'>
-
-        <% if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level) %>
-
-          <div class='btn-icon-grey-delete' onclick='openSessionForm(this)'><i class="fas fa-pen"></i></div>
-
-          <%= link_to training_copy_form_session_path(session.training, session, page: params[:page]), data: { toggle: 'tooltip'}, title: 'Copy Session' do %>
-            <div class='btn-icon-grey-delete'><i class="fas fa-copy"></i></div>
-          <% end %>
-
-          <%= link_to remove_session_trainers_path(session_id: session.id, destroy: 'true'), data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' do %>
-            <div class='btn-icon-grey-delete'><i class="fas fa-trash-alt"></i></div>
-          <% end %>
+          <p class='error'>Sevener(s) non disponible(s) : <%= unavailable.sort.join(', ') %></p>
 
         <% end %>
 
-        <h4 class='card-session-number'><%= session_number %>/<%= session.training.sessions.count %> </h4>
+      <% end %>
 
-      </div>
+    </div>
+
+    <div id="session-menu"
+         class='sessions-copy d-flex justify-content-end align-items-center'>
+
+      <% if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level) %>
+
+        <div class='d-flex justify-content-center align-items-center width-3rem height-3rem bld-light-grey2
+                    bld-dark-grey-hover cursor-pointer'
+
+             data-action="click->trainings--trainings-show#openSessionForm">
+          <i class="fas fa-pen"></i>
+        </div>
+
+        <%= link_to training_copy_form_session_path(session.training, session,
+                    page: params[:page]),
+                    class: "d-flex justify-content-center align-items-center width-3rem height-3rem bld-light-grey2 bld-dark-grey-hover cursor-pointer",
+                    data: { toggle: 'tooltip'},
+                    title: 'Copy Session' do %>
+
+          <i class="fas fa-copy"></i>
+
+        <% end %>
+
+        <%= link_to remove_session_trainers_path(session_id: session.id, destroy: 'true'),
+                    class: "d-flex justify-content-center align-items-center width-3rem height-3rem bld-light-grey2 bld-dark-grey-hover cursor-pointer",
+                    data: { toggle: 'tooltip', confirm: 'Are you sure ?'},
+                    title: 'Delete' do %>
+
+          <i class="fas fa-trash-alt"></i>
+
+        <% end %>
+
+      <% end %>
+
+      <h4 class='card-session-number bld-light-grey2 ml-1rem'><%= session_number %>/<%= session.training.sessions.count %> </h4>
 
     </div>
 
@@ -298,41 +321,46 @@
 
       <div class="card-footer-lg__infos-mobile">
 
-        <div class="session-date-time">
+        <div class="session-date-time width-100">
 
-          <% if session.date.present? %>
+            <p id='<%= "date-form-" + "#{session.id.to_s}" %>'
+               class="mr-5rem">
+              <%="#{session&.date&.to_s.presence || 'A dater'}"%>
+            </p>
 
-            <p id='<%= "date-form-" + "#{session.id.to_s}" %>'> <%="#{session&.date&.to_s}"%> </p>
+            <p id='<%= "time-form-" + "#{session.id.to_s}" %>'>
+              <%= " #{session.start_time.strftime("%k:%M")} to #{session.end_time.strftime("%k:%M")}" %>
+            </p>
 
-          <% else %>
+            <div class="ml-2rem">
 
-            <p id='<%= "date-form-" + "#{session.id.to_s}" %>'> A dater </p>
+              <% if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level) %>
 
-          <% end %>
+                <%= render Buttons::OptionsButtonComponent.new(vertical: true) do %>
 
-            <p id='<%= "time-form-" + "#{session.id.to_s}" %>'><%= " #{session.start_time.strftime("%k:%M")} to #{session.end_time.strftime("%k:%M")}" %></p>
+                  <%= link_to 'Copy Session', training_copy_form_session_path(session.training, session, page: params[:page]),
+                                              class: "flex-row-start-centered fs-1_6rem font-weight-500 bkt-bg-light-grey10-hover width-100 p-3",
+                                              data: { toggle: 'tooltip'},
+                                              title: 'Copy Session' %>
+
+                  <a class='flex-row-start-centered fs-1_6rem font-weight-500 bkt-bg-light-grey10-hover width-100 p-3'
+                     data-toggle='modal'
+                     data-target='#editSession<%= session.id %>'>
+                    Edit Session
+                  </a>
+
+                  <%= link_to 'Delete Session', remove_session_trainers_path(session_id: session.id, destroy: 'true'),
+                                                class: "flex-row-start-centered fs-1_6rem font-weight-500 bkt-bg-light-grey10-hover width-100 p-3",
+                                                data: { toggle: 'tooltip', confirm: 'Are you sure ?'},
+                                                title: 'Delete' %>
+
+                <% end %>
+
+              <% end %>
+
+            </div>
 
         </div>
-
-        <% if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level) %>
-
-          <div class="sessions-menu cursor-pointer" onclick="openContentMenu(this);">
-
-            <i class="fas fa-ellipsis-v"></i>
-
-          </div>
-
-          <div class="content-dropdown hidden">
-
-            <%= link_to 'Copy Session', training_copy_form_session_path(session.training, session, page: params[:page]), data: { toggle: 'tooltip'}, title: 'Copy Session' %>
-
-            <a class='session-edit' data-toggle='modal' data-target='#editSession<%= session.id %>'>Edit Session</a>
-
-            <%= link_to 'Delete Session', remove_session_trainers_path(session_id: session.id, destroy: 'true'), data: { toggle: 'tooltip', confirm: 'Are you sure ?'}, title: 'Delete' %>
-
-          </div>
-
-        <% end %>
 
       </div>
 
@@ -340,7 +368,9 @@
 
   </div>
 
-  <div class="card-main-lg-mobile" ondblclick="doubleClick(this)">
+  <div class="card-main-lg-mobile pos-rel">
+
+    <%= link_to '', training_session_path(session.training, session), class: 'stretched-link' %>
 
     <div class="card-session-header-mobile">
       <h3 id='<%= "title-form-" + "#{session.id.to_s}" %>'><%= session.title %></h3>
@@ -348,7 +378,6 @@
 
     <div class="mods-list">
       <%= render_async show_session_content_path(session_id: session.id) %>
-      <% session_number = session.training.sessions.order(date: :asc).find_index(session) + 1 %>
     </div>
 
     <div class='sessions-footer'>

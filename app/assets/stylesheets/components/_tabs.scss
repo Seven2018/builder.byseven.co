@@ -51,3 +51,21 @@
     margin-bottom: 2rem;
   }
 }
+
+//////////////////
+// BUILDER TABS //
+//////////////////
+
+.bld-tab-control {
+  color: $bld-dark-grey;
+  border-bottom: .5px solid $bld-light-grey2;
+  height: 33.5px !important;
+}
+
+.bld-tab-blue-green {
+
+  &.active {
+    color: $bld-blue-green;
+    border-bottom: .5px solid $bld-blue-green;
+  }
+}

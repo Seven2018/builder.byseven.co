@@ -84,7 +84,6 @@
       $('input[name="workshop_module[action1_id][]"] input:checkbox:not(:checked)').parent().css("color", "gray");
     }
   $('input[name="workshop_module[action1_id][]"]').change(function () {
-    console.log('test2');
     var $cs=$('input[name="workshop_module[action1_id][]"]:checked');
     if ($cs.length > 1) {
       $('input[name="workshop_module[action1_id][]"]:not(:checked)').attr("disabled", true);

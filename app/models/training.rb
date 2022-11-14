@@ -102,6 +102,153 @@ class Training < ApplicationRecord
     self.sessions.map{|x| x.duration * x.session_trainers.count}.sum
   end
 
+  ##############
+  ## AIRTABLE ##
+  ##############
+
+  def self.import_airtable(card)
+    training = Training.find_by(id: card['Builder_id'])
+    message = []
+
+    creator = card['Creator'].present? ?
+      User.find_by(id: OverviewUser.find(card['Creator'].join)['Builder_id']) : nil
+    operator = card['Operator'].present? ?
+      User.find_by(id: OverviewUser.find(card['Operator'].join)['Builder_id']) : nil
+    knowers = card['Knower/Briefer'].present? ?
+      User.where(id: OverviewUser.find_many(card['Knower/Briefer']).map{|x| x['Builder_id']}) : []
+
+    if training.present?
+
+      if card['Status'] == '12. Fail'
+        begin
+          training.destroy
+          card['Builder_id'] = nil
+          card.save
+          message << "Training #{training.title} deleted"
+        rescue => e
+          message << "Failed to delete Training #{training.title}"
+          puts message.first
+          puts e.message
+        end
+
+        return message.first
+      end
+
+      begin
+        card['Needs'].present? ? needs = card['Needs'] : needs = ''
+        card['Objectives'].present? ? objectives = card['Objectives'] : objectives = ''
+        infos = "Besoins\n\n" + needs + "\n\n\nObjectifs\n\n" + objectives
+
+        training.update(title: card['Title']) if training.title != card['Title']
+        training.update(unit_price: card['Unit Price']) if training.unit_price != card['Unit Price']
+        training.update(infos: infos)
+
+        current_creator = training.owners.first
+        if current_creator != creator
+          TrainingOwnership.find_or_create_by(user: (current_creator.presence || creator), training: training, user_type: 'Owner')
+                           .update user: creator
+        end
+
+        current_operator = training.sidekicks.first
+        if current_operator != operator
+          TrainingOwnership.find_or_create_by(user: (current_creator.presence || creator), training: training, user_type: 'Sidekick')
+                           .update user: operator
+        end
+
+        current_knowers = training.writers
+        if current_knowers.map(&:id).sort != knowers.map(&:id).sort
+          TrainingOwnership.where.not(training: training, user_type: 'Writer', user: knowers).destroy_all
+          knowers.each do |knower|
+            TrainingOwnership.find_or_create_by(training: training, user_type: 'Writer', user: knower)
+          end
+        end
+      rescue => e
+        message << "Failed to update Training #{training.title}"
+        puts message.first
+        puts e.message
+      end
+
+    elsif card['Status'] != '12. Fail'
+
+      if card['Partner Contact ⭐️'].present?
+        contact = OverviewContact.find(card['Partner Contact ⭐️']&.join)
+        company = OverviewClient.find(contact['Company/School']&.join)
+        message << "Training has no Partner" unless company.id.present?
+
+        unless contact['Builder_id'].present?
+
+          begin
+            unless company['Builder_id'].present?
+              reference = (ClientCompany.where.not(reference: nil).order(id: :asc).last.reference[-8..-1].to_i + 1).to_s.rjust(8, '0') if ClientCompany.all.count != 0
+              new_company = ClientCompany.create(name: company['Name'], address: company['Address'], zipcode: company['Zipcode'], city: company['City'], client_company_type: company['Type'], description: '', reference: reference)
+              message << "Failed to create Partner." unless new_company.valid?
+              company['Builder_id'] = new_company.id
+              company.save
+            end
+          rescue => e
+            message << "Failed to create Partner."
+            puts message.first
+            puts e.message
+          end
+
+          begin
+            new_contact = ClientContact.new(name: contact['Firstname'] + ' ' + contact['Lastname'], email: contact['Email'], client_company_id: company['Builder_id'].to_i, title: '', role_description: '')
+            message << "Failed to create Partner Contact." unless new_contact.save
+            contact['Builder_id'] = new_contact.id
+            contact.save
+          rescue => e
+            message << "Failed to create Partner Contact."
+            puts message.first
+            puts e.message
+          end
+        end
+
+        begin
+          company['Type'] == 'School' ? vat = false : vat = true
+          vat = true if card['VAT'] == true
+          card['Needs'].present? ? needs = card['Needs'] : needs = ''
+          card['Objectives'].present? ? objectives = card['Objectives'] : objectives = ''
+          infos = "Besoins\n\n" + needs + "\n\n\nObjectifs\n\n" + objectives
+          training = Training.new(title: card['Title'],
+                                  client_contact_id: contact['Builder_id'],
+                                  refid: "#{Time.current.strftime('%y')}-#{(Training.last.refid[-4..-1].to_i + 1).to_s.rjust(4, '0')}",
+                                  satisfaction_survey: 'https://learn.byseven.co/survey',
+                                  unit_price: card['Unit Price'].to_f,
+                                  training_type: card['Type'],
+                                  vat: vat,
+                                  infos: infos,
+                                  airtable_id: card.id)
+
+          if training.save
+            card['Reference SEVEN'] = training.refid
+            card['Builder_id'] = training.id
+            card['Builder Update'] = Time.now.utc.iso8601(3)
+            card.save
+
+            TrainingOwnership.create(training: training, user: creator, user_type: 'Owner') if creator.present?
+            TrainingOwnership.create(training: training, user: operator, user_type: 'Sidekick') if operator.present?
+
+            knowers.each do |knower|
+              TrainingOwnership.create(training: training, user: knower, user_type: 'Writer')
+            end
+          else
+            message << "Failed to create Training."
+          end
+        rescue => e
+          message << "Failed to create Training."
+          puts message.first
+          puts e.message
+        end
+
+      else
+        message << "Training has no Partner Contact"
+      end
+
+    end
+
+    return message.present? ? message.first : training
+  end
+
   def export_airtable
     # begin
       existing_card = OverviewTraining.find(self.airtable_id)
@@ -122,7 +269,7 @@ class Training < ApplicationRecord
 
       end
 
-      existing_card['Status'] = "11. Terminée" if (self.invoice_items.present? && self.invoice_items.where(status: ['Pending', 'Sent']).count == 0 && self.invoice_items.where(status: 'Paid').count > 0)
+      existing_card['Status'] = "11. Terminée" if (self.end_time > Date.today && self.invoice_items.present? && self.invoice_items.where(status: ['Pending', 'Sent']).count == 0 && self.invoice_items.where(status: 'Paid').count > 0)
 
       self.sessions.each do |session|
         if session.date.present?
@@ -240,45 +387,42 @@ class Training < ApplicationRecord
   end
 
   def export_numbers_sevener(user)
-    # begin
-      cards = OverviewNumbersSevener.all(filter: "{Training_id} = '#{self.id}'")
+    cards = OverviewNumbersSevener.all(filter: "{Training_id} = '#{self.id}'")
 
-      cards.each do |trainer|
-        unless self.trainers.map{|x| x.id}.include?(OverviewUser.find(trainer['Sevener'].join)['Builder_id'])
-          trainer.destroy
-        end
+    cards.each do |trainer|
+      unless self.trainers.map{|x| x.id}.include?(OverviewUser.find(trainer['Sevener'].join)['Builder_id'])
+        trainer.destroy
+      end
+    end
+
+    if ['sevener', 'sevener+'].include?(user.access_level)
+      sevener = OverviewUser.all(filter: "{Builder_id} = '#{user.id}'")&.first
+      card = OverviewNumbersSevener.all(filter: "{Training_id} = '#{self.id}'").select{|x| x['Sevener'] == [sevener.id]}&.first
+      invoices = OverviewInvoiceSevener.all(filter: "{Training_id} = '#{self.id}'" && "{Sevener} = '#{[sevener.id]}'")
+      dates = ''
+
+      unless card.present?
+        # card = OverviewNumbersSevener.create('Training' => [OverviewTraining.all.select{|x| x['Builder_id'] == self.id}&.first.id], 'Sevener' => [sevener.id], 'Billing Type' => 'Hourly')
+        card = OverviewNumbersSevener.create('Training' => [OverviewTraining.all(filter: "{Builder_id} = '#{self.id}'")&.first.id], 'Sevener' => [sevener.id], 'Billing Type' => 'Hourly')
+        self.client_contact.client_company.client_company_type == 'Company' ? card['Unit Price'] = 80 : card['Unit Price'] = 40
       end
 
-      if ['sevener', 'sevener+'].include?(user.access_level)
-        sevener = OverviewUser.all(filter: "{Builder_id} = '#{user.id}'")&.first
-        card = OverviewNumbersSevener.all(filter: "{Training_id} = '#{self.id}'").select{|x| x['Sevener'] == [sevener.id]}&.first
-        invoices = OverviewInvoiceSevener.all(filter: "{Training Reference} = '#{[self.refid]}'" && "{Sevener} = '#{[sevener.id]}'")
-        dates = ''
-
-        unless card.present?
-          # card = OverviewNumbersSevener.create('Training' => [OverviewTraining.all.select{|x| x['Builder_id'] == self.id}&.first.id], 'Sevener' => [sevener.id], 'Billing Type' => 'Hourly')
-          card = OverviewNumbersSevener.create('Training' => [OverviewTraining.all(filter: "{Builder_id} = '#{self.id}'")&.first.id], 'Sevener' => [sevener.id], 'Billing Type' => 'Hourly')
-          self.client_contact.client_company.client_company_type == 'Company' ? card['Unit Price'] = 80 : card['Unit Price'] = 40
-        end
-
-        unless card['Billing Type'] == 'Flat rate'
-          card['Unit Number'] = user.hours(self)
-        end
-
-        card['Invoices Sevener'] = invoices.map{|x| x.id}
-        card['Total Paid'] = invoices.select{|x| x['Amount'] if x['Status'] == 'Paid'}.map{|x| x['Amount']}.sum
-
-        self.sessions.each do |session|
-          dates += session.date.strftime('%d/%m/%Y') + "\n" if session.users.include?(user) if session.date.present?
-        end
-
-        card['Dates'] = dates
-        card['User_id'] = user.id
-        card['Training_id'] = self.id
-        card.save
+      unless card['Billing Type'] == 'Flat rate'
+        card['Unit Number'] = user.hours(self)
       end
-    # rescue
-    # end
+
+      card['Invoices Sevener'] = invoices.map{|x| x.id}
+      card['Total Paid'] = invoices.select{|x| x['Amount'] if x['Status'] == 'Paid'}.map{|x| x['Amount']}.sum
+
+      self.sessions.each do |session|
+        dates += session.date.strftime('%d/%m/%Y') + "\n" if session.users.include?(user) if session.date.present?
+      end
+
+      card['Dates'] = dates
+      card['User_id'] = user.id
+      card['Training_id'] = self.id
+      card.save
+    end
   end
 
   def self.export_numbers_activity_cumulation

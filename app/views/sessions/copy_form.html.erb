@@ -1,4 +1,6 @@
-<div class="container-seven-large d-flex flex-column align-items-center"
+<% training = @session.training %>
+
+<div class="container-seven-large height-100 d-flex flex-column align-items-center"
      data-controller="sessions--sessions-copy-form">
 
   <div id="page-controls"
@@ -10,61 +12,124 @@
 
   </div>
 
+
   <div class="p-5rem min-width-50">
 
-    <h3 id='copy_title'
-        class='<%= @session.training.id %> mb-3rem'>
-      Copy "<%= @session.title %>" to:
-    </h3>
+    <%= render(Tools::TabsSystemComponent.new(tabs_names: ["copy_session", "copy_content_to_session"]),
+                                              klasses: 'width-100') do %>
 
-    <%= simple_form_for :copy,
-                        url: training_copy_session_path(@session.training, @session),
-                        method: 'GET',
-                        data: {
-                          sessions__copy_form_target: 'form'
-                        } do |f| %>
+      <div id="copy_session-display"
+           class="bld-tab">
 
-      <div class="copy-form-element">
+        <p id='copy_title'
+            class='<%= training.id %> mb-3rem'>
+          Copy "<%= @session.title %>" to :
+        </p>
 
-        <%= render(Tools::SelectAutocompleteComponent.new(path: trainings_search_path,
-                                                                  additional_params: 'not_completed',
-                                                                  width: '100%',
-                                                                  menu_max_height: '22rem',
-                                                                  placeholder: 'Search for training or leave empty to copy here',
-                                                                  input_name: "copy[target_training_id]",
-                                                                  data_action_input: 'change->sessions--sessions-copy-form#switchConfirmButton',
-                                                                  data_action_select: 'click->sessions--sessions-copy-form#switchConfirmButton',
-                                                                  klasses: 'mr-0 mb-2rem')) %>
+        <%= simple_form_for :copy,
+                            url: training_copy_session_path(training, @session),
+                            method: 'GET',
+                            data: {
+                              sessions__copy_form_target: 'form'
+                            } do |f| %>
 
-        <div class="d-flex justify-content-between align-items-center">
+          <div class="copy-form-element">
 
-          <label for="copy[amount]">Number of copies</label>
+            <%= render(Tools::SelectAutocompleteComponent.new(path: trainings_search_path,
+                                                                      additional_params: 'not_completed',
+                                                                      width: '100%',
+                                                                      menu_max_height: '22rem',
+                                                                      placeholder: 'Search for training or leave empty to copy here',
+                                                                      input_name: "copy[target_training_id]",
+                                                                      data_action_input: 'change->sessions--sessions-copy-form#switchConfirmButton',
+                                                                      data_action_select: 'click->sessions--sessions-copy-form#switchConfirmButton',
+                                                                      klasses: 'mr-0 mb-2rem')) %>
 
-          <input type="numeric"
-                 name="copy[amount]"
-                 class="width-5rem text-center"
-                 value="1">
+            <div class="d-flex justify-content-between align-items-center">
 
-        </div>
+              <label for="copy[amount]">Number of copies</label>
+
+              <input type="numeric"
+                     name="copy[amount]"
+                     class="width-5rem text-center"
+                     value="1">
+
+            </div>
+
+          </div>
+
+          <div class='d-flex justify-content-end mt-2rem'>
+
+            <%= button_tag type: 'submit',
+                           value: 'copy',
+                           class: 'btn btn-edit-green btn-icon btn-submit copy-button hidden',
+                           data: { action: 'click->sessions--sessions-copy-form#blockEvents' },
+                           title: 'Copy' do %>
+              <i class="fas fa-copy"></i>
+            <% end %>
+
+            <%= button_tag type: 'submit',
+                           value: 'copy_here',
+                           class: 'btn btn-edit-green btn-icon btn-submit copy-here-button',
+                           data: { action: 'click->sessions--sessions-copy-form#blockEvents' },
+                           title: 'Copy here' do %>
+              <i class="fas fa-angle-double-down"></i>
+            <% end %>
+
+          </div>
+
+        <% end %>
 
       </div>
 
-      <div class='modal-control'>
+      <div id="copy_content_to_session-display"
+           class="bld-tab hidden">
 
-        <%= button_tag type: 'submit',
-                       value: 'copy',
-                       class: 'btn btn-edit-green btn-icon btn-submit copy-button hidden',
-                       data: { action: 'click->sessions--sessions-copy-form#blockEvents' },
-                       title: 'Copy' do %>
-          <i class="fas fa-copy"></i>
-        <% end %>
+        <p class='mb-3rem'>
+          Copy content into target(s) session(s) :
+        </p>
 
-        <%= button_tag type: 'submit',
-                       value: 'copy_here',
-                       class: 'btn btn-edit-green btn-icon btn-submit copy-here-button',
-                       data: { action: 'click->sessions--sessions-copy-form#blockEvents' },
-                       title: 'Copy here' do %>
-          <i class="fas fa-angle-double-down"></i>
+        <%= simple_form_for :copy,
+                            url: training_copy_content_session_path(training, @session),
+                            method: 'GET',
+                            data: {
+                              sessions__copy_form_target: 'form'
+                            } do |f| %>
+
+          <div class="copy-form-element">
+
+            <%= render(Tools::SelectAutocompleteComponent.new(path: trainings_search_path,
+                                                                      additional_params: 'not_completed',
+                                                                      width: '100%',
+                                                                      menu_max_height: '22rem',
+                                                                      placeholder: 'Search for target training',
+                                                                      input_name: 'copy[training_id]',
+                                                                      default_value: [training.id, training.client_company.name + ' - ' + training.title + ' - id: ' + training.id.to_s],
+                                                                      data_action_input: 'keyup->sessions--sessions-copy-form#fetchSessions',
+                                                                      data_action_select: 'click->sessions--sessions-copy-form#fetchSessions',
+                                                                      klasses: 'mr-0 mb-2rem')) %>
+
+          </div>
+
+          <div data-sessions--sessions-copy-form-target="sessionsList">
+
+            <%= render(Tools::CheckboxCollectionComponent.new(elements: training.sessions.pluck(:id, :title),
+                                                              input_name: 'copy[target_sessions_ids]')) %>
+
+          </div>
+
+          <div class='d-flex justify-content-end mt-2rem'>
+
+            <%= button_tag type: 'submit',
+                           value: 'copy',
+                           class: 'btn btn-edit-green btn-icon btn-submit copy-button',
+                           data: { action: 'click->sessions--sessions-copy-form#blockEvents' },
+                           title: 'Copy' do %>
+              <i class="fas fa-copy"></i>
+            <% end %>
+
+          </div>
+
         <% end %>
 
       </div>
