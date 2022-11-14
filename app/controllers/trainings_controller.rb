@@ -155,6 +155,11 @@ class TrainingsController < ApplicationController
     invoices.present? ? @amount_to_bill = amount_due - amount_billed : @amount_to_bill = amount_due
   end
 
+
+  ##################
+  ## EMAIL SYSTEM ##
+  ##################
+
   def trainer_notification_email
     authorize @training
     if params[:status] == 'new'
@@ -175,10 +180,10 @@ class TrainingsController < ApplicationController
     TrainerNotificationMailer.with(user: user).trainer_session_reminder(session, user).deliver
   end
 
-  def redirect_docusign
-    skip_authorization
-    redirect_to "https://account-d.docusign.com/oauth/auth?response_type=token&scope=signature&client_id=ce366c33-e8f1-4aa7-a8eb-a83fbffee4ca&redirect_uri=http://localhost:3000/docusign/callback"
-  end
+
+  ###############
+  ## ATTENDEES ##
+  ###############
 
   def import_attendees
     authorize @training
@@ -209,12 +214,50 @@ class TrainingsController < ApplicationController
       @trainings = @trainings.result(distinct: true)
     end
 
-    @trainings = @trainings.map{|x| [x.id, (x.client_company.name + ' - ' + x.title + ' - id: ' + x.id.to_s)]}
+    @trainings = @trainings.limit(50).map{|x| [x.id, (x.client_company.name + ' - ' + x.title + ' - id: ' + x.id.to_s)]}
 
     render partial: 'shared/tools/select_autocomplete', locals: { elements: @trainings }
   end
 
-  #########################
+  ##############
+  ## AIRTABLE ##
+  ##############
+
+  def airtable_create_training
+    airtable_training = OverviewTraining.find(params[:record_id])
+    skip_authorization
+
+    result = Training.import_airtable(airtable_training)
+
+    if result.class == String
+      redirect_to trainings_path
+      flash[:alert] = "#{result}"
+    else
+      redirect_to training_path(result)
+    end
+  end
+
+
+  ##########
+  ## MISC ##
+  ##########
+
+  def training_sessions_list
+    training = Training.find(params[:training_id])
+    authorize training
+
+    sessions = params[:empty] == 'true' ? training.sessions.where_not_exists(:workshops) : training.sessions
+    sessions = sessions.order(date: :asc).pluck(:id, :title)
+
+    # render json: sessions
+    render partial: 'shared/tools/training_sessions_list', locals: { elements: sessions }
+  end
+
+  # def redirect_docusign
+  #   skip_authorization
+  #   redirect_to "https://account-d.docusign.com/oauth/auth?response_type=token&scope=signature&client_id=ce366c33-e8f1-4aa7-a8eb-a83fbffee4ca&redirect_uri=http://localhost:3000/docusign/callback"
+  # end
+
 
   private
 

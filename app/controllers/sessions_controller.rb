@@ -69,6 +69,8 @@ class SessionsController < ApplicationController
     authorize @session
 
     training = @session.training
+    @session_number = params.dig(:session, :session_number)
+
     @session.update(session_params)
     @redirect_from = params[:redirect_from]
     if @session.save
@@ -146,18 +148,28 @@ class SessionsController < ApplicationController
     redirect_to training_path(training)
   end
 
-  def copy_content(source, target)
+  def copy_content
     authorize @session
-    target_session = Session.find(params[:copy][:session_id])
-    workshop_count = target_session.workshops.count
-    @session.workshops.each do |workshop|
-      new_workshop = Workshop.create(workshop.attributes.except("id", "created_at", "updated_at", "session_id"))
-      new_workshop.update(session_id: target_session.id, position: workshop_count + workshop.position)
-      workshop.workshop_modules.each do |mod|
-        new_mod = WorkshopModule.create(mod.attributes.except("id", "created_at", "updated_at", "workshop_id", "user_id"))
-        new_mod.update(workshop_id: new_workshop.id, position: mod.position)
+
+    training = Training.find(params.dig(:copy, :training_id))
+    target_sessions = Session.where(id: params.dig(:copy, :target_sessions_ids).split(','))
+
+    tar.each do |target_session|
+
+      workshop_count = target_session.workshops.count
+
+      @session.workshops.each do |workshop|
+        new_workshop = Workshop.create(workshop.attributes.except("id", "created_at", "updated_at", "session_id"))
+        new_workshop.update(session_id: target_session.id, position: workshop_count + workshop.position)
+        workshop.workshop_modules.each do |mod|
+          new_mod = WorkshopModule.create(mod.attributes.except("id", "created_at", "updated_at", "workshop_id", "user_id"))
+          new_mod.update(workshop_id: new_workshop.id, position: mod.position)
+        end
       end
+
     end
+
+    redirect_to training_path(training)
   end
 
   def presence_sheet
@@ -190,6 +202,26 @@ class SessionsController < ApplicationController
       SessionAttendee.create(attendee_id: new_attendee.id, session_id: @session.id)
     end
     redirect_to training_session_path(@session.training, @session)
+  end
+
+
+  #########################
+  ## SEARCH AUTOCOMPLETE ##
+  #########################
+
+  def sessions_search
+    skip_authorization
+
+    if params[:search] == ""
+      @sessions = Session.all.joins(:training).order('trainings.title asc').limit(50)
+    else
+      @sessions = Session.search_by_title_and_training(params[:search])
+      @sessions = @sessions.limit(50)
+    end
+
+    @sessions = @sessions.map{|x| [x.id, (x.training.title + ' - ' + x.title + ' - id: ' + x.id.to_s)]}.sort{|a,b| a[1] <=> b[1]}
+
+    render partial: 'shared/tools/select_autocomplete', locals: { elements: @sessions }
   end
 
   private

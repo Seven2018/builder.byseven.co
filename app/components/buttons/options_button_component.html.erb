@@ -1,0 +1,27 @@
+<div class="dropdown">
+
+  <div id="dropdownMenu"
+       class="btn-icon-grey btn-icon smooth-transition cursor-pointer"
+       data-toggle="dropdown">
+
+    <span class="iconify"
+          data-icon="<%= @vertical ? 'fa-solid:ellipsis-h' : 'fa-solid:ellipsis-v' %>"
+          data-width="20"
+          data-height="20"></span>
+
+  </div>
+
+  <div class="dropdown-menu dropdown-menu-right min-width-fit-content"
+       aria-labelledby="dropdownMenu">
+
+    <div class="bkt-bg-white rounded-5px
+                bkt-box-shadow-medium width-max-content overflow-hidden">
+
+      <%= content %>
+
+    </div>
+
+  </div>
+
+
+</div>

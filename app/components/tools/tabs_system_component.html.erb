@@ -1,0 +1,26 @@
+<div class="<%= @klasses %>"
+		 data-controller="tools--tabs-system"
+		 data-tools--tabs-system-target='tabContainer'>
+	
+	<div class="d-flex justify-content-start align-items-center mb-5rem border-bottom-bkt-light-grey5" style='height: 32.5px;'>
+
+		<% active = true %>
+
+		<% @tabs_names.each do |tab_name| %>
+
+			<p id="<%= tab_name %>"
+	       class="bld-tab-control bld-tab-blue-green fs-1_6rem
+	       	      p-1rem z-index-5 cursor-pointer <%= 'active' if active %>"
+	       data-action='click->tools--tabs-system#selectTab'>
+	      <%= tab_name.capitalize.gsub('_', ' ') %>
+	    </p>
+
+	    <% active = false %>
+
+		<% end %>
+
+	</div>
+
+	<%= content %>
+
+</div>

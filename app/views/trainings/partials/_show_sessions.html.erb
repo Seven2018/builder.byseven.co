@@ -1,10 +1,14 @@
+<% session_number = 1 %>
+
 <% training.sessions.order(date: :asc, start_time: :asc, title: :asc).each do |session| %>
 
   <% if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level) || session.users.include?(current_user) %>
 
     <div class='session-card-block' id="card-block-<%= session.id %>">
-      <%= render 'trainings/partials/show_session_card', session: session %>
+      <%= render 'trainings/partials/show_session_card', session: session, session_number: session_number %>
     </div>
+
+    <% session_number += 1 %>
 
     <!-- MODALS -->
 
@@ -46,7 +50,7 @@
 
 <% end %>
 
-<a data-toggle='modal' data-target='#newSession' data-toggle="tooltip" title="Add Session">
+<a data-toggle='modal' data-target='#newSession' title="Add Session">
 
   <div class='session-card-block'>
 
@@ -62,25 +66,3 @@
   </div>
 
 </a>
-
-
-<!------------>
-<!-- MOBILE -->
-<!------------>
-
-<div class="card-lg-mobile card-lg-mobile-empty">
-
-  <div class="card-main-lg-mobile" ondblclick="doubleClick(this)">
-
-    <div class="card-session-header-mobile">
-
-      <div>
-        <i class="fas fa-plus-circle"></i>
-        <p>Add a Session</p>
-      </div>
-
-    </div>
-
-  </div>
-
-</div>

@@ -156,6 +156,7 @@ Rails.application.routes.draw do
   resources :trainings do
     get 'sessions_viewer/:id', to: 'sessions#viewer', as: 'session_viewer'
     get 'sessions/:id/copy', to: 'sessions#copy', as: 'copy_session'
+    get 'sessions/:id/copy_content', to: 'sessions#copy_content', as: 'copy_content_session'
     get 'sessions/:id/copy_form', to: 'sessions#copy_form', as: 'copy_form_session'
     get 'sessions/:id/presence_sheet', to: 'sessions#presence_sheet', as: 'session_presence_sheet'
     patch 'sessions/:id/update_ajax', to: 'sessions#update_ajax', as: 'update_ajax_session'
@@ -204,6 +205,9 @@ Rails.application.routes.draw do
   get 'trainings/:id/trainer_session_reminder', to: 'trainings#trainer_reminder_email', as: 'trainer_reminder_email'
   get 'show_session_content', to: 'trainings#show_session_content', as: 'show_session_content'
   # get 'trainings/:id/import_attendees', to: 'trainings#import_attendees', as: 'import_attendees_training'
+  get :airtable_create_training, controller: :trainings
+  get :training_sessions_list, controller: :trainings
+  get :sessions_search, controller: :sessions
 
 
   #########

@@ -20,7 +20,7 @@
 }
 
 .dropdown-training {
-  position: relivatve;
+  position: relative;
 
   .dropdown-pdf {
     background: white;
@@ -302,16 +302,6 @@
   text-transform: none !important;
 }
 
-.sessions-copy {
-  display: flex;
-  justify-content: flex-end;
-  align-items: baseline;
-  color: #888888;
-  i {
-    color: #888888;
-  }
-}
-
 .sessions-footer {
   min-height: 4rem;
   position: relative;
@@ -319,10 +309,6 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-
-  i {
-    margin-right: 1rem;
-  }
 }
 
 .info {

@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus'
+import { useClickOutside } from 'stimulus-use'
 
 export default class extends Controller {
   static get targets () {
@@ -19,9 +20,14 @@ export default class extends Controller {
       ] = this
 
     this.setup()
+    useClickOutside(this, { element: document.querySelector('.dropdown-pdf') })
   }
 
   setup() {
+    flatpickr(".datepicker", {
+      disableMobile: true,
+      dateFormat: "d/m/Y",});
+
     const timepicker24s = document.querySelectorAll('.timepicker_24')
     timepicker24s.forEach((element) => {
       flatpickr(element, {
@@ -29,12 +35,47 @@ export default class extends Controller {
         noCalendar: true,
         dateFormat: "H:i",
         time_24hr: true,
+        minuteIncrement: 5,
         defaultDate: element.dataset.defaultTime
       })
     })
 
     this.enableCalendarUpdate()
   }
+
+
+  ///////////////////////
+  // OPEN SESSION EDIT //
+  ///////////////////////
+
+  openSessionForm(event) {
+    const element = event.currentTarget
+    const card = element.closest('.card-lg')
+    card.querySelector('.card-footer-lg__infos').classList.add('hidden')
+    card.querySelector('.card-session-header').querySelector('h3').classList.add('hidden')
+    card.querySelector('.sessions-copy').classList.add('hidden')
+    card.querySelector('#owner-session-index').classList.add('hidden')
+    card.querySelector('.card-footer-lg__form').classList.remove('hidden')
+    card.querySelector('.card-main-lg').setAttribute('ondblclick','writeLED(1,1)')
+  }
+
+
+  ////////////////
+  // EXPORT PDF //
+  ////////////////
+
+  openExportSubMenu(event) {
+    const element = event.currentTarget
+    const dropdown_pdf = element.parentNode.parentNode.querySelector('.dropdown-pdf')
+    dropdown_pdf.classList.remove('hidden')
+  }
+
+  closeExportSubMenu(event) {
+    const element = event.currentTarget
+    const dropdown_pdf = element.parentNode.parentNode.querySelector('.dropdown-pdf')
+    dropdown_pdf.classList.add('hidden')
+  }
+
 
   /////////////////////
   // CALENDAR UPDATE //

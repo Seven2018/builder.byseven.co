@@ -49,6 +49,10 @@ class TrainingPolicy < ApplicationPolicy
     check_access_seven
   end
 
+  def training_sessions_list?
+    check_access_seven
+  end
+
   private
 
   def check_access_seven
