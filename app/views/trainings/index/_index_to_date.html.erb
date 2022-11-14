@@ -38,7 +38,7 @@
               </div>
 
               <img src="<%= training.client_contact.client_company.logo %>"
-                   class='lazyload client-logo width-5rem min-width-5rem height-5rem ml-0_5rem'>
+                   class='client-logo width-5rem min-width-5rem height-5rem ml-0_5rem'>
 
             </div>
 
@@ -50,7 +50,7 @@
 
           <% if owners.present? %>
 
-            <img class="lazyload avatar-sm-owner training-card-user training-card-user-<%= u %>" src="<%= training.owners.first.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+            <img class="avatar-sm-owner training-card-user training-card-user-<%= u %>" src="<%= training.owners.first.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
             <% u += 1 %>
 
           <% end %>
@@ -59,7 +59,7 @@
 
           <% if sidekicks.present? %>
 
-            <img class="lazyload avatar-sm-sidekick training-card-user training-card-user-<%= u %>" src="<%= sidekicks.first.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+            <img class="avatar-sm-sidekick training-card-user training-card-user-<%= u %>" src="<%= sidekicks.first.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
             <% u += 1 %>
 
           <% end %>
@@ -68,7 +68,7 @@
 
           <% if writers.present? %>
 
-            <img class="lazyload avatar-sm-writer training-card-user training-card-user-<%= u %>" src="<%= writers.first.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+            <img class="avatar-sm-writer training-card-user training-card-user-<%= u %>" src="<%= writers.first.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
 
           <% end %>
 
@@ -82,3 +82,17 @@
 
 <% end %>
 
+<% if any_more > 0 %>
+
+  <div class="training-card d-flex justify-content-center align-items-center bld-bg-light-grey2">
+
+    <div class="width-25rem mx-0_5rem px-1rem">
+
+      <p class="text-center mb-1rem font-weight-700">+ <%= any_more %> more trainings</p>
+      <p class="text-center font-weight-700">Please use the search to filter the results</p>
+
+    </div>
+
+  </div>
+
+<% end %>

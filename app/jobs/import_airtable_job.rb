@@ -59,7 +59,7 @@ class ImportAirtableJob < ApplicationJob
         training.update(unit_price: card['Unit Price']) if training.unit_price != card['Unit Price']
         training.update(infos: infos)
 
-      elsif card['Partner Contact'].present?
+      elsif card['Partner Contact ⭐️'].present?
 
         owners = OverviewUser.all.select{|x| if card['Owner'].present?; card['Owner'].include?(x.id); end}
         sidekicks = OverviewUser.all.select{|x| if card['Sidekick'].present?; card['Sidekick'].include?(x.id); end}
