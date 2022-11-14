@@ -8,9 +8,10 @@
       <%= render 'trainings/partials/show_session_card', session: session, session_number: session_number %>
     </div>
 
-    <% session_number += 1 %>
 
+    <!------------>
     <!-- MODALS -->
+    <!------------>
 
     <div id="editSession<%= session.id %>"
          class="modal fade editSession"
@@ -46,6 +47,10 @@
       </div>
 
     </div>
+
+    <!------------>
+
+    <% session_number += 1 %>
 
   <% end %>
 

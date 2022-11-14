@@ -251,7 +251,7 @@ class Training < ApplicationRecord
 
   def export_airtable
     # begin
-      existing_card = OverviewTraining.find(self.airtable_id)
+      existing_card = Rails.env.production? ? OverviewTraining.find(self.airtable_id) : OverviewTraining.all(filter: "{Builder_id} = '#{self.id}'").first
       details = "Détail des sessions (date, horaires, intervenants):\n\n"
       seven_invoices = "Factures SEVEN :\n"
 
@@ -398,7 +398,8 @@ class Training < ApplicationRecord
     if ['sevener', 'sevener+'].include?(user.access_level)
       sevener = OverviewUser.all(filter: "{Builder_id} = '#{user.id}'")&.first
       card = OverviewNumbersSevener.all(filter: "{Training_id} = '#{self.id}'").select{|x| x['Sevener'] == [sevener.id]}&.first
-      invoices = OverviewInvoiceSevener.all(filter: "{Training_id} = '#{self.id}'" && "{Sevener} = '#{[sevener.id]}'")
+      invoices = OverviewInvoiceSevener.all(filter: "{Training_id} = '#{self.id}'").select{|x| x['Sevener'] == [sevener.id]}
+      binding.pry
       dates = ''
 
       unless card.present?

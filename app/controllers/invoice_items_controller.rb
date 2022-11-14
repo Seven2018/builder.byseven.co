@@ -378,6 +378,8 @@ class InvoiceItemsController < ApplicationController
 
   # Filter for index method
   def index_filtered(n = 1)
+    n = 1 if n == 0
+
     if params[:training_id].present?
       @invoice_items_total = InvoiceItem.where(training_id: params[:training_id].to_i, type: params[:type]).order('id DESC')
       @invoice_items = @invoice_items_total.offset((n-1)*50).first(50)

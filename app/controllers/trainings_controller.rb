@@ -17,7 +17,7 @@ class TrainingsController < ApplicationController
     @to_date_any_more = @trainings_to_date.count - 10
     @trainings_to_date = @trainings_to_date.first(10)
 
-    trainings_to_staff_ids = Session.where('date >= ?', Date.today).where_not_exists(:session_trainers).map(&:training_id).uniq
+    trainings_to_staff_ids = Session.where(training_id: trainings.ids).where('date >= ?', Date.today).where_not_exists(:session_trainers).map(&:training_id).uniq
     @trainings_to_staff = Training.where(id: trainings_to_staff_ids)
 
     @trainings_home = Training.where(training_type: 'Home').order(title: :asc)

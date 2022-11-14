@@ -4,8 +4,26 @@ class InvoiceLinesController < ApplicationController
   def create
     @invoice_item = InvoiceItem.find(params[:invoice_item_id])
     @product = Product.find(params[:product_id]) if params[:product_id]
+
+    preparation = params[:product_id].to_i == 3
+
+    if preparation
+      preparation_description = "Préparation et conception pédagogique"
+      preparation_text = "<p>Mise à disposition des ressources (contenus, sources, articles),<br>
+                          Calls de qualification et préparation en amont des sessions,<br>
+                          Scénarisation sur-mesure des ateliers,<br>
+                          Follow up RH en distanciel.</p>"
+    end
+
     if @product
-      @invoiceline = InvoiceLine.new(invoice_item_id: @invoice_item.id, product_id: @product.id, description: @product.name, quantity: 1, net_amount: @product.price, tax_amount: @product.tax, position: @invoice_item.invoice_lines.count + 1)
+      @invoiceline = InvoiceLine.new(invoice_item_id: @invoice_item.id,
+                                     product_id: @product.id,
+                                     description: preparation ? preparation_description : @product.name,
+                                     comments: preparation ? preparation_text : '',
+                                     quantity: 1,
+                                     net_amount: @product.price,
+                                     tax_amount: @product.tax,
+                                     position: @invoice_item.invoice_lines.count + 1)
     elsif params[:type] == 'Chapter'
       @invoiceline = InvoiceLine.new(invoice_item_id: @invoice_item.id, description: 'Chapter', position: @invoice_item.invoice_lines.count + 1, comments: 'chapter')
     elsif params[:description] == 'Nom'
