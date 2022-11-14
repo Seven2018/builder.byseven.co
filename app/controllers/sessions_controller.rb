@@ -154,7 +154,7 @@ class SessionsController < ApplicationController
     training = Training.find(params.dig(:copy, :training_id))
     target_sessions = Session.where(id: params.dig(:copy, :target_sessions_ids).split(','))
 
-    tar.each do |target_session|
+    target_sessions.each do |target_session|
 
       workshop_count = target_session.workshops.count
 
