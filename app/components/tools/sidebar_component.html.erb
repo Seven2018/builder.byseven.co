@@ -1,0 +1,36 @@
+<div data-controller="tools--sidebar"
+     data-side="<%= @side %>"
+     data-offset-value="<%= @width %>">
+
+  <button class='<%= @button_klasses %> cursor-pointer' 
+          title="Show Products"
+          data-action="click->tools--sidebar#show">
+    <i class="fas fa-book"></i>
+  </button>
+
+  <div class="pos-fix height-100vh min-width-20rem bld-bg-white z-index-1000 smooth-transition <%= @klasses %>"
+       style='width: <%= @width %>; top: 0; bottom: 0; <%= @side == "right" ? "right: -#{@width};" : "left: -#{@width};" %>'
+       data-tools--sidebar-target="display">
+
+    <div class="<%= @side == "right" ? "bld-box-shadow-compact-left" : "bld-box-shadow-compact-right" %>
+                height-100 bld-bg-white pos-rel">
+
+      <button class="btn btn-icon-close pos-abs-important"
+              style="top: 1.6rem; right: 1rem;"
+              data-action="click->tools--sidebar#hide">
+        <i class="fas fa-times"></i>
+      </button>
+
+      <h3 class="fs-2_4rem font-weight-700 text-center py-2rem border-bottom-bld-light-grey"><%= @title %></h3>
+
+      <div id="sidebar-content">
+
+        <%= content %>
+
+      </div>
+
+    </div>
+
+  </div>
+  
+</div>

@@ -11,7 +11,7 @@ class PagesController < ApplicationController
   end
 
   def contact_form
-    unless params[:email_2]&.present? || params[:email]&.empty?
+    unless params[:email_2]&.present? || params[:email]&.gsub(' ', '').empty?
       contact = IncomingContact.create('Name' => params[:name], 'Email' => params[:email], 'Tel' => params[:tel], 'Message' => params[:message], 'Training' => params[:training], 'Date' => DateTime.now.strftime('%Y-%m-%d'))
       IncomingContactMailer.new_incoming_contact(contact, User.where(id: [1, 3])).deliver
     else
@@ -21,7 +21,7 @@ class PagesController < ApplicationController
   end
 
   def contact_form_becos
-    unless params[:email_2]&.present? || params[:email]&.empty?
+    unless params[:email_2]&.present? || params[:email]&.gsub(' ', '').empty?
       if params[:type] == 'Participant'
         contact = IncomingContactBecos.create('Lastname' => params[:lastname].strip.titleize, 'Firstname' => params[:firstname].strip.titleize, 'Email' => params[:email].strip.downcase, 'Tel' => params[:phone], 'Linkedin' => params[:linkedin], 'Message' => params[:message], 'Chosen Date' => params[:date], 'Chosen Time' => params[:time], 'Newsletter' => params[:newsletter].present?)
       elsif params[:type] == 'Recruiter'

@@ -49,13 +49,33 @@ class InvoiceItem < ApplicationRecord
     self.invoice_lines.map(&:product)
   end
 
+  def set_uuid
+    if self.type == 'Invoice'
+
+      self.uuid =
+        if InvoiceItem.where(type: 'Invoice').count > 0
+          "FA#{Date.today.strftime('%Y')}" + (InvoiceItem.where(type: 'Invoice').last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')
+        else
+          "FA#{Date.today.strftime('%Y')}00001"
+        end
+
+    else
+
+      self.uuid =
+        if InvoiceItem.where(type: 'Estimate').count > 0
+          "DE#{Date.today.strftime('%Y')}" + (InvoiceItem.where(type: 'Estimate').last.uuid[-5..-1].to_i + 1).to_s.rjust(5, '0')
+        else
+          "DE#{Date.today.strftime('%Y')}00001"
+        end
+
+    end
+  end
+
   # Exports the data to Airtable DB
   def export_numbers_revenue
     # begin
       return if self.type != 'Invoice'
-      # training = OverviewTraining.all.select{|x| x['Builder_id'] == self.training.id}&.first if self.training.present?
       training = OverviewTraining.all(filter: "{Builder_id} = '#{self.training_id}'")&.first if self.training.present?
-      # invoice = OverviewNumbersRevenue.all.select{|x| x['Invoice_id'] == self.id}&.first
       invoice = OverviewNumbersRevenue.all(filter: "{Invoice_id} = '#{self.id}'")&.first
 
       unless invoice.present?
@@ -65,6 +85,8 @@ class InvoiceItem < ApplicationRecord
           invoice = OverviewNumbersRevenue.create('Invoice SEVEN' => self.uuid, 'Issue Date' => Date.today.strftime('%Y-%m-%d'), 'Invoice_id' => self.id)
         end
       end
+
+      invoice['Training'] = [training&.id]
 
       lines = []
       if self.products.include?(Product.find(1))

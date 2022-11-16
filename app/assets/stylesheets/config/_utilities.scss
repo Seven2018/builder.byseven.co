@@ -295,9 +295,13 @@ a.disabled-link { pointer-events: none; }
 .height-40rem         { height: 40rem !important; }
 .height-sm-40rem         { @include from-medium {height: 40rem !important;}}
 
-.height-20  {height: 20% !important;}
+.height-20  { height: 20% !important;}
 .height-60  { height: 60% !important; }
 .height-100 { height: 100% !important; }
+
+.min-height-20  { min-height: 20% !important;}
+.min-height-60  { min-height: 60% !important; }
+.min-height-100 { min-height: 100% !important; }
 
 .min-height-3_5rem  { min-height: 3.5rem !important; }
 .min-height-4rem    { min-height: 4rem !important; }
@@ -457,6 +461,9 @@ a.disabled-link { pointer-events: none; }
 /////////////
 // PADDING //
 /////////////
+
+.p-input    { padding: 0.375rem 0.75rem; }
+.p-input-lg { padding: 1.5rem 2rem !important; }
 
 .p-0  { padding: 0 !important; }
 .px-0 { padding-right:  0 !important; padding-left:   0 !important; }
@@ -907,6 +914,10 @@ a.disabled-link { pointer-events: none; }
 .pos-rel { position: relative; }
 .pos-abs { position: absolute; }
 .pos-fix { position: fixed; }
+
+.pos-rel-important { position: relative !important; }
+.pos-abs-important { position: absolute !important; }
+.pos-fix-important { position: fixed !important; }
 
 .top-0 { top: 0px }
 .bottom-0 { bottom: 0px }

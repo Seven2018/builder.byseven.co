@@ -29,7 +29,6 @@ gem 'ckeditor', git: 'https://github.com/galetahub/ckeditor'
 
 gem 'wicked_pdf',  '~> 2.6.3'
 gem 'wkhtmltopdf-binary'
-gem 'wkhtmltopdf-heroku', '2.12.5.0'
 
 
 ##################
@@ -100,4 +99,8 @@ group :development, :test do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'dotenv-rails'
+end
+
+group :production do
+  gem 'wkhtmltopdf-heroku', '2.12.5.0'
 end

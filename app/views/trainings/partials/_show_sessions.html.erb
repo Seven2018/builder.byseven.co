@@ -8,9 +8,10 @@
       <%= render 'trainings/partials/show_session_card', session: session, session_number: session_number %>
     </div>
 
-    <% session_number += 1 %>
 
+    <!------------>
     <!-- MODALS -->
+    <!------------>
 
     <div id="editSession<%= session.id %>"
          class="modal fade editSession"
@@ -39,12 +40,17 @@
         <% @session = session %>
         <%= render '/session_trainers/trainers_link_to_session', training: nil,
                                                       session: @session,
+                                                      session_number: session_number,
                                                       page: 'training',
                                                       controller_action: 'trainings_show' %>
 
       </div>
 
     </div>
+
+    <!------------>
+
+    <% session_number += 1 %>
 
   <% end %>
 

@@ -1,0 +1,75 @@
+<% training = invoice_item.training %>
+<% company = invoice_item.client_company %>
+
+<div class="modal-content">
+
+  <div class="modal-header">
+
+    <div id="modal-title" style=" display: flex; justify-content: space-between;">
+      <h3 class="modal-title" id="myModalLabel">Copy <%= invoice_item.uuid %> to :</h3>
+    </div>
+
+    <button class="btn btn-icon-close"
+            data-dismiss="modal"
+            aria-label="Close">
+      <i class="fas fa-times"></i>
+    </button>
+
+  </div>
+
+  <div class="modal-body min-width-40rem">
+
+    <%= simple_form_for :copy, url: copy_invoice_item_path(invoice_item), method: 'GET' do |f| %>
+
+      <% if invoice_item.type == 'Invoice' %>
+
+        <%= render(Tools::SelectAutocompleteComponent.new(path: trainings_search_path,
+                                                          width: '100%',
+                                                          menu_max_height: '22rem',
+                                                          placeholder: 'Search for training',
+                                                          input_name: "copy[target_training_id]",
+                                                          default_value: training.present? ? [training.id, training.client_company.name + ' - ' + training.title + ' - id: ' + training.id.to_s] : [],
+                                                          data_action_input: '',
+                                                          data_action_select: '',
+                                                          klasses: 'mr-0 mb-2rem')) %>
+
+      <% else %>
+
+        <%= render(Tools::SelectAutocompleteComponent.new(path: client_companies_search_path,
+                                                          width: '100%',
+                                                          menu_max_height: '22rem',
+                                                          placeholder: 'Search for Company',
+                                                          input_name: "copy[target_client_company_id]",
+                                                          default_value: company.present? ? [company.id, company.name] : [],
+                                                          data_action_input: '',
+                                                          data_action_select: '',
+                                                          klasses: 'mr-0 mb-2rem')) %>
+
+      <% end %>
+
+      <div class="d-flex justify-content-between align-items-center">
+
+        <label for="copy[amount]">Number of copies</label>
+
+        <input type="numeric"
+               name="copy[amount]"
+               class="width-5rem text-center"
+               value="1">
+
+      </div>
+
+      <div class='modal-control'>
+
+        <%= button_tag type: 'submit', class: 'btn btn-edit-green btn-icon copy-button',
+                                       data: { toggle: 'tooltip' }, 
+                                       title: 'Copy' do %>
+          <i class="fas fa-copy"></i>
+        <% end %>
+
+      </div>
+
+    <% end %>
+
+  </div>
+
+</div>

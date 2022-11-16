@@ -41,6 +41,14 @@
           <i class="fas fa-book"></i>
         </div>
 
+        <%# render(Tools::SidebarComponent.new(title: 'Products',
+                                           width: '35rem',
+                                           side: 'right',
+                                           button_klasses: 'btn btn-edit-grey btn-icon',
+                                           klasses: '')) do %>
+
+        <%# end %>
+
       <% end %>
 
       <div class="dropdown">
@@ -111,6 +119,7 @@
   <div class="modal-dialog" role="document" style="border-radius: 20px">
     <%= render 'session_trainers/trainers_link_to_session', training: nil, 
                                                             session: @session,
+                                                            session_number: nil,
                                                             page: 'session' %>
   </div>
 

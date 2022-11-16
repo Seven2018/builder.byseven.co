@@ -12,6 +12,7 @@ class SessionsController < ApplicationController
     @training = Training.find(params[:training_id])
     @session = Session.new(session_params)
     authorize @session
+
     @session.training = @training
     if @session.save
       UpdateAirtableJob.perform_async(@training)
@@ -73,6 +74,7 @@ class SessionsController < ApplicationController
 
     @session.update(session_params)
     @redirect_from = params[:redirect_from]
+
     if @session.save
 
       UpdateAirtableJob.perform_async(@session.training, true)
@@ -231,6 +233,6 @@ class SessionsController < ApplicationController
   end
 
   def session_params
-    params.require(:session).permit(:title, :date, :start_time, :end_time, :training_id, :duration, :lunch_duration, :attendee_number, :description, :teaser, :image, :address, :room, :session_type, { user_ids: [] }, session_trainers_attributes: [:id, :session_id, :user_id])
+    params.require(:session).except(:session_number).permit(:title, :date, :start_time, :end_time, :training_id, :duration, :lunch_duration, :attendee_number, :description, :teaser, :image, :address, :room, :session_type, { user_ids: [] }, session_trainers_attributes: [:id, :session_id, :user_id])
   end
 end

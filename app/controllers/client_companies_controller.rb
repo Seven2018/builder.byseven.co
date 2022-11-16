@@ -39,9 +39,25 @@ before_action :set_clientcompany, only: [:show, :edit, :update, :destroy]
     redirect_to client_companies_path
   end
 
+
+  #########################
+  ## SEARCH AUTOCOMPLETE ##
+  #########################
+
   def client_companies_search
     skip_authorization
-    @client_companies = ClientCompany.ransack(name_cont: params[:search]).result(distinct: true).limit(5)
+
+    if params[:search] == ""
+      @client_companies = ClientCompany.all.order(name: :asc)
+    else
+      @client_companies = ClientCompany.all.ransack(name_cont: params[:search])
+      @client_companies.sorts = ['name asc']
+      @client_companies = @client_companies.result(distinct: true)
+    end
+
+    @client_companies = @client_companies.limit(50).map{|x| [x.id, x.name]}
+
+    render partial: 'shared/tools/select_autocomplete', locals: { elements: @client_companies }
   end
 
   private
