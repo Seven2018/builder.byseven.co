@@ -59,19 +59,19 @@
   padding: 0 !important;
 }
 
+.invoice-desc-line, .invoice-desc-line-chapter {
+  height: 3.2rem;
+  margin-left : 3rem;
+}
+
 .invoice-desc-line, .invoice-desc-line-chapter, .invoice-desc-line > div {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.invoice-desc-line {
-  padding-left : 3rem;
-}
-
 .invoice-desc-line-chapter {
-  height: 4rem;
-  background-color: #3AA2AC;
+  border-bottom: .5px solid #787878;
 }
 
 .invoice-desc-line > div {

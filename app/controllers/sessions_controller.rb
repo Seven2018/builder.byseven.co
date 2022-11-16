@@ -12,6 +12,7 @@ class SessionsController < ApplicationController
     @training = Training.find(params[:training_id])
     @session = Session.new(session_params)
     authorize @session
+
     @session.training = @training
     if @session.save
       UpdateAirtableJob.perform_async(@training)

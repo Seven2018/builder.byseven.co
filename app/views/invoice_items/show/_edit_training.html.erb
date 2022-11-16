@@ -1,0 +1,121 @@
+<% training = invoice_item.training %>
+<% company = invoice_item.client_company %>
+
+<div class="modal-content">
+
+  <div class="modal-header">
+
+    <div id="modal-title" style=" display: flex; justify-content: space-between;">
+      <h3 class="modal-title" id="myModalLabel">Edit <%= invoice_item.uuid %> :</h3>
+    </div>
+
+    <button class="btn btn-icon-close"
+            data-dismiss="modal"
+            aria-label="Close">
+      <i class="fas fa-times"></i>
+    </button>
+
+  </div>
+
+  <div class="modal-body min-width-40rem">
+
+    <% if invoice_item.type == 'Invoice' %>
+
+      <%= render(Tools::TabsSystemComponent.new(tabs_names: ["edit_training", "edit_client_company"]),
+                                                klasses: 'width-100') do %>
+
+        <div id="edit_training-display"
+             class="bld-tab">
+          
+          <%= simple_form_for invoice_item do |f| %>
+
+            
+            <%= render(Tools::SelectAutocompleteComponent.new(path: trainings_search_path,
+                                                              width: '100%',
+                                                              menu_max_height: '22rem',
+                                                              placeholder: 'Search for training',
+                                                              input_name: "invoice_item[training_id]",
+                                                              default_value: training.present? ? [training.id, training.client_company.name + ' - ' + training.title + ' - id: ' + training.id.to_s] : [],
+                                                              data_action_input: '',
+                                                              data_action_select: '',
+                                                              klasses: 'mr-0 mb-2rem')) %>
+
+
+
+            <div class='modal-control'>
+
+              <%= button_tag type: 'submit', class: 'btn btn-edit-green btn-icon copy-button',
+                                             data: { toggle: 'tooltip' }, 
+                                             title: 'Save' do %>
+                <i class="fas fa-save"></i>
+              <% end %>
+
+            </div>
+
+          <% end %>
+
+        </div>
+
+        <div id="edit_client_company-display"
+             class="bld-tab hidden">
+          
+          <%= simple_form_for invoice_item do |f| %>
+
+            
+            <%= render(Tools::SelectAutocompleteComponent.new(path: client_companies_search_path,
+                                                              width: '100%',
+                                                              menu_max_height: '22rem',
+                                                              placeholder: 'Search for Company',
+                                                              input_name: "invoice_item[client_company_id]",
+                                                              default_value: company.present? ? [company.id, company.name] : [],
+                                                              data_action_input: '',
+                                                              data_action_select: '',
+                                                              klasses: 'mr-0 mb-2rem')) %>
+
+            <div class='modal-control'>
+
+              <%= button_tag type: 'submit', class: 'btn btn-edit-green btn-icon copy-button',
+                                             data: { toggle: 'tooltip' }, 
+                                             title: 'Save' do %>
+                <i class="fas fa-save"></i>
+              <% end %>
+
+            </div>
+
+          <% end %>
+
+        </div>
+
+      <% end %>
+
+    <% else %>
+
+      <%= simple_form_for invoice_item do |f| %>
+
+        <%= render(Tools::SelectAutocompleteComponent.new(path: client_companies_search_path,
+                                                              width: '100%',
+                                                              menu_max_height: '22rem',
+                                                              placeholder: 'Search for Company',
+                                                              input_name: "invoice_item[client_company_id]",
+                                                              default_value: company.present? ? [company.id, company.name] : [],
+                                                              data_action_input: '',
+                                                              data_action_select: '',
+                                                              klasses: 'mr-0 mb-2rem')) %>
+
+        <div class='modal-control'>
+
+          <%= button_tag type: 'submit', class: 'btn btn-edit-green btn-icon copy-button',
+                                         data: { toggle: 'tooltip' }, 
+                                         title: 'Save' do %>
+            <i class="fas fa-save"></i>
+          <% end %>
+
+        </div>
+
+      <% end %>
+
+    <% end %>
+
+  </div>
+
+</div>

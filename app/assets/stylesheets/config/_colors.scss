@@ -10,6 +10,7 @@ $gray: #0E0000;
 $light-gray: #F4F4F4;
 
 $bld-white: #FFFFFF;
+$bld-light-greybg: #f7f7f7;
 $bld-light-grey: #C4C4C4;
 $bld-light-grey2: #888888;
 $bld-light-grey4: #F4F4F4;
@@ -44,6 +45,7 @@ $bld-negative-red: #EC6D6D;
 
 .bld-bg-transparent            { background-color: rgba(0, 0, 0, 0); }
 .bld-bg-white                  { background-color: $bld-white; }
+.bld-bg-light-greybg           { background-color: $bld-light-greybg; }
 .bld-bg-light-grey             { background-color: $bld-light-grey; }
 .bld-bg-light-grey4            { background-color: $bld-light-grey4; }
 .bld-bg-dark-grey              { background-color: $bld-dark-grey; }

@@ -31,10 +31,13 @@ class InvoiceLinesController < ApplicationController
     else
       @invoiceline = InvoiceLine.new(invoice_item_id: @invoice_item.id, description: 'Commentaires', position: @invoice_item.invoice_lines.count + 1)
     end
+
     authorize @invoiceline
     @invoiceline.net_amount = 0 unless @invoiceline.net_amount.present?
+
     if @invoiceline.save
-      UpdateAirtableJob.perform_async(@invoice_item.training, false, @invoice_item) if @invoice_item.training.present?
+      UpdateAirtableJob.perform_async(@invoice_item.training, false, [@invoice_item]) if @invoice_item.training.present?
+
       redirect_to invoice_item_path(@invoice_item)
     end
   end
@@ -52,14 +55,17 @@ class InvoiceLinesController < ApplicationController
 
     invoice.update(status: 'Credit') if invoice.total_amount < 0
 
-    UpdateAirtableJob.perform_async(@invoiceline.invoice_item.training, false, @invoiceline.invoice_item) if @invoiceline.invoice_item.training.present?
+    UpdateAirtableJob.perform_async(@invoiceline.invoice_item.training, false, [@invoiceline.invoice_item]) if @invoiceline.invoice_item.training.present?
+
     redirect_to invoice_item_path(@invoiceline.invoice_item)
   end
 
   def destroy
     authorize @invoiceline
     @invoiceline.destroy
-    UpdateAirtableJob.perform_async(@invoiceline.invoice_item.training, false, @invoiceline.invoice_item) if @invoiceline.invoice_item.training.present?
+
+    UpdateAirtableJob.perform_async(@invoiceline.invoice_item.training, false, [@invoiceline.invoice_item]) if @invoiceline.invoice_item.training.present?
+
     redirect_to invoice_item_path(@invoiceline.invoice_item)
   end
 

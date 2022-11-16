@@ -191,3 +191,28 @@
     border: 1px solid #FDC553 !important;
   }
 }
+
+
+/////////////
+// UPDATED //
+/////////////
+
+#sidebar-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 2rem 0;
+
+  a {
+    width: 100%;
+    background-color: white;
+    font-size: 1.6rem;
+    font-weight: 400;
+    padding: 1rem;
+
+    &:hover {
+      background-color: $bld-light-grey;
+    }
+  }
+}

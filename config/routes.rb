@@ -75,7 +75,7 @@ Rails.application.routes.draw do
   # INVOICE_ITEMS #
   #################
 
-  resources :invoice_items, only: [:index, :show, :edit, :update, :destroy]
+  resources :invoice_items, only: [:index, :show, :update, :destroy]
   get :report, controller: :invoice_items
   post :new_invoice_item, controller: :invoice_items
   post :new_estimate, controller: :invoice_items

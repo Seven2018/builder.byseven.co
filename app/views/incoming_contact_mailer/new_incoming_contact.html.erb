@@ -42,15 +42,6 @@
         display:table;
         padding: 50px 0;
       }
-
-      .mailer-text {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        min-width: 300px;
-      }
     </style>
   </head>
   <body>
@@ -65,15 +56,14 @@
       <div class="mailer-text">
         <p>Nous avons reçu une nouvelle demande entrante via learn.byseven.co</p>
         <br>
-        <ul>
-          <% if @contact['Nom'].present? %>
-            <li>Nom : <%= @contact['Nom'] %></li>
-          <% else %>
-            <li>Nom : <%= "#{@contact['Firstname']} #{@contact['Lastname']}" %></li>
-          <% end %>
-          <li>Email de contact : <%= @contact['Email'] %></li>
-          <li>Message : <%= @contact['Message'] %></li>
-        </ul>
+        <p>Date : <%= Time.now.strftime('%d/%m/%Y - %H:%M') %></p>
+        <% if @contact['Nom'].present? %>
+          <p>Nom : <%= @contact['Nom'] %></p>
+        <% else %>
+          <p>Nom : <%= "#{@contact['Firstname']} #{@contact['Lastname']}" %></p>
+        <% end %>
+        <p>Email de contact : <%= @contact['Email'] %></p>
+        <p>Message : <%= @contact['Message'] %></p>
         <br>
       </div>
     </div>

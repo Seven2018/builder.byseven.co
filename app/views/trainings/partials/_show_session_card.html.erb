@@ -63,15 +63,15 @@
 
         <div class='card-footer-lg__block width-15rem'>
 
-          <% if session.session_type == 'Face-to-face' %>
-
-            <i class="fas fa-chalkboard-teacher"></i>
-            <p id='<%= "session_type-form-" + "#{session.id.to_s}"%>'>Face-to-face</p>
-
-          <% else %>
+          <% if session.session_type == 'Online' %>
 
             <i class="fas fa-laptop"></i>
             <p id='<%= "session_type-form-" + "#{session.id.to_s}"%>'>Online</p>
+
+          <% else %>
+
+            <i class="fas fa-chalkboard-teacher"></i>
+            <p id='<%= "session_type-form-" + "#{session.id.to_s}"%>'>Face-to-face</p>
 
           <% end %>
 
@@ -139,8 +139,8 @@
                                                         title: 'Session type',
                                                         input_name: 'session[session_type]',
                                                         collection: ['Face-to-face', 'Online'],
-                                                        selected_text: session.session_type,
-                                                        selected_value: session.session_type,
+                                                        selected_text: session.session_type.presence || 'Face-to-face',
+                                                        selected_value: session.session_type.presence || 'Face-to-face',
                                                         data_action: '')) %>
             </div>
           </div>

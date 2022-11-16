@@ -1,10 +1,17 @@
+<% invoice_id = @invoice_item.id %>
+<% invoice_type = @invoice_item.type %>
+<% client_company = @invoice_item.client_company %>
+<% client_company_type = client_company.client_company_type %>
+<% client_contact = @invoice_item.training&.client_contact %>
+
 <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) || @invoice_item.user_id == current_user.id %>
 
-  <div class="container-seven-large">
+  <div class="container-seven-large"
+       data-controller="invoices--invoices-show">
 
     <div class="invoice-item-container-mobile">
 
-      <h1><%= @invoice_item.client_company.name %> : <%= @invoice_item.uuid %></h1>
+      <h1><%= client_company.name %> : <%= @invoice_item.uuid %></h1>
 
       <%= link_to invoice_item_path(@invoice_item, format: :pdf) do %>
 
@@ -22,11 +29,11 @@
 
         <% if @invoice_item.training.present? %>
 
-          <%= link_to invoice_items_path(training_id: @invoice_item.training.id, type: @invoice_item.type), class: 'btn return-arrow' do %><i class="fas fa-arrow-left"></i><% end %>
+          <%= link_to invoice_items_path(training_id: @invoice_item.training.id, type: invoice_type), class: 'btn return-arrow' do %><i class="fas fa-arrow-left"></i><% end %>
 
         <% else %>
 
-          <%= link_to client_company_path(@invoice_item.client_company), class: 'btn return-arrow' do %><i class="fas fa-arrow-left"></i><% end %>
+          <%= link_to client_company_path(client_company), class: 'btn return-arrow' do %><i class="fas fa-arrow-left"></i><% end %>
 
         <% end %>
 
@@ -77,13 +84,20 @@
 
             <% end %>
 
-            <% if @invoice_item.type == 'Invoice' %>
+            <% if invoice_type == 'Invoice' %>
 
               <%= link_to credit_invoice_item_path(@invoice_item), class: "btn btn-edit-red btn-icon", data: {toggle: 'tooltip'}, title: 'Credit Note' do %>
                   <i class="fas fa-file-invoice-dollar"></i>
               <% end %>
 
-            <% elsif @invoice_item.type == 'Estimate' %>
+              <button class='btn btn-edit-green btn-icon'
+                      data-toggle='modal'
+                      data-target='#editTraining'
+                      title="Edit Training">
+                <i class="fas fa-pen"></i>
+              </button>
+
+            <% elsif invoice_type == 'Estimate' %>
 
               <%= link_to invoice_item_path(@invoice_item), method: :delete, data: {confirm: 'Are you sure ?'}, class: 'btn btn-edit-red btn-icon' do %>
                 <i class="fas fa-trash-alt"></i>
@@ -95,8 +109,40 @@
 
             <% end %>
 
-            <button class='btn btn-edit-green btn-icon invoiceitem_copy' data-toggle='modal' data-toggle='tooltip' data-target='#copyInvoiceItem' title='Copy Invoice'><i class="fas fa-copy"></i></button>
-            <a id='show_library' class='btn btn-edit-grey btn-icon' data-toggle="tooltip" title="Show Products"><i class="fas fa-book"></i></i></a>
+            <button class='btn btn-edit-green btn-icon'
+                    data-toggle='modal'
+                    data-target='#copyInvoiceItem'
+                    title="Copy <%= @invoice_item.type %>">
+              <i class="fas fa-copy"></i>
+            </button>
+
+            <%= render(Tools::SidebarComponent.new(title: 'Products',
+                                           width: '35rem',
+                                           side: 'right',
+                                           button_klasses: 'btn btn-edit-grey btn-icon',
+                                           klasses: '')) do %>
+
+              <%= link_to invoice_lines_path(invoice_item_id: invoice_id, type: 'Chapter'), method: :post do %>
+                Chapter
+              <% end %>
+
+              <%= link_to invoice_lines_path(invoice_item_id: invoice_id), method: :post do %>
+                Commentaires
+              <% end %>
+
+              <%= link_to invoice_lines_path(invoice_item_id: invoice_id, description: 'Nom'), method: :post do %>
+                Nom du participant
+              <% end %>
+
+              <% Product.all.each do |product| %>
+
+                <%= link_to invoice_lines_path(product_id: product.id, invoice_item_id: invoice_id), method: :post do %>
+                  <%= product.name %>
+                <% end %>
+
+              <% end %>
+
+            <% end %>
 
           </div>
 
@@ -106,7 +152,7 @@
 
       <div class="invoice-header">
 
-        <% unless @invoice_item.type == 'Order' %>
+        <% unless invoice_type == 'Order' %>
 
           <div>
             <h3 style="color:black;">SAS SEVEN</h3>
@@ -131,7 +177,7 @@
 
         <div>
 
-          <% if @invoice_item.type == 'Invoice' %>
+          <% if invoice_type == 'Invoice' %>
 
             <% if @invoice_item.total_amount < 0 %>
               <h1>Avoir</h1>
@@ -139,7 +185,7 @@
               <h1>Facture</h1>
             <% end %>
 
-          <% elsif @invoice_item.type == 'Order' %>
+          <% elsif invoice_type == 'Order' %>
 
             <h1>Template</h1>
 
@@ -159,33 +205,33 @@
 
       <div class="invoice-client">
 
-        <% unless @invoice_item.type == 'Order' %>
+        <% unless invoice_type == 'Order' %>
 
-          <% if @invoice_item.client_company.client_company_type == 'Company' && @invoice_item.client_company.opco_id.present? %>
+          <% if client_company_type == 'Company' && client_company.opco_id.present? %>
 
-            <%= link_to 'OPCO', edit_client_invoice_item_path(client_company_id: @invoice_item.client_company.id), class: 'btn invoice-item-button-opco', data: {toggle: 'tooltip'}, title: 'Change to OPCO' %>
+            <%= link_to 'OPCO', edit_client_invoice_item_path(client_company_id: client_company.id), class: 'btn invoice-item-button-opco', data: {toggle: 'tooltip'}, title: 'Change to OPCO' %>
 
-          <% elsif @invoice_item.client_company.client_company_type == 'OPCO' && @invoice_item.description.present? %>
-              <%= link_to 'Client', edit_client_invoice_item_path(client_company_id: @invoice_item.client_company.id), class: 'btn invoice-item-button-opco', data: {toggle: 'tooltip'}, title: 'Change back to Client' %>
+          <% elsif client_company_type == 'OPCO' && @invoice_item.description.present? %>
+              <%= link_to 'Client', edit_client_invoice_item_path(client_company_id: client_company.id), class: 'btn invoice-item-button-opco', data: {toggle: 'tooltip'}, title: 'Change back to Client' %>
 
           <% end %>
 
           <div>
-            <% airtable_contact = OverviewContact.all.select{|x|x['Builder_id'] == @invoice_item.training&.client_contact&.id}&.first %>
+            <% airtable_contact = OverviewContact.all(filter: "{Builder_id} = '#{client_contact&.id}'").first %>
 
-            <% if @invoice_item.training.present? && @invoice_item&.training&.client_contact.billing_contact.present? && (@invoice_item.training.client_company == @invoice_item.client_company) %>
+            <% if @invoice_item.training.present? && client_contact.billing_contact.present? && (@invoice_item.training.client_company == client_company) %>
 
-              <p><%= @invoice_item&.training&.client_contact.billing_contact %></p>
-              <p><%= @invoice_item&.training&.client_contact.billing_address %></p>
-              <p><%= @invoice_item&.training&.client_contact.billing_zipcode %> <%= @invoice_item&.training&.client_contact.billing_city %></p>
-              <p><%= @invoice_item.client_company.siret %></p>
+              <p><%= client_contact.billing_contact %></p>
+              <p><%= client_contact.billing_address %></p>
+              <p><%= client_contact.billing_zipcode %> <%= client_contact.billing_city %></p>
+              <p><%= client_company.siret %></p>
 
             <% else %>
 
-              <p><%= @invoice_item.client_company.name %></p>
-              <p><%= @invoice_item.client_company.address %></p>
-              <p><%= @invoice_item.client_company.zipcode %> <%= @invoice_item.client_company.city %></p>
-              <p><%= @invoice_item.client_company.siret %></p>
+              <p><%= client_company.name %></p>
+              <p><%= client_company.address %></p>
+              <p><%= client_company.zipcode %> <%= client_company.city %></p>
+              <p><%= client_company.siret %></p>
 
             <% end %>
 
@@ -205,20 +251,36 @@
 
       <div class="invoice-object">
 
-        <% if @invoice_item.object.present? %>
-          <p id='object-link'><strong>Objet: <%= @invoice_item.object %></strong></p>
-        <% end %>
+        <div class="height-4rem width-fit-content d-flex align-items-center cursor-pointer"
+             data-invoices--invoices-show-target="objectDisplay"
+             data-action="click->invoices--invoices-show#toggleEditObject">
 
-        <%= simple_form_for @invoice_item, html: { class: "hidden", id: 'object-form' } do |f| %>
+          <p class="font-weight-700">
+            Objet: <%= @invoice_item.object.presence || 'N/R' %>
+          </p>
 
-          <div style="display:flex;flex-direction:row;justify-content:space-between;align-items: center; height:100%;">
+        </div>
 
-            <%= f.input :object, placeholder: 'Objet', value: @invoice_item.object, label: false, input_html: { style: 'width: 300px;'} %>
+        <%= simple_form_for @invoice_item, html: { class: "hidden" }, data: { invoices__invoices_show_target: "objectForm" }, remote: true do |f| %>
+
+          <div class="height-4rem d-flex justify-content-start align-items-center">
+
+            <input type="text"
+                   name="invoice_item[object]"
+                   class="height-4rem width-30rem bld-bg-light-greybg border-none p-input"
+                   placeholder="Object"
+                   autocomplete="off"
+                   value="<%= @invoice_item.object %>"
+                   data-invoices--invoices-show-target="objectInput">
+
             <%= f.hidden_field :skip_update, value: true %>
 
-            <%= button_tag type: 'submit', class: 'btn btn-add-user', input_html: { style: 'height: 3.5rem' } do %>
+            <%= f.submit '', class: 'hidden-submit hidden', data: { invoices__invoices_show_target: "objectSubmit" } %>
+
+            <div class="btn btn-add-user height-3_5rem cursor-pointer"
+                 data-action="click->invoices--invoices-show#confirmObject">
               Update
-            <% end %>
+            </div>
 
           </div>
 
@@ -245,7 +307,7 @@
 
       </div>
 
-      <% if @invoice_item.client_company.client_company_type == 'School' %>
+      <% if client_company_type == 'School' %>
         <br>
         <p>TVA non applicable, art. 261-4 du CGI</p>
       <% end %>
@@ -257,18 +319,26 @@
           <% total_net = [] %>
           <% total_ht = [] %>
           <% total_tva = [] %>
+
           <% @invoice_item.invoice_lines.each do |line| %>
+
+            <% quantity = line.quantity %>
+            <% net_amount = line.net_amount %>
+            <% tax_amount = line.tax_amount %>
+
             <% if line.product %>
-              <% total_ht << line.net_amount*line.quantity %>
-              <% total_tva << line.net_amount*line.quantity*line.tax_amount/100 %>
-              <% total_net << line.net_amount*line.quantity * (1 + (line.tax_amount / 100)) %>
+              <% total_ht << net_amount*quantity %>
+              <% total_tva << net_amount*quantity*tax_amount/100 %>
+              <% total_net << net_amount*quantity * (1 + (tax_amount / 100)) %>
             <% end %>
+
           <% end %>
+
           <% @invoice_item.tax_amount = total_tva.sum %>
           <% @invoice_item.total_amount = total_net.sum %>
           <% @invoice_item.save %>
 
-          <% if @invoice_item.type == 'Order' %>
+          <% if invoice_type == 'Order' %>
 
             <p>TVA non applicable, art. 261-4 du CGI</p>
 
@@ -308,7 +378,7 @@
 
       </div>
 
-      <% unless @invoice_item.type == 'Order' %>
+      <% unless invoice_type == 'Order' %>
 
         <div class="invoice-bank-statement">
           <p>Déclaration d'activité sous le numéro 11 92 20487 92 auprès du Préfet d'IDF</p>
@@ -327,52 +397,25 @@
 
     </div>
 
-    <div id='library' class="nav-side-menu-container">
-
-      <div class="nav-side-menu">
-
-        <a id="close_library" class='centered-item'><i class="fas fa-times"></i></a>
-
-        <div class="brand">Products</div>
-
-        <div class="menu-list">
-
-          <ul id="product-list">
-
-            <%= link_to invoice_lines_path(invoice_item_id: @invoice_item.id, type: 'Chapter'), method: :post do %>
-              <li>Chapter</li>
-            <% end %>
-
-            <%= link_to invoice_lines_path(invoice_item_id: @invoice_item.id), method: :post do %>
-              <li>Commentaires</li>
-            <% end %>
-
-            <%= link_to invoice_lines_path(invoice_item_id: @invoice_item.id, description: 'Nom'), method: :post do %>
-              <li>Nom du participant</li>
-            <% end %>
-
-            <% Product.all.each do |product| %>
-
-              <%= link_to invoice_lines_path(product_id: product.id, invoice_item_id: @invoice_item.id), method: :post do %>
-                <li><%= product.name %></li>
-              <% end %>
-
-            <% end %>
-
-          </ul>
-
-        </div>
-
-      </div>
-
-    </div>
-
   </div>
 
 
   <!------------>
   <!-- MODALS -->
   <!------------>
+
+  <div id="editTraining"
+       class="modal fade"
+       tabindex="-1"
+       role="dialog"
+       data-backdrop="static"
+       data-keyboard="false">
+
+    <div class="modal-dialog" role="document" style="border-radius: 2rem">
+      <%= render 'invoice_items/show/edit_training', invoice_item: @invoice_item %>
+    </div>
+
+  </div>
 
   <div id="copyInvoiceItem"
        class="modal fade"
@@ -382,7 +425,7 @@
        data-keyboard="false">
 
     <div class="modal-dialog" role="document" style="border-radius: 2rem">
-      <%= render 'invoice_items/copy', invoice_item: @invoice_item %>
+      <%= render 'invoice_items/show/copy', invoice_item: @invoice_item %>
     </div>
 
   </div>
@@ -404,43 +447,7 @@
 
   <% end %>
 
-  <div id="editClient"
-       class="modal fade"
-       tabindex="-1"
-       role="dialog"
-       data-backdrop="static"
-       data-keyboard="false">
-
-    <div class="modal-dialog" role="document" style="border-radius: 2rem">
-      <%= render 'invoice_items/edit_client', invoice_item: @invoice_item %>
-    </div>
-
-  </div>
-
-  <!--  -->
-
-  <script>
-    var button_show = document.getElementById('show_library');
-    var button_close = document.getElementById('close_library');
-    var library = document.getElementById('library');
-    button_show.addEventListener('click', (event) => {
-      library.style.height = '100vh';
-    })
-    button_close.addEventListener('click', (event) => {
-      library.style.height = '0vh';
-    })
-  </script>
-  <script>
-    window.onload = function() {
-      object = document.getElementById('object-link');
-      form = document.getElementById('object-form');
-      object.addEventListener('click', (event) => {
-        object.classList.toggle('hidden');
-        form.classList.toggle('hidden');
-      })
-    }
-  </script>
-
+  <!------------>
 
 <% else %>
 
