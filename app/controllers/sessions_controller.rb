@@ -24,12 +24,15 @@ class SessionsController < ApplicationController
   def show
     authorize @session
     @session_trainer = SessionTrainer.new
-    # @comment = Comment.new
+
+    @contents = Content.all.joins(:theme).order('themes.name ASC', 'title ASC').group_by(&:theme)
     workshops = @session.workshops.order(position: :asc)
+
     if workshops.map(&:position) != (1..@session.workshops.count).to_a
       i = 1
       workshops.each{|x| x.update position: i; i += 1}
     end
+
     respond_to do |format|
       format.html
       format.pdf do
@@ -206,6 +209,31 @@ class SessionsController < ApplicationController
     redirect_to training_session_path(@session.training, @session)
   end
 
+
+  #####################
+  ## SEARCH CONTENTS ##
+  #####################
+
+  def session_content_search
+    skip_authorization
+
+    @session = Session.find(params.dig(:search, :session_id))
+    @training = @session.training
+
+    if params.dig(:search, :title) == ""
+      @contents = Content.all
+    elsif params.dig(:search, :deep_mode).present?
+      @contents = Content.deep_search(params.dig(:search, :title))
+    else
+      @contents = Content.search_by_title(params.dig(:search, :title))
+    end
+
+    @contents = @contents.joins(:theme).order('themes.name ASC', 'title ASC').group_by(&:theme)
+
+    respond_to do |format|
+      format.js
+    end
+  end
 
   #########################
   ## SEARCH AUTOCOMPLETE ##

@@ -10,6 +10,19 @@ class Content < ApplicationRecord
   include PgSearch::Model
   pg_search_scope :search_by_title,
     against: [ :title ],
+    associated_against: {
+      content_modules: :title,
+    },
+    using: {
+      tsearch: { prefix: true }
+    },
+    ignoring: :accents
+
+  pg_search_scope :deep_search,
+    against: [ :title ],
+    associated_against: {
+      content_modules: [:title, :instructions],
+    },
     using: {
       tsearch: { prefix: true }
     },

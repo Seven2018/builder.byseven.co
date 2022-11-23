@@ -195,6 +195,7 @@ a.disabled-link { pointer-events: none; }
 .width-24rem          { width: 24rem !important; }
 .width-25rem          { width: 25rem !important; }
 .width-30rem          { width: 30rem !important; }
+.width-33rem          { width: 33rem !important; }
 .width-35rem          { width: 35rem !important; }
 .width-50rem          { width: 50rem !important; }
 .width-65rem          { width: 65rem !important; }
@@ -321,6 +322,7 @@ a.disabled-link { pointer-events: none; }
 .min-height-90vh  { min-height: 90vh; }
 .min-height-100vh { min-height: 100vw; }
 
+.max-height-0     { max-height: 0 }
 .max-height-4rem  { max-height: 4rem }
 .max-height-6rem  { max-height: 6rem }
 .max-height-7rem  { max-height: 7rem }
@@ -528,6 +530,14 @@ a.disabled-link { pointer-events: none; }
 .pr-3rem { padding-right:  3rem !important; }
 .pb-3rem { padding-bottom: 3rem !important; }
 .pl-3rem { padding-left:   3rem !important; }
+
+.p-3_5rem  { padding: 3.5rem !important; }
+.px-3_5rem { padding-right:  3.5rem !important; padding-left:   3.5rem !important; }
+.py-3_5rem { padding-top:    3.5rem !important; padding-bottom: 3.5rem !important; }
+.pt-3_5rem { padding-top:    3.5rem !important; }
+.pr-3_5rem { padding-right:  3.5rem !important; }
+.pb-3_5rem { padding-bottom: 3.5rem !important; }
+.pl-3_5rem { padding-left:   3.5rem !important; }
 
 .p-4rem  { padding: 4rem !important; }
 .px-4rem { padding-right:  4rem !important; padding-left:   4rem !important; }

@@ -14,7 +14,7 @@
 
     <%= simple_form_for :edit_sending, url: marked_as_send_invoice_item_path(item), method: 'GET' do |f| %>
 
-      <%= f.input :payment_date, as: :string, input_html: { class: 'datepicker', value: item.sending_date} %>
+      <%= f.input :sending_date, as: :string, input_html: { class: 'datepicker', value: item.sending_date} %>
 
       <div class='modal-control'>
 
