@@ -1,0 +1,2 @@
+document.getElementById('show-library').innerHTML = '<%= j (render("sessions/show/show_library", training: @training, session: @session, contents: @contents)) %>';
+document.querySelector('body').classList.remove('wait')

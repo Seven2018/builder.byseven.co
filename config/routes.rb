@@ -208,6 +208,7 @@ Rails.application.routes.draw do
   get :airtable_create_training, controller: :trainings
   get :training_sessions_list, controller: :trainings
   get :sessions_search, controller: :sessions
+  get :session_content_search, controller: :sessions
 
 
   #########

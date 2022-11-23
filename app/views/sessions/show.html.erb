@@ -35,19 +35,51 @@
 
       <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
 
-        <div class='show_library btn-icon-grey' 
-             title="Library"
-             data-action="click->sessions--sessions-show#showLibrary">
-          <i class="fas fa-book"></i>
-        </div>
-
-        <%# render(Tools::SidebarComponent.new(title: 'Products',
+        <%= render(Tools::SidebarComponent.new(title: 'Library',
                                            width: '35rem',
                                            side: 'right',
-                                           button_klasses: 'btn btn-edit-grey btn-icon',
+                                           button_klasses: 'btn-icon-grey',
                                            klasses: '')) do %>
 
-        <%# end %>
+          <div class="width-100">
+
+            <% status = !params[:search].nil? %>
+
+            <%= simple_form_for :search, url: session_content_search_path, html: { class: 'sidebar-search' }, method: 'GET', remote: true do |f| %>
+
+              <div class="d-flex flex-column justify-content-start">
+
+                <%= f.input :title, placeholder: 'Search',
+                                    label: false,
+                                    input_html: {
+                                      class: "width-33rem mx-1rem",
+                                      autocomplete: "off",
+                                      data: { action: 'keyup->sessions--sessions-show#searchSubmit' }
+                                    } %>
+
+                <%= render(Tools::CheckboxCollectionComponent.new(elements: [['true', 'Deep search']],
+                                                                input_name: 'search[deep_mode]',
+                                                                data_action_check: 'click->sessions--sessions-show#searchSubmit',
+                                                                select_all: false)) %>
+
+                <%= f.hidden_field :session_id, value: @session.id %>
+
+                <%= f.submit '', class: 'hidden-submit hidden' %>
+
+              </div>
+
+            <% end %>
+
+            <div id="show-library"
+                 class="mt-3rem">
+
+              <%= render 'sessions/show/show_library', training: @session.training, session: @session, contents: @contents %>
+
+            </div>
+
+          </div>
+
+        <% end %>
 
       <% end %>
 
@@ -82,12 +114,6 @@
   <div id="mods" style="min-height: 50vh;">
     <%= render 'workshops/index', session: @session %>
   </div>
-
-  <% if (['super_admin', 'admin', 'training manager'].include? current_user.access_level) %>
-
-    <%= render 'sessions/show/show_library' %>
-
-  <% end %>
 
 </div>
 

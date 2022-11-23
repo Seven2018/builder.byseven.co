@@ -18,6 +18,8 @@ export default class extends Controller {
       })(this.identifier)
       ] = this
 
+    this.timer
+    this.waitTime = 500
   }
 
 
@@ -89,6 +91,38 @@ export default class extends Controller {
     const library = document.getElementById('library');
 
     library.style.height = '0px';
+  }
+
+  searchSubmit(event) {
+    const element = event.currentTarget
+    const form = element.closest('form')
+    const submit = form.querySelector('.hidden-submit')
+
+    clearTimeout(this.timer);
+
+    this.timer = setTimeout(() => {
+      submit.click()
+      document.querySelector('body').classList.add('wait')
+    }, this.waitTime);
+  }
+
+  toggleContentList(event) {
+    const element = event.currentTarget
+    const container = element.parentNode
+    const caret = container.querySelector('svg')
+    const list = container.querySelector('.content-list')
+
+    if (container.offsetHeight == '40') {
+      container.style.maxHeight = '10000000000rem'
+      list.style.maxHeight = '10000000000rem'
+      list.classList.add('active')
+      caret.dataset.rotate = '90deg'
+    } else {
+      container.style.maxHeight = '4rem'
+      list.style.maxHeight = '0'
+      list.classList.remove('active')
+      caret.dataset.rotate = '0'
+    }
   }
 
 
