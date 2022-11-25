@@ -129,7 +129,7 @@ class UsersController < ApplicationController
       redirect_to user_path(builder_user)
     else
       redirect_to users_path
-      flash[:alert] = 'An problem has occured. Please contact your administrator.'
+      flash[:alert] = 'A problem has occured. Please contact your administrator.'
     end
   end
 

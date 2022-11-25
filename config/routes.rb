@@ -91,6 +91,8 @@ Rails.application.routes.draw do
   get 'invoice_items/:id/marked_as_paid', to: 'invoice_items#marked_as_paid', as: 'marked_as_paid_invoice_item'
   get 'invoice_items/:id/marked_as_cancelled', to: 'invoice_items#marked_as_cancelled', as: 'marked_as_cancelled_invoice_item'
 
+  get :airtable_update_invoice, controller: :invoice_items
+
 
   #################
   # INVOICE_LINES #

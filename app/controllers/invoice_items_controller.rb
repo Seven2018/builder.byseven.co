@@ -119,6 +119,31 @@ class InvoiceItemsController < ApplicationController
     end
   end
 
+  ##############
+  ## AIRTABLE ##
+  ##############
+
+  def airtable_update_invoice
+    invoice = OverviewNumbersRevenue.find(params[:record_id])
+    builder_invoice = InvoiceItem.find_by(id: invoice['Invoice_id'])
+    skip_authorization
+
+    if invoice['Type'] == 'To Delete'
+      begin
+        if builder_invoice.nil?
+          flash[:alert] = "Invoice #{invoice['Invoice SEVEN']} not found."
+        else
+          builder_invoice.destroy
+          flash[:notice] = "Invoice #{builder_invoice.uuid} successfully deleted."
+        end
+      rescue
+          flash[:alert] = "A problem has occured. Please contact your administrator."
+      end
+
+      redirect_to invoice_items_path(type: 'Invoice', page: 1)
+    end
+  end
+
   # Creates a new InvoiceItem using data from Airtable DB
   def new_airtable_invoice_item
     skip_authorization
