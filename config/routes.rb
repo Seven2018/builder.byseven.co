@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
 
   ###########
   # ACTIONS #
@@ -217,7 +216,13 @@ Rails.application.routes.draw do
   # USERS #
   #########
 
+  devise_for :users, controllers: {
+    omniauth_callbacks: 'users/omniauth_callbacks',
+    passwords: 'users/passwords'
+  }
+
   resources :users
+  post :reset_password, controller: :users
   get :users_search, controller: :users
   get :airtable_create_user, controller: :users
 

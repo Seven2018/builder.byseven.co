@@ -11,48 +11,70 @@
 
       </div>
 
-      <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+      <div id="reset-form">
 
-        <%= f.error_notification %>
+        <%= simple_form_for :user, url: reset_password_path, method: :post, remote: true do |f| %>
 
-        <div class="form-inputs mb-2rem">
-          <%= f.input :email,
-                      required: true,
-                      autofocus: true,
-                      input_html: { autocomplete: "email" } %>
-        </div>
+          <div class="form-inputs">
+            <%= f.input :email,
+                        required: true,
+                        autofocus: true,
+                        input_html: { autocomplete: "email" } %>
+          </div>
 
-        <div class="d-flex justify-content-center">
+          <div id="reset-error"
+               class="hidden mt-1rem mb-2rem">
+            <p class="fs-1_2rem bld-red">Unknow account. Please enter a valid email.</p>
+          </div>
 
-          <button type="submit"
-                  class="bld-btn-yellow">
-            Send me instructions
-          </button>
+          <div class="d-flex justify-content-center mt-2rem">
 
-        </div>
-
-      <% end %>
-
-      <div class="d-flex justify-content-between align-items-center mt-2rem">
-
-        <%= link_to new_user_session_path, class: "bld-btn-white-dark-grey" do %>
-
-          Log in
-
-        <% end %>
-
-        <%= link_to user_google_oauth2_omniauth_authorize_path, method: :post do %>
-
-          <div class="bld-btn-google">
-
-            <img class="width-2rem height-2rem mr-1rem"
-                 src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
-
-            Sign in with Google
+            <button type="submit"
+                    class="bld-btn-yellow">
+              Send me instructions
+            </button>
 
           </div>
 
         <% end %>
+
+        <div class="d-flex justify-content-between align-items-center mt-2rem">
+
+          <%= link_to new_user_session_path, class: "bld-btn-white-dark-grey" do %>
+
+            Log in
+
+          <% end %>
+
+          <%= link_to user_google_oauth2_omniauth_authorize_path, method: :post do %>
+
+            <div class="bld-btn-google">
+
+              <img class="width-2rem height-2rem mr-1rem"
+                   src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
+
+              Sign in with Google
+
+            </div>
+
+          <% end %>
+
+        </div>
+
+      </div>
+
+      <div id="reset-message"
+           class="hidden">
+
+        <div class="d-flex justify-content-center">
+          <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+          <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_newtztyc.json"  background="transparent"  speed="1"  style="width: 200px; height: 200px; margin-top: -3rem;" loop autoplay></lottie-player>
+        </div>
+
+        <div class="text-center z-index-5 mt-1rem mb-3rem" style='margin-top: -5rem;'>
+          <p class="fs-2_4rem font-weight-700 bld-dark-grey mb-1rem">Instructions are on their way !</p>
+          <p class="fs-1_4rem font-weight-500 bld-dark-grey">You will receive an email in a few moments.</p>
+        </div>
 
       </div>
 
