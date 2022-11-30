@@ -330,7 +330,7 @@ class Training < ApplicationRecord
 
       if seveners
         self.trainers.where(access_level: ['sevener+', 'sevener']).each do |user|
-          numbers_card = OverviewNumbersSevener.all(filter: "{User_id} = '#{user.id}'" && "{Training_id} = '#{self.id}'")&.first
+          numbers_card = OverviewNumbersSevener.all(filter: "{Training_id} = '#{self.id}'").select{|x| x['User_id'] == user.id}&.first
 
           if numbers_card['Total Due (incl. VAT and Expenses)'] == numbers_card['Total Paid']
             if numbers_card['Billing Type'] == 'Hourly'

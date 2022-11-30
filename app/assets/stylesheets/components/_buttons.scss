@@ -17,6 +17,7 @@
   border: 1px solid $bld-yellow;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
   transition: background-color .25s ease-in-out, color .25s ease-in-out;
+  text-transform: none;
   cursor: pointer;
 
   &:hover {
@@ -78,6 +79,40 @@
 //////////
 // MISC //
 //////////
+
+.bld-btn-google {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  color: grey;
+  background-color: $bld-white !important;
+  padding: 1.6rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 2rem;
+  border-radius: .5rem;
+  border: 1px solid transparent;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  transition: all .25s ease-in-out;
+  cursor: pointer;
+
+  &:not(.disabled):hover {
+    border: 1px solid $bld-light-grey4;
+    background-color: $bld-light-grey4 !important;
+  }
+
+  &:not(.disabled):focus {
+    background-color: $bld-white;
+    color: $bld-dark-grey;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
 
 .bld-btn-back {
   p, svg {
