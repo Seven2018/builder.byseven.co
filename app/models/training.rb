@@ -259,7 +259,7 @@ class Training < ApplicationRecord
 
         builder_invoice = InvoiceItem.find(invoice['Invoice_id'])
 
-        if ['Training', 'Home', 'Deposit (Home)'].include?(invoice['Type'])
+        if ['Training', 'Home', 'Deposit (Home)', 'Direction MS'].include?(invoice['Type'])
           if invoice['Paid'] == true
             seven_invoices += "[x] #{builder_invoice.uuid} \n"
           else
