@@ -123,6 +123,7 @@ class TrainingsController < ApplicationController
   def copy
     authorize @training
     target_training = Training.find(params[:copy][:training_id])
+
     if target_training.present?
       @training.sessions.each do |session|
         new_session = Session.create(session.attributes.except("id", "created_at", "updated_at", "training_id", "address", "room"))
