@@ -1,0 +1,114 @@
+<div class="mt-5rem">
+
+  <% contents.each do |theme, contents_list| %>
+
+    <% if !['Ice breaker', 'Présentation', 'Conclusion'].include?(theme.name) %>
+
+      <div class="content-index-theme">
+
+        <div class="content-index-theme-title">
+
+          <a class='btn-link'>
+            <i class="fas fa-angle-down"></i>
+          </a>
+
+          <p><%= theme.name %></p>
+
+        </div>
+
+        <div id="collapse<%= theme.id %>"
+             class="content-index-nested collapse">
+
+          <% contents_list.each do |content| %>
+
+            <div class="content-index-card">
+
+              <%= link_to content_path(content) do %>
+
+                <span class="content-index-card-title"><%= content.title %></span>
+
+                <% if !content.theories.nil? %>
+
+                  <span class="content-index-card-theories">
+
+                    <% content.theories.order('name ASC').each do |theory| %>
+                      <%= theory.name %>
+                    <% end %>
+
+                  </span>
+
+                <% end %>
+
+              <% end %>
+
+            </div>
+
+          <% end %>
+
+        </div>
+
+      </div>
+
+    <% end %>
+
+  <% end %>
+
+</div>
+
+<div class="mt-5rem">
+
+  <% contents.sort_by{|x| x[0].id}.to_h.each do |theme, contents_list| %>
+
+    <% if ['Ice breaker', 'Présentation', 'Conclusion'].include?(theme.name) %>
+
+      <div class="content-index-theme">
+
+        <div class="content-index-theme-title">
+
+          <a class='btn-link'>
+            <i class="fas fa-angle-down"></i>
+          </a>
+
+          <p><%= theme.name %></p>
+
+        </div>
+
+        <div id="collapse<%= theme.id %>"
+             class="content-index-nested collapse">
+
+          <% contents_list.each do |content| %>
+
+            <div class="content-index-card">
+
+              <%= link_to content_path(content) do %>
+
+                <span class="content-index-card-title"><%= content.title %></span>
+
+                <% if !content.theories.nil? %>
+
+                  <span class="content-index-card-theories">
+
+                    <% content.theories.order('name ASC').each do |theory| %>
+                      <%= theory.name %>
+                    <% end %>
+
+                  </span>
+
+                <% end %>
+
+              <% end %>
+
+            </div>
+
+          <% end %>
+
+        </div>
+
+      </div>
+
+    <% end %>
+
+  <% end %>
+
+</div>
+

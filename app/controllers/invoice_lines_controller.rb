@@ -50,7 +50,7 @@ class InvoiceLinesController < ApplicationController
     invoice = @invoiceline.invoice_item
     authorize @invoiceline
 
-    params[:invoice_line][:tax_amount] = '0' unless params.dig(:invoice_line, :tax_amount).present?
+    params[:invoice_line][:tax_amount] = '0' if params.dig(:invoice_line, :tax_amount) == ''
 
     @invoiceline.update(invoiceline_params)
     @invoiceline.invoice_item.update_price

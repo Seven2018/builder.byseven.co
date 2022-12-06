@@ -1,0 +1,10 @@
+document.getElementById('contents-list').innerHTML = '<%= j (render("contents/index/index_contents_list", contents: @contents)) %>';
+document.querySelector('body').classList.remove('wait')
+
+$('.content-index-theme-title').on('click', function(){
+	if($(this).parent().children('.collapse').hasClass('show')) {
+	  $(this).parent().children('.collapse').collapse('hide');
+	} else {
+	  $(this).parent().children('.collapse').collapse('show');
+	}
+});
