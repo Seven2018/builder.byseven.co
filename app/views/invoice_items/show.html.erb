@@ -397,57 +397,58 @@
 
     </div>
 
-  </div>
+    <!------------>
+    <!-- MODALS -->
+    <!------------>
 
-
-  <!------------>
-  <!-- MODALS -->
-  <!------------>
-
-  <div id="editTraining"
-       class="modal fade"
-       tabindex="-1"
-       role="dialog"
-       data-backdrop="static"
-       data-keyboard="false">
-
-    <div class="modal-dialog" role="document" style="border-radius: 2rem">
-      <%= render 'invoice_items/show/edit_training', invoice_item: @invoice_item %>
-    </div>
-
-  </div>
-
-  <div id="copyInvoiceItem"
-       class="modal fade"
-       tabindex="-1"
-       role="dialog"
-       data-backdrop="static"
-       data-keyboard="false">
-
-    <div class="modal-dialog" role="document" style="border-radius: 2rem">
-      <%= render 'invoice_items/show/copy', invoice_item: @invoice_item %>
-    </div>
-
-  </div>
-
-  <% unless @invoice_item.training.nil? %>
-
-    <div id="sendInvoiceItem"
+    <div id="editTraining"
          class="modal fade"
          tabindex="-1"
          role="dialog"
          data-backdrop="static"
          data-keyboard="false">
 
-      <div class="modal-dialog modal-lg" role="document" style="border-radius: 2rem">
-        <%= render 'invoice_items/send_invoice', invoice_item: @invoice_item %>
+      <div class="modal-dialog" role="document" style="border-radius: 2rem">
+        <%= render 'invoice_items/show/edit_training', invoice_item: @invoice_item %>
       </div>
 
     </div>
 
-  <% end %>
+    <div id="copyInvoiceItem"
+         class="modal fade"
+         tabindex="-1"
+         role="dialog"
+         data-backdrop="static"
+         data-keyboard="false">
 
-  <!------------>
+      <div class="modal-dialog" role="document" style="border-radius: 2rem">
+        <%= render 'invoice_items/show/copy', invoice_item: @invoice_item %>
+      </div>
+
+    </div>
+
+    <% unless @invoice_item.training.nil? %>
+
+      <div id="sendInvoiceItem"
+           class="modal fade"
+           tabindex="-1"
+           role="dialog"
+           data-backdrop="static"
+           data-keyboard="false">
+
+        <div class="modal-dialog modal-lg" role="document" style="border-radius: 2rem">
+          <%= render 'invoice_items/send_invoice', invoice_item: @invoice_item %>
+        </div>
+
+      </div>
+
+    <% end %>
+
+    <!------------>
+
+  </div>
+
+
 
 <% else %>
 

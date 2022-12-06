@@ -505,6 +505,11 @@
 
 .btn-edit-green {
   background-color: rgba(74, 194, 199, 80%) !important;
+
+  &.disabled {
+    opacity: .5;
+    cursor: not-allowed;
+  }
 }
 
 .btn-edit-blue {

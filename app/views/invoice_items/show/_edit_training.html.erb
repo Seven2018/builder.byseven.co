@@ -6,7 +6,7 @@
   <div class="modal-header">
 
     <div id="modal-title" style=" display: flex; justify-content: space-between;">
-      <h3 class="modal-title" id="myModalLabel">Edit <%= invoice_item.uuid %> :</h3>
+      <h3 class="modal-title">Edit <%= invoice_item.uuid %> :</h3>
     </div>
 
     <button class="btn btn-icon-close"
@@ -68,8 +68,8 @@
                                                               placeholder: 'Search for Company',
                                                               input_name: "invoice_item[client_company_id]",
                                                               default_value: company.present? ? [company.id, company.name] : [],
-                                                              data_action_input: '',
-                                                              data_action_select: '',
+                                                              data_action_input: 'keyup->invoices--invoices-show#disableInvoiceEdit',
+                                                              data_action_select: 'click->invoices--invoices-show#enableInvoiceEdit',
                                                               klasses: 'mr-0 mb-2rem')) %>
 
             <div class='modal-control'>
