@@ -16,10 +16,16 @@ $bld-light-grey2: #888888;
 $bld-light-grey4: #F4F4F4;
 $bld-dark-grey: #333333;
 $bld-yellow: #FCC74C;
-$bld-blue-green: #4ac2c7;
+$bld-orange: #f3722c;
+$bld-neutral-orange: #FFDCA9;
 $bld-red: #FF5656;
 $bld-light-red: #EC6D6D40;
 $bld-negative-red: #EC6D6D;
+$bld-blue: #22577a;
+$bld-neutral-blue: #a9def9;
+$bld-blue-green: #4ac2c7;
+$bld-green: #004b23;
+$bld-positive-green: #b5c99a;
 
 
 .bld-white                     { color: $bld-white; }
@@ -28,8 +34,11 @@ $bld-negative-red: #EC6D6D;
 .bld-light-grey4               { color: $bld-light-grey4; }
 .bld-dark-grey                 { color: $bld-dark-grey; }
 .bld-yellow                    { color: $bld-yellow; }
-.bld-blue-green                { color: $bld-blue-green; }
+.bld-orange                    { color: $bld-orange; }
 .bld-red                       { color: $bld-red; }
+.bld-blue                      { color: $bld-blue; }
+.bld-blue-green                { color: $bld-blue-green; }
+.bld-green                     { color: $bld-green; }
 
 .bld-white-important           { color: $bld-white !important; }
 .bld-light-grey-important      { color: $bld-light-grey !important; }
@@ -51,7 +60,10 @@ $bld-negative-red: #EC6D6D;
 .bld-bg-light-grey4            { background-color: $bld-light-grey4; }
 .bld-bg-dark-grey              { background-color: $bld-dark-grey; }
 .bld-bg-yellow                 { background-color: $bld-yellow; }
+.bld-bg-neutral-orange         { background-color: $bld-neutral-orange; }
 .bld-bg-light-red              { background-color: $bld-light-red; }
+.bld-bg-neutral-blue           { background-color: $bld-neutral-blue; }
+.bld-bg-positive-green         { background-color: $bld-positive-green; }
 
 .bld-bg-white-important        { background-color: $bld-white !important; }
 .bld-bg-light-grey-important   { background-color: $bld-light-grey !important; }

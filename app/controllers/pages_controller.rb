@@ -6,8 +6,39 @@ class PagesController < ApplicationController
   end
 
   def billing
-    @user = User.find(params[:user_id])
-    @trainings = Training.joins(sessions: :session_trainers).where(sessions: {session_trainers: {user_id: @user.id}}).uniq
+    @to_pay = []
+
+    OverviewNumbersSevener.all(filter: "User_id = '#{current_user.id}'").sort_by{|x| x['Due Date (Training)']}.each do |intervention|
+
+      training = Training.find_by(id: intervention['Training_id'])
+
+      next if training.nil?
+      next if training.end_time.nil?
+
+      if intervention['Total Due (excl. VAT)'].to_f - intervention['Total Paid'].to_f > 0
+        @to_pay << {training: training, intervention: intervention}
+      end
+
+    end
+  end
+
+  def billing_completed
+    @paid = []
+
+    OverviewNumbersSevener.all(filter: "User_id = '#{current_user.id}'").sort_by{|x| x['Due Date (Training)']}.each do |intervention|
+
+      training = Training.find_by(id: intervention['Training_id'])
+
+      next if training.nil?
+      next if training.end_time.nil?
+
+      if intervention['Total Due (excl. VAT)'].to_f - intervention['Total Paid'].to_f <= 0
+        @paid << {training: training, intervention: intervention}
+      end
+
+    end
+
+    render partial: "pages/billing/trainings_list", locals: {type: "Archived", list: @paid}
   end
 
   def contact_form

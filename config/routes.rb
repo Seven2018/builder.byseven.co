@@ -117,6 +117,7 @@ Rails.application.routes.draw do
   get :contact_form, controller: :pages
   get :contact_form_becos, controller: :pages
   get :billing, controller: :pages
+  get :billing_completed, controller: :pages
   get :export_numbers_activity_cumulation, controller: :pages
 
 

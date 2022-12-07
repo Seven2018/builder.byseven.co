@@ -1,0 +1,182 @@
+<% archived = type == 'Archived' %>
+
+<div class='mb-10rem'>
+
+  <table class='completed'>
+
+    <tr>
+      <th>Company/School</th>
+      <th>Training</th>
+      <th>Date</th>
+      <th>Status</th>
+      <th>Invoices</th>
+      <th>Total Paid</th>
+      <th></th>
+    </tr>
+
+    <% if list.empty? %>
+
+      <div class="billing-card">
+        <div class="billing-card-title">
+          <p>No training in this category</p>
+        </div>
+      </div>
+
+    <% end %>
+
+    <% list.each do |hash| %>
+
+      <% training, intervention = hash[:training], hash[:intervention] %>
+      <% training_end_time = training.end_time %>
+      <% invoices = OverviewInvoiceSevener.find_many(intervention['Invoices Sevener'].presence || []) %>
+
+      <tbody>
+
+        <tbody>
+
+          <tr>
+
+            <td>
+
+              <% if invoices.count != 0 %>
+
+                <a class='btn-link' onclick='showInvoice(this);'>
+                  <i class="fas fa-angle-down"></i>
+                  <p class="font-weight-700"><%= training.client_company.name %></p>
+                </a>
+
+              <% else %>
+
+                <p style='padding-left:20px;'><b><%= training.client_company.name %></b></p>
+
+              <% end %>
+
+            </td>
+
+            <td>
+              <p><b><%= training.title %></b></p>
+            </td>
+
+            <td class="min-width-20rem width-20rem">
+              <%= training.start_time.strftime("%b %d") %> - <%= training_end_time.strftime("%b %d, %Y") %>
+            </td>
+
+            <td class="min-width-20rem width-20rem">
+
+              <% if archived %>
+
+                <p class="width-fit-content px-1rem py-0_5rem rounded-30px bld-dark-grey bld-bg-light-grey">
+                  Completed
+                </p>
+
+              <% elsif (training_end_time.present? && training_end_time < Date.today) %>
+
+                <p class="width-fit-content px-1rem py-0_5rem rounded-30px bld-green bld-bg-positive-green">
+                  Completed
+                </p>
+
+              <% else %>
+
+                <p class="width-fit-content px-1rem py-0_5rem rounded-30px bld-blue bld-bg-neutral-blue">
+                  Ongoing
+                </p>
+
+              <% end %>
+
+            </td>
+
+            <td class="min-width-10rem width-10rem">
+              <p><%= invoices.count %></p>
+            </td>
+
+            <td class="min-width-10rem width-10rem">
+              <% total_due = intervention['Total Due (excl. VAT)'].to_f - intervention['Total Paid'].to_f %>
+              <p class="font-weight-700"><%= intervention['Total Paid'].to_f %>€</p>
+            </td>
+
+            <td style="min-width: 56px;">
+
+              <% unless total_due == 0 || archived %>
+
+                <% if training_end_time.present? && training_end_time <= Date.today %>
+
+                  <%= link_to invoice_form_path(training), class: 'btn btn-edit-green btn-icon m-0',
+                                                           title: 'Submit an invoice' do %>
+                    <i class="fas fa-file-invoice-dollar"></i>
+                  <% end %>
+
+                <% else %>
+
+                  <a class='btn btn-edit-grey btn-icon m-0 disabled' style='opacity: .25;'>
+                    <i class="fas fa-file-invoice-dollar"
+                       title='You may only send invoices for completed trainings.'></i>
+                  </a>
+
+                <% end %>
+
+              <% end %>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+        <tbody class='hide hidden'>
+
+          <% total = 0 %>
+
+          <% invoices.each do |invoice| %>
+
+            <tr class="invoice">
+
+              <% is_paid = invoice['Status'] == 'Paid' %>
+
+              <td>
+                <p style='padding-left:20px;'>Invoice n°<%= invoice['Invoice number'] %></p>
+              </td>
+
+              <td></td>
+              <td></td>
+
+              <td>
+
+                <% if is_paid %>
+
+                  <p class="width-fit-content px-1rem py-0_5rem rounded-30px bld-green bld-bg-positive-green">
+                    <i class="far fa-check-circle bld-green mr-1rem"></i>
+                    Paid
+                  </p>
+
+                <% else %>
+
+                  <p class="width-fit-content px-1rem py-0_5rem rounded-30px bld-orange bld-bg-neutral-orange">
+                    <i class="fas fa-hourglass-half bld-orange mr-1rem"></i>
+                    Pending
+                  </p>
+
+                <% end %>
+
+              </td>
+
+              <td></td>
+
+              <td class="min-width-10rem width-10rem">
+               <p class="font-weight-700 <%= is_paid ? 'bld-green' : 'bld-orange' %>"><%= invoice['Amount'] %>€</p>
+              </td>
+
+              <td></td>
+
+            </tr>
+
+          <% end %>
+
+        </tbody>
+
+      </tbody>
+
+    <% end %>
+
+  </table>
+
+</div>

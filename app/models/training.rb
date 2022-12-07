@@ -32,11 +32,11 @@ class Training < ApplicationRecord
     ignoring: :accents
 
   def start_time
-    Session.where(training_id: self).where.not(date: nil).order(date: :asc).first&.date
+    self.sessions.where.not(date: nil).minimum(:date)
   end
 
   def end_time
-    Session.where(training_id: self).where.not(date: nil).order(date: :asc).last&.date
+    self.sessions.where.not(date: nil).maximum(:date)
   end
 
   def next_session

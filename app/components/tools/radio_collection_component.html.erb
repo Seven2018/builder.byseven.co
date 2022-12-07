@@ -1,0 +1,28 @@
+<div class="<%= @klasses %> <%= 'd-flex align-items-center' if @horizontal %>"
+		 data-controller="tools--radio-collection"
+		 data-color="<%= @color %>"
+		 data-checked="<%= @checked %>">
+
+	<% @elements.each do |key, text| %>
+
+		<div class="d-flex align-items-center <%= @horizontal ? 'mr-2rem' : 'mb-1rem' %>"
+				 data-tools--radio-collection-target="customRadio"
+				 data-action="click->tools--radio-collection#selectRadio">
+			
+			<div class="width-2rem height-2rem rounded-10px border-bld-light-grey-0_5px mr-1rem cursor-pointer">
+
+				<input type="radio"
+							 id="<%= key %>"
+		      		 name="<%= @input_name %>"
+		      		 value="<%= key %>"
+		      		 class="d-none">
+
+			</div>
+
+			<p><%= text %></p>
+
+		</div>
+
+	<% end %>
+
+</div>

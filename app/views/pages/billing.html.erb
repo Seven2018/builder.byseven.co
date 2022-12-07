@@ -1,317 +1,40 @@
-<div class="container-seven-large">
+<div class="container-seven-large"
+     data-controller="pages--billing">
 
-  <div id='billing-index'>
+  <div class="pt-3rem">
 
-    <% to_pay = [] %>
-    <% paid = [] %>
+    <div id="trainings-list">
 
-    <% OverviewNumbersSevener.all(filter: "User_id = '#{current_user.id}'").sort_by{|x| x['Due Date (Training)']}.each do |intervention| %>
+      <%= render(Tools::TabsSystemComponent.new(tabs_names: ["pending", "archived"]),
+                                                  klasses: 'width-100',
+                                                  color: 'yellow') do %>
 
-      <% training = Training.find_by(id: intervention['Training_id']) %>
+        <div id="pending-display"
+             class="bld-tab">
 
-      <% next if training.nil? %>
-      <% next if training.end_time.nil? %>
+          <%= render "pages/billing/trainings_list", type: "Pending", list: @to_pay %>
 
-      <% if intervention['Total Due (excl. VAT)'].to_f - intervention['Total Paid'].to_f <= 0 %>
-        <% paid << {training: training, intervention: intervention} %>
-      <% else %>
-        <% to_pay << {training: training, intervention: intervention} %>
-      <% end %>
+        </div>
 
-    <% end %>
+        <div id="archived-display"
+             class="bld-tab d-flex justify-content-center align-items-start hidden"
+             style="min-height: calc(100vh - 9.5rem);">
 
-    <div class='billing-index-category'>
+          <%= render_async billing_completed_path do %>
 
-      <h2>Pending</h2>
+            <div class="d-flex flex-column height-50vh justify-content-center align-items-center">
 
-      <table class="invoices-to-do">
+              <p class="bld-blue-green fs-1_6rem font-weight-700 mb-2rem">Loading...</p>
 
-        <tbody>
-          <tbody>
+              <div class="loader"></div> 
 
-            <tr>
-              <th>Company/School</th>
-              <th>Training</th>
-              <th>Date</th>
-              <th>Training Status</th>
-              <th>Invoices</th>
-              <th>Total Paid</th>
-              <th></th>
-            </tr>
-
-            <% if to_pay.empty? %>
-              <div class="billing-card">
-                <div class="billing-card-title">
-                  <p>No training in this category</p>
-                </div>
-              </div>
-            <% end %>
-
-            <% to_pay.each do |hash| %>
-
-              <% training, intervention = hash[:training], hash[:intervention] %>
-              <% invoices = intervention['Invoices Sevener'] %>
-
-              <% if invoices.nil? %>
-                <% invoices = [] %>
-              <% end %>
-
-              <tr>
-
-                <td>
-                  <% if invoices.count != 0 %>
-                    <a class='btn-link' onclick='showInvoice(this);'><i class="fas fa-angle-down"></i> <p><b><%= training.client_company.name %></b></p></a>
-                  <% else %>
-                    <p style='padding-left:20px;'><b><%= training.client_company.name %></b></p></a>
-                  <% end %>
-                </td>
-
-                <td>
-                  <p><b><%= training.title %></b></p>
-                </td>
-
-                <td>
-                  <% if training.end_time.present? %>
-                    <%= training.start_time.strftime("%b %d") %> - <%= training.end_time.strftime("%b %d, %Y") %>
-                  <% end %>
-                </td>
-
-                <td>
-
-                  <% if training.end_time.present? && training.end_time < Date.today %>
-
-                    <div class="completed-btn">
-                      <p>Completed</p>
-                    </div>
-
-                    <% else %>
-
-                    <div class="ongoing-btn">
-                      <p>Ongoing</p>
-                    </div>
-
-                  <% end %>
-
-                </td>
-
-                <td>
-                  <p><%= invoices.count %></p>
-                </td>
-
-                <td>
-                  <% total_due = intervention['Total Due (excl. VAT)'].to_f - intervention['Total Paid'].to_f %>
-                  <p><%= intervention['Total Paid'].to_f %>€</p>
-                </td>
-
-                <td>
-
-                  <% unless total_due == 0 %>
-
-                    <% if training.end_time.present? && training.end_time <= Date.today %>
-
-                      <%= link_to invoice_form_path(training), class: 'btn btn-edit-green btn-icon', data: {toggle:'tooltip'}, title: 'Submit an invoice' do %>
-                        <i class="fas fa-file-invoice-dollar"></i>
-                      <% end %>
-
-                    <% else %>
-
-                      <a class='btn btn-edit-grey btn-icon disabled' style='opacity: .25;'>
-                        <i data-toggle='tooltip' title='You may only send invoices for completed trainings.' class="fas fa-file-invoice-dollar"></i>
-                      </a>
-
-                    <% end %>
-
-                  <% end %>
-
-                </td>
-
-              </tr>
-
-
-
-          </tbody>
-
-          <tbody class='hide hidden'>
-
-            <% total = 0 %>
-
-            <% invoices.each do |invoice| %>
-
-              <tr>
-
-                <td>
-                  <% invoice = OverviewInvoiceSevener.find(invoice) %>
-                  <p style='padding-left:20px;'>Invoice n°<%= invoice['Invoice number'] %></p>
-                </td>
-
-                <td></td>
-                <td></td>
-                <td></td>
-
-                <td>
-                  <% total += invoice['Amount'].to_f %>
-                  <p><%= invoice['Amount'] %>€</p>
-                </td>
-
-                <td>
-
-                  <% if invoice['Status'] == 'Paid' %>
-
-                    <div class='status'><i class="far fa-check-circle" data-toggle='tooltip' title='Paid' style='color:#004b23;'></i> <p style='color:#004b23;'>Paid</p></div>
-
-                  <% else %>
-
-                    <div class='status'><i class="fas fa-hourglass-half" data-toggle='tooltip' title='Pending' style='color:#f3722c;'></i><p style='color:#f3722c;'>Pending</p></div>
-
-                  <% end %>
-                </td>
-
-              </tr>
-
-            <% end %>
-
-          </tbody>
-
-          <% end %>
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-    <div class='billing-index-category'>
-
-      <h2 style='color:#888888'>Archived</h2>
-
-      <table class='completed'>
-
-        <tr>
-          <th>Company/School</th>
-          <th>Training</th>
-          <th>Date</th>
-          <th>Invoices</th>
-          <th>Total Paid</th>
-          <th></th>
-          <th></th>
-        </tr>
-
-        <% if paid.empty? %>
-
-          <div class="billing-card">
-            <div class="billing-card-title">
-              <p>No training in this category</p>
             </div>
-          </div>
 
-        <% end %>
-
-        <% paid.each do |hash| %>
-
-          <% training, intervention = hash[:training], hash[:intervention] %>
-          <% invoices = intervention['Invoices Sevener'] %>
-
-          <% if invoices.nil? %>
-            <% invoices = [] %>
           <% end %>
 
-          <tbody>
+        </div>
 
-            <tbody>
-
-              <tr>
-
-                <td>
-
-                  <% if invoices.count != 0 %>
-
-                    <a class='btn-link' onclick='showInvoice(this);'><i class="fas fa-angle-down"></i> <p><b><%= training.client_company.name %></b></p></a>
-
-                  <% else %>
-
-                    <p style='padding-left:20px;'><b><%= training.client_company.name %></b></p>
-
-                  <% end %>
-
-                </td>
-
-                <td>
-                  <p><b><%= training.title %></b></p>
-                </td>
-
-                <td>
-                  <%= training.start_time.strftime("%b %d") %> - <%= training.end_time.strftime("%b %d, %Y") %>
-                </td>
-
-                <td>
-                  <p><%= invoices.count %></p>
-                </td>
-
-                <td>
-                  <% total_due = intervention['Total Due (excl. VAT)'].to_f - intervention['Total Paid'].to_f %>
-                  <p><%= intervention['Total Paid'].to_f %>€</p></td>
-                <td>
-
-                  <% unless total_due == 0 %>
-                    <%= link_to invoice_form_path(training), class: 'btn btn-edit-green btn-icon invisible', data: {toggle:'tooltip'}, title: 'Submit an invoice' do %>
-                      <i class="fas fa-file-invoice-dollar"></i>
-                    <% end %>
-                  <% end %>
-
-                </td>
-
-                <td></td>
-
-              </tr>
-            </tbody>
-
-            <tbody class='hide hidden'>
-
-              <% total = 0 %>
-
-              <% invoices.each do |invoice| %>
-
-                <tr>
-
-                  <td>
-                    <% invoice = OverviewInvoiceSevener.find(invoice) %>
-                    <p style='padding-left:20px;'>Invoice n°<%= invoice['Invoice number'] %></p>
-                  </td>
-
-                  <td></td>
-                  <td></td>
-
-                  <td>
-                   <p><%= invoice['Amount'] %>€</p>
-                  </td>
-
-                  <td>
-
-                    <% if invoice['Status'] == 'Paid' %>
-
-                      <div class='status'><i class="far fa-check-circle" data-toggle='tooltip' title='Paid' style='color:#004b23;'></i> <p style='color:#004b23;'>Paid</p></div>
-
-                    <% else %>
-
-                      <div class='status'><i class="fas fa-hourglass-half" data-toggle='tooltip' title='Pending' style='color:#f3722c;'></i><p style='color:#f3722c;'>Pending</p></div>
-
-                    <% end %>
-
-                  </td>
-
-                  <td></td>
-
-                </tr>
-
-              <% end %>
-
-            </tbody>
-
-          </tbody>
-
-        <% end %>
-
-      </table>
+      <% end %>
 
     </div>
 
