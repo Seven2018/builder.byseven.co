@@ -32,13 +32,20 @@ a.disabled-link { pointer-events: none; }
 // LOADER //
 ////////////
 
-.loader {
+.loader-yellow, .loader-blue-green {
   border: 8px solid #f3f3f3;
-  border-top: 8px solid $bld-blue-green;
   border-radius: 50%;
   width: 50px;
   height: 50px;
   animation: spin 2s linear infinite;
+}
+
+.loader-yellow {
+  border-top: 8px solid $bld-yellow;
+}
+
+.loader-blue-green {
+  border-top: 8px solid $bld-blue-green;
 }
 
 @keyframes spin {
@@ -312,6 +319,7 @@ a.disabled-link { pointer-events: none; }
 .height-14rem         { height: 14rem !important; }
 .height-20rem         { height: 20rem !important; }
 .height-24rem         { height: 24rem !important; }
+.height-29rem         { height: 29rem !important; }
 .height-30rem         { height: 30rem !important; }
 .height-40rem         { height: 40rem !important; }
 .height-sm-40rem         { @include from-medium {height: 40rem !important;}}

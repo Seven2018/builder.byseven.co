@@ -29,6 +29,7 @@ class User < ApplicationRecord
 
   paginates_per 25
 
+
   ###############
   ## PG_SEARCH ##
   ###############

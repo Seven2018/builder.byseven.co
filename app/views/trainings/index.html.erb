@@ -110,27 +110,57 @@
 
     <div class="flex-row-start-centered">
 
-      <h3 class="training-update-text training-update-text-upcoming active" onclick="switchView(this)">Upcoming</h3>
-      <h3 class="training-update-text training-update-text-completed" onclick="switchView(this)">Completed</h3>
+      <h3 class="training-update-text training-update-text-upcoming active"
+          data-tab="trainings-upcoming"
+          data-action="click->trainings--trainings-index#showTab">
+        Upcoming
+      </h3>
+
+      <h3 class="training-update-text training-update-text-completed"
+          data-tab="trainings-completed"
+          data-action="click->trainings--trainings-index#showTab">
+        Completed
+      </h3>
 
       <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-        <h3 class="training-update-text training-update-text-home" onclick="switchView(this)">Home</h3>
+
+        <h3 class="training-update-text training-update-text-home"
+            data-tab="trainings-home"
+            data-action="click->trainings--trainings-index#showTab">
+          Home
+        </h3>
+
       <% end %>
 
     </div>
 
-    <div class="trainings-row trainings-row-upcoming">
-      <%# render_async index_upcoming_path(user: params[:user]) %>
+    <div class="trainings-row trainings-row-upcoming"
+         data-tab-container="trainings-upcoming">
       <%= render 'trainings/index/index_upcoming' %>
     </div>
 
-    <div class="trainings-row trainings-row-completed hidden">
-      <%= render_async index_completed_path(user: params[:user], search: params[:search]&.permit!)%>
+    <div class="trainings-row trainings-row-completed hidden"
+         data-tab-container="trainings-completed">
+
+      <%= render_async index_completed_path(user: params[:user], search: params[:search]&.permit!) do %>
+
+        <div class="height-29rem d-flex flex-column justify-content-center align-items-center"
+             style="width: calc(100vw - 8rem);">
+
+          <p class="bld-yellow fs-1_6rem font-weight-700 mb-2rem">Loading...</p>
+
+          <div class="loader-yellow"></div>
+
+        </div>
+
+      <% end %>
+
     </div>
 
     <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
 
-      <div class="trainings-row trainings-row-home hidden">
+      <div class="trainings-row trainings-row-home hidden"
+           data-tab-container="trainings-home">
         <%= render 'trainings/index/index_home', trainings: @trainings_home %>
       </div>
 
@@ -151,71 +181,3 @@
   </div>
 
 </div>
-
-<script>
-  function switchView(element) {
-    button_upcoming = document.querySelector('.training-update-text-upcoming')
-    button_completed = document.querySelector('.training-update-text-completed')
-    if (document.querySelector('.training-update-text-home') != null) {
-      button_home = document.querySelector('.training-update-text-home')
-    }
-    row_upcoming = document.querySelector('.trainings-row-upcoming')
-    row_completed = document.querySelector('.trainings-row-completed')
-    row_home = document.querySelector('.trainings-row-home')
-    if (element == button_upcoming) {
-      element.classList.add('active')
-      button_completed.classList.remove('active')
-      if (document.querySelector('.training-update-text-home') != null) {
-        button_home.classList.remove('active')
-        row_home.classList.add('hidden')
-      }
-      row_upcoming.classList.remove('hidden')
-      row_completed.classList.add('hidden')
-    } else if (element == button_completed) {
-      element.classList.add('active')
-      button_upcoming.classList.remove('active')
-      if (document.querySelector('.training-update-text-home') != null) {
-        button_home.classList.remove('active')
-        row_home.classList.add('hidden')
-      }
-      row_upcoming.classList.add('hidden')
-      row_completed.classList.remove('hidden')
-    } else {
-      element.classList.add('active')
-      button_upcoming.classList.remove('active')
-      button_completed.classList.remove('active')
-      row_upcoming.classList.add('hidden')
-      row_completed.classList.add('hidden')
-      row_home.classList.remove('hidden')
-    }
-  }
-
-  sliders = document.querySelectorAll('.trainings-row');
-  sliders.forEach((slider) => {
-    isDown = false;
-    let startX;
-    let scrollLeft;
-
-    slider.addEventListener('mousedown', (e) => {
-      isDown = true;
-      slider.classList.add('active');
-      startX = e.pageX - slider.offsetLeft;
-      scrollLeft = slider.scrollLeft;
-    });
-    slider.addEventListener('mouseleave', () => {
-      isDown = false;
-      slider.classList.remove('active');
-    });
-    slider.addEventListener('mouseup', () => {
-      isDown = false;
-      slider.classList.remove('active');
-    });
-    slider.addEventListener('mousemove', (e) => {
-      if(!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - slider.offsetLeft;
-      const walk = (x - startX) * 3; //scroll-fast
-      slider.scrollLeft = scrollLeft - walk;
-    });
-  })
-</script>
