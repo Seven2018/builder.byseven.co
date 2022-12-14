@@ -1,1 +1,5 @@
-document.querySelector('.trainings-row-upcoming').innerHTML = '<%= j (render("trainings/partials/index_upcoming")) %>';
+document.getElementById('trainings-row-upcoming').innerHTML = '<%= j (render("trainings/index/index_upcoming", upcoming_trainings: @upcoming_trainings)) %>';
+document.getElementById('trainings-row-to-date').innerHTML = '<%= j (render("trainings/index/index_to_date", trainings: @trainings_to_date, any_more: @to_date_any_more)) %>';
+document.getElementById('trainings-row-to-staff').innerHTML = '<%= j (render("trainings/index/index_to_staff", trainings: @trainings_to_staff)) %>';
+
+document.getElementById('trainings_index_container').trainingsIndex.setCompleted()

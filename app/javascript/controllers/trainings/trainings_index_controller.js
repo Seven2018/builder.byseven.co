@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
   static get targets () {
-    return ['']
+    return ['upcomingContainer', 'completedContainer']
   }
 
   connect() {
@@ -19,9 +19,37 @@ export default class extends Controller {
       ] = this
 
     this.clickGuardian = false
+    this.waitTime = 500
+    this.timer
 
+    this.setCompleted()
     this.setupHorizontalScroll()
   }
+
+
+  ////////////
+  // SEARCH //
+  ////////////
+
+  search() {
+    clearTimeout(this.timer);
+
+    this.timer = setTimeout(() => {
+      const form = document.getElementById('search-form')
+      const submit = form.querySelector('.hidden-submit')
+
+      submit.click()
+      this.displaySpinner(this.upcomingContainerTarget)
+
+      this.setCompleted()
+
+    }, this.waitTime)
+  }
+
+
+  //////////
+  // TABS //
+  //////////
 
   showTab(event) {
     const element = event.currentTarget
@@ -53,6 +81,21 @@ export default class extends Controller {
   // PRIVATE //
   /////////////
 
+  setCompleted() {
+    this.displaySpinner(this.completedContainerTarget)
+
+    const search_title = document.getElementById('search_title').value
+    const additional_params = window.location.search.substring(1)
+    const path = '/trainings_completed'
+    const url = `${path}?search[title]=${search_title}&${additional_params}`
+
+    fetch(url)
+      .then(response => response.text())
+      .then(html => {
+        this.completedContainerTarget.innerHTML = html
+      })
+  }
+
   setupHorizontalScroll() {
     const sliders = document.querySelectorAll('.trainings-row');
 
@@ -83,6 +126,10 @@ export default class extends Controller {
         slider.scrollLeft = scrollLeft - walk;
       });
     })
+  }
+
+  displaySpinner(node) {
+    node.innerHTML = '<div class="height-29rem d-flex flex-column justify-content-center align-items-center" style="width: calc(100vw - 8rem);"><p class="bld-yellow fs-1_6rem font-weight-700 mb-2rem">Loading...</p><div class="loader-yellow"></div></div>'
   }
 
 }

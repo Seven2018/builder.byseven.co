@@ -11,7 +11,6 @@ Rails.application.routes.draw do
   # AIRTABLE #
   ############
 
-  get :airtable_import_users, controller: :pages
   get :import_airtable, controller: :pages
   get :account_invoice, controller: :pages
   get 'trainings/:id/export_airtable', to: 'pages#export_airtable', as: 'export_airtable'
@@ -208,6 +207,7 @@ Rails.application.routes.draw do
   get 'show_session_content', to: 'trainings#show_session_content', as: 'show_session_content'
   # get 'trainings/:id/import_attendees', to: 'trainings#import_attendees', as: 'import_attendees_training'
   get :airtable_create_training, controller: :trainings
+  get :export_training_to_airtable, controller: :trainings
   get :training_sessions_list, controller: :trainings
   get :sessions_search, controller: :sessions
   get :session_content_search, controller: :sessions

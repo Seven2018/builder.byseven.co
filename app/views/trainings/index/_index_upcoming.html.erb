@@ -1,4 +1,4 @@
-<% @upcoming_trainings.each do |training| %>
+<% upcoming_trainings.each do |training| %>
 
   <% sessions = ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) ? 
                 training.sessions : training.sessions.where_exists(:session_trainers, user_id: current_user.id) %>

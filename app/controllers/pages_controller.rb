@@ -41,6 +41,16 @@ class PagesController < ApplicationController
     render partial: "pages/billing/trainings_list", locals: {type: "Archived", list: @paid}
   end
 
+  def account_invoice
+    InvoiceItem.account_invoice
+    redirect_to report_path
+  end
+
+
+  ####################################
+  ## LEARN BY SEVEN WEBSITE (TOOLS) ##
+  ####################################
+
   def contact_form
     unless params[:email_2]&.present? || params[:email]&.gsub(' ', '').empty?
       contact = IncomingContact.create('Name' => params[:name], 'Email' => params[:email], 'Tel' => params[:tel], 'Message' => params[:message], 'Training' => params[:training], 'Date' => DateTime.now.strftime('%Y-%m-%d'))
@@ -62,16 +72,10 @@ class PagesController < ApplicationController
     redirect_to 'https://learn.byseven.co/thank-you-becos.html'
   end
 
-  def airtable_import_users
-    OverviewUser.all.each do |user|
-      if user['Builder_id'].nil?
-        new_user = User.new(firstname: user['Firstname'], lastname: user['Lastname'], email: user['Email'], access_level: 'sevener', password: 'tititoto')
-        new_user.save
-      end
-    end
-    redirect_back(fallback_location: root_path)
-    flash[:notice] = "Data imported from Airtable."
-  end
+
+  ##############
+  ## AIRTABLE ##
+  ##############
 
   def import_airtable
     skip_authorization
@@ -86,15 +90,12 @@ class PagesController < ApplicationController
     end
   end
 
-  def account_invoice
-    InvoiceItem.account_invoice
-    redirect_to report_path
-  end
-
   def export_numbers_activity_cumulation
     UpdateCumulationChartJob.perform_async(Date.today)
     redirect_to trainings_path
   end
+
+  ##############
 end
 
 

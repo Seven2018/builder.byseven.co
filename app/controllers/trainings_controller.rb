@@ -1,5 +1,9 @@
 class TrainingsController < ApplicationController
-  before_action :set_training, only: [:show, :edit, :update, :destroy, :copy, :invoice_form, :trainer_notification_email, :import_attendees]
+  before_action :set_training, only: [:show, :edit, :update, :destroy, :copy, :invoice_form, :trainer_notification_email, :import_attendees, :export_training_to_airtable]
+
+  ##########
+  ## CRUD ##
+  ##########
 
   def index
     # Index for trainings / Homepage (trainings/index)
@@ -8,6 +12,8 @@ class TrainingsController < ApplicationController
     @upcoming_trainings = trainings_ordered(trainings, 'upcoming')
     @upcoming_any_more = @upcoming_trainings.count - 10
     @upcoming_trainings = @upcoming_trainings.first(10)
+
+    @completed_trainings = trainings_ordered(trainings, 'completed')
 
     all_ids = trainings_ordered(trainings, 'all').map(&:id)
     trainings = trainings.where(id: all_ids).order_as_specified(id: all_ids)
@@ -33,7 +39,7 @@ class TrainingsController < ApplicationController
     trainings = search_trainings
 
     @trainings = trainings_ordered(trainings, 'completed')
-    render partial: "trainings/partials/index_completed"
+    render partial: "trainings/index/index_completed", locals: {completed_trainings: @trainings}
   end
 
   def new
@@ -120,44 +126,6 @@ class TrainingsController < ApplicationController
     redirect_to trainings_path
   end
 
-  def copy
-    authorize @training
-    target_training = Training.find(params[:copy][:training_id])
-
-    if target_training.present?
-      @training.sessions.each do |session|
-        new_session = Session.create(session.attributes.except("id", "created_at", "updated_at", "training_id", "address", "room"))
-        new_session.update(training_id: target_training.id)
-        session.workshops.each do |workshop|
-          new_workshop = Workshop.create(workshop.attributes.except("id", "created_at", "updated_at", "session_id"))
-          new_workshop.update(session_id: new_session.id)
-          workshop.workshop_modules.each do |mod|
-            new_mod = WorkshopModule.create(mod.attributes.except("id", "created_at", "updated_at", "workshop_id", "user_id"))
-            new_mod.update(workshop_id: new_workshop.id)
-          end
-          j = 1
-          new_workshop.workshop_modules.order(position: :asc).each{|mod| mod.update(position: j); j += 1}
-        end
-        i = 1
-        new_session.workshops.order(position: :asc).each{|workshop| workshop.update(position: i); i += 1}
-      end
-      redirect_to training_path(target_training)
-    else
-      raise
-    end
-  end
-
-  def invoice_form
-    authorize @training
-    @user = OverviewUser.all.select{|x| x['Builder_id'] == current_user.id}&.first
-    @airtable_training = OverviewTraining.all.select{|x| x['Builder_id'] == @training.id}&.first
-    invoices = OverviewInvoiceSevener.all.select{|x| x['User_id'] == [current_user.id] && x['Training_id'] == [@training.id]}
-    intervention = OverviewNumbersSevener.all.select{|x| x['Training_id'] == @training.id && x['User_id'] == current_user.id}.first
-    amount_due = intervention['Total Due (excl. VAT)'].to_f - intervention['Total Paid'].to_f
-    amount_billed = invoices.map{|x| x['Amount']}.sum if invoices.present?
-    invoices.present? ? @amount_to_bill = amount_due - amount_billed : @amount_to_bill = amount_due
-  end
-
 
   ##################
   ## EMAIL SYSTEM ##
@@ -202,6 +170,7 @@ class TrainingsController < ApplicationController
     flash[:notice] = 'Import successful'
   end
 
+
   #########################
   ## SEARCH AUTOCOMPLETE ##
   #########################
@@ -222,6 +191,7 @@ class TrainingsController < ApplicationController
     render partial: 'shared/tools/select_autocomplete', locals: { elements: @trainings }
   end
 
+
   ##############
   ## AIRTABLE ##
   ##############
@@ -240,10 +210,59 @@ class TrainingsController < ApplicationController
     end
   end
 
+  def export_training_to_airtable
+    authorize @training
+
+    UpdateAirtableJob.perform_async(@training, true)
+
+    respond_to do |format|
+      format.js { flash.now[:notice] = 'Updating... Please wait a few moments for the changes to appear in Airtable' }
+    end
+  end
+
 
   ##########
   ## MISC ##
   ##########
+
+  def copy
+    authorize @training
+    target_training = Training.find(params[:copy][:training_id])
+
+    if target_training.present?
+      @training.sessions.each do |session|
+        new_session = Session.create(session.attributes.except("id", "created_at", "updated_at", "training_id", "address", "room"))
+        new_session.update(training_id: target_training.id)
+        session.workshops.each do |workshop|
+          new_workshop = Workshop.create(workshop.attributes.except("id", "created_at", "updated_at", "session_id"))
+          new_workshop.update(session_id: new_session.id)
+          workshop.workshop_modules.each do |mod|
+            new_mod = WorkshopModule.create(mod.attributes.except("id", "created_at", "updated_at", "workshop_id", "user_id"))
+            new_mod.update(workshop_id: new_workshop.id)
+          end
+          j = 1
+          new_workshop.workshop_modules.order(position: :asc).each{|mod| mod.update(position: j); j += 1}
+        end
+        i = 1
+        new_session.workshops.order(position: :asc).each{|workshop| workshop.update(position: i); i += 1}
+      end
+      redirect_to training_path(target_training)
+    else
+      raise
+    end
+  end
+
+  def invoice_form
+    authorize @training
+
+    @user = OverviewUser.all.select{|x| x['Builder_id'] == current_user.id}&.first
+    @airtable_training = OverviewTraining.all.select{|x| x['Builder_id'] == @training.id}&.first
+    invoices = OverviewInvoiceSevener.all.select{|x| x['User_id'] == [current_user.id] && x['Training_id'] == [@training.id]}
+    intervention = OverviewNumbersSevener.all.select{|x| x['Training_id'] == @training.id && x['User_id'] == current_user.id}.first
+    amount_due = intervention['Total Due (excl. VAT)'].to_f - intervention['Total Paid'].to_f
+    amount_billed = invoices.map{|x| x['Amount']}.sum if invoices.present?
+    invoices.present? ? @amount_to_bill = amount_due - amount_billed : @amount_to_bill = amount_due
+  end
 
   def training_sessions_list
     training = Training.find(params[:training_id])
@@ -255,11 +274,6 @@ class TrainingsController < ApplicationController
     # render json: sessions
     render partial: 'shared/tools/training_sessions_list', locals: { elements: sessions }
   end
-
-  # def redirect_docusign
-  #   skip_authorization
-  #   redirect_to "https://account-d.docusign.com/oauth/auth?response_type=token&scope=signature&client_id=ce366c33-e8f1-4aa7-a8eb-a83fbffee4ca&redirect_uri=http://localhost:3000/docusign/callback"
-  # end
 
 
   private
@@ -278,8 +292,8 @@ class TrainingsController < ApplicationController
     # If user in team SEVEN
     if ['super_admin', 'admin', 'project manager'].include?(current_user.access_level)
       # Search trainings
-      if params[:search].present?
-        trainings = Training.search_by_title_and_company("#{params[:search][:title]}")
+      if params[:search].present? && params.dig(:search, :title) != ''
+        trainings = Training.search_by_title_and_company("#{params.dig(:search, :title)}")
       end
 
       # Search trainings involving selected user
