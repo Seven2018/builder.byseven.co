@@ -1,14 +1,11 @@
 <div id="stimulus-paginate-controller"
      class="container"
-     data-controller="tools--paginate">
+     data-controller="tools--paginate tools--remember-search">
 
   <div id="searchbar"
-       class="bld__searchbar justify-content-between mt-5rem"
-       data-controller="tools--remember-search">
+       class="bld__searchbar justify-content-between mt-5rem">
 
     <div class="d-flex align-items-center">
-      
-      <i class="fas fa-search searchbar-icon"></i>
 
       <%= simple_form_for :search, url: users_path,
                                    method: :get,
@@ -22,7 +19,7 @@
                              autocomplete: 'off',
                              data: {
                                tools__remember_search_target: :search,
-                               action: 'keyup->tools--remember-search#storeSearch'
+                               action: 'keyup->tools--remember-search#storeSearch  keyup->tools--remember-search#submitSearch'
                              }
                            },
                            label: false,
@@ -31,26 +28,12 @@
 
         <%= f.hidden_field :page, value: '1', data: { tools__paginate_target: :pageInput } %>
 
-        <%=
-            f.submit(
-              'Search',
-              class: 'btn-search',
-              onclick: "document.querySelector('body').classList.add('wait');",
-              data: {
-                tools__remember_search_target: :submit,
-                tools__paginate_target: :submit,
-                search_form: :submit
-              }
-            )
-          %>
-
-        <button type='submit' class="btn-search btn-search--mobile">
-          <i class="fas fa-search"></i>
-        </button>
+        <%= f.submit '', class: 'hidden-submit hidden',
+                         data: { tools__paginate_target: 'submit' } %>
 
       <% end %>
 
-      <button class='btn-reset bkt-dark-grey'
+      <button class='btn-reset bld-dark-grey'
               data-action="click->tools--remember-search#resetAllFilter">
         Reset
       </button>
@@ -66,7 +49,7 @@
   </div>
 
   <p id="impersonation_users_count"
-     class="fs-2_4rem font-weight-600 bkt-dark-grey mb-2rem">Results: <%= @total_users %></p>
+     class="fs-2_4rem font-weight-600 bkt-dark-grey my-2rem">Results : <%= @total_users %></p>
 
   <div id="impersonation_users_list">
 

@@ -6,14 +6,28 @@ class ClientCompany < ApplicationRecord
   belongs_to :opco, class_name: "ClientCompany", optional: true
   validates :client_company_type, inclusion: { in: %w(Company School OPCO) }
 
-  # SEARCHING CLIENT_COMPANY BY name
+  paginates_per 25
+
+
+  ###############
+  ## PG_SEARCH ##
+  ###############
+
   include PgSearch::Model
-  pg_search_scope :search_by_name,
+  pg_search_scope :search_companies,
     against: [ :name ],
+    associated_against: {
+      client_contacts: [:name, :email],
+    },
     using: {
       tsearch: { prefix: true }
     },
     ignoring: :accents
+
+
+  #############
+  ## METHODS ##
+  #############
 
   def to_builder
     Jbuilder.new do |client_company|

@@ -1,6 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
 
-
 export default class extends Controller {
   static get targets () {
     return [ "search", "dropdown", "submit" ]
@@ -28,6 +27,22 @@ export default class extends Controller {
     }
 
     this.setupHrefs()
+
+    this.waitTime = 500
+    this.timer
+  }
+
+  submitSearch(event) {
+    clearTimeout(this.timer);
+
+    this.timer = setTimeout(() => {
+      const form = this.searchTarget.closest('form')
+      const submit = form.querySelector('.hidden-submit')
+
+      submit.click()
+      // this.displaySpinner(this.upcomingContainerTarget)
+
+    }, this.waitTime)
   }
 
   setupHrefs() {

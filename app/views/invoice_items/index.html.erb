@@ -1,6 +1,8 @@
-<div class="container-seven-large">
+<div id="stimulus-paginate-controller"
+     class="container-seven-large height-100"
+     data-controller="tools--paginate tools--remember-search">
 
-  <div id='page-controls'>
+  <div class="mb-2rem">
 
     <% if params[:training_id] %>
 
@@ -14,12 +16,6 @@
         <i class="fas fa-arrow-left"></i>
       <% end %>
 
-    <% elsif params[:search] %>
-
-      <%= link_to invoice_items_path(type: params[:type]), class: 'btn return-arrow' do %>
-        <i class="fas fa-arrow-left"></i>
-      <% end %>
-
     <% else %>
 
       <%= link_to report_path, class: 'btn return-arrow' do %>
@@ -28,117 +24,117 @@
 
     <% end %>
 
-    <div class='flex-row-between-centered'>
+  </div>
 
-      <%= simple_form_for :search, url: invoice_items_path, method: 'GET' do |f| %>
+  <div id="searchbar"
+   class="bld__searchbar justify-content-between align-items-center">
 
-        <%= f.input :reference, placeholder: 'Search', label: false %>
+    <div class='d-flex align-items-center'>
+
+      <%= simple_form_for :search, url: invoice_items_path,
+                                   method: :get,
+                                   remote: true,
+                                   data: {
+                                     tools__remember_search_key_value: 'builderInvoiceItemsSearches',
+                                   } do |f| %>
+
+        <%= f.input :reference, placeholder: 'Search',
+                                input_html: {
+                                  autocomplete: 'off',
+                                  data: {
+                                    tools__remember_search_target: :search,
+                                    action: 'keyup->tools--remember-search#storeSearch keyup->tools--remember-search#submitSearch'
+                                  }
+                                },
+                                label: false,
+                                required: false %>
 
         <%= hidden_field_tag :type, params[:type] %>
-        <%= hidden_field_tag :page, 1 %>
+        <%= f.hidden_field :page, value: '1', data: { tools__paginate_target: :pageInput } %>
+
+        <%= f.submit '', class: 'hidden-submit hidden',
+                         data: { tools__paginate_target: 'submit' } %>
 
       <% end %>
 
-      <% if params[:type] == 'Order' %>
-
-        <a data-toggle='modal' type='button' data-target='#newOrder' style='cursor:pointer;'>
-          <button class="btn btn-edit-yellow">Create Order</i></button>
-        </a>
-
-      <% elsif params[:type] == 'Invoice' %>
-
-        <a data-toggle='modal' type='button' data-target='#exportCSV' style='cursor:pointer;'>
-          <button class="btn btn-edit-red">Export <i class="fas fa-file-csv"></i></button>
-        </a>
-
-      <% end %>
+      <button class='btn-reset bld-dark-grey'
+              data-action="click->tools--remember-search#resetAllFilter">
+        Reset
+      </button>
 
     </div>
+
+    <% if params[:type] == 'Order' %>
+
+      <a data-toggle='modal' type='button' data-target='#newOrder' style='cursor:pointer;'>
+        <button class="bld-btn-yellow">Create Order</button>
+      </a>
+
+    <% elsif params[:type] == 'Invoice' %>
+
+      <a data-toggle='modal' type='button' data-target='#exportCSV' style='cursor:pointer;'>
+        <button class="bld-btn-red">Export <i class="fas fa-file-csv ml-1rem"></i></button>
+      </a>
+
+    <% end %>
 
   </div>
 
   <div class="flex-row-between-centered">
 
-    <% if params[:type] == 'Invoice' %>
-
-      <h1>Invoices List</h1>
-
-    <% elsif params[:type] == 'Estimate' %>
-
-      <h1>Estimates List</h1>
-
-    <% end %>
-
-    <div class="result-pages-controls">
-
-      <% if params[:page].to_i > 1 %>
-
-        <%= link_to url_for(page: params[:page].to_i - 1, type: params[:type]) do %>
-          <i class="fas fa-caret-left"></i>
-        <% end %>
-
-      <% else %>
-
-        <i class="fas fa-caret-left" style='color:rgba(0,0,0,0.3)'></i>
-
-      <% end %>
-
-      <p><%= "Page #{params[:page]} / #{@invoice_items_total.count / 50 + 1}" %></p>
-
-      <% if params[:page].to_i < @invoice_items_total.count / 50 + 1 %>
-
-        <%= link_to url_for(page: params[:page].to_i + 1, type: params[:type]) do %>
-          <i class="fas fa-caret-right"></i>
-        <% end %>
-
-      <% else %>
-
-        <i class="fas fa-caret-right" style='color:rgba(0,0,0,0.3'></i>
-
-      <% end %>
-
-    </div>
+    <p id="invoices_count"
+       class="fs-2_4rem font-weight-600 bkt-dark-grey my-2rem"><%= params[:type] %>s : <%= @total_invoices %></p>
 
   </div>
 
-  <div class="invoice-list">
+  <div id="invoices_list"
+       class="invoice-list">
+
     <%= render 'invoice_items/index/index_invoice_items_list', invoice_items: @invoice_items %>
+
   </div>
 
-</div>
+  <div class="paginate-container paginate-container-dark-grey">
 
-<!------------>
-<!-- MODALS -->
-<!------------>
+    <%= render 'shared/paginate/paginate', instances: @invoice_items, any_more: @any_more %>
 
-<div id="exportCSV"
-     class="modal fade"
-     tabindex="-1"
-     role="dialog"
-     data-backdrop="static"
-     data-keyboard="false">
-
-  <div class="modal-dialog" role="document" style="border-radius: 2rem">
-    <%= render 'export_csv' %>
   </div>
 
-</div>
+  <!------------>
+  <!-- MODALS -->
+  <!------------>
 
-<% if params[:type] == 'Order' %>
-
-  <div id="newOrder"
+  <div id="exportCSV"
        class="modal fade"
        tabindex="-1"
        role="dialog"
        data-backdrop="static"
        data-keyboard="false">
 
-    <div class="modal-dialog modal-lg" role="document" style="border-radius: 2rem">
-      <%= render 'invoice_items/new_order', training: Training.find(params[:training_id]) %>
+    <div class="modal-dialog" role="document" style="border-radius: 2rem">
+      <%= render 'export_csv' %>
     </div>
 
   </div>
 
-<% end %>
+  <% if params[:type] == 'Order' %>
 
-<!------------>
+    <div id="newOrder"
+         class="modal fade"
+         tabindex="-1"
+         role="dialog"
+         data-backdrop="static"
+         data-keyboard="false">
+
+      <div class="modal-dialog modal-lg" role="document" style="border-radius: 2rem">
+        <%= render 'invoice_items/new_order', training: Training.find(params[:training_id]) %>
+      </div>
+
+    </div>
+
+  <% end %>
+
+  <!------------>
+
+</div>
+

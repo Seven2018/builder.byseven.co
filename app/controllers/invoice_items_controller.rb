@@ -12,22 +12,35 @@ end
 class InvoiceItemsController < ApplicationController
   before_action :set_invoice_item, only: [:show, :edit, :update, :copy, :transform_to_invoice, :edit_client, :credit, :marked_as_send, :marked_as_paid, :marked_as_cancelled, :destroy]
 
+  ##########
+  ## CRUD ##
+  ##########
+
   # Indexes with a filter option (see below)
   def index
-    @invoice_items = policy_scope(InvoiceItem)
+    if (params[:export].present? && params[:export][:type].present?)
+      @invoice_items = policy_scope(InvoiceItem).where(created_at: params[:export][:start_date]..params[:export][:end_date], type: params[:export][:type]).order(:uuid)
+    else
+      if params[:training_id].present?
+        @invoice_items = policy_scope(InvoiceItem).where(training_id: params[:training_id].to_i, type: params[:type])
+      elsif params[:client_company_id].present?
+        @invoice_items = policy_scope(InvoiceItem).where(client_company_id: params[:client_company_id].to_i, type: params[:type])
+      elsif params[:client_company_id].nil?
+        @invoice_items = policy_scope(InvoiceItem).where(type: params[:type])
+      end
 
-    unless params[:export].present?
-      index_filtered(params[:page].to_i)
+      search_invoice = params.dig(:search, :reference)&.downcase
+      page_index = (params.dig(:search, :page).presence || 1).to_i
+
+      @invoice_items = @invoice_items.where("lower(uuid) LIKE ?", "%#{search_invoice}%").or(@invoice_items.where_exists(:client_company, "lower(name) LIKE ?", "%#{search_invoice}%")) if search_invoice.present?
+      @total_invoices = @invoice_items.count
+      @invoice_items = @invoice_items.order(id: :desc).page(page_index)
+      @any_more = @invoice_items.count * page_index < @total_invoices
     end
-
-    if params[:search]
-      @invoice_items = @invoice_items_total = ((InvoiceItem.where(type: params[:type]).where("lower(uuid) LIKE ?", "%#{params[:search][:reference].downcase}%")) + (InvoiceItem.joins(:client_company).where(type: params[:type]).where("lower(client_companies.name) LIKE ?", "%#{params[:search][:reference].downcase}%"))).flatten(1).uniq
-    end
-
-    @invoice_items = InvoiceItem.where(created_at: params[:export][:start_date]..params[:export][:end_date], type: params[:export][:type]).order(:uuid) if (params[:export].present? && params[:export][:type].present?)
 
     respond_to do |format|
       format.html
+      format.js
       format.csv { send_data @invoice_items.to_csv, filename: "Factures SEVEN #{params[:export][:start_date].split('-').join('')} - #{params[:export][:end_date].split('-').join('')}.csv" }
     end
   end
@@ -118,6 +131,14 @@ class InvoiceItemsController < ApplicationController
       redirect_to invoice_item_path(@invoice)
     end
   end
+
+  # Destroys an InvoiceItem
+  def destroy
+    authorize @invoice_item
+    @invoice_item.destroy
+    redirect_to client_company_path(@invoice_item.client_company)
+  end
+
 
   ##############
   ## AIRTABLE ##
@@ -290,6 +311,11 @@ class InvoiceItemsController < ApplicationController
     flash[:alert] = "This training unit type is not defined as 'Participant' in Airtable." unless airtable_training['Unit Type'] == 'Participant'
   end
 
+
+  ##########
+  ## MISC ##
+  ##########
+
   # Creates a new estimate
   def new_estimate
     @client_company = ClientCompany.find(params[:client_company_id])
@@ -412,13 +438,6 @@ class InvoiceItemsController < ApplicationController
     redirect_to invoice_item_path(credit)
   end
 
-  # Destroys an InvoiceItem
-  def destroy
-    authorize @invoice_item
-    @invoice_item.destroy
-    redirect_to client_company_path(@invoice_item.client_company)
-  end
-
   # Marks an InvoiceItem as send
   def marked_as_send
     authorize @invoice_item
@@ -461,23 +480,8 @@ class InvoiceItemsController < ApplicationController
     redirect_back(fallback_location: invoice_item_path(@invoice_item))
   end
 
+
   private
-
-  # Filter for index method
-  def index_filtered(n = 1)
-    n = 1 if n == 0
-
-    if params[:training_id].present?
-      @invoice_items_total = InvoiceItem.where(training_id: params[:training_id].to_i, type: params[:type]).order(id: :desc)
-      @invoice_items = @invoice_items_total.offset((n-1)*50).first(50)
-    elsif params[:client_company_id].present?
-      @invoice_items_total = InvoiceItem.where(client_company_id: params[:client_company_id].to_i, type: params[:type]).order(id: :desc)
-      @invoice_items = @invoice_items_total.offset((n-1)*50).first(50)
-    elsif params[:client_company_id].nil?
-      @invoice_items_total = InvoiceItem.where(type: params[:type]).order(id: :desc)
-      @invoice_items = @invoice_items_total.offset((n-1)*50).first(50)
-    end
-  end
 
   def set_invoice_item
     @invoice_item = InvoiceItem.find(params[:id])

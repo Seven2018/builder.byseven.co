@@ -40,6 +40,44 @@
   }
 }
 
+.bld-btn-red {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  color: $bld-white;
+  background-color: $bld-red !important;
+  padding: 1.6rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 2rem;
+  border-radius: .5rem;
+  border: 1px solid $bld-red;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  transition: background-color .25s ease-in-out, color .25s ease-in-out;
+  text-transform: none;
+  cursor: pointer;
+
+  &:not([disabled]) {
+
+    &:hover {
+      color: $bld-red;
+      // border: 1px solid $bld-dark-red;
+      background-color: $bld-white !important;
+    }
+
+    &:focus {
+      color: $bld-red;
+      background-color: $bld-white !important;
+    }
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
 
 ///////////////////////////////////
 // WHITE WITH TEXT COLOR BUTTONS //
@@ -155,6 +193,7 @@
   font-size: 1.6rem;
   padding: 0 1rem;
   border-radius: .5rem;
+  cursor: pointer;
 
   &:hover {
     background-color: $bld-light-grey4;

@@ -1,0 +1,11 @@
+document.getElementById('client_companies_count').innerHTML = 'Results : <%= @total_companies %>';
+document.getElementById('client_companies_list').innerHTML = '<%= j render("client_companies/index/index_companies_list", client_companies: @client_companies) %>';
+document.querySelector('.paginate-container').innerHTML = '<%= j render("shared/paginate/paginate", instances: @client_companies, any_more: @any_more) %>';
+
+
+document.querySelector('body').classList.remove('wait')
+document.getElementById('bld-blockDiv').classList.add('d-none')
+
+document.getElementById('stimulus-paginate-controller').paginate._setPaginationLinks()
+
+document.querySelector('#builder-container').scrollTop = 0;

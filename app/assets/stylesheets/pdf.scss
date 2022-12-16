@@ -149,7 +149,7 @@ p.logistics-pdf {
 }
 
 .invoice-desc-line-pdf {
-  margin-top: 10px;
+  padding: 10px 0;
   display: inline-block;
   width: 100%;
 
@@ -160,12 +160,9 @@ p.logistics-pdf {
 
 .invoice-desc-line-chapter-pdf {
   width: 100%;
-  background-color: #3AA2AC;
+  padding: 10px 0;
+  border-bottom: .5px solid #787878;
 }
-
-// .invoice-desc-line-pretaxamount {
-//   width: 100px !important;
-// }
 
 .invoice-desc-headline-description-pdf {
   width: 290px !important;
@@ -178,6 +175,7 @@ p.logistics-pdf {
 }
 
 .invoice-desc-line-data-pdf {
+  height: 100%;
 
   p {
     text-align: right;

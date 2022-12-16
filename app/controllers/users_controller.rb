@@ -55,6 +55,10 @@ class UsersController < ApplicationController
       @user = current_user
     end
     authorize @user
+
+    trainings = Training.where_exists(:session_trainers, user_id: @user.id)
+    @upcoming_trainings = trainings.where_exists(:sessions, 'date >= ?', Date.today)
+    @completed_trainings = trainings.where_not_exists(:sessions, 'date >= ?', Date.today)
   end
 
   def edit

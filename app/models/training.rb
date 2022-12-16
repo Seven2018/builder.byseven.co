@@ -269,7 +269,7 @@ class Training < ApplicationRecord
 
       end
 
-      existing_card['Status'] = "11. Terminée" if (self.end_time.present? && self.end_time > Date.today && self.invoice_items.present? && self.invoice_items.where(status: ['Pending', 'Sent']).count == 0 && self.invoice_items.where(status: 'Paid').count > 0)
+      existing_card['Status'] = "11. Terminée" if (self.end_time.present? && self.end_time < Date.today && self.invoice_items.present? && self.invoice_items.where(status: ['Pending', 'Sent']).count == 0 && self.invoice_items.where(status: 'Paid').count > 0)
 
       self.sessions.each do |session|
         if session.date.present?

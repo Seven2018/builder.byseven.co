@@ -1,4 +1,4 @@
-document.getElementById('impersonation_users_count').innerHTML = 'Results: <%= @total_users %>';
+document.getElementById('impersonation_users_count').innerHTML = 'Results : <%= @total_users %>';
 document.getElementById('impersonation_users_list').innerHTML = '<%= j render("users/index/index_users_list", users: @users) %>';
 document.querySelector('.paginate-container').innerHTML = '<%= j render("shared/paginate/paginate", instances: @users, any_more: @any_more) %>';
 
