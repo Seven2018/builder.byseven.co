@@ -72,9 +72,35 @@
 
             <% end %>
 
-            <%= link_to invoice_item_path(@invoice_item, format: :pdf), target: :_blank, class: 'btn btn-edit-yellow btn-icon', data: {toggle: 'tooltip'}, title: 'Export to PDF' do %>
-              <i class="fas fa-file-pdf"></i>
-            <% end %>
+            <div class="dropdown">
+
+              <div id="dropdownMenu"
+                   class="btn btn-edit-yellow btn-icon smooth-transition cursor-pointer"
+                   data-toggle="dropdown">
+
+                <i class="fas fa-file-pdf"></i>
+
+              </div>
+
+              <div class="dropdown-menu dropdown-menu-right min-width-fit-content width-max-content"
+                   aria-labelledby="dropdownMenu"
+                   style="margin-top: .5rem;">
+
+                <div class="bkt-bg-white bkt-box-shadow-medium width-max-content overflow-hidden">
+
+                  <%= link_to '🇫🇷', invoice_item_path(@invoice_item, format: :pdf, lang: 'fr'),
+                                    target: :_blank,
+                                    class: "flex-row-start-centered fs-1_6rem font-weight-500 bld-bg-light-grey-hover width-100 p-3" %>
+
+                  <%= link_to '🇬🇧', invoice_item_path(@invoice_item, format: :pdf, lang: 'en'),
+                                    target: :_blank,
+                                    class: "flex-row-start-centered fs-1_6rem font-weight-500 bld-bg-light-grey-hover width-100 p-3" %>
+
+                </div>
+
+              </div>
+
+            </div>
 
             <% unless @invoice_item.training.nil? %>
 

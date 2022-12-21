@@ -1,21 +1,25 @@
 <div class="modal-content">
+
   <div class="modal-header">
+
     <div id="modal-title" style=" display: flex; justify-content: space-between;">
-      <% if @invoice_item.type == 'Estimate' %>
-        <h3 class="modal-title" id="myModalLabel">Send an Estimate</h3>
-      <% else %>
-        <h3 class="modal-title" id="myModalLabel">Send an Invoice</h3>
-      <% end %>
+
+      <h3 class="modal-title" id="myModalLabel">Send an <%= @invoice_item.type.presence || 'Invoice' %></h3>
+
     </div>
-    <button type="button" class="btn btn-icon-close" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+
+    <button type="button" class="btn btn-icon-close" data-dismiss="modal" aria-label="Close">
+      <i class="fas fa-times"></i>
+    </button>
+
   </div>
+
   <div class="modal-body">
+
     <%= simple_form_for :invoice_mail, url: send_invoice_mail_path(@invoice_item), method: 'GET' do |f| %>
-      <% if @invoice_item.type == 'Estimate' %>
-        <%= f.input :to, collection: @invoice_item.client_company.client_contacts, label_method: :name, value_method: :email, include_blank: false %>
-      <% else %>
-        <%= f.input :to, collection: @invoice_item.training.client_contact.client_company.client_contacts, label_method: :name, value_method: :email, include_blank: false %>
-      <% end %>
+
+      <%= f.input :to, collection: @invoice_item.client_company.client_contacts.presence || @invoice_item.training.client_contact.client_company.client_contacts, label_method: :name, value_method: :email, include_blank: false %>
+
       <br>
       <% if @invoice_item.type == 'Estimate' %>
         <%= f.input :subjet, input_html: {value: "SEVEN : Devis #{@invoice_item.uuid}"} %>
@@ -75,11 +79,19 @@
          %>
         <% end %>
       <% end %>
+
+      <%= file_field_tag :file %>
+
       <div class='modal-control'>
+
         <%= button_tag type: 'submit', class: 'btn btn-edit-orange btn-icon', data: { toggle: 'tooltip' }, title: 'Send' do %>
           <i class="fas fa-envelope"></i>
         <% end %>
+
       </div>
+
     <% end %>
+
   </div>
+
 </div>

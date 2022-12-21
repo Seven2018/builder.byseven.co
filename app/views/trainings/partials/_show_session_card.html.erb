@@ -340,18 +340,18 @@
                 <%= render Buttons::OptionsButtonComponent.new(vertical: true) do %>
 
                   <%= link_to 'Copy Session', training_copy_form_session_path(session.training, session, page: params[:page]),
-                                              class: "flex-row-start-centered fs-1_6rem font-weight-500 bkt-bg-light-grey10-hover width-100 p-3",
+                                              class: "flex-row-start-centered fs-1_6rem font-weight-500 bld-bg-light-grey-hover width-100 p-3",
                                               data: { toggle: 'tooltip'},
                                               title: 'Copy Session' %>
 
-                  <a class='flex-row-start-centered fs-1_6rem font-weight-500 bkt-bg-light-grey10-hover width-100 p-3'
+                  <a class='flex-row-start-centered fs-1_6rem font-weight-500 bld-bg-light-grey-hover width-100 p-3'
                      data-toggle='modal'
                      data-target='#editSession<%= session.id %>'>
                     Edit Session
                   </a>
 
                   <%= link_to 'Delete Session', remove_session_trainers_path(session_id: session.id, destroy: 'true'),
-                                                class: "flex-row-start-centered fs-1_6rem font-weight-500 bkt-bg-light-grey10-hover width-100 p-3",
+                                                class: "flex-row-start-centered fs-1_6rem font-weight-500 bld-bg-light-grey-hover width-100 p-3",
                                                 data: { toggle: 'tooltip', confirm: 'Are you sure ?'},
                                                 title: 'Delete' %>
 

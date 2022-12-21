@@ -49,6 +49,8 @@ class InvoiceItemsController < ApplicationController
   def show
     authorize @invoice_item
 
+    set_invoice_item_text
+
     respond_to do |format|
       format.html
       format.pdf do
@@ -480,6 +482,10 @@ class InvoiceItemsController < ApplicationController
     redirect_back(fallback_location: invoice_item_path(@invoice_item))
   end
 
+  def send_invoice_mail
+    raise
+  end
+
 
   private
 
@@ -489,6 +495,46 @@ class InvoiceItemsController < ApplicationController
 
   def invoice_item_params
     params.require(:invoice_item).permit(:training_id, :client_company_id, :status, :uuid, :object)
+  end
+
+  def set_invoice_item_text
+    @text = {'fr' => { 'invoice' => 'Facture',
+              'established' => 'Établie en euro',
+              'designation' => 'Désignation',
+              'quantity' => 'Qté',
+              'unit_price' => 'PU HT',
+              'subtotal' => 'Montant HT',
+              'vat' => 'TVA',
+              'net_subtotal' => 'Total HT Net',
+              'total_vat' => 'Total TVA',
+              'total' => 'Total TTC',
+              'net_total' => 'Net à payer en EUR',
+              'due_date' => 'Echéance(s)',
+              'amount' => 'Montant',
+              'bank_statement1' => "Déclaration d'activité sous le numéro 11 92 20487 92 auprès du Préfet d'IDF",
+              'bank_statement2' => "Domiciliation Bancaire : CIC Paris République",
+              'bank_statement3' => "Banque : 3006 Guichet : 10011 N° Compte : 00020287201 Clé : 36",
+              'info' => "Pas d'escompte pour paiement anticipé, passée la date d'échéance, tout paiement différé entraîne l'application d'une pénalité de 3 fois le taux d'intérêt légal (loi 2008-776 du 04/08/2008) ainsi qu'une indemnité forfaitaire pour frais de recouvrement de 40 euros (Décret 2012-1115 du 02/10/2012)."
+                    },
+              'en' => { 'invoice' => 'Invoice',
+                'established' => 'Established in euro',
+                'designation' => 'Description',
+                'quantity' => 'Qty',
+                'unit_price' => 'Unit Price',
+                'subtotal' => 'Subtotal',
+                'vat' => 'VAT',
+                'net_subtotal' => 'Subtotal',
+                'total_vat' => 'VAT',
+                'total' => 'Total',
+                'net_total' => 'Total Net Price',
+                'due_date' => 'Due date',
+                'amount' => 'Amount',
+                'bank_statement1' => "Declaration of activity under number 11 92 20487 92 with the Prefect of IDF",
+                'bank_statement2' => "Bank address: CIC Paris République",
+                'bank_statement3' => "Bank: 3006 Box: 10011 Account number: 00020287201 Key: 36",
+                'info' => "No discount for early payment, after the due date, any deferred payment will result in the application of a penalty of 3 times the legal interest rate (law 2008-776 of 04/08/2008) as well as a fixed indemnity for collection costs of 40 euros (Decree 2012-1115 of 02/10/2012)."
+                      }
+            }
   end
 
   def self.to_csv

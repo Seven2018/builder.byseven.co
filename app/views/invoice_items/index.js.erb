@@ -9,3 +9,8 @@ document.getElementById('bld-blockDiv').classList.add('d-none')
 document.getElementById('stimulus-paginate-controller').paginate._setPaginationLinks()
 
 document.querySelector('#builder-container').scrollTop = 0;
+
+flatpickr(".datepicker", {
+  disableMobile: true,
+  dateFormat: "d/m/Y",
+})
