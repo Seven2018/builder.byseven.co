@@ -50,10 +50,16 @@ class InvoiceLinesController < ApplicationController
     invoice = @invoiceline.invoice_item
     authorize @invoiceline
 
+    params[:invoice_line][:tax_amount] = '0' if params.dig(:invoice_line, :tax_amount) == ''
+
     @invoiceline.update(invoiceline_params)
     @invoiceline.invoice_item.update_price
 
-    invoice.update(status: 'Credit') if invoice.total_amount < 0
+    if invoice.total_amount < 0
+      invoice.update(status: 'Credit')
+    else
+      invoice.update(status: 'Pending')
+    end
 
     UpdateAirtableJob.perform_async(@invoiceline.invoice_item.training, false, [@invoiceline.invoice_item]) if @invoiceline.invoice_item.training.present?
 

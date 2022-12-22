@@ -7,6 +7,29 @@ class InvoiceItem < ApplicationRecord
   validates_uniqueness_of :uuid
   self.inheritance_column = :_type_disabled
 
+  paginates_per 25
+
+
+  ###############
+  ## PG_SEARCH ##
+  ###############
+
+  include PgSearch::Model
+  pg_search_scope :search_invoices,
+    against: [ :uuid ],
+    associated_against: {
+      client_company: [:name],
+    },
+    using: {
+      tsearch: { prefix: true }
+    },
+    ignoring: :accents
+
+
+  #############
+  ## METHODS ##
+  #############
+
   def self.to_csv
     attributes = %w(Date Journal Compte_Général Compte_Auxiliaire Référence Libellé Débit Crédit)
     CSV.generate(headers: true) do |csv|

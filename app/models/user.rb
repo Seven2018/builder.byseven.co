@@ -22,7 +22,18 @@ class User < ApplicationRecord
   require 'uri'
   require 'net/http'
 
-  # SEARCHING USERS BY firstname and lastname
+  enum status: {
+    inactive: 0,
+    active: 1
+  }
+
+  paginates_per 25
+
+
+  ###############
+  ## PG_SEARCH ##
+  ###############
+
   include PgSearch::Model
   pg_search_scope :search_users,
     against: [ :firstname, :lastname, :email ],
@@ -31,13 +42,6 @@ class User < ApplicationRecord
     },
     ignoring: :accents
 
-
-  enum status: {
-    inactive: 0,
-    active: 1
-  }
-
-  paginates_per 25
 
   #############
   ## METHODS ##
@@ -69,7 +73,6 @@ class User < ApplicationRecord
   end
 
   def export_airtable_user
-
     existing_user = OverviewUser.all.select{|x| x['Builder_id'] == self.id || x['Email'] == self.email}&.first
 
     if existing_user.present?
@@ -84,7 +87,6 @@ class User < ApplicationRecord
     ['sevener+', 'sevener'].include?(self.access_level) ? existing_user['Status'] = "Sevener" : existing_user['Status'] = "SEVEN"
 
     existing_user.save
-
   end
 
   def self.report
@@ -92,15 +94,12 @@ class User < ApplicationRecord
   end
 
   def to_builder
-
     Jbuilder.new do |user|
       user.(self, :firstname, :id)
     end
-
   end
 
   def self.from_omniauth(access_token)
-
     data = access_token.info
     user = User.where(email: data['email']).first
 
@@ -112,6 +111,18 @@ class User < ApplicationRecord
     #     )
     # end
     user
+  end
 
+
+  ##############
+  ## PASSWORD ##
+  ##############
+
+  def reset_password!
+    self.send(:set_reset_password_token)
+
+    UserMailer.with(user: self)
+        .reset_password(self)
+        .deliver_later
   end
 end

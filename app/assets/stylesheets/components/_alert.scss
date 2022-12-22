@@ -3,4 +3,21 @@
   bottom: 1.6rem;
   right: 1.6rem;
   z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: .5rem;
+  padding: 2rem 5rem 2rem 2rem;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.alert-dismissible {
+  padding-right: 3.5rem;
+
+  .close {
+    height: 4rem;
+    width: 4rem;
+    top: .8rem;
+  }
 }

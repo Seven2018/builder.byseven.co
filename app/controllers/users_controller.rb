@@ -1,5 +1,10 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:edit, :update, :destroy]
+  before_action :authenticate_user!, except: [:reset_password]
+
+  ##########
+  ## CRUD ##
+  ##########
 
   def index
     @users = policy_scope(User).active
@@ -50,6 +55,10 @@ class UsersController < ApplicationController
       @user = current_user
     end
     authorize @user
+
+    trainings = Training.where_exists(:session_trainers, user_id: @user.id)
+    @upcoming_trainings = trainings.where_exists(:sessions, 'date >= ?', Date.today)
+    @completed_trainings = trainings.where_not_exists(:sessions, 'date >= ?', Date.today)
   end
 
   def edit
@@ -73,30 +82,21 @@ class UsersController < ApplicationController
     redirect_to users_path
   end
 
-  # # Allows to scrape data from the current user Linkedin profile
-  # def linkedin_scrape
-  #   skip_authorization
-  #   oauth = LinkedIn::OAuth2.new
-  #   url = oauth.auth_code_url
-  #   redirect_to "#{url}"
-  # end
 
-  # def linkedin_scrape_callback
-  #   skip_authorization
-  #   oauth = LinkedIn::OAuth2.new
-  #   code = params[:code]
-  #   access_token = oauth.get_access_token(code)
-  #   api = LinkedIn::API.new(access_token)
-  #   client = RestClient
-  #   # Updates User picture with his(her) Linkedin profile picture.
-  #   url = 'https://api.linkedin.com/v2/me?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams))'
-  #   res = RestClient.get(url, Authorization: "Bearer #{access_token.token}")
-  #   picture_url = res.body.split('"').select{ |i| i[/https:\/\/media\.licdn\.com\/dms\/image\/.*/]}.last
-  #   current_user.update(picture: picture_url)
+  ##############
+  ## PASSWORD ##
+  ##############
 
-  #   redirect_to user_path(current_user)
-  # end
+  def reset_password
+    skip_authorization
 
+    @user = User.find_by(email: params.dig(:user, :email))
+    @user.reset_password! if @user
+
+    respond_to do |format|
+      format.js
+    end
+  end
 
   ##############
   ## AIRTABLE ##
@@ -129,7 +129,7 @@ class UsersController < ApplicationController
       redirect_to user_path(builder_user)
     else
       redirect_to users_path
-      flash[:alert] = 'An problem has occured. Please contact your administrator.'
+      flash[:alert] = 'A problem has occured. Please contact your administrator.'
     end
   end
 

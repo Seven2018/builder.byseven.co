@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.7.3'
+ruby '2.7.6'
 
 gem 'rails', '6.0.0'
 gem 'pg', '~> 0.21'
@@ -27,7 +27,7 @@ gem 'ckeditor', git: 'https://github.com/galetahub/ckeditor'
 # PDF #
 #######
 
-gem 'wicked_pdf',  '~> 2.6.3'
+gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 
 

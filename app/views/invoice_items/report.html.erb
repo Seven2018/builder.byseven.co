@@ -1,20 +1,32 @@
 <div class="container-seven-large">
+
   <div class="report-main">
+
     <div id="page-controls">
     </div>
+
     <div id="report-btns">
-      <%= link_to invoice_items_path(type: 'Invoice', page: 1) do %>
+
+      <%= link_to invoice_items_path(type: 'Invoice') do %>
+
         <div class="invoice-btn">
           <i class="fas fa-file-invoice fa-5x"></i>
           <p>Invoices</p>
         </div>
-        <% end %>
-        <%= link_to invoice_items_path(type: 'Estimate', page: 1) do %>
-          <div class="estimates-btn">
-            <i class="fas fa-file-invoice-dollar fa-5x"></i>
-            <p>Estimates</p>
-          </div>
-        <% end %>
+
+      <% end %>
+
+      <%= link_to invoice_items_path(type: 'Estimate') do %>
+
+        <div class="estimates-btn">
+          <i class="fas fa-file-invoice-dollar fa-5x"></i>
+          <p>Estimates</p>
+        </div>
+
+      <% end %>
+
     </div>
+
   </div>
+
 </div>

@@ -2,6 +2,10 @@ class SessionsController < ApplicationController
   before_action :set_session, only: [:show, :edit, :update, :update_ajax, :destroy, :viewer, :copy_form, :copy, :copy_content, :presence_sheet, :import_attendees]
   skip_before_action :verify_authenticity_token, only: [:update_ajax]
 
+  ##########
+  ## CRUD ##
+  ##########
+
   def new
     @training = Training.find(params[:training_id])
     @session = Session.new
@@ -14,13 +18,13 @@ class SessionsController < ApplicationController
     authorize @session
 
     @session.training = @training
+
     if @session.save
       UpdateAirtableJob.perform_async(@training)
       redirect_to training_path(@training)
     end
   end
 
-  # Shows an InvoiceItem in html or pdf version
   def show
     authorize @session
     @session_trainer = SessionTrainer.new
@@ -96,6 +100,10 @@ class SessionsController < ApplicationController
     UpdateAirtableJob.perform_async(@training, true)
     redirect_to training_path(@training)
   end
+
+  ##########
+  ## MISC ##
+  ##########
 
   # Shows a Session in "viewer mode"
   def viewer

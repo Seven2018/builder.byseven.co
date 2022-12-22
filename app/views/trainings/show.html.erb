@@ -22,6 +22,18 @@
 
       <div class="page-controls-buttons flex-row-between-centered">
 
+        <%= link_to export_training_to_airtable_path(id: @training.id),
+                                                     class: "btn-icon-yellow",
+                                                     title: "Update Airtable",
+                                                     remote: true do %>
+
+          <span class="iconify"
+                data-icon="simple-icons:airtable"
+                data-width="25"
+                data-height="25"></span>
+
+        <% end %>
+
         <%= link_to update_calendar_path(training_id: @training.id),
                                          class: "btn-icon-red",
                                          data: {

@@ -1,30 +1,28 @@
-<div class="container-seven-large"
+<div id="trainings_index_container"
+     class="container-seven-large"
      data-controller="trainings--trainings-index">
 
   <div id="page-controls">
 
-    <%= simple_form_for :search, url: trainings_path, html: {  autocomplete: 'off' }, method: 'GET' do |f| %>
+    <%= simple_form_for :search, url: trainings_path, html: {  id: 'search-form', autocomplete: 'off' }, method: 'GET', remote: true do |f| %>
 
         <%= f.input :title,
                     placeholder: 'Search Trainings',
                     label: false,
                     input_html: {
-                      value: params.dig(:search, :title).presence
+                      data: { action: "keyup->trainings--trainings-index#search" }
                     } %>
-
-      <% if params[:search].present? %>
-
-        <%= link_to trainings_path, class: 'search-close' do %>
-          <i class="far fa-times-circle"></i>
-        <% end %>
-
-      <% end %>
 
       <% if params[:user].present? %>
 
-        <%= f.input :user, as: :hidden, input_html: { value: params[:user] } %>
+        <%= f.input :user, as: :hidden,
+                           input_html: {
+                             value: params[:user]
+                           } %>
 
       <% end %>
+
+      <%= f.submit '', class: 'hidden-submit hidden' %>
 
     <% end %>
 
@@ -32,7 +30,7 @@
 
       <% if (['super_admin', 'admin', 'training manager'].include? current_user.access_level) %>
 
-        <%= link_to import_airtable_path, class: "btn btn-edit-yellow" do %>
+        <!-- <%# link_to import_airtable_path, class: "btn btn-edit-yellow" do %>
 
           <div class='flex-row-between-centered'>
 
@@ -42,7 +40,7 @@
 
           </div>
 
-        <% end %>
+        <%# end %> -->
 
       <% end %>
 
@@ -110,39 +108,62 @@
 
     <div class="flex-row-start-centered">
 
-      <h3 class="training-update-text training-update-text-upcoming active" onclick="switchView(this)">Upcoming</h3>
-      <h3 class="training-update-text training-update-text-completed" onclick="switchView(this)">Completed</h3>
+      <h3 class="training-update-text training-update-text-upcoming active"
+          data-tab="trainings-upcoming"
+          data-action="click->trainings--trainings-index#showTab">
+        Upcoming
+      </h3>
+
+      <h3 class="training-update-text training-update-text-completed"
+          data-tab="trainings-completed"
+          data-action="click->trainings--trainings-index#showTab">
+        Completed
+      </h3>
 
       <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-        <h3 class="training-update-text training-update-text-home" onclick="switchView(this)">Home</h3>
+
+        <h3 class="training-update-text training-update-text-home"
+            data-tab="trainings-home"
+            data-action="click->trainings--trainings-index#showTab">
+          Home
+        </h3>
+
       <% end %>
 
     </div>
 
-    <div class="trainings-row trainings-row-upcoming">
-      <%# render_async index_upcoming_path(user: params[:user]) %>
-      <%= render 'trainings/index/index_upcoming' %>
+    <div id="trainings-row-upcoming"
+         class="trainings-row"
+         data-trainings--trainings-index-target="upcomingContainer"
+         data-tab-container="trainings-upcoming">
+      <%= render 'trainings/index/index_upcoming', upcoming_trainings: @upcoming_trainings %>
     </div>
 
-    <div class="trainings-row trainings-row-completed hidden">
-      <%= render_async index_completed_path(user: params[:user], search: params[:search]&.permit!)%>
+    <div id="trainings-row-completed"
+         class="trainings-row hidden"
+         data-trainings--trainings-index-target="completedContainer"
+         data-tab-container="trainings-completed">
+
     </div>
 
     <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
 
-      <div class="trainings-row trainings-row-home hidden">
+      <div class="trainings-row trainings-row-home hidden"
+           data-tab-container="trainings-home">
         <%= render 'trainings/index/index_home', trainings: @trainings_home %>
       </div>
 
       <h3 class="training-update-text">To Schedule</h3>
 
-      <div class="trainings-row">
+      <div id="trainings-row-to-date"
+           class="trainings-row">
         <%= render 'trainings/index/index_to_date', trainings: @trainings_to_date, any_more: @to_date_any_more %>
       </div>
 
       <h3 class="training-update-text">To Staff</h3>
 
-      <div class="trainings-row">
+      <div id="trainings-row-to-staff"
+           class="trainings-row">
         <%= render 'trainings/index/index_to_staff', trainings: @trainings_to_staff %>
       </div>
 
@@ -151,71 +172,3 @@
   </div>
 
 </div>
-
-<script>
-  function switchView(element) {
-    button_upcoming = document.querySelector('.training-update-text-upcoming')
-    button_completed = document.querySelector('.training-update-text-completed')
-    if (document.querySelector('.training-update-text-home') != null) {
-      button_home = document.querySelector('.training-update-text-home')
-    }
-    row_upcoming = document.querySelector('.trainings-row-upcoming')
-    row_completed = document.querySelector('.trainings-row-completed')
-    row_home = document.querySelector('.trainings-row-home')
-    if (element == button_upcoming) {
-      element.classList.add('active')
-      button_completed.classList.remove('active')
-      if (document.querySelector('.training-update-text-home') != null) {
-        button_home.classList.remove('active')
-        row_home.classList.add('hidden')
-      }
-      row_upcoming.classList.remove('hidden')
-      row_completed.classList.add('hidden')
-    } else if (element == button_completed) {
-      element.classList.add('active')
-      button_upcoming.classList.remove('active')
-      if (document.querySelector('.training-update-text-home') != null) {
-        button_home.classList.remove('active')
-        row_home.classList.add('hidden')
-      }
-      row_upcoming.classList.add('hidden')
-      row_completed.classList.remove('hidden')
-    } else {
-      element.classList.add('active')
-      button_upcoming.classList.remove('active')
-      button_completed.classList.remove('active')
-      row_upcoming.classList.add('hidden')
-      row_completed.classList.add('hidden')
-      row_home.classList.remove('hidden')
-    }
-  }
-
-  sliders = document.querySelectorAll('.trainings-row');
-  sliders.forEach((slider) => {
-    isDown = false;
-    let startX;
-    let scrollLeft;
-
-    slider.addEventListener('mousedown', (e) => {
-      isDown = true;
-      slider.classList.add('active');
-      startX = e.pageX - slider.offsetLeft;
-      scrollLeft = slider.scrollLeft;
-    });
-    slider.addEventListener('mouseleave', () => {
-      isDown = false;
-      slider.classList.remove('active');
-    });
-    slider.addEventListener('mouseup', () => {
-      isDown = false;
-      slider.classList.remove('active');
-    });
-    slider.addEventListener('mousemove', (e) => {
-      if(!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - slider.offsetLeft;
-      const walk = (x - startX) * 3; //scroll-fast
-      slider.scrollLeft = scrollLeft - walk;
-    });
-  })
-</script>

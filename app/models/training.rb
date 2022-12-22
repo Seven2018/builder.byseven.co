@@ -32,11 +32,11 @@ class Training < ApplicationRecord
     ignoring: :accents
 
   def start_time
-    Session.where(training_id: self).where.not(date: nil).order(date: :asc).first&.date
+    self.sessions.where.not(date: nil).minimum(:date)
   end
 
   def end_time
-    Session.where(training_id: self).where.not(date: nil).order(date: :asc).last&.date
+    self.sessions.where.not(date: nil).maximum(:date)
   end
 
   def next_session
@@ -259,7 +259,7 @@ class Training < ApplicationRecord
 
         builder_invoice = InvoiceItem.find(invoice['Invoice_id'])
 
-        if ['Training', 'Home', 'Deposit (Home)'].include?(invoice['Type'])
+        if ['Training', 'Home', 'Deposit (Home)', 'Direction MS'].include?(invoice['Type'])
           if invoice['Paid'] == true
             seven_invoices += "[x] #{builder_invoice.uuid} \n"
           else
@@ -269,7 +269,7 @@ class Training < ApplicationRecord
 
       end
 
-      existing_card['Status'] = "11. Terminée" if (self.end_time > Date.today && self.invoice_items.present? && self.invoice_items.where(status: ['Pending', 'Sent']).count == 0 && self.invoice_items.where(status: 'Paid').count > 0)
+      existing_card['Status'] = "11. Terminée" if (self.end_time.present? && self.end_time < Date.today && self.invoice_items.present? && self.invoice_items.where(status: ['Pending', 'Sent']).count == 0 && self.invoice_items.where(status: 'Paid').count > 0)
 
       self.sessions.each do |session|
         if session.date.present?
@@ -330,7 +330,7 @@ class Training < ApplicationRecord
 
       if seveners
         self.trainers.where(access_level: ['sevener+', 'sevener']).each do |user|
-          numbers_card = OverviewNumbersSevener.all(filter: "{User_id} = '#{user.id}'" && "{Training_id} = '#{self.id}'")&.first
+          numbers_card = OverviewNumbersSevener.all(filter: "{Training_id} = '#{self.id}'").select{|x| x['User_id'] == user.id}&.first
 
           if numbers_card['Total Due (incl. VAT and Expenses)'] == numbers_card['Total Paid']
             if numbers_card['Billing Type'] == 'Hourly'

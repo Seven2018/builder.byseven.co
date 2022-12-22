@@ -1,15 +1,14 @@
 class ContentsController < ApplicationController
   before_action :set_content, only: [:show, :edit, :update, :destroy]
 
-  def index
-    params[:search] ? @contents = policy_scope(Content).where("lower(title) LIKE ?", "%#{params[:search][:title].downcase}%").order(title: :asc) : @contents = policy_scope(Content).order(title: :asc)
-    @contents = policy_scope(Content)
-    @themes = Theme.all
-  end
+  ##########
+  ## CRUD ##
+  ##########
 
-  def contents_search
-    skip_authorization
-    @contents = Content.ransack(title_cont: params[:search]).result(distinct: true).limit(5)
+  def index
+    @contents = policy_scope(Content)
+
+    @contents = @contents.joins(:theme).order('themes.name ASC', 'title ASC').group_by(&:theme)
   end
 
   def show
@@ -47,6 +46,28 @@ class ContentsController < ApplicationController
     authorize @content
     @content.destroy
     redirect_to contents_path
+  end
+
+  #####################
+  ## SEARCH CONTENTS ##
+  #####################
+
+  def contents_search
+    skip_authorization
+
+    if params.dig(:search, :title) == ""
+      @contents = Content.all
+    elsif params.dig(:search, :deep_mode).present?
+      @contents = Content.deep_search(params.dig(:search, :title))
+    else
+      @contents = Content.search_by_title(params.dig(:search, :title))
+    end
+
+    @contents = @contents.joins(:theme).order('themes.name ASC', 'title ASC').group_by(&:theme)
+
+    respond_to do |format|
+      format.js
+    end
   end
 
   private

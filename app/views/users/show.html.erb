@@ -1,147 +1,85 @@
 <div class="container-seven-large">
+
   <div id="page-controls">
-      <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-        <%= link_to users_path, class: 'btn return-arrow' do %><i class="fas fa-arrow-left"></i><% end %>
-      <% else %>
-        <%= link_to trainings_path, class: 'btn return-arrow' do %><i class="fas fa-arrow-left"></i><% end %>
-      <% end %>
+
+    <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
+
+      <%= link_to users_path, class: 'btn return-arrow' do %><i class="fas fa-arrow-left"></i><% end %>
+
+    <% else %>
+
+      <%= link_to trainings_path, class: 'btn return-arrow' do %><i class="fas fa-arrow-left"></i><% end %>
+
+    <% end %>
+
     <div class='page-control-buttons' style='display:flex;'>
+
       <% if current_user.access_level == 'super_admin' || @user == current_user || (current_user.access_level == 'admin' && (@user.access_level == 'sevener' || @user.access_level == 'sevener+')) %>
+
         <a class="btn-icon-grey" data-toggle='modal' data-target='#editUser' data-toggle='tooltip' title='Edit User'><i class="fas fa-user-edit"></i></a>
+
         <a class="btn-icon-grey" data-toggle='modal' data-target='#editPassword' data-toggle='tooltip' title='Edit Password'><i class="fas fa-key"></i></a>
+
       <% end %>
+
     </div>
+
   </div>
+
   <div class='user-card'>
+
     <div class="index-card-small-show">
-        <div class='user-picture-logo-show'>
-          <img src='<%= @user.picture %>' alt="" class='user-logo-show' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
-        </div>
-        <div class="user-info">
-          <h4><strong><%=  @user.firstname %> <%=  @user.lastname %></strong></h4>
-          <p><%= @user.email %></p>
-          <p><%= @user.phone_number %></p>
-          <p><%= @user.description %></p>
-        </div>
+
+      <div class='user-picture-logo-show'>
+
+        <img src='<%= @user.picture %>' alt="" class='user-logo-show' onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
+
+      </div>
+
+      <div class="user-info">
+
+        <h4><strong><%=  @user.firstname %> <%=  @user.lastname %></strong></h4>
+        <p><%= @user.email %></p>
+        <p><%= @user.phone_number %></p>
+        <p><%= @user.description %></p>
+
+      </div>
+
     </div>
+
   </div>
-  <% trainings = Training.joins(sessions: :session_trainers).where(session_trainers: {user_id: @user.id}).uniq %>
+
   <h3 class="training-update-text">Upcoming</h3>
+
   <div class="trainings-row">
-    <% trainings.each do |training| %>
-      <%# if training.end_time.present? && training.end_time >= Date.today %>
-      <% if training.end_time.present? && Session.joins(:session_trainers).where(training_id: training.id, session_trainers: {user_id: @user.id}).where.not(date: nil).order(date: :asc)&.last&.date >= Date.today %>
-        <div class="training-card" id="card-index" data-toggle='tooltip' title='<%= training.title %>'>
-          <div class="training-card-main">
-            <%= link_to training_path(training), class: 'stretched-link' do %>
-            <div class="training-card-infos">
-              <% sessions = training.sessions.order(date: :asc).pluck(:date) %>
-              <div class='training-card-infos-elements'>
-                <% if sessions.count == 1 %>
-                  <%= " On #{sessions.first&.strftime('%d %b, %Y')}" %>
-                <% else %>
-                  <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-                    <%= " #{sessions.first&.strftime('%d %b, %Y')} to #{sessions.last&.strftime('%d %b, %Y')}" %>
-                  <% else %>
-                    <% trainer_sessions = Session.joins(:session_trainers).where(training_id: training.id, session_trainers: {user_id: current_user.id}).order(date: :asc) %>
-                    <%= " #{trainer_sessions.first&.date&.strftime('%d %b %Y')} to #{trainer_sessions.last&.date&.strftime('%d %b, %Y')}" %>
-                  <% end %>
-                <% end %>
-              </div>
-            </div>
-            <div class="training-card-bottom">
-              <div class="training-client-titles">
-                <div class="training-titles">
-                <img src="<%= Training.includes(:client_contact).find(training.id).client_contact.client_company.logo %>" class='lazyload client-logo'>
-                  <p><b><%= training.client_company.name %></b></p>
-                  <% if training.title.length >= 100 %>
-                    <p><%= training.title.first(100) + '...' %></p>
-                  <% else %>
-                    <p><%= training.title %></p>
-                  <% end %>
-                </div>
-              </div>
-              <% owners = training.owners %>
-              <% u = 1 %>
-              <% if owners.present? %>
-                <img class="lazyload avatar-sm-owner training-card-user training-card-user-<%= u %>" src="<%= training.owners.first.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
-                <% u += 1 %>
-              <% end %>
-              <% sidekicks = training.sidekicks %>
-              <% if sidekicks.present? %>
-                <img class="lazyload avatar-sm-sidekick training-card-user training-card-user-<%= u %>" src="<%= sidekicks.first.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
-                <% u += 1 %>
-              <% end %>
-              <% writers = training.writers%>
-              <% if writers.present? %>
-                <img class="lazyload avatar-sm-writer training-card-user training-card-user-<%= u %>" src="<%= writers.first.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
-              <% end %>
-            <% end %>
-            </div>
-          </div>
-        </div>
-      <% end %>
+
+    <% @upcoming_trainings.each do |training| %>
+
+      <%= render 'users/show/show_training_card', training: training, filter_mode: 'upcoming' %>
+
     <% end %>
+
   </div>
+
   <h3 class="training-update-text">Completed</h3>
+
   <div class="trainings-row">
-    <% trainings.uniq.each do |training| %>
-      <% if training.end_time.present? && Session.joins(:session_trainers).where(training_id: training.id, session_trainers: {user_id: @user.id}).where.not(date: nil).order(date: :asc).last.date < Date.today %>
-        <div class="training-card" id="card-index" data-toggle='tooltip' title='<%= training.title %>'>
-          <div class="training-card-main">
-            <%= link_to training_path(training), class: 'stretched-link' do %>
-              <div class="training-card-infos-completed">
-                <% sessions = training.sessions %>
-                <div class='training-card-infos-elements'>
-                  <% if sessions.count == 1 %>
-                    <%= "  On #{sessions.first&.date&.strftime('%d %b, %Y')}" %>
-                  <% else %>
-                    <% if ['super_admin', 'admin', 'training manager'].include?(current_user.access_level) %>
-                      <%= " #{sessions.order(date: :asc).first&.date&.strftime('%d %b, %Y')} to #{sessions.order(date: :asc).last&.date&.strftime('%d %b, %Y')}" %>
-                    <% else %>
-                      <% trainer_sessions = Session.joins(:session_trainers).where(training_id: training.id, session_trainers: {user_id: current_user.id}).order(date: :asc) %>
-                      <%= " #{trainer_sessions.first&.date&.strftime('%d %b %Y')} to #{trainer_sessions.last&.date&.strftime('%d %b, %Y')}" %>
-                    <% end %>
-                  <% end %>
-                </div>
-              </div>
-              <div class="training-card-bottom">
-                <div class="training-client-titles">
-                  <div class="training-titles">
-                  <img src="<%= Training.includes(:client_contact).find(training.id).client_contact.client_company.logo %>" class='lazyload client-logo'>
-                    <p><b><%= training.client_company.name %></b></p>
-                    <% if training.title.length >= 95 %>
-                      <p><%= training.title.first(95) + '...' %></p>
-                    <% else %>
-                      <p><%= training.title %></p>
-                    <% end %>
-                  </div>
-                </div>
-                <% owners = training.owners %>
-                <% u = 1 %>
-                <% if owners.present? %>
-                  <img class="lazyload avatar-sm-owner training-card-user training-card-user-<%= u %>" src="<%= training.owners.first.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
-                  <% u += 1 %>
-                <% end %>
-                <% sidekicks = training.sidekicks %>
-                <% if sidekicks.present? %>
-                  <img class="lazyload avatar-sm-sidekick training-card-user training-card-user-<%= u %>" src="<%= sidekicks.first.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
-                  <% u += 1 %>
-                <% end %>
-                <% writers = training.writers%>
-                <% if writers.present? %>
-                  <img class="lazyload avatar-sm-writer training-card-user training-card-user-<%= u %>" src="<%= writers.first.picture %>" onerror='this.onerror=null;this.src="<%= asset_url('empty-avatar.png', type: :image) %>";'>
-                <% end %>
-              <% end %>
-              </div>
-          </div>
-        </div>
-      <% end %>
+
+    <% @completed_trainings.uniq.each do |training| %>
+
+      <%= render 'users/show/show_training_card', training: training, filter_mode: 'completed' %>
+
     <% end %>
+
   </div>
+
 </div>
 
-<!-- Modal -->
+
+<!------------>
+<!-- MODALS -->
+<!------------>
+
 <div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document" style="border-radius: 2rem">
     <%= render 'edit', user: @user %>
@@ -153,6 +91,8 @@
     <%= render 'changepassword', user: @user %>
   </div>
 </div>
+
+<!------------>
 
 <script>
   sliders = document.querySelectorAll('.trainings-row');

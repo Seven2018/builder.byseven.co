@@ -72,17 +72,40 @@
 
             <% end %>
 
-            <%= link_to invoice_item_path(@invoice_item, format: :pdf), target: :_blank, class: 'btn btn-edit-yellow btn-icon', data: {toggle: 'tooltip'}, title: 'Export to PDF' do %>
-              <i class="fas fa-file-pdf"></i>
-            <% end %>
+            <div class="dropdown">
 
-            <% unless @invoice_item.training.nil? %>
+              <div id="dropdownMenu"
+                   class="btn btn-edit-yellow btn-icon smooth-transition cursor-pointer"
+                   data-toggle="dropdown">
 
-              <button class='btn btn-edit-orange btn-icon' data-toggle='modal' data-toggle='tooltip' data-target='#sendInvoiceItem' title='Send Invoice'>
-                <i class="fas fa-envelope"></i>
-              </button>
+                <i class="fas fa-file-pdf"></i>
 
-            <% end %>
+              </div>
+
+              <div class="dropdown-menu dropdown-menu-right min-width-fit-content width-max-content"
+                   aria-labelledby="dropdownMenu"
+                   style="margin-top: .5rem;">
+
+                <div class="bkt-bg-white bkt-box-shadow-medium width-max-content overflow-hidden">
+
+                  <%= link_to '🇫🇷', invoice_item_path(@invoice_item, format: :pdf, lang: 'fr'),
+                                    target: :_blank,
+                                    class: "flex-row-start-centered fs-1_6rem font-weight-500 bld-bg-light-grey-hover width-100 p-3" %>
+
+                  <%= link_to '🇬🇧', invoice_item_path(@invoice_item, format: :pdf, lang: 'en'),
+                                    target: :_blank,
+                                    class: "flex-row-start-centered fs-1_6rem font-weight-500 bld-bg-light-grey-hover width-100 p-3" %>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- TO DO : SEND INVOICE MAIL FEATURE -->
+          <!--   <button class='btn btn-edit-orange btn-icon' data-toggle='modal' data-toggle='tooltip' data-target='#sendInvoiceItem' title='Send Invoice'>
+              <i class="fas fa-envelope"></i>
+            </button> -->
 
             <% if invoice_type == 'Invoice' %>
 
@@ -397,57 +420,56 @@
 
     </div>
 
-  </div>
+    <!------------>
+    <!-- MODALS -->
+    <!------------>
 
-
-  <!------------>
-  <!-- MODALS -->
-  <!------------>
-
-  <div id="editTraining"
-       class="modal fade"
-       tabindex="-1"
-       role="dialog"
-       data-backdrop="static"
-       data-keyboard="false">
-
-    <div class="modal-dialog" role="document" style="border-radius: 2rem">
-      <%= render 'invoice_items/show/edit_training', invoice_item: @invoice_item %>
-    </div>
-
-  </div>
-
-  <div id="copyInvoiceItem"
-       class="modal fade"
-       tabindex="-1"
-       role="dialog"
-       data-backdrop="static"
-       data-keyboard="false">
-
-    <div class="modal-dialog" role="document" style="border-radius: 2rem">
-      <%= render 'invoice_items/show/copy', invoice_item: @invoice_item %>
-    </div>
-
-  </div>
-
-  <% unless @invoice_item.training.nil? %>
-
-    <div id="sendInvoiceItem"
+    <div id="editTraining"
          class="modal fade"
          tabindex="-1"
          role="dialog"
          data-backdrop="static"
          data-keyboard="false">
 
-      <div class="modal-dialog modal-lg" role="document" style="border-radius: 2rem">
-        <%= render 'invoice_items/send_invoice', invoice_item: @invoice_item %>
+      <div class="modal-dialog" role="document" style="border-radius: 2rem">
+        <%= render 'invoice_items/show/edit_training', invoice_item: @invoice_item %>
       </div>
 
     </div>
 
-  <% end %>
+    <div id="copyInvoiceItem"
+         class="modal fade"
+         tabindex="-1"
+         role="dialog"
+         data-backdrop="static"
+         data-keyboard="false">
 
-  <!------------>
+      <div class="modal-dialog" role="document" style="border-radius: 2rem">
+        <%= render 'invoice_items/show/copy', invoice_item: @invoice_item %>
+      </div>
+
+    </div>
+
+    <% unless @invoice_item.training.nil? %>
+
+      <div id="sendInvoiceItem"
+           class="modal fade"
+           tabindex="-1"
+           role="dialog"
+           data-backdrop="static"
+           data-keyboard="false">
+
+        <div class="modal-dialog modal-lg" role="document" style="border-radius: 2rem">
+          <%= render 'invoice_items/send_invoice', invoice_item: @invoice_item %>
+        </div>
+
+      </div>
+
+    <% end %>
+
+    <!------------>
+
+  </div>
 
 <% else %>
 

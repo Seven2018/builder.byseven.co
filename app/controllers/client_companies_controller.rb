@@ -1,9 +1,27 @@
 class ClientCompaniesController < ApplicationController
 before_action :set_clientcompany, only: [:show, :edit, :update, :destroy]
 
-  # Index with "search" option
+
+  ##########
+  ## CRUD ##
+  ##########
+
   def index
-    params[:search] ? @client_companies = policy_scope(ClientCompany).where("lower(name) LIKE ?", "%#{params[:search][:name].downcase}%").order(name: :asc) : @client_companies = policy_scope(ClientCompany).order(name: :asc)
+    @client_companies = policy_scope(ClientCompany)
+
+    # params[:search] ? @client_companies = policy_scope(ClientCompany).where("lower(name) LIKE ?", "%#{params[:search][:name].downcase}%").order(name: :asc) : @client_companies = policy_scope(ClientCompany).order(name: :asc)
+    search_name = params.dig(:search, :name)
+    page_index = (params.dig(:search, :page).presence || 1).to_i
+
+    @client_companies = @client_companies.search_companies(search_name) if search_name.present?
+    @total_companies = @client_companies.count
+    @client_companies = @client_companies.order(name: :asc).page(page_index)
+    @any_more = @client_companies.count * page_index < @total_companies
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def show

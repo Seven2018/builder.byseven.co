@@ -15,7 +15,7 @@ class SessionTrainersController < ApplicationController
       trainers_list << user.id.to_s
     end
 
-    UpdateAirtableJob.perform_async(training, true)
+    # UpdateAirtableJob.perform_async(training, true) # NOT NEEDED, SEPARATE BUTTON ADDED
     redirect_to redirect_path(training_id: "/#{training.id}/", session_id: "|#{training.sessions.ids.join(',')}|", list: trainers_list.join(','))
   end
 

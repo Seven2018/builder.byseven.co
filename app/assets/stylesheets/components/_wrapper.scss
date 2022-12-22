@@ -46,10 +46,12 @@ body.wait *, body.wait
 
 .container-seven-large {
   background-color: #f7f7f7;
-
+  min-height: calc(100vh - 5rem);
+  height: fit-content;
   padding: 0 1rem;
-   @include from-large {
-   padding: 1.5rem 4rem;
+
+  @include from-large {
+    padding: 2rem 4rem 4rem 4rem;
   }
 }
 
@@ -187,7 +189,7 @@ body.wait *, body.wait
 #search_title, #search_name {
   height: 4rem;
   width: 30rem;
-  padding: 0 4rem;
+  padding: 1rem;
   margin-right: 1rem;
   background-color: white;
   box-shadow: 10px 10px 23px -13px rgba(0,0,0,0.13);
@@ -196,6 +198,10 @@ body.wait *, body.wait
 
   textarea {
     color: black;
+  }
+
+  &::placeholder {
+    color: #C4C4C4 !important;
   }
 
   &:focus {

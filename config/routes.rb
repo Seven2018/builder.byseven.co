@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
 
   ###########
   # ACTIONS #
@@ -12,7 +11,6 @@ Rails.application.routes.draw do
   # AIRTABLE #
   ############
 
-  get :airtable_import_users, controller: :pages
   get :import_airtable, controller: :pages
   get :account_invoice, controller: :pages
   get 'trainings/:id/export_airtable', to: 'pages#export_airtable', as: 'export_airtable'
@@ -91,6 +89,8 @@ Rails.application.routes.draw do
   get 'invoice_items/:id/marked_as_paid', to: 'invoice_items#marked_as_paid', as: 'marked_as_paid_invoice_item'
   get 'invoice_items/:id/marked_as_cancelled', to: 'invoice_items#marked_as_cancelled', as: 'marked_as_cancelled_invoice_item'
 
+  get :airtable_update_invoice, controller: :invoice_items
+
 
   #################
   # INVOICE_LINES #
@@ -116,6 +116,7 @@ Rails.application.routes.draw do
   get :contact_form, controller: :pages
   get :contact_form_becos, controller: :pages
   get :billing, controller: :pages
+  get :billing_completed, controller: :pages
   get :export_numbers_activity_cumulation, controller: :pages
 
 
@@ -206,6 +207,7 @@ Rails.application.routes.draw do
   get 'show_session_content', to: 'trainings#show_session_content', as: 'show_session_content'
   # get 'trainings/:id/import_attendees', to: 'trainings#import_attendees', as: 'import_attendees_training'
   get :airtable_create_training, controller: :trainings
+  get :export_training_to_airtable, controller: :trainings
   get :training_sessions_list, controller: :trainings
   get :sessions_search, controller: :sessions
   get :session_content_search, controller: :sessions
@@ -215,7 +217,13 @@ Rails.application.routes.draw do
   # USERS #
   #########
 
+  devise_for :users, controllers: {
+    omniauth_callbacks: 'users/omniauth_callbacks',
+    passwords: 'users/passwords'
+  }
+
   resources :users
+  post :reset_password, controller: :users
   get :users_search, controller: :users
   get :airtable_create_user, controller: :users
 

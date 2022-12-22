@@ -1,12 +1,16 @@
 <div id="items">
+
   <% total_duration = 0 %>
   <% exceed = [] %>
   <% rythm_alert = [] %>
+
   <% session.workshops.each do |workshop| %>
     <% total_duration += workshop.duration %>
     <% exceed << workshop.position if (total_duration * 60) > (workshop.session.end_time - workshop.session.start_time) %>
   <% end %>
+
   <% mod_list = session.workshops.order(position: :asc).map{|x| x.workshop_modules.order(position: :asc)}.flatten %>
+
   <% mod_list.each_with_index do |mod, index| %>
     <% unless index == 0 %>
       <% previous_mod = mod_list[index - 1] %>
@@ -15,25 +19,44 @@
       <% end %>
     <% end %>
   <% end %>
+
   <% if @session.workshops.empty? %>
+
     <div class="empty-mod">
+
       <% if ['super_admin', 'admin', 'training manager'].include? current_user.access_level %>
+
         <br>
         <p> <%= "Ajouter du contenu" %> </p>
+
       <% else %>
+
         <i class="fas fa-wrench"></i>
         <p> <%= "Session à construire" %> </p>
+
       <% end %>
+
     </div>
+
   <% else %>
+
     <% @session.workshops.order('position ASC').each do |workshop| %>
+
       <% if workshop.position == 1 %>
+
         <% @start = @session.start_time %>
+
       <% else %>
+
         <% @duration = @session.workshops.find_by(position: (workshop.position - 1 )).duration.minutes %>
         <% @start += @duration %>
+
       <% end %>
+
       <%= render "workshops/show", workshop: workshop, session: @session, start: @start, exceed: exceed, rythm_alert: rythm_alert %>
+
     <% end %>
+
   <% end %>
+
 </div>
