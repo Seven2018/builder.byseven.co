@@ -107,9 +107,12 @@
     }
 
     ol {
+      list-style: initial;
+      list-style-type: decimal;
       padding: 20px;
+
       @include from-large {
-      padding: 0 40px;
+        padding: 0 40px;
       }
     }
 

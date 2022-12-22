@@ -1,10 +1,15 @@
+<% session = @workshop.session %>
+<% modules = @workshop.workshop_modules.order(position: :asc) %>
+<% start = session.start_time + session.workshops.where('position < ?', @workshop.position).map(&:duration).sum.minutes %>
+<% modules_count = @workshop.workshop_modules.count %>
+
 <div class="workshop-middle-info-main mb-5rem">
 
   <p class="fs-2rem">Modules</p>
 
 </div>
 
-<% unless @workshop.workshop_modules.present? %>
+<% unless modules.present? %>
 
   <div class="no-workshop">
 
@@ -20,11 +25,9 @@
 
   <div id="items">
 
-    <% start = @workshop.session.start_time %>
-    <% modules_count = @workshop.workshop_modules.count %>
     <% i = 1 %>
 
-    <% @workshop.workshop_modules.order('position ASC').each do |mod| %>
+    <% modules.each do |mod| %>
 
       <div class='card card-mods'>
 
@@ -114,7 +117,7 @@
 
                 <% end %>
 
-                <% if mod.position ==  @workshop.workshop_modules.count %>
+                <% if mod.position ==  modules.count %>
 
                   <a class='btn return-arrow'><i class="fas fa-arrow-down" style='color:grey;cursor:default;'></i></a>
 
