@@ -484,6 +484,7 @@ class InvoiceItemsController < ApplicationController
 
   def send_invoice_mail
     raise
+    # TO DO
   end
 
 
