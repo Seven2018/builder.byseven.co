@@ -18,3 +18,5 @@ yarn-debug.log*
 .yarn-integrity
 .DS_Store
 latest.dump
+
+.idea/
