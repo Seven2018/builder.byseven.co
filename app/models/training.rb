@@ -246,6 +246,7 @@ class Training < ApplicationRecord
 
     end
 
+    puts "tmp test ======", message
     return message.present? ? message.first : training
   end
 
