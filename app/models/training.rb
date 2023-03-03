@@ -238,6 +238,7 @@ class Training < ApplicationRecord
           message << "Failed to create Training."
           puts message.first
           puts e.message
+          puts e.backtrace
         end
 
       else
