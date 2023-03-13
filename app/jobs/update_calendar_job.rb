@@ -89,7 +89,11 @@ class UpdateCalendarJob < ApplicationJob
     event.id = SecureRandom.hex(32)
     session_trainer = SessionTrainer.where(user_id: user_id, session_id: session_id).first
     session_trainer.calendar_uuid.nil? ? session_trainer.update(calendar_uuid: event.id) : session_trainer.update(calendar_uuid: session_trainer.calendar_uuid + ' - ' + event.id)
-    service.insert_event(hash[user_id.to_i], event)
+    begin
+      service.insert_event(hash[user_id.to_i], event)
+    rescue => e
+      raise "je n'arrive pas a mettre a jour le calendrier de cette persone: #{hash[user_id.to_i]}, demandez lui de me donner les droits! #{e.backtrace.to_s}"
+    end
   end
 
   def delete_calendar_id(session_trainer, service)
