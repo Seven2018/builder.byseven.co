@@ -320,7 +320,11 @@ class SessionTrainersController < ApplicationController
     # Remove Session Trainers for selected user (destroy if calendar_uuid is nil, mark for deletion otherwise)
     if params.dig(:link, :mode) == 'delete'
 
-      existing&.calendar_uuid&.nil? ? existing&.destroy : existing&.update(status: 'to_delete')
+      if existing&.calendar_uuid.present?
+        existing&.update(status: 'to_delete')
+      else
+        existing&.destroy
+      end
 
     # Create a SessionTrainer for selected user
     else
