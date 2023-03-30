@@ -162,6 +162,8 @@ class Training < ApplicationRecord
             TrainingOwnership.find_or_create_by(training: training, user_type: 'Writer', user: knower)
           end
         end
+
+        puts "missing partner update"
       rescue => e
         message << "Failed to update Training #{training.title}"
         puts message.first
