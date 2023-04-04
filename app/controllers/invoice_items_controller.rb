@@ -401,6 +401,11 @@ class InvoiceItemsController < ApplicationController
 
     UpdateAirtableJob.perform_async(new_invoice_item.training, false, [new_invoice_item]) if new_invoice_item.training.present?
 
+    unless new_invoice_item.valid?
+      puts "can't create training"
+      puts new_invoice_item
+      puts new_invoice_item.errors.messages
+    end
     redirect_to invoice_item_path(new_invoice_item)
   end
 
