@@ -1,4 +1,6 @@
 class InvoiceItem < ApplicationRecord
+  default_scope {order(created_at: :asc)}
+
   belongs_to :client_company, optional: true
   belongs_to :training, optional: true
   belongs_to :user, optional: true

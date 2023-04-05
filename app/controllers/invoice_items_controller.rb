@@ -34,7 +34,7 @@ class InvoiceItemsController < ApplicationController
 
       @invoice_items = @invoice_items.where("lower(uuid) LIKE ?", "%#{search_invoice}%").or(@invoice_items.where_exists(:client_company, "lower(name) LIKE ?", "%#{search_invoice}%")) if search_invoice.present?
       @total_invoices = @invoice_items.count
-      @invoice_items = @invoice_items.order(id: :desc).page(page_index)
+      @invoice_items = @invoice_items.order(created_at: :desc).page(page_index)
       @any_more = @invoice_items.count * page_index < @total_invoices
     end
 
